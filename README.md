@@ -111,6 +111,7 @@ after running it you need to scan the qr
 ╠➥ demote
 ╠➥ kickall
 ╚═〘 CR_AZYZ  B O T 〙
+---
 
 ## Troubleshooting
 Make sure all the necessary dependencies are installed: https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md
