@@ -10,13 +10,13 @@
 
 ## Getting Started
 
-This project require NodeJS v12.
+This project require NodeJS v12
 
 ### Install
 Clone this project
 
 ```bash
-> git clone https://github.com/nuraziz0404/wabot-v1
+> git clone https://github.com/nuraziz0404/botwa
 > cd whatsapp-bot
 ```
 
