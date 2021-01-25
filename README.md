@@ -1,3 +1,13 @@
+<p align="center">
+<img src="https://s2.ezgif.com/save/ezgif-2-5430d77ab976.png" height="128"/>
+</p>
+<p align="center">
+<a href="https://github.com/nuraziz0404/botwa"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
+</p>
+<p align="center">
+<a href="https://github.com/nuraziz0404"><img title="Author" src="https://img.shields.io/badge/Github-Aziz-blue?style=for-the-badge&logo=github"></a>
+</p>
+
 ## Getting Started
 
 This project require NodeJS v12.
@@ -6,7 +16,7 @@ This project require NodeJS v12.
 Clone this project
 
 ```bash
-> git clone https://github.com/nuraziz0404/botwa
+> git clone https://github.com/nuraziz0404/wabot-v1
 > cd whatsapp-bot
 ```
 
@@ -31,86 +41,77 @@ after running it you need to scan the qr
 ---
 
 ## Features
-╔══✪〘 Fitur BOT 〙✪
-╠➥ status
-╠➥ ping && speed
-╠➥ menu && help
-╠➥ ownerbot
-╠➥ botstat
-╠➥ tnc
-╠➥ donate && donasi
-╠➥ sticker
-╠➥ getimage && stickertoimg
-╠➥ stickergif && gifsticker
-╠➥ stickergiphy
-╠➥ meme
-╠➥ logoph
-╠➥ qrcode
-╠➥ nulis
-╠➥ shortlink
-╠➥ hilihfont
-╠➥ ytmp3 (beta)
-╠➥ play (beta)
-╠➥ tts
-╠➥ listsurah
-╠➥ infosurah
-╠➥ surah
-╠➥ tafsir
-╠➥ alaudio
-╠➥ jsholat
-╠➥ cekzodiak
-╠➥ artinama
-╠➥ cekjodoh
-╠➥ fakta
-╠➥ katabijak
-╠➥ pantun
-╠➥ quote
-╠➥ anime
-╠➥ animebatch
-╠➥ whatanime
-╠➥ kpop
-╠➥ memes
-╠➥ simisimi
-╠➥ resep
-╠➥ wiki
-╠➥ sreddit
-╠➥ cuaca
-╠➥ resi
-╠➥ ceklokasi
-╠➥ nekopoi
-╠➥ katakasar
-╠➥ klasemen
-╠➥ reset
-╠➥ mutegrup
-╠➥ setprofile
-╠➥ welcome
-╠➥ kickall
-╠➥ grouplink
-╠➥ revoke
-╠➥ add
-╠➥ kick
-╠➥ promote
-╠➥ demote
-╠➥ join
-╠➥ bye
-╠➥ del
-╠➥ tagall
-╠➥ ban
-╠➥ bc
-╠➥ leaveall
-╠➥ clearall
-╠➥ mutegrup
-╠➥ setprofile
-╠➥ welcome
-╠➥ kickall
-╠➥ grouplink
-╠➥ revoke
-╠➥ add
-╠➥ kick
-╠➥ promote
-╠➥ demote
-╠➥ kickall
-╚═〘 CR_AZYZ  B O T 〙
+╔══ | ✪〘 Fitur BOT 〙✪
+------------ | -------------
+╠➥ | status
+╠➥ | ping && speed
+╠➥ | menu && help
+╠➥ | ownerbot
+╠➥ | botstat
+╠➥ | tnc
+╠➥ | donate && donasi
+╠➥ | sticker
+╠➥ | getimage && stickertoimg
+╠➥ | stickergif && gifsticker
+╠➥ | stickergiphy
+╠➥ | meme
+╠➥ | logoph
+╠➥ | qrcode
+╠➥ | nulis
+╠➥ | shortlink
+╠➥ | hilihfont
+╠➥ | ytmp3 (beta)
+╠➥ | play (beta)
+╠➥ | tts
+╠➥ | listsurah
+╠➥ | infosurah
+╠➥ | surah
+╠➥ | tafsir
+╠➥ | alaudio
+╠➥ | jsholat
+╠➥ | cekzodiak
+╠➥ | artinama
+╠➥ | cekjodoh
+╠➥ | fakta
+╠➥ | katabijak
+╠➥ | pantun
+╠➥ | quote
+╠➥ | anime
+╠➥ | animebatch
+╠➥ | whatanime
+╠➥ | kpop
+╠➥ | memes
+╠➥ | simisimi
+╠➥ | resep
+╠➥ | wiki
+╠➥ | sreddit
+╠➥ | cuaca
+╠➥ | resi
+╠➥ | ceklokasi
+╠➥ | nekopoi
+╠➥ | katakasar
+╠➥ | klasemen
+╠➥ | reset
+╠➥ | mutegrup
+╠➥ | setprofile
+╠➥ | welcome
+╠➥ | kickall
+╠➥ | grouplink
+╠➥ | revoke
+╠➥ | add
+╠➥ | kick
+╠➥ | promote
+╠➥ | demote
+╠➥ | join
+╠➥ | bye
+╠➥ | del
+╠➥ | tagall
+╠➥ | ban
+╠➥ | bc
+╠➥ | leaveall
+╠➥ | clearall
+╚═ | 〘 CR_AZYZ  B O T 〙
+---
 
 ## Troubleshooting
 Make sure all the necessary dependencies are installed: https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md

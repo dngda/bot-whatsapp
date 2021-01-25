@@ -62,10 +62,10 @@ const start = (aziz = new Client()) => {
 
     aziz.onIncomingCall(async (callData) => {
         // ketika seseorang menelpon nomor bot akan mengirim pesan
-        await aziz.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan.\n\n-bot')
+        await aziz.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan.\n\n~ini bot')
         .then(async () => {
             // bot akan memblock nomor itu
-            await aziz.contactBlock(callData.peerJid)
+            //await aziz.contactBlock(callData.peerJid)
         })
     })
 

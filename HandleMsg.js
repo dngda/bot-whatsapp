@@ -12,7 +12,6 @@ const base64Img = require('base64-img')
 const webp = require('webp-converter')
 const split = require('split')
 const filter = require('filter')
-const https = require('https'); // or 'https' for https:// URLs
 
 
 const appRoot = require('app-root-path')
@@ -50,7 +49,8 @@ const {
     color, 
     processTime, 
     isUrl,
-	download
+    download,
+    redir
 } = require('./utils')
 
 const { uploadImages } = require('./utils/fetcher')
@@ -135,8 +135,8 @@ module.exports = HandleMsg = async (aziz, message) => {
 		const isKasar = await cariKasar(chats)
 
         // [BETA] Avoid Spam Message
-        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)), aziz.reply(from, 'Mohon untuk tidak melakukan spam', id) }
-        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)), aziz.reply(from, 'Mohon untuk tidak melakukan spam', id) }
+        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)), aziz.reply(from, 'Mohon untuk tidak melakukan spam', id) }
+        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)), aziz.reply(from, 'Mohon untuk tidak melakukan spam', id) }
         //
         if(!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${argx}`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
         if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
@@ -304,17 +304,17 @@ module.exports = HandleMsg = async (aziz, message) => {
                     var filename = `./media/stickergif.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
                     await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: "base64" })
+                        var gif = await fs.readFileSync(`${filename}`, { encoding: "base64" })
                         await aziz.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
                         .catch(() => {
                             aziz.reply(from, 'Maaf filenya terlalu besar!', id)
                         })
                     })
                   } else {
-                    aziz.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif* max 10 sec!`, id)
+                    aziz.reply(from, `[❗] Kirim video dengan caption *${prefix}stickergif* max 10 sec!`, id)
                    }
                 } else {
-		    aziz.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif*`, id)
+		    aziz.reply(from, `[❗] Kirim video dengan caption *${prefix}stickergif*`, id)
 	        }
             break
 
@@ -327,7 +327,7 @@ module.exports = HandleMsg = async (aziz, message) => {
                     var filename = `./media/stickergif.${_mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
                     await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: "base64" })
+                        var gif = await fs.readFileSync(`${filename}`, { encoding: "base64" })
                         await aziz.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
                         .catch(() => {
                             aziz.reply(from, 'Maaf filenya terlalu besar!', id)
@@ -370,13 +370,19 @@ module.exports = HandleMsg = async (aziz, message) => {
                 await aziz.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
             }
             break
+    case 'qr':
     case 'qrcode':
-        if (args.length !== 2) return aziz.reply(from, `Untuk menggunakan fitur qrcode, ketik :\n${prefix}qrcode [kata/url] [size]\n\nContoh: ${prefix}qrcode https://google.com 300\n\n*Size minimal 100 & maksimal 500*`, id)
-        aziz.reply(from, `wait...`, id);
-        rugaapi.qrcode(args[0], args[1])
-        .then(async (res) => {
-          await aziz.sendFileFromUrl(from, `${res}`, id)
-        })
+            if(args.length == 0) return aziz.reply(from, `Untuk membuat kode qr, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya aziz`, id)        
+            aziz.reply(from, `wait...`, id);
+            let kata = args[0]
+            for (let i = 1; i < args.length; i++) {
+                kata += ` ${args[i]}`
+            }
+            console.log(kata)
+            rugaapi.qrcode(kata, 500)
+            .then(async (res) => {
+              await aziz.sendFileFromUrl(from, `${res}`, id)
+            })
       break			
         case 'meme':
             if ((isMedia || isQuotedImage) && args.length >= 2) {
@@ -609,46 +615,59 @@ module.exports = HandleMsg = async (aziz, message) => {
                     
                     var time = moment(t * 1000).format('mm')
                     var dir = `./media/ytmp3/${time}.mp3`
-
-                    
-                    async function file(){
-                        function download(link, dest, callback) {
-                            var file = fs.createWriteStream(dest);
-                            https.get(link, function (response) {
-                                async function f(){
-                                  await response.pipe(file);
+                        async function mp3(){
+                            console.log('Proses download sedang berlangsung')
+                            await download(link, dir, function(err){
+                                if(err){
+                                  console.error(err);
+                                }else{
+                                    console.log('Download Complete')
+                                    aziz.sendPtt(from, dir, id)
+                                    .then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
                                 }
-                                f()
-                              file.on('finish', function () {
-                                file.close(callback); // close() is async, call callback after close completes.
-                              });
-                              file.on('error', function (err) {
-                                fs.unlink(dest); // Delete the file async. (But we don't check the result)
-                                if (callback)
-                                  callback(err.message);
-                              });
-                            });
-                          }
-                        
-                          await download(link, dir, function(err){
+                             });
+                        }
+                        mp3()
+                          
+				})
+            break
+                /*
+            case 'ytmp4':
+            if (args.length < 1) return aruga.reply(from, `Untuk mendownload Video dari youtube (resolusi 720p)\nketik: ${prefix}ytmp4 [link_yt]\nContoh: ${prefix}ytmp4 https://youtu.be/00qzo345XVM`, id)
+            const id4 = args[0].replace('https://youtu.be/','').replace('https://www.youtube.com/watch?v=','')
+            const link4 = `https://youtu.be/${id4}`
+            console.log(link4)
+            
+            async function f(link){
+                    const urldl = await redir(link)
+                    var time = moment(t * 1000).format('mm')
+                    var dir = `./media/ytmp4/${time}.mp4` 
+                    async function mp4(linkdl){
+                        console.log('Proses download sedang berlangsung')
+                        await download(linkdl, dir, function(err){
                             if(err){
                               console.error(err);
                             }else{
                                 console.log('Download Complete')
-                                aziz.sendPtt(from, dir, id)
+                                aziz.sendFile(from, dir, id)
+                                .then(console.log(`Video Processed for ${processTime(t, moment())} Second`))
                             }
                          });
-
                     }
-                    file()
-
-                    console.log(`Audio Processed for ${processTime(t, moment())} Second`)
-					.catch(() => {
-						aziz.reply(from, `URL Ini ${args[0]} Sudah pernah di Download sebelumnya. URL akan di Reset setelah 1 Jam/60 Menit`, id)
-					})
-				})
+                    mp4(urldl)
+            }
+            axios.get(`https://arugaz.my.id/api/media/ytvid?url=${link4}`)
+            .then(function(res){
+              const mp4 = res.data.getVideo
+              f(mp4)
+            
+            })
+            
             break
-		//Primbon Menu
+            */
+
+        //Primbon Menu
+        /*
 		case 'cekzodiak':
             if (args.length !== 4) return aziz.reply(from, `Untuk mengecek zodiak, gunakan ${prefix}cekzodiak nama tanggallahir bulanlahir tahunlahir\nContoh: ${prefix}cekzodiak sugi 13 06 2004`, id)
             const cekzodiak = await rugaapi.cekzodiak(args[0],args[1],args[2])
@@ -657,20 +676,23 @@ module.exports = HandleMsg = async (aziz, message) => {
                 aziz.reply(from, 'Ada yang Error!', id)
             })
             break
+            */
 		case 'artinama':
 			if (args.length == 0) return aziz.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama namakamu`, id)
             rugaapi.artinama(body.slice(10))
 			.then(async(res) => {
 				await aziz.reply(from, `Arti : ${res}`, id)
 			})
-			break
+            break
+            /*
 		case 'cekjodoh':
 			if (args.length !== 2) return aziz.reply(from, `Untuk mengecek jodoh melalui nama\nketik: ${prefix}cekjodoh nama-kamu nama-pasangan\n\ncontoh: ${prefix}cekjodoh bagas siti\n\nhanya bisa pakai nama panggilan (satu kata)`)
 			rugaapi.cekjodoh(args[0],args[1])
 			.then(async(res) => {
 				await aziz.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
 			})
-			break
+            break
+            */
 			
         // Random Kata
         case 'fakta':
@@ -710,6 +732,7 @@ module.exports = HandleMsg = async (aziz, message) => {
             })
             break
         case 'quote':
+        case 'quotes':
             const quotex = await rugaapi.quote()
             await aziz.reply(from, quotex, id)
             .catch(() => {
@@ -763,10 +786,11 @@ module.exports = HandleMsg = async (aziz, message) => {
         // Search Any
     case 'animebatch':
 	case 'dewabatch':
-		if (args.length == 0) return aziz.reply(from, `Untuk mencari anime batch dari Dewa Batch, ketik ${prefix}dewabatch judul\n\nContoh: ${prefix}dewabatch naruto`, id)
+		if (args.length == 0) return aziz.reply(from, `Untuk mencari anime batch dari Kusonime, ketik ${prefix}animebatch judul\n\nContoh: ${prefix}animebatch naruto`, id)
 		rugaapi.dewabatch(args[0])
 		.then(async(res) => {
-		await aziz.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
+        console.log(res)
+		await aziz.sendFileFromUrl(from, `${res.thumb}`, '', `Judul: ${res.title}\nLink: ${res.link}`, id)
 		})
         break
         case 'sreddit':
@@ -839,39 +863,21 @@ module.exports = HandleMsg = async (aziz, message) => {
                     console.log(res.getAudio)
                     var link = `${res.getAudio}.mp3`
                     var time = moment(t * 1000).format('mm')
-                    var dir = `./media/ytmp3/${time}.mp3`
-                    async function file(){
-                        function download(link, dest, callback) {
-                            var file = fs.createWriteStream(dest);
-                            https.get(link, function (response) {
-                                async function f(){
-                                  await response.pipe(file);
+                    var dir = `./media/ytmp3/${time}.mp3`           
+                        async function play(){
+                            console.log('proses download sedang berlangsung')
+                            await download(link, dir, function(err){
+                                if(err){
+                                  console.error(err);
+                                }else{
+                                    console.log('Download Complete')
+                                    aziz.sendPtt(from, dir, id)
+                                    .then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
                                 }
-                                f()
-                              file.on('finish', function () {
-                                file.close(callback); // close() is async, call callback after close completes.
-                              });
-                              file.on('error', function (err) {
-                                fs.unlink(dest); // Delete the file async. (But we don't check the result)
-                                if (callback)
-                                  callback(err.message);
-                              });
-                            });
-                          }
-                        
-                          await download(link, dir, function(err){
-                            if(err){
-                              console.error(err);
-                            }else{
-                                console.log('Download Complete')
-                                aziz.sendPtt(from, dir, id)
-                            }
-                         });
-
-                    }
-                    file()
-                    
-                    console.log(`Audio Processed for ${processTime(t, moment())} Second`)
+                             }); 
+                        }
+                        play()    
+                                        
 				})
             })
             .catch(() => {
@@ -1240,8 +1246,8 @@ module.exports = HandleMsg = async (aziz, message) => {
             const chatz = await aziz.getAllChatIds()
             for (let idk of chatz) {
                 var cvk = await aziz.getChatById(idk)
-                if (!cvk.isReadOnly) aziz.sendText(idk, `〘 *A R U G A  B C* 〙\n\n${msg}`)
-                if (cvk.isReadOnly) aziz.sendText(idk, `〘 *A R U G A  B C* 〙\n\n${msg}`)
+                if (!cvk.isReadOnly) aziz.sendText(idk, `══✪〘 *BOT Broadcast* 〙✪══\n\n${msg}`)
+                if (cvk.isReadOnly) aziz.sendText(idk, `══✪〘 *BOT Broadcast* 〙✪══\n\n${msg}`)
             }
             aziz.reply(from, 'Broadcast Success!', id)
             break

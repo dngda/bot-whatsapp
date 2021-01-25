@@ -3,6 +3,7 @@ const fs = require('fs-extra')
 const chalk = require('chalk')
 const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
+const follow = require('follow-redirects')
 
 /**
  * Get text with color
@@ -65,6 +66,17 @@ const download = (url, path, callback) => {
 
 
 /**
+ *@param {String} url
+ */
+
+const redir = (url)=>{
+    follow.get(url, response => {
+        return response.responseUrl
+    })
+}
+
+
+/**
  * Add number to filter
  * @param  {String} from
  */
@@ -72,7 +84,7 @@ const addFilter = (from) => {
     usedCommandRecently.add(from)
     setTimeout(() => {
         return usedCommandRecently.delete(from)
-    }, 5000) // 5sec is delay before processing next command
+    }, 1000) // 5sec is delay before processing next command
 }
 
 module.exports = {
@@ -84,5 +96,6 @@ module.exports = {
     isUrl,
     color,
     messageLog,
-	download
+    download,
+    redir
 }
