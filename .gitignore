@@ -18,3 +18,5 @@ debug.log
 package-lock.json
 
 # Other files
+media/tts.mp3
+session.data.json
