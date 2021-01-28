@@ -33,75 +33,77 @@ Run the Whatsapp bot
 > npm start
 ```
 
-after running it you need to scan the QR
+After running it you need to scan the QR
 
 ### Information
 - bot configuration on /settings/setting.json
 ---
 
 ## Features
-╔══✪〘 Fitur BOT 〙✪
-╠➥ ping _atau_ speed
-╠➥ menu _atau_ help
-╠➥ ownerbot
-╠➥ botstat
-╠➥ tnc
-╠➥ donate _atau_ ${prefix}donasi
-║
-╠══✪〘 Converter 〙✪
-╠➥ sticker _atau_ stiker
-╠➥ getimage _atau_ stickertoimg _atau_ stimg
-╠➥ stickergif _atau_ gifsticker
-╠➥ stickergiphy
-╠➥ meme
-╠➥ qrcode
-╠➥ nulis
-╠➥ shortlink
-╠➥ hilih
-╠➥ ytmp3 (beta)
-╠➥ play (beta)
-╠➥ tts _atau_ say
-║
-╠══✪〘 Islam 〙✪
-╠➥ listsurah
-╠➥ infosurah
-╠➥ surah
-╠➥ tafsir
-╠➥ alaudio
-╠➥ jsholat
-║
-╠══✪〘 Nganu 〙✪
-╠➥ artinama
-╠➥ fakta
-╠➥ katabijak
-╠➥ pantun
-╠➥ quote
-║
-╠══✪〘 Hiburan 〙✪
-╠➥ anime
-╠➥ animebatch
-╠➥ whatanime
-╠➥ kpop
-╠➥ memes
-║
-╠══✪〘 Info 〙✪
-╠➥ sreddit
-╠➥ cuaca
-╠➥ resi
-╠➥ ceklokasi
-║
-╠══✪〘 Anti Toxic 〙✪
-╠➥ katakasar
-╠➥ klasemen
-╠➥ reset
-║
-╠══✪〘 Bot Conf 〙✪
-╠➥ join
-╠➥ bye
-╠➥ del
-╠➥ tagall
-║
-╚═〘 *AirMineral Bot* 〙
+
+✪〘 Fitur BOT 〙✪
+- ping _atau_ speed
+- menu _atau_ help
+- ownerbot
+- botstat
+- tnc
+- donate _atau_ donasi
+
+✪〘 Converter 〙✪
+- sticker _atau_ stiker
+- getimage _atau_ stickertoimg _atau_ stimg
+- stickergif _atau_ gifsticker
+- stickergiphy
+- meme
+- qrcode
+- nulis
+- shortlink
+- hilih
+- ytmp3 (beta)
+- play (beta)
+- tts _atau_ say
+
+✪〘 Islam 〙✪
+- listsurah
+- infosurah
+- surah
+- tafsir
+- alaudio
+- jsholat
+
+✪〘 Nganu 〙✪
+- artinama
+- fakta
+- katabijak
+- pantun
+- quote
+
+✪〘 Hiburan 〙✪
+- anime
+- animebatch
+- whatanime
+- kpop
+- memes
+
+✪〘 Info 〙✪
+- sreddit
+- cuaca
+- resi
+- ceklokasi
+
+✪〘 Anti Toxic 〙✪
+- katakasar
+- klasemen
+- reset
+
+✪〘 Bot Conf 〙✪
+- join
+- bye
+- del
+- tagall
+
+And some hidden commands xD
+
 ---
 
 ## Troubleshooting
