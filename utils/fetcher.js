@@ -1,8 +1,4 @@
 const fetch = require('node-fetch')
-const FormData = require('form-data')
-const fs = require('fs')
-const { fromBuffer } = require('file-type')
-const resizeImage = require('./imageProcessing')
 
 /**
  *Fetch Json from Url
@@ -61,44 +57,8 @@ const fetchBase64 = (url, mimetype) => {
             })
     })
 }
-
-/**
- * Upload Image to Telegra.ph
- *
- * @param  {String} base64 image buffer
- * @param  {Boolean} resize
- */
-
-const uploadImages = (buffData, type) => {
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve, reject) => {
-        const { ext } = await fromBuffer(buffData)
-        const filePath = 'utils/tmp.' + ext
-        const _buffData = type ? await resizeImage(buffData, false) : buffData
-        fs.writeFile(filePath, _buffData, { encoding: 'base64' }, (err) => {
-            if (err) return reject(err)
-            console.log('Uploading image to telegra.ph server...')
-            const fileData = fs.readFileSync(filePath)
-            const form = new FormData()
-            form.append('file', fileData, 'tmp.' + ext)
-            fetch('https://telegra.ph/upload', {
-                method: 'POST',
-                body: form
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.error) return reject(res.error)
-                    resolve('https://telegra.ph' + res[0].src)
-                })
-                .then(() => fs.unlinkSync(filePath))
-                .catch(err => reject(err))
-        })
-    })
-}
-
 module.exports = {
     fetchJson,
     fetchText,
-    fetchBase64,
-    uploadImages
+    fetchBase64
 }
