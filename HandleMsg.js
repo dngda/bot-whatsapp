@@ -193,7 +193,7 @@ module.exports = HandleMsg = async (client, message) => {
                 await client.joinGroupViaLink(linkgrup)
                       .then(async () => {
                           await client.sendText(from, 'Berhasil join grup via link!')
-                          await client.sendText(chekgrup.id, `Hai minna~, Im CR_azyz Bot. To find out the commands on this Bot type ${prefix}menu`)
+                          await client.sendText(chekgrup.id, `Hai minna~, Im AirMineral Bot. To find out the commands on this Bot type ${prefix}menu`)
                       })
             } else {
                 let cgrup = await client.getAllGroups()
@@ -408,7 +408,7 @@ module.exports = HandleMsg = async (client, message) => {
                         hehex += `╠➥ `
                         hehex += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
                             }
-                        hehex += '╚═〘 *CR_azyz  B O T* 〙'
+                        hehex += '╚═〘 *AirMineral Bot* 〙'
                     client.reply(from, hehex, id)
                 })
             } catch(err) {
@@ -548,7 +548,7 @@ module.exports = HandleMsg = async (client, message) => {
                     hasil += '╠➥ '
                     hasil += `${kota}\n`
                 }
-                hasil += '╚═〘 *CR_AZYZ  B O T* 〙'
+                hasil += '╚═〘 *AirMineral Bot* 〙'
                 await client.reply(from, hasil, id)
             }else{
             var datak = await axios.get('https://api.banghasan.com/sholat/format/json/kota/nama/'+args[0])
@@ -1021,7 +1021,7 @@ module.exports = HandleMsg = async (client, message) => {
                 hehex += '╠➥'
                 hehex += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
             }
-            hehex += '╚═〘 *CR_AZYZ  B O T* 〙'
+            hehex += '╚═〘 *AirMineral Bot* 〙'
             await client.sendTextWithMentions(from, hehex)
             break
 
