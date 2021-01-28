@@ -1,11 +1,11 @@
 <p align="center">
-<img src="https://s2.ezgif.com/save/ezgif-2-5430d77ab976.png" height="128"/>
+<img src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c543.png" height="128"/>
 </p>
 <p align="center">
 <a href="https://github.com/dngda/bot-whatsapp"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
 </p>
 <p align="center">
-<a href="https://github.com/dngda/"><img title="Author" src="https://img.shields.io/badge/Github-Aziz-blue?style=for-the-badge&logo=github"></a>
+<a href="https://github.com/dngda/"><img title="Author" src="https://img.shields.io/badge/Github-dngda-blue?style=for-the-badge&logo=github"></a>
 </p>
 
 ## Getting Started
@@ -17,14 +17,13 @@ Clone this project
 
 ```bash
 > git clone https://github.com/dngda/bot-whatsapp
-> cd whatsapp-bot
+> cd bot-whatsapp
 ```
 
 Install the dependencies:
 
 ```bash
 > npm install 
-> npm install gify-cli -g
 ```
 
 ### Usage
@@ -34,83 +33,75 @@ Run the Whatsapp bot
 > npm start
 ```
 
-after running it you need to scan the qr
+after running it you need to scan the QR
 
 ### Information
 - bot configuration on /settings/setting.json
 ---
 
 ## Features
-╔══ | ✪〘 Fitur BOT 〙✪
------------- | -------------
-╠➥ | status
-╠➥ | ping && speed
-╠➥ | menu && help
-╠➥ | ownerbot
-╠➥ | botstat
-╠➥ | tnc
-╠➥ | donate && donasi
-╠➥ | sticker
-╠➥ | getimage && stickertoimg
-╠➥ | stickergif && gifsticker
-╠➥ | stickergiphy
-╠➥ | meme
-╠➥ | logoph
-╠➥ | qrcode
-╠➥ | nulis
-╠➥ | shortlink
-╠➥ | hilihfont
-╠➥ | ytmp3 (beta)
-╠➥ | play (beta)
-╠➥ | tts
-╠➥ | listsurah
-╠➥ | infosurah
-╠➥ | surah
-╠➥ | tafsir
-╠➥ | alaudio
-╠➥ | jsholat
-╠➥ | cekzodiak
-╠➥ | artinama
-╠➥ | cekjodoh
-╠➥ | fakta
-╠➥ | katabijak
-╠➥ | pantun
-╠➥ | quote
-╠➥ | anime
-╠➥ | animebatch
-╠➥ | whatanime
-╠➥ | kpop
-╠➥ | memes
-╠➥ | simisimi
-╠➥ | resep
-╠➥ | wiki
-╠➥ | sreddit
-╠➥ | cuaca
-╠➥ | resi
-╠➥ | ceklokasi
-╠➥ | nekopoi
-╠➥ | katakasar
-╠➥ | klasemen
-╠➥ | reset
-╠➥ | mutegrup
-╠➥ | setprofile
-╠➥ | welcome
-╠➥ | kickall
-╠➥ | grouplink
-╠➥ | revoke
-╠➥ | add
-╠➥ | kick
-╠➥ | promote
-╠➥ | demote
-╠➥ | join
-╠➥ | bye
-╠➥ | del
-╠➥ | tagall
-╠➥ | ban
-╠➥ | bc
-╠➥ | leaveall
-╠➥ | clearall
-╚═ | 〘 CR_AZYZ  B O T 〙
+╔══✪〘 Fitur BOT 〙✪
+╠➥ ping _atau_ speed
+╠➥ menu _atau_ help
+╠➥ ownerbot
+╠➥ botstat
+╠➥ tnc
+╠➥ donate _atau_ ${prefix}donasi
+║
+╠══✪〘 Converter 〙✪
+╠➥ sticker _atau_ stiker
+╠➥ getimage _atau_ stickertoimg _atau_ stimg
+╠➥ stickergif _atau_ gifsticker
+╠➥ stickergiphy
+╠➥ meme
+╠➥ qrcode
+╠➥ nulis
+╠➥ shortlink
+╠➥ hilih
+╠➥ ytmp3 (beta)
+╠➥ play (beta)
+╠➥ tts _atau_ say
+║
+╠══✪〘 Islam 〙✪
+╠➥ listsurah
+╠➥ infosurah
+╠➥ surah
+╠➥ tafsir
+╠➥ alaudio
+╠➥ jsholat
+║
+╠══✪〘 Nganu 〙✪
+╠➥ artinama
+╠➥ fakta
+╠➥ katabijak
+╠➥ pantun
+╠➥ quote
+║
+╠══✪〘 Hiburan 〙✪
+╠➥ anime
+╠➥ animebatch
+╠➥ whatanime
+╠➥ kpop
+╠➥ memes
+║
+╠══✪〘 Info 〙✪
+╠➥ sreddit
+╠➥ cuaca
+╠➥ resi
+╠➥ ceklokasi
+║
+╠══✪〘 Anti Toxic 〙✪
+╠➥ katakasar
+╠➥ klasemen
+╠➥ reset
+║
+╠══✪〘 Bot Conf 〙✪
+╠➥ join
+╠➥ bye
+╠➥ del
+╠➥ tagall
+║
+╚═〘 *AirMineral Bot* 〙
 ---
 
 ## Troubleshooting
@@ -123,6 +114,7 @@ Fix Stuck on linux, install google chrome stable:
 ```
 
 ## Thanks to
-- [WA-Automate](https://github.com/open-wa/wa-automate-nodejs)
+- [Open-WA-Automate](https://github.com/open-wa/wa-automate-nodejs)
 - [YogaSakti](https://github.com/YogaSakti/imageToSticker)
 - [ArugaZ](https://github.com/ArugaZ/whatsapp-bot)
+- [Aziz0404](https://github.com/nuraziz0404/botwa)
