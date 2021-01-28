@@ -9,7 +9,7 @@ node_modules
 debug.log
 
 # Session files
-# *.data.json
+*.data.json
 
 # Workspace files
 *.code-workspace
@@ -19,3 +19,4 @@ package-lock.json
 
 # Other files
 media
+data/group.json
