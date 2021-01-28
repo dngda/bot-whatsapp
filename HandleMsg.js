@@ -871,18 +871,32 @@ module.exports = HandleMsg = async (client, message) => {
 
         case 'tts':
         case 'say':
-            if (args.length == 0) return client.reply(from, `Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\ncontoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8`, id)
-            const ttsGB = require('node-gtts')(args[0])
-            const dataText = body.slice(8)
-                if (dataText === '') return client.reply(from, 'apa teksnya syg..', id)
-                try {
-                    
-                    ttsGB.save('./media/tts.mp3', dataText, function () {
-                    client.sendPtt(from, './media/tts.mp3', id)
-                    })
-                } catch (err) {
-                    client.reply(from, err, id)
+            if (!isQuotedChat && args.length !== 0) {
+                const ttsGB = require('node-gtts')(args[0])
+                    const dataText = body.slice(8)
+                    if (dataText === '') return client.reply(from, 'Apa teksnya syg..', id)
+                    try {
+                        ttsGB.save('./media/tts.mp3', dataText, function () {
+                            client.sendPtt(from, './media/tts.mp3', id)
+                        })
+                    } catch (err) {
+                        client.reply(from, err, id)
+                    }
                 }
+            else if (isQuotedChat && args.length !== 0) {
+                const ttsGB = require('node-gtts')(args[0])
+                    const dataText = quotedMsgObj.content.toString()
+                    try {
+                        ttsGB.save('./media/tts.mp3', dataText, function () {
+                            client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
+                        })
+                    } catch (err) {
+                        client.reply(from, err.toString(), id)
+                    }
+            }
+            else {
+                await client.reply(from, `Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\ncontoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8`, id)
+            }
             break
 
         case 'ceklokasi':
