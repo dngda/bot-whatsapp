@@ -9,7 +9,7 @@ node_modules
 debug.log
 
 # Session files
-.data.json
+*.data.json
 
 # Workspace files
 *.code-workspace
