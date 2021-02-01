@@ -20,4 +20,4 @@ media
 package-lock.json
 
 # Data files
-data
+data/*
