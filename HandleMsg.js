@@ -198,6 +198,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 })
                         }
                         break
+                    case 'stat':
                     case 'botstat': {
                         const loadedMsg = await client.getAmountOfLoadedMessages()
                         const chatIds = await client.getAllChatIds()
@@ -631,7 +632,7 @@ module.exports = HandleMsg = async (client, message) => {
                             .then(body => {
                                 let splitpantun = body.split('\n')
                                 let randompantun = splitpantun[Math.floor(Math.random() * splitpantun.length)]
-                                client.reply(from, randompantun.replace(/aruga-line/g, "\n"), id)
+                                client.reply(from, ' '+randompantun.replace(/aruga-line/g, "\n"), id)
                             })
                             .catch(() => {
                                 client.reply(from, 'Ada yang Error!', id)
@@ -1029,7 +1030,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'tagall':
-                    case 'everyone':
+                    case 'alle':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
                         const groupMem = await client.getGroupMembers(groupId)
                         let res = '╔══✪〘 Mention All 〙✪══\n'
