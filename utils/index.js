@@ -87,6 +87,16 @@ const addFilter = (from) => {
     }, 1000) // 5sec is delay before processing next command
 }
 
+const createReadFileSync = (path) => {
+    if (fs.existsSync(path)) {
+        return fs.readFileSync(path)
+    }
+    else {
+        fs.writeFileSync(path, '[]')
+        return fs.readFileSync(path)
+    }
+}
+
 module.exports = {
     msgFilter: {
         isFiltered,
@@ -97,5 +107,6 @@ module.exports = {
     color,
     messageLog,
     download,
-    redir
+    redir,
+    createReadFileSync
 }

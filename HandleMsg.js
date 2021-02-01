@@ -9,7 +9,7 @@ const fetch = require('node-fetch')
 const appRoot = require('app-root-path')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
-const db_group = new FileSync(appRoot + '/lib/data/group.json')
+const db_group = new FileSync(appRoot + '/data/group.json')
 const db = low(db_group)
 
 db.defaults({ group: [] }).write()
@@ -27,7 +27,6 @@ const {
     cekResi,
     urlShortener,
     meme,
-    translate,
     getLocationData,
     images,
     rugaapi,
@@ -40,19 +39,18 @@ const {
     processTime,
     isUrl,
     download,
-    redir
+    createReadFileSync
 } = require('./utils')
 
 const fs = require('fs-extra')
-const banned = JSON.parse(fs.readFileSync('./settings/banned.json'))
-const simi = JSON.parse(fs.readFileSync('./settings/simi.json'))
-const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
 
-const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
-const welcome = JSON.parse(fs.readFileSync('./settings/welcome.json'))
-
-let antisticker = JSON.parse(fs.readFileSync('./lib/helper/antisticker.json'))
-let antilink = JSON.parse(fs.readFileSync('./lib/helper/antilink.json'))
+const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
+const skripsi = JSON.parse(createReadFileSync('./settings/skripsi.json'))
+const banned = JSON.parse(createReadFileSync('./data/banned.json'))
+const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
+const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
+const antisticker = JSON.parse(createReadFileSync('./data/antisticker.json'))
+const antilink = JSON.parse(createReadFileSync('./data/antilink.json'))
 
 let {
     ownerNumber,
@@ -116,7 +114,7 @@ module.exports = HandleMsg = async (client, message) => {
         // [IDENTIFY]
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
-        const isSimi = simi.includes(chatId)
+        // const isSimi = simi.includes(chatId)
         const isNgegas = ngegas.includes(chatId)
         const isKasar = await cariKasar(chats)
 
@@ -952,16 +950,17 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'skripsi':
+                        let randomSkripsi = skripsi[Math.floor(Math.random() * skripsi.length)]
                         const ttsGB = require('node-gtts')('id')
                         try {
-                            ttsGB.save('./media/tts.mp3', 'Udahlah, ngapain juga ngerjain skripsi, mending Valorant aja sampe Meninggoyy', function () {
+                            ttsGB.save('./media/tts.mp3', randomSkripsi, function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
                             })
                         } catch (err) {
                             client.reply(from, err, id)
                         }
                         break
-                    
+
                     case 'apakah':
                         const isTrue = Boolean(Math.round(Math.random()))
                         var result = ''
@@ -1058,16 +1057,16 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'kasar':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+                        // if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
                         if (args.length !== 1) return client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
                         if (args[0] == 'on') {
                             ngegas.push(chatId)
-                            fs.writeFileSync('./settings/ngegas.json', JSON.stringify(ngegas))
+                            fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
                             client.reply(from, 'Fitur Anti Kasar sudah di Aktifkan', id)
                         } else if (args[0] == 'off') {
                             let nixx = ngegas.indexOf(chatId)
                             ngegas.splice(nixx, 1)
-                            fs.writeFileSync('./settings/ngegas.json', JSON.stringify(ngegas))
+                            fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
                             client.reply(from, 'Fitur Anti Kasar sudah di non-Aktifkan', id)
                         } else {
                             client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
@@ -1124,12 +1123,12 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length !== 1) return client.reply(from, `Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`, id)
                         if (args[0] == 'on') {
                             welcome.push(chatId)
-                            fs.writeFileSync('./settings/welcome.json', JSON.stringify(welcome))
+                            fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
                             client.reply(from, 'Welcome Message sekarang diaktifkan!', id)
                         } else if (args[0] == 'off') {
                             let xporn = welcome.indexOf(chatId)
                             welcome.splice(xporn, 1)
-                            fs.writeFileSync('./settings/welcome.json', JSON.stringify(welcome))
+                            fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
                             client.reply(from, 'Welcome Message sekarang dinonaktifkan', id)
                         } else {
                             client.reply(from, `Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`, id)
@@ -1159,18 +1158,18 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length == 0) return client.reply(from, `Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban add 628xx --untuk mengaktifkan\n${prefix}ban del 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`, id)
                         if (args[0] == 'add') {
                             banned.push(args[1] + '@c.us')
-                            fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
+                            fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                             client.reply(from, 'Success banned target!')
                         } else
                             if (args[0] == 'del') {
                                 let xnxx = banned.indexOf(args[1] + '@c.us')
                                 banned.splice(xnxx, 1)
-                                fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
+                                fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                                 client.reply(from, 'Success unbanned target!')
                             } else {
                                 for (let i = 0; i < mentionedJidList.length; i++) {
                                     banned.push(mentionedJidList[i])
-                                    fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
+                                    fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                                     client.reply(from, 'Success ban target!', id)
                                 }
                             }
