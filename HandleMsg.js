@@ -51,10 +51,7 @@ const {
     redir
 } = require('./utils')
 
-// const { uploadImages } = require('./utils/fetcher').default
-
 const fs = require('fs-extra')
-// const { title } = require('process')
 const banned = JSON.parse(fs.readFileSync('./settings/banned.json'))
 const simi = JSON.parse(fs.readFileSync('./settings/simi.json'))
 const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
@@ -63,7 +60,6 @@ const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 const welcome = JSON.parse(fs.readFileSync('./settings/welcome.json'))
 
 let antisticker = JSON.parse(fs.readFileSync('./lib/helper/antisticker.json'))
-// let stickerspam = JSON.parse(fs.readFileSync('./lib/helper/stickerspam.json'))
 let antilink = JSON.parse(fs.readFileSync('./lib/helper/antilink.json'))
 
 let { 
@@ -143,16 +139,17 @@ module.exports = HandleMsg = async (client, message) => {
         // [BETA] Avoid Spam Message
         msgFilter.addFilter(from)
 	
-	//[AUTO READ] Auto read message 
-	client.sendSeen(chatId)
+        //[AUTO READ] Auto read message 
+        await client.sendSeen(chatId)
 	    
-	// Filter Banned People
+	    // Filter Banned People
         if (isBanned) {
             return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
         }
         
-            // Ini Command nya
-
+        // Ini Command nya
+        client.simulateTyping(chat.id, true).then(async () =>{
+            
         switch (command) {
         case 'status':
             client.reply(from, `Bot aktif\nSpeed: ${processTime(t, moment())} _Second_`, id)
@@ -1185,21 +1182,11 @@ module.exports = HandleMsg = async (client, message) => {
         default:
             break
         }
-		
-		// // Simi-simi function
-		// if ((!isCmd && isGroupMsg && isSimi) && message.type === 'chat') {
-        //     axios.get(`https://lol-human.herokuapp.com/api/simi/${encodeURIComponent(message.body)}`)
-		// 	.then((res) => {
-		// 		if (res.data.status == 403) return client.sendText(ownerNumber, `${res.data.result}\n\n${res.data.pesan}`)
-		// 		client.reply(from, `Simi berkata: ${res.data.result}`, id)
-		// 	})
-		// 	.catch((err) => {
-		// 		client.reply(from, `${err}`, id)
-		// 	})
-		// }
+        
+        })//typing
 		
 		// Kata kasar function
-		if(!isCmd && isGroupMsg && isNgegas) {
+		if(!isCmd && isGroupMsg && isNgegas && chat.type !== "image") {
             const find = db.get('group').find({ id: groupId }).value()
             if(find && find.id === groupId){
                 const cekuser = db.get('group').filter({id: groupId}).map('members').value()[0]
@@ -1223,7 +1210,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const cekuser = db.get('group').filter({id: groupId}).map('members').value()[0]
                         if(isKasar){
                             cekuser.push({id: pengirim, denda: 5000})
-                            await client.reply(from, "Jangan badword bodoh\nDenda +5.000", id)
+                            await client.reply(from, "Jangan badword woy\nDenda +5.000", id)
                         } else {
                             cekuser.push({id: pengirim, denda: 0})
                         }
@@ -1233,7 +1220,7 @@ module.exports = HandleMsg = async (client, message) => {
             } else {
                 if(isKasar){
                     db.get('group').push({ id: groupId, members: [{id: pengirim, denda: 5000}] }).write()
-                    await client.reply(from, "Jangan badword bodoh\nDenda +5.000\nTotal : Rp5.000", id)
+                    await client.reply(from, "Jangan badword woy\nDenda +5.000\nTotal : Rp5.000", id)
                 } else {
                     db.get('group').push({ id: groupId, members: [{id: pengirim, denda: 0}] }).write()
                 }
