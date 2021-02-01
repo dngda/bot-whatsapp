@@ -43,6 +43,7 @@ const {
 } = require('./utils')
 
 const fs = require('fs-extra')
+const { uploadImages } = require('./utils/fetcher')
 
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 const skripsi = JSON.parse(createReadFileSync('./settings/skripsi.json'))
@@ -95,7 +96,7 @@ module.exports = HandleMsg = async (client, message) => {
         const AntiStickerSpam = antisticker.includes(chatId)
         const stickermsg = message.type === 'sticker'
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
-        const stickerMetadata = {pack: 'Created with', author: 'SeroBot'}
+        const stickerMetadata = { pack: 'Created with', author: 'SeroBot' }
 
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
@@ -241,7 +242,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 try {
                                     var encryptedMedia = isQuotedImage ? quotedMsg : message
                                     var _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
-                                    
+
                                     var mediaData = await decryptMedia(encryptedMedia, uaOverride)
                                     var imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                                     base64img = imageBase64
@@ -275,11 +276,11 @@ module.exports = HandleMsg = async (client, message) => {
                         if (isMedia || isQuotedVideo) {
                             if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                                 var mediaData = await decryptMedia(message, uaOverride)
-                                client.reply(from, '[WAIT] Sedang di proses⏳ silahkan tunggu ± 1 min!', id)
+                                client.reply(from, '[WAIT] Sedang diproses⏳ silakan tunggu ± 1 min!', id)
                                 var filename = `./media/stickergif.${mimetype.split('/')[1]}`
                                 await fs.writeFileSync(filename, mediaData)
                                 await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                                    var gif = await fs.readFileSync(`${filename}`, { encoding: "base64" })
+                                    var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: 'base64' })
                                     await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, stickerMetadata)
                                         .catch(() => {
                                             client.reply(from, 'Maaf filenya terlalu besar!', id)
@@ -290,26 +291,6 @@ module.exports = HandleMsg = async (client, message) => {
                             }
                         } else {
                             client.reply(from, `[❗] Kirim video dengan caption *${prefix}stickergif*`, id)
-                        }
-                        break
-
-                    case 'gifsticker':
-                        if (isMedia || isQuotedVideo) {
-                            const encryptMedia = isQuotedVideo ? quotedMsg : message
-                            const _mimetype = isQuotedVideo ? quotedMsg.mimetype : mimetype
-                            var mediaData = await decryptMedia(encryptMedia, uaOverride)
-                            client.reply(from, '[WAIT] Sedang di proses⏳ silahkan tunggu ± 1 min!', id)
-                            var filename = `./media/stickergif.${_mimetype.split('/')[1]}`
-                            await fs.writeFileSync(filename, mediaData)
-                            await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                                var gif = await fs.readFileSync(`${filename}`, { encoding: "base64" })
-                                await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, stickerMetadata)
-                                    .catch(() => {
-                                        client.reply(from, 'Maaf filenya terlalu besar!', id)
-                                    })
-                            })
-                        } else {
-                            client.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif*`, id)
                         }
                         break
 
@@ -369,7 +350,7 @@ module.exports = HandleMsg = async (client, message) => {
                             const ImageBase64 = await meme.custom(getUrl, top, bottom)
                             client.sendFile(from, ImageBase64, 'image.png', '', null, true)
                                 .then(() => {
-                                    client.reply(from, 'Ini makasih!', id)
+                                    client.reply(from, 'Here you\'re!', id)
                                 })
                                 .catch(() => {
                                     client.reply(from, 'Ada yang error!')
@@ -711,13 +692,23 @@ module.exports = HandleMsg = async (client, message) => {
                     // Search Any
                     case 'animebatch':
                     case 'dewabatch':
-                        if (args.length == 0) return client.reply(from, `Untuk mencari anime batch dari Kusonime, ketik ${prefix}animebatch judul\n\nContoh: ${prefix}animebatch naruto`, id)
+                        if (args.length == 0) return client.reply(from, `Untuk mencari anime batch dari Dewa Batch, ketik ${prefix}animebatch judul\n\nContoh: ${prefix}animebatch naruto`, id)
                         rugaapi.dewabatch(args[0])
                             .then(async (res) => {
-                                console.log(res)
-                                await client.sendFileFromUrl(from, `${res.thumb}`, '', `Judul: ${res.title}\nLink: ${res.link}`, id)
+                                await client.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
                             })
                         break
+
+                    case 'images':
+                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
+                        const cariwall = body.slice(8)
+                        const hasilwall = await images.fdci(cariwall)
+                        await client.sendFileFromUrl(from, hasilwall, '', '', id)
+                            .catch(() => {
+                                client.reply(from, 'Ada yang Error!', id)
+                            })
+                        break
+
                     case 'sreddit':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
                         const carireddit = body.slice(9)
@@ -964,7 +955,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'apakah':
                         const isTrue = Boolean(Math.round(Math.random()))
                         var result = ''
-                        if(args.length === 0) result = 'Tanya apa woy yang jelas dong'
+                        if (args.length === 0) result = 'Apakah apa woy yang jelas dong! Misalnya, apakah aku ganteng?'
                         else {
                             result = isTrue ? 'Iya' : 'Tidak'
                         }
