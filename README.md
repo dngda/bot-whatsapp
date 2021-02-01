@@ -8,7 +8,7 @@
 <a href="https://github.com/dngda/"><img title="Author" src="https://img.shields.io/badge/Github-dngda-blue?style=for-the-badge&logo=github"></a>
 </p>
 
-## Getting Started
+## SeroBot
 
 This project require NodeJS v12
 
@@ -77,6 +77,7 @@ After running it you need to scan the QR
 - katabijak
 - pantun
 - quote
+- apakah
 
 ✪〘 Hiburan 〙✪
 - anime

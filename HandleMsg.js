@@ -97,6 +97,7 @@ module.exports = HandleMsg = async (client, message) => {
         const AntiStickerSpam = antisticker.includes(chatId)
         const stickermsg = message.type === 'sticker'
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
+        const stickerMetadata = {pack: 'Created with', author: 'SeroBot'}
 
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
@@ -183,7 +184,7 @@ module.exports = HandleMsg = async (client, message) => {
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
                                     await client.sendText(from, 'Berhasil join grup via link!')
-                                    await client.sendText(chekgrup.id, `Hai minna~, Im AirMineral Bot. To find out the commands on this Bot type ${prefix}menu`)
+                                    await client.sendText(chekgrup.id, `Hai minna~, Im SeroBot. To find out the commands on this Bot type ${prefix}menu`)
                                 })
                         } else {
                             let cgrup = await client.getAllGroups()
@@ -231,22 +232,26 @@ module.exports = HandleMsg = async (client, message) => {
                             const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
                             const mediaData = await decryptMedia(encryptMedia, uaOverride)
                             const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
-                            client.sendImageAsSticker(from, imageBase64)
+                            client.sendImageAsSticker(from, imageBase64, stickerMetadata)
                                 .then(() => {
                                     client.sendText(from, 'Here\'s your sticker')
                                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                                 })
                         } else if (args[0] === 'nobg') {
                             if (isMedia || isQuotedImage) {
+                                client.reply(from, `Copy that, processing...`, id)
                                 try {
-                                    var mediaData = await decryptMedia(message, uaOverride)
-                                    var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
-                                    var base64img = imageBase64
+                                    var encryptedMedia = isQuotedImage ? quotedMsg : message
+                                    var _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+                                    
+                                    var mediaData = await decryptMedia(encryptedMedia, uaOverride)
+                                    var imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+                                    base64img = imageBase64
                                     var outFile = './media/noBg.png'
                                     // kamu dapat mengambil api key dari website remove.bg dan ubahnya difolder settings/api.json
                                     var result = await removeBackgroundFromImageBase64({ base64img, apiKey: apiNoBg, size: 'auto', type: 'auto', outFile })
                                     await fs.writeFile(outFile, result.base64img)
-                                    await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
+                                    await client.sendImageAsSticker(from, `data:${_mimetype};base64,${result.base64img}`, stickerMetadata)
                                         .then(() => {
                                             client.sendText(from, 'Here\'s your sticker')
                                             console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
@@ -277,7 +282,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 await fs.writeFileSync(filename, mediaData)
                                 await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
                                     var gif = await fs.readFileSync(`${filename}`, { encoding: "base64" })
-                                    await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                                    await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, stickerMetadata)
                                         .catch(() => {
                                             client.reply(from, 'Maaf filenya terlalu besar!', id)
                                         })
@@ -300,7 +305,7 @@ module.exports = HandleMsg = async (client, message) => {
                             await fs.writeFileSync(filename, mediaData)
                             await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
                                 var gif = await fs.readFileSync(`${filename}`, { encoding: "base64" })
-                                await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                                await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, stickerMetadata)
                                     .catch(() => {
                                         client.reply(from, 'Maaf filenya terlalu besar!', id)
                                     })
@@ -396,7 +401,7 @@ module.exports = HandleMsg = async (client, message) => {
                                         hehex += `╠➥ `
                                         hehex += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
                                     }
-                                    hehex += '╚═〘 *AirMineral Bot* 〙'
+                                    hehex += '╚═〘 *SeroBot* 〙'
                                     client.reply(from, hehex, id)
                                 })
                         } catch (err) {
@@ -526,7 +531,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'jsholat':
                     case 'jsolat':
-                        if (args.length < 1) client.reply(from, `ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\nContoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`)
+                        if (args.length === 0) return client.reply(from, `ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\nContoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`, id)
                         if (args[0] == 'daerah') {
                             var datad = await axios.get('https://api.banghasan.com/sholat/format/json/kota')
                             var datas = datad.data.kota
@@ -536,7 +541,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 hasil += '╠➥ '
                                 hasil += `${kota}\n`
                             }
-                            hasil += '╚═〘 *AirMineral Bot* 〙'
+                            hasil += '╚═〘 *SeroBot* 〙'
                             await client.reply(from, hasil, id)
                         } else {
                             var datak = await axios.get('https://api.banghasan.com/sholat/format/json/kota/nama/' + args[0])
@@ -946,6 +951,34 @@ module.exports = HandleMsg = async (client, message) => {
                         await client.sendTextWithMentions(from, textKlas)
                         break
 
+                    case 'skripsi':
+                        const ttsGB = require('node-gtts')('id')
+                        try {
+                            ttsGB.save('./media/tts.mp3', 'Udahlah, ngapain juga ngerjain skripsi, mending Valorant aja sampe Meninggoyy', function () {
+                                client.sendPtt(from, './media/tts.mp3', id)
+                            })
+                        } catch (err) {
+                            client.reply(from, err, id)
+                        }
+                        break
+                    
+                    case 'apakah':
+                        const isTrue = Boolean(Math.round(Math.random()))
+                        var result = ''
+                        if(args.length === 0) result = 'Tanya apa woy yang jelas dong'
+                        else {
+                            result = isTrue ? 'Iya' : 'Tidak'
+                        }
+                        const ttsGBs = require('node-gtts')('id')
+                        try {
+                            ttsGBs.save('./media/tts.mp3', result, function () {
+                                client.sendPtt(from, './media/tts.mp3', id)
+                            })
+                        } catch (err) {
+                            client.reply(from, err, id)
+                        }
+                        break
+
                     // Group Commands (group admin only)
                     case 'add':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
@@ -957,6 +990,7 @@ module.exports = HandleMsg = async (client, message) => {
                             client.reply(from, 'Tidak dapat menambahkan target', id)
                         }
                         break
+
                     case 'kick':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
                         if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
@@ -969,6 +1003,7 @@ module.exports = HandleMsg = async (client, message) => {
                             await client.removeParticipant(groupId, mentionedJidList[i])
                         }
                         break
+
                     case 'promote':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
                         if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
@@ -979,6 +1014,7 @@ module.exports = HandleMsg = async (client, message) => {
                         await client.promoteParticipant(groupId, mentionedJidList[0])
                         await client.sendTextWithMentions(from, `Request diterima, menambahkan @${mentionedJidList[0].replace('@c.us', '')} sebagai admin.`)
                         break
+
                     case 'demote':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
                         if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
@@ -989,28 +1025,30 @@ module.exports = HandleMsg = async (client, message) => {
                         await client.demoteParticipant(groupId, mentionedJidList[0])
                         await client.sendTextWithMentions(from, `Request diterima, menghapus jabatan @${mentionedJidList[0].replace('@c.us', '')}.`)
                         break
+
                     case 'bye':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
                         if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
                         client.sendText(from, 'Good bye... ( ⇀‸↼‶ )').then(() => client.leaveGroup(groupId))
                         break
+
                     case 'del':
                         if (!quotedMsg) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
                         if (!quotedMsgObj.fromMe) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
-                        client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
+                        await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
                         break
 
                     case 'tagall':
                     case 'everyone':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
                         const groupMem = await client.getGroupMembers(groupId)
-                        let hehex = '╔══✪〘 Mention All 〙✪══\n'
+                        let res = '╔══✪〘 Mention All 〙✪══\n'
                         for (let i = 0; i < groupMem.length; i++) {
-                            hehex += '╠➥'
-                            hehex += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
+                            res += '╠➥'
+                            res += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
                         }
-                        hehex += '╚═〘 *AirMineral Bot* 〙'
-                        await client.sendTextWithMentions(from, hehex)
+                        res += '╚═〘 *SeroBot* 〙'
+                        await client.sendTextWithMentions(from, res)
                         break
 
                     case 'katakasar':
@@ -1171,6 +1209,7 @@ module.exports = HandleMsg = async (client, message) => {
                         client.reply(from, 'Success clear all chat!', id)
                         break
                     default:
+                        await client.sendText(from, 'Perintah tidak ada.\n/menu untuk melihat daftar perintah!')
                         break
                 }
 

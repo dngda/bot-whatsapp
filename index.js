@@ -36,7 +36,7 @@ const start = (client = new Client()) => {
 	    })
 	    } else {
         await client.simulateTyping(chat.id, true).then(async () => {
-          await client.sendText(chat.id, `Hai minna~, Im AirMineral Bot. To find out the commands on this bot type ${prefix}menu`)
+          await client.sendText(chat.id, `Hai minna~, Im SeroBot. To find out the commands on this bot type ${prefix}menu`)
         })
 	    }
 	}
