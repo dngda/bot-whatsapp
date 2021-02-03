@@ -714,6 +714,17 @@ module.exports = HandleMsg = async (client, message) => {
                             })
                         break
 
+                    case 'crjogja':
+                        const url = 'https://inderaja.bmkg.go.id/Radar/JOGJ_SingleLayerCRefQC.png'
+                        if (args.length == 0) return client.sendFileFromUrl(from, url, id)
+                            .then(() => {
+                                client.sendText(from, 'UTC ke WIB = +7')
+                            })
+                            .catch(() => {
+                                client.reply(from, 'Ada yang Error!', id)
+                            })
+                        break
+
                     case 'sreddit':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
                         const carireddit = body.slice(9)
