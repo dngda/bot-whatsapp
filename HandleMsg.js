@@ -278,15 +278,19 @@ module.exports = HandleMsg = async (client, message) => {
                             if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                                 var mediaData = await decryptMedia(message, uaOverride)
                                 client.reply(from, '[WAIT] Sedang diproses⏳ silakan tunggu ± 1 min!', id)
-                                var filename = `./media/stickergif.${mimetype.split('/')[1]}`
-                                await fs.writeFileSync(filename, mediaData)
-                                await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                                    var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: 'base64' })
-                                    await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, stickerMetadata)
-                                        .catch(() => {
-                                            client.reply(from, 'Maaf filenya terlalu besar!', id)
-                                        })
-                                })
+                                // var filename = `./media/stickergif.${mimetype.split('/')[1]}`
+                                // await fs.writeFileSync(filename, mediaData)
+                                // await exec(`gify ${filename} ./media/stickergf.gif --fps=30`, async function (error, stdout, stderr) {
+                                //     var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: 'base64' })
+                                    // await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, stickerMetadata)
+                                    //     .catch(() => {
+                                    //         client.reply(from, 'Maaf filenya terlalu besar!', id)
+                                    //     })
+                                    await client.sendMp4AsSticker(from, `data:${mimetype};base64,${mediaData.toString('base64')}`, null, stickerMetadata)
+                                    .catch(() => {
+                                        client.reply(from, 'Maaf filenya terlalu besar!', id)
+                                    })
+                                // })
                             } else {
                                 client.reply(from, `[❗] Kirim video dengan caption *${prefix}stickergif* max 10 sec!`, id)
                             }
