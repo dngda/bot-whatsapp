@@ -5,7 +5,6 @@ const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 const axios = require('axios')
 const fetch = require('node-fetch')
-const webshot = require('webshot-node')
 
 const appRoot = require('app-root-path')
 const low = require('lowdb')
