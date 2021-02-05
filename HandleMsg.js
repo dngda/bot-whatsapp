@@ -711,7 +711,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'image':
                     case 'images':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
-                        const cariwall = body.slice(8)
+                        const cariwall = body.substr(str.indexOf(' ') + 1)
                         var hasilwall = ''
                         do{
                             hasilwall = await images.fdci(cariwall)
