@@ -715,7 +715,8 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'crjogja':
-                        const url = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
+                        // const url = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
+                        const url = 'https://screenshotapi.net/api/v1/screenshot?url=https%3A%2F%2Fsipora.staklimyogyakarta.com%2Fradar%2F&width=600&height=600&fresh=true&output=image'
                         await client.sendText(from, 'Gotcha, please wait!')
                         await client.simulateTyping(from, true)
                         await client.sendFileFromUrl(from, url, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/')
