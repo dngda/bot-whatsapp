@@ -128,7 +128,7 @@ module.exports = HandleMsg = async (client, message) => {
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
 
-        // [BETA] Avoid Spam Message
+        //[BETA] Avoid Spam Message
         msgFilter.addFilter(from)
 
         //[AUTO READ] Auto read message 
@@ -142,7 +142,6 @@ module.exports = HandleMsg = async (client, message) => {
         // Ini Command nya
         if (isCmd) {
             client.simulateTyping(chat.id, true).then(async () => {
-
                 switch (command) {
                     case 'status':
                         client.reply(from, `Bot aktif\nSpeed: ${processTime(t, moment())} _Second_`, id)
@@ -704,6 +703,7 @@ module.exports = HandleMsg = async (client, message) => {
                             })
                         break
 
+                    case 'image':
                     case 'images':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
                         const cariwall = body.slice(8)
@@ -715,13 +715,15 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'crjogja':
-                        const url = 'https://inderaja.bmkg.go.id/Radar/JOGJ_SingleLayerCRefQC.png'
-                        if (args.length == 0) return client.sendFileFromUrl(from, url, id)
+                        const url = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
+                        await client.sendText(from, 'Gotcha, please wait!')
+                        await client.simulateTyping(from, true)
+                        await client.sendFileFromUrl(from, url, id)
                             .then(() => {
-                                client.sendText(from, 'UTC ke WIB = +7')
+                                client.simulateTyping(from, false)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang Error! Mending cek sendiri aja ke\nhttps://sipora.staklimyogyakarta.com/radar/', id)
                             })
                         break
 
@@ -1042,6 +1044,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!quotedMsg) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
                         if (!quotedMsgObj.fromMe) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
                         await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
+                        await client.simulateTyping(from, false)
                         break
 
                     case 'tagall':
