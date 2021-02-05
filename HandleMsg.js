@@ -379,7 +379,7 @@ module.exports = HandleMsg = async (client, message) => {
                         try {
                             axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .then((response) => {
-                                    let hehex = '╔══✪〘 List Surah 〙✪══\n'
+                                    let hehex = '╔══✪〘 List Surah 〙✪\n'
                                     for (let i = 0; i < response.data.data.length; i++) {
                                         hehex += `╠➥ `
                                         hehex += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
@@ -518,7 +518,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args[0] == 'daerah') {
                             var datad = await axios.get('https://api.banghasan.com/sholat/format/json/kota')
                             var datas = datad.data.kota
-                            let hasil = '╔══✪〘 Daftar Kota 〙✪══\n'
+                            let hasil = '╔══✪〘 Daftar Kota 〙✪\n'
                             for (let i = 0; i < datas.length; i++) {
                                 var kota = datas[i].nama
                                 hasil += '╠➥ '
@@ -528,17 +528,21 @@ module.exports = HandleMsg = async (client, message) => {
                             await client.reply(from, hasil, id)
                         } else {
                             var datak = await axios.get('https://api.banghasan.com/sholat/format/json/kota/nama/' + args[0])
-                            var kodek = datak.data.kota[0].id
+                            try {
+                                var kodek = datak.data.kota[0].id
+                            }catch(err) {
+                                    return client.reply(from, 'Kota tidak ditemukan', id)
+                                }
                             var tgl = moment(t * 1000).format('YYYY-MM-DD')
                             var datas = await axios.get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
                             var jadwals = datas.data.jadwal.data
-                            let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0]} 〙✪══\n`
-                            jadwal += `╠➥ Imsak    : ` + jadwals.imsak + '\n'
-                            jadwal += `╠➥ Subuh    : ` + jadwals.subuh + '\n'
-                            jadwal += `╠➥ Dzuhur   : ` + jadwals.dzuhur + '\n'
-                            jadwal += `╠➥ Ashahr   : ` + jadwals.ashar + '\n'
+                            let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0]} 〙✪\n`
+                            jadwal += `╠➥ Imsak      : ` + jadwals.imsak + '\n'
+                            jadwal += `╠➥ Subuh      : ` + jadwals.subuh + '\n'
+                            jadwal += `╠➥ Dzuhur    : ` + jadwals.dzuhur + '\n'
+                            jadwal += `╠➥ Ashar       : ` + jadwals.ashar + '\n'
                             jadwal += `╠➥ Maghrib  : ` + jadwals.maghrib + '\n'
-                            jadwal += `╠➥ Isya'    : ` + jadwals.isya + '\n'
+                            jadwal += `╠➥ Isya'         : ` + jadwals.isya + '\n'
                             jadwal += '╚═〘 *Air Mineral Bot* 〙'
                             client.reply(from, jadwal, id)
                         }
@@ -703,11 +707,16 @@ module.exports = HandleMsg = async (client, message) => {
                             })
                         break
 
+                    case 'pin':
                     case 'image':
                     case 'images':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
                         const cariwall = body.slice(8)
-                        const hasilwall = await images.fdci(cariwall)
+                        var hasilwall = ''
+                        do{
+                            hasilwall = await images.fdci(cariwall)
+                        }while(hasilwall == undefined | hasilwall == null)
+
                         await client.sendFileFromUrl(from, hasilwall, '', '', id)
                             .catch(() => {
                                 client.reply(from, 'Ada yang Error!', id)
@@ -1055,7 +1064,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'alle':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
                         const groupMem = await client.getGroupMembers(groupId)
-                        let res = '╔══✪〘 Mention All 〙✪══\n'
+                        let res = '╔══✪〘 Mention All 〙✪\n'
                         for (let i = 0; i < groupMem.length; i++) {
                             res += '╠➥'
                             res += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
