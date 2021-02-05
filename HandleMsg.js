@@ -5,6 +5,7 @@ const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 const axios = require('axios')
 const fetch = require('node-fetch')
+const webshot = require('webshot-node')
 
 const appRoot = require('app-root-path')
 const low = require('lowdb')
@@ -281,11 +282,11 @@ module.exports = HandleMsg = async (client, message) => {
                                 // await fs.writeFileSync(filename, mediaData)
                                 // await exec(`gify ${filename} ./media/stickergf.gif --fps=30`, async function (error, stdout, stderr) {
                                 //     var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: 'base64' })
-                                    // await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, stickerMetadata)
-                                    //     .catch(() => {
-                                    //         client.reply(from, 'Maaf filenya terlalu besar!', id)
-                                    //     })
-                                    await client.sendMp4AsSticker(from, `data:${mimetype};base64,${mediaData.toString('base64')}`, null, stickerMetadata)
+                                // await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, stickerMetadata)
+                                //     .catch(() => {
+                                //         client.reply(from, 'Maaf filenya terlalu besar!', id)
+                                //     })
+                                await client.sendMp4AsSticker(from, `data:${mimetype};base64,${mediaData.toString('base64')}`, null, stickerMetadata)
                                     .catch(() => {
                                         client.reply(from, 'Maaf filenya terlalu besar!', id)
                                     })
@@ -533,12 +534,12 @@ module.exports = HandleMsg = async (client, message) => {
                             var datas = await axios.get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
                             var jadwals = datas.data.jadwal.data
                             let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0]} 〙✪══\n`
-                            jadwal += `╠➥ Imsak:` + jadwals.imsak + '\n'
-                            jadwal += `╠➥ Subuh:` + jadwals.subuh + '\n'
-                            jadwal += `╠➥ Dzuhur: ` + jadwals.dzuhur + '\n'
-                            jadwal += `╠➥ Ashahr: ` + jadwals.ashar + '\n'
-                            jadwal += `╠➥ Maghrib: ` + jadwals.maghrib + '\n'
-                            jadwal += `╠➥ Isya': ` + jadwals.isya + '\n'
+                            jadwal += `╠➥ Imsak    : ` + jadwals.imsak + '\n'
+                            jadwal += `╠➥ Subuh    : ` + jadwals.subuh + '\n'
+                            jadwal += `╠➥ Dzuhur   : ` + jadwals.dzuhur + '\n'
+                            jadwal += `╠➥ Ashahr   : ` + jadwals.ashar + '\n'
+                            jadwal += `╠➥ Maghrib  : ` + jadwals.maghrib + '\n'
+                            jadwal += `╠➥ Isya'    : ` + jadwals.isya + '\n'
                             jadwal += '╚═〘 *Air Mineral Bot* 〙'
                             client.reply(from, jadwal, id)
                         }
@@ -635,7 +636,7 @@ module.exports = HandleMsg = async (client, message) => {
                             .then(body => {
                                 let splitpantun = body.split('\n')
                                 let randompantun = splitpantun[Math.floor(Math.random() * splitpantun.length)]
-                                client.reply(from, ' '+randompantun.replace(/aruga-line/g, "\n"), id)
+                                client.reply(from, ' ' + randompantun.replace(/aruga-line/g, "\n"), id)
                             })
                             .catch(() => {
                                 client.reply(from, 'Ada yang Error!', id)
@@ -715,8 +716,11 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'crjogja':
-                        // const url = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
-                        const url = 'https://screenshotapi.net/api/v1/screenshot?url=https%3A%2F%2Fsipora.staklimyogyakarta.com%2Fradar%2F&width=600&height=600&fresh=true&output=image'
+                        const url1 = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
+                        const url2 = 'https://screenshotapi.net/api/v1/screenshot?token=FREB5SDBA2FRMO4JDMSHXAEGNYLKYCA4&url=https%3A%2F%2Fsipora.staklimyogyakarta.com%2Fradar%2F&width=600&height=600&fresh=true&output=image'
+                        const isTrue1 = Boolean(Math.round(Math.random()))
+                        const url = isTrue1 ? url1 : url2
+
                         await client.sendText(from, 'Gotcha, please wait!')
                         await client.simulateTyping(from, true)
                         await client.sendFileFromUrl(from, url, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/')
