@@ -573,7 +573,7 @@ module.exports = HandleMsg = async (client, message) => {
                     //Media
                     case 'ytmp3':
                         if (args.length == 0) return client.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
-                        const linkmp3 = args[0].replace('https://youtu.be/', '').replace('https://www.youtube.com/watch?v=', '')
+                        const linkmp3 = args[0].substr((args[0].indexOf('=')) !== -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                         rugaapi.ytmp3(`https://youtu.be/${linkmp3}`)
                             .then(async (res) => {
                                 if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
@@ -776,7 +776,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'play'://silahkan kalian custom sendiri jika ada yang ingin diubah
                         if (args.length == 0) return client.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
-                        axios.get(`http://arugaz.my.id/api/media/ytsearch?query=${body.slice(6)}`)
+                        axios.get(`http://api.arugaz.my.id/api/media/ytsearch?query=${body.slice(6)}`)
                             .then(async (res) => {
                                 console.log(res.data.result[0].id)
                                 var estimasi = res.data.result[0].duration / 50
