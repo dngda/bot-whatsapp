@@ -274,7 +274,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'stickergif':
                     case 'stikergif':
                         if (isMedia || isQuotedVideo) {
-                            if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
+                            if (mimetype === 'video/mp4' && message.duration <= 10 || mimetype === 'image/gif' && message.duration <= 10) {
                                 var mediaData = await decryptMedia(message, uaOverride)
                                 client.reply(from, '[WAIT] Sedang diproses⏳ silakan tunggu ± 1 min!', id)
                                 // var filename = `./media/stickergif.${mimetype.split('/')[1]}`
@@ -285,7 +285,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 //     .catch(() => {
                                 //         client.reply(from, 'Maaf filenya terlalu besar!', id)
                                 //     })
-                                await client.sendMp4AsSticker(from, `data:${mimetype};base64,${mediaData.toString('base64')}`, null, stickerMetadata)
+                                await client.sendMp4AsSticker(from, `data:${mimetype};base64,${mediaData.toString('base64')}`, {endTime: '00:00:09.0'}, stickerMetadata)
                                     .catch(() => {
                                         client.reply(from, 'Maaf filenya terlalu besar!', id)
                                     })
