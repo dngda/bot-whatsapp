@@ -1,16 +1,36 @@
-const { create, Client } = require('@open-wa/wa-automate')
+const wa = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 
-const start = (client = new Client()) => {
+//create session
+wa.create()
+    .then(client => start(client))
+    .catch(err => new Error(err))
+
+function start(client) {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
-    console.log(color(figlet.textSync('   BOT-WA', { font: 'Ghost', horizontalLayout: 'default' })))
+    console.log(color(figlet.textSync('  SeroBot', { font: 'Ghost', horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color('[DEV]'), color('Danang', 'yellow'))
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
+    
+    // ketika seseorang mengirim pesan
+    client.onMessage(async message => {
+        if (message.body === 'P') {
+          await client.sendText(message.from, 'Wa\'alaikumussalam Wr.Wb')
+        }
+        client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
+            .then((msg) => {
+                if (msg >= 3000) {
+                    console.log('[client]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
+                    client.cutMsgCache()
+                }
+            })
+        HandleMsg(client, message)
+    })
 
     // Mempertahankan sesi agar tetap nyala
     client.onStateChanged((state) => {
@@ -19,7 +39,7 @@ const start = (client = new Client()) => {
     })
 
     // ketika bot diinvite ke dalam group
-    client.onAddedToGroup(async (chat) => {
+    client.onAddedToGroup(async chat => {
 	const groups = await client.getAllGroups()
 	// kondisi ketika batas group bot telah tercapai,ubah di file settings/setting.json
 	if (groups.length > groupLimit) {
@@ -43,9 +63,9 @@ const start = (client = new Client()) => {
     })
 
     // ketika seseorang masuk/keluar dari group
-    client.onGlobalParicipantsChanged(async (event) => {
+    client.onGlobalParicipantsChanged(async event => {
         const host = await client.getHostNumber() + '@c.us'
-		const welcome = JSON.parse(fs.readFileSync('./settings/welcome.json'))
+		const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
 		const isWelcome = welcome.includes(event.chat)
 		let profile = await client.getProfilePicFromServer(event.who)
 		if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
@@ -70,26 +90,8 @@ const start = (client = new Client()) => {
         })
     })
 
-    // ketika seseorang mengirim pesan
-    client.onMessage(async (message) => {
-        client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
-            .then((msg) => {
-                if (msg >= 3000) {
-                    console.log('[client]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
-                    client.cutMsgCache()
-                }
-            })
-        HandleMsg(client, message)    
-    
-    })
-	
     // Message log for analytic
     client.onAnyMessage((anal) => { 
         messageLog(anal.fromMe, anal.type)
     })
 }
-
-//create session
-create(options)
-    .then((client) => start(client))
-    .catch((err) => new Error(err))

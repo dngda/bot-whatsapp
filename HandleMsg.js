@@ -331,8 +331,8 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'qr':
                     case 'qrcode':
-                        if (args.length == 0) return client.reply(from, `Untuk membuat kode qr, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya client`, id)
-                        client.reply(from, `wait...`, id);
+                        if (args.length == 0) return client.reply(from, `Untuk membuat kode QR, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya SeroBot`, id)
+                        client.reply(from, `Okey wait...`, id);
                         let kata = args[0]
                         for (let i = 1; i < args.length; i++) {
                             kata += ` ${args[i]}`
@@ -779,6 +779,7 @@ module.exports = HandleMsg = async (client, message) => {
                         axios.get(`http://api.arugaz.my.id/api/media/ytsearch?query=${body.slice(6)}`)
                             .then(async (res) => {
                                 console.log(res.data.result[0].id)
+                                if (res.data.result[0].duration >= 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
                                 var estimasi = res.data.result[0].duration / 50
                                 var est = estimasi.toFixed(0)
 
@@ -885,26 +886,26 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'tts':
                     case 'say':
                         if (!isQuotedChat && args.length !== 0) {
+                            try {
                             const ttsGB = require('node-gtts')(args[0])
                             const dataText = body.slice(8)
                             if (dataText === '') return client.reply(from, 'Apa teksnya syg..', id)
-                            try {
                                 ttsGB.save('./media/tts.mp3', dataText, function () {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                 })
                             } catch (err) {
-                                client.reply(from, err, id)
+                                client.reply(from, err.name + ': ' + err.message, id)
                             }
                         }
                         else if (isQuotedChat && args.length !== 0) {
+                            try {
                             const ttsGB = require('node-gtts')(args[0])
                             const dataText = quotedMsgObj.content.toString()
-                            try {
                                 ttsGB.save('./media/tts.mp3', dataText, function () {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
                                 })
                             } catch (err) {
-                                client.reply(from, err.toString(), id)
+                                client.reply(from, err.name + ': ' + err.message, id)
                             }
                         }
                         else {
@@ -1050,7 +1051,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'bye':
                         if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
                         if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-                        client.sendText(from, 'Good bye... ( ⇀‸↼‶ )').then(() => client.leaveGroup(groupId))
+                        await client.sendText(from, 'Good bye 👋').then(() => client.leaveGroup(groupId))
                         break
 
                     case 'del':
@@ -1248,7 +1249,7 @@ module.exports = HandleMsg = async (client, message) => {
                     if (isKasar) {
                         const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + 5000).write()
                         if (denda) {
-                            await client.reply(from, "Jangan badword woy\nDenda +5.000\nTotal : Rp" + formatin(denda.denda), id)
+                            await client.reply(from, "Yoo rasah nganggo misuh su!\nDenda +5.000\nTotal : Rp" + formatin(denda.denda), id)
                         }
                     }
                 } else {
@@ -1263,7 +1264,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                         if (isKasar) {
                             cekuser.push({ id: pengirim, denda: 5000 })
-                            await client.reply(from, "Jangan badword woy\nDenda +5.000", id)
+                            await client.reply(from, "Yoo rasah nganggo misuh su!\nDenda +5.000", id)
                         } else {
                             cekuser.push({ id: pengirim, denda: 0 })
                         }
