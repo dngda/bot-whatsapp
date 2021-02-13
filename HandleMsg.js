@@ -60,9 +60,7 @@ let {
     prefix
 } = setting
 
-const {
-    apiNoBg
-} = JSON.parse(fs.readFileSync('./settings/api.json'))
+const {apiNoBg} = JSON.parse(fs.readFileSync('./settings/api.json'))
 
 function formatin(duit) {
     let reverse = duit.toString().split('').reverse().join('');
@@ -248,7 +246,8 @@ module.exports = HandleMsg = async (client, message) => {
                                     base64img = imageBase64
                                     var outFile = './media/noBg.png'
                                     // kamu dapat mengambil api key dari website remove.bg dan ubahnya difolder settings/api.json
-                                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: apiNoBg, size: 'auto', type: 'auto', outFile })
+                                    var selectedApiNoBg = apiNoBg[Math.floor(Math.random() * apiNoBg.length)]
+                                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: selectedApiNoBg, size: 'auto', type: 'auto', outFile })
                                     await fs.writeFile(outFile, result.base64img)
                                     await client.sendImageAsSticker(from, `data:${_mimetype};base64,${result.base64img}`, stickerMetadata)
                                         .then(() => {
@@ -258,7 +257,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                                 } catch (err) {
                                     console.log(err)
-                                    await client.reply(from, 'Maaf batas penggunaan hari ini sudah mencapai maksimal', id)
+                                    await client.reply(from, 'Maaf terjadi error atau batas penggunaan sudah tercapai!', id)
                                 }
                             }
                         } else if (args.length === 1) {
@@ -1274,13 +1273,13 @@ module.exports = HandleMsg = async (client, message) => {
             } else {
                 if (isKasar) {
                     db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 5000 }] }).write()
-                    await client.reply(from, "Jangan badword woy\nDenda +5.000\nTotal : Rp5.000", id)
+                    await client.reply(from, "Yoo rasah nganggo misuh su!\nDenda +5.000\nTotal : Rp5.000", id)
                 } else {
                     db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 0 }] }).write()
                 }
             }
         }
     } catch (err) {
-        console.log(color('[EROR]', 'red'), err)
+        console.log(color('[ERROR]', 'red'), err)
     }
 }
