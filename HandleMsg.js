@@ -893,7 +893,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                 })
                             } catch (err) {
-                                client.reply(from, err.name + ': ' + err.message, id)
+                                client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8', id)
                             }
                         }
                         else if (isQuotedChat && args.length !== 0) {
@@ -904,7 +904,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
                                 })
                             } catch (err) {
-                                client.reply(from, err.name + ': ' + err.message, id)
+                                client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8', id)
                             }
                         }
                         else {
