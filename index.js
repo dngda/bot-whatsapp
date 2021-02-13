@@ -19,8 +19,8 @@ function start(client) {
     
     // ketika seseorang mengirim pesan
     client.onMessage(async message => {
-        if (message.body === 'P') {
-          await client.sendText(message.from, 'Wa\'alaikumussalam Wr.Wb')
+        if (message.body === 'P' | message.body === 'p') {
+          await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
         }
         client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
             .then((msg) => {
