@@ -5,7 +5,7 @@ const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 
 //create session
-wa.create(options)
+wa.create(options(true, start))
     .then(client => start(client))
     .catch(err => new Error(err))
 

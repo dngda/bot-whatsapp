@@ -1,4 +1,3 @@
-require('dotenv').config()
 const { decryptMedia } = require('@open-wa/wa-automate')
 
 const moment = require('moment-timezone')
@@ -103,7 +102,6 @@ module.exports = HandleMsg = async (client, message) => {
         const args = body.trim().split(/ +/).slice(1)
         const argx = body.slice(0).trim().split(/ +/).shift().toLowerCase()
         const isCmd = body.startsWith(prefix)
-        const uaOverride = process.env.UserAgent
         const url = args.length !== 0 ? args[0] : ''
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
         const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
@@ -227,12 +225,14 @@ module.exports = HandleMsg = async (client, message) => {
                             client.reply(from, `Copy that, processing...`, id)
                             const encryptMedia = isQuotedImage ? quotedMsg : message
                             const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
-                            const mediaData = await decryptMedia(encryptMedia, uaOverride)
+                            const mediaData = await decryptMedia(encryptMedia)
                             const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                             client.sendImageAsSticker(from, imageBase64, stickerMetadata)
                                 .then(() => {
                                     client.sendText(from, 'Here\'s your sticker')
                                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
+                                }).catch(err => {
+                                    console.log(err)
                                 })
                         } else if (args[0] === 'nobg') {
                             if (isMedia || isQuotedImage) {
@@ -241,7 +241,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     var encryptedMedia = isQuotedImage ? quotedMsg : message
                                     var _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
 
-                                    var mediaData = await decryptMedia(encryptedMedia, uaOverride)
+                                    var mediaData = await decryptMedia(encryptedMedia)
                                     var imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                                     base64img = imageBase64
                                     var outFile = './media/noBg.png'
@@ -274,7 +274,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'stikergif':
                         if (isMedia || isQuotedVideo) {
                             if (mimetype === 'video/mp4' && message.duration <= 10 || mimetype === 'image/gif' && message.duration <= 10) {
-                                var mediaData = await decryptMedia(message, uaOverride)
+                                var mediaData = await decryptMedia(message)
                                 client.reply(from, '[WAIT] Sedang diproses⏳ silakan tunggu ± 1 min!', id)
                                 // var filename = `./media/stickergif.${mimetype.split('/')[1]}`
                                 // await fs.writeFileSync(filename, mediaData)
@@ -348,7 +348,7 @@ module.exports = HandleMsg = async (client, message) => {
                             const top = arg.split('|')[0]
                             const bottom = arg.split('|')[1]
                             const encryptMedia = isQuotedImage ? quotedMsg : message
-                            const mediaData = await decryptMedia(encryptMedia, uaOverride)
+                            const mediaData = await decryptMedia(encryptMedia)
                             const getUrl = await uploadImages(mediaData, false)
                             const ImageBase64 = await meme.custom(getUrl, top, bottom)
                             client.sendFile(from, ImageBase64, 'image.png', '', null, true)
@@ -835,9 +835,9 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'whatanime':
                         if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
                             if (isMedia) {
-                                var mediaData = await decryptMedia(message, uaOverride)
+                                var mediaData = await decryptMedia(message)
                             } else {
-                                var mediaData = await decryptMedia(quotedMsg, uaOverride)
+                                var mediaData = await decryptMedia(quotedMsg)
                             }
                             const imgBS4 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                             client.reply(from, 'Searching....', id)
@@ -1126,7 +1126,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (isMedia && type == 'image' || isQuotedImage) {
                             const dataMedia = isQuotedImage ? quotedMsg : message
                             const _mimetype = dataMedia.mimetype
-                            const mediaData = await decryptMedia(dataMedia, uaOverride)
+                            const mediaData = await decryptMedia(dataMedia)
                             const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                             await client.setGroupIcon(groupId, imageBase64)
                         } else if (args.length === 1) {
