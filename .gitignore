@@ -10,8 +10,6 @@ debug.log
 
 # Session files
 *.data.json
-stored
-media
 
 # Workspace files
 *.code-workspace
@@ -21,3 +19,4 @@ package-lock.json
 
 # Data files
 data/*
+media/*

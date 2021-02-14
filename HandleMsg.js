@@ -166,7 +166,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
                     case 'owner':
                         await client.sendContact(from, ownerNumber)
-                            .then(() => client.sendText(from, 'Jika kalian ingin request fitur silahkan chat nomor owner!'))
+                            .then(() => client.sendText(from, 'Jika kalian ingin request fitur silahkan chat nomor di atas'))
                         break
                     case 'join':
                         if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot kegroup silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
