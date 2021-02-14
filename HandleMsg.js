@@ -233,6 +233,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                                 }).catch(err => {
                                     console.log(err)
+                                    client.sendText(from, 'Maaf, ada yang error!')
                                 })
                         } else if (args[0] === 'nobg') {
                             if (isMedia || isQuotedImage) {
@@ -253,6 +254,9 @@ module.exports = HandleMsg = async (client, message) => {
                                         .then(() => {
                                             client.sendText(from, 'Here\'s your sticker')
                                             console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
+                                        }).catch(err => {
+                                            console.log(err)
+                                            client.sendText(from, 'Maaf, ada yang error!')
                                         })
 
                                 } catch (err) {
