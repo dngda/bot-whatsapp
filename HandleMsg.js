@@ -30,7 +30,8 @@ const {
     getLocationData,
     images,
     rugaapi,
-    cariKasar
+    cariKasar,
+    kbbi
 } = require('./lib')
 
 const {
@@ -369,8 +370,8 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'nulis':
-                        if (args.length == 0) return client.reply(from, `Membuat bot menulis teks yang dikirim menjadi gambar\nPemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`, id)
-                        const nulisq = body.slice(7)
+                        if (args.length == 0 && !isQuotedChat) return client.reply(from, `Membuat bot menulis teks yang dikirim menjadi gambar\nPemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`, id)
+                        const nulisq = isQuotedChat ? quotedMsgObj.content.toString() : body.slice(7)
                         const nulisp = await rugaapi.tulis(nulisq)
                         await client.sendImage(from, `${nulisp}`, '', 'Nih...', id)
                             .catch(() => {
@@ -757,7 +758,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (isGroupMsg) {
                             client.reply(from, 'Untuk Fitur Nekopoi Silahkan Lakukan di Private Message', id)
                         } else {
-                            var data = await axios.get('https://arugaz.my.id/api/anime/nekopoi/random')
+                            var data = await axios.get('https://api.arugaz.my.id/api/anime/nekopoi/random')
                             var x = Math.floor((Math.random() * 7) + 0);
                             var poi = data.data[x]
                             console.log(poi)
@@ -1003,6 +1004,19 @@ module.exports = HandleMsg = async (client, message) => {
                         } catch (err) {
                             client.reply(from, err, id)
                         }
+                        break
+
+                    case 'kbbi':
+                        if (args.length !== 1) return client.reply(from, `Mencari arti kata dalam KBBI\nPenggunaan: ${prefix}kbbi <kata>\ncontoh: ${prefix}kbbi apel`, id)
+                        const cariKata = kbbi(args[0])
+                            .then(res => {
+                                if (res == '') return client.reply(from, `Maaf kata "${args[0]}" tidak tersedia di KBBI`, id)
+                                client.reply(from, res+`\n\nMore: https://kbbi.web.id/${args[0]}`, id)
+
+                            }).catch(err => {
+                                client.reply(from, 'Ada yang error!', id)
+                                console.log(err)
+                            })
                         break
 
                     // Group Commands (group admin only)
