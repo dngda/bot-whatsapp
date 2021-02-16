@@ -4,6 +4,7 @@ const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 const axios = require('axios')
 const fetch = require('node-fetch')
+const gTTS = require('gtts')
 
 const appRoot = require('app-root-path')
 const low = require('lowdb')
@@ -890,21 +891,21 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'say':
                         if (!isQuotedChat && args.length !== 0) {
                             try {
-                            const ttsGB = require('node-gtts')(args[0])
                             const dataText = body.slice(8)
                             if (dataText === '') return client.reply(from, 'Apa teksnya syg..', id)
-                                ttsGB.save('./media/tts.mp3', dataText, function () {
+                                var gtts = new gTTS(dataText, args[0])
+                                gtts.save('./media/tts.mp3', function() {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                 })
                             } catch (err) {
-                                client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8', id)
+                                client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
                             }
                         }
                         else if (isQuotedChat && args.length !== 0) {
                             try {
-                            const ttsGB = require('node-gtts')(args[0])
                             const dataText = quotedMsgObj.content.toString()
-                                ttsGB.save('./media/tts.mp3', dataText, function () {
+                            var gtts = new gTTS(dataText, args[0])
+                                gtts.save('./media/tts.mp3', function () {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
                                 })
                             } catch (err) {
@@ -977,9 +978,9 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'skripsi':
                         let randomSkripsi = skripsi[Math.floor(Math.random() * skripsi.length)]
-                        const ttsGB = require('node-gtts')('id')
+                        var gtts = new gTTS(randomSkripsi, 'id')
                         try {
-                            ttsGB.save('./media/tts.mp3', randomSkripsi, function () {
+                            gtts.save('./media/tts.mp3', function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
                             })
                         } catch (err) {
@@ -994,9 +995,9 @@ module.exports = HandleMsg = async (client, message) => {
                         else {
                             result = isTrue ? 'Iya' : 'Tidak'
                         }
-                        const ttsGBs = require('node-gtts')('id')
+                        var gtts = new gTTS(result, 'id')
                         try {
-                            ttsGBs.save('./media/tts.mp3', result, function () {
+                            gtts.save('./media/tts.mp3', function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
                             })
                         } catch (err) {
