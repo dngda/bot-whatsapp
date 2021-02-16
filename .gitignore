@@ -20,3 +20,4 @@ package-lock.json
 # Data files
 data/*
 media/*
+logs/*
