@@ -16,7 +16,10 @@ function start(client) {
     console.log(color('[DEV]'), color('Danang', 'yellow'))
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
-    
+
+    // set presence to online
+    client.setPresence(true)
+
     // ketika seseorang mengirim pesan
     client.onMessage(async message => {
         if (message.body === 'P' | message.body === 'p') {
