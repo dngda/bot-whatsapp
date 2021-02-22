@@ -20,6 +20,8 @@ Clone this project
 > cd bot-whatsapp
 ```
 
+You need to install Libreoffice to use doctopdf command
+
 Install the dependencies:
 
 ```bash
@@ -42,26 +44,27 @@ After running it you need to scan the QR
 ## Features
 
 ✪〘 Fitur BOT 〙✪
-- ping _atau_ speed
-- menu _atau_ help
+- ping
+- menu
 - ownerbot
 - botstat
 - tnc
-- donate _atau_ donasi
+- donate
 
 ✪〘 Converter 〙✪
-- sticker _atau_ stiker
-- getimage _atau_ stickertoimg _atau_ stimg
-- stickergif _atau_ gifsticker
+- sticker
+- stickertoimg
+- stickergif
 - stickergiphy
-- meme
+- memefy
+- doctopdf
 - qrcode
 - nulis
 - shortlink
 - hilih
-- ytmp3 (beta)
-- play (beta)
-- tts _atau_ say
+- ytmp3
+- play
+- tts
 
 ✪〘 Islam 〙✪
 - listsurah

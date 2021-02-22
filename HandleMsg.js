@@ -5,6 +5,7 @@ moment.tz.setDefault('Asia/Jakarta').locale('id')
 const axios = require('axios')
 const fetch = require('node-fetch')
 const gTTS = require('gtts')
+const toPdf = require("office-to-pdf")
 
 const appRoot = require('app-root-path')
 const low = require('lowdb')
@@ -105,15 +106,16 @@ module.exports = HandleMsg = async (client, message) => {
         const argx = body.slice(0).trim().split(/ +/).shift().toLowerCase()
         const isCmd = body.startsWith(prefix)
         const url = args.length !== 0 ? args[0] : ''
+        
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
         const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
         const isQuotedChat = quotedMsg && quotedMsg.type === 'chat'
         const isQuotedLocation = quotedMsg && quotedMsg.type === 'location'
+        const isQuotedDocs = quotedMsg && quotedMsg.type === 'document'
 
         // [IDENTIFY]
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
-        // const isSimi = simi.includes(chatId)
         const isNgegas = ngegas.includes(chatId)
         const isKasar = await cariKasar(chats)
 
@@ -217,14 +219,14 @@ module.exports = HandleMsg = async (client, message) => {
                                 .then(() => {
                                     console.log(`Sticker to Image Processed for ${processTime(t, moment())} Seconds`)
                                 })
-                        } else if (!quotedMsg) return client.reply(from, `Format salah, silahkan tag/reply sticker yang ingin dijadikan gambar!`, id)
+                        } else if (!quotedMsg) return client.reply(from, `Silakan tag/reply sticker yang ingin dijadikan gambar dengan command!`, id)
                         break
 
                     // Sticker Creator
                     case 'sticker':
                     case 'stiker':
                         if ((isMedia || isQuotedImage) && args.length === 0) {
-                            client.reply(from, `Copy that, processing...`, id)
+                            client.reply(from, `Copy that, processing!`, id)
                             const encryptMedia = isQuotedImage ? quotedMsg : message
                             const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
                             const mediaData = await decryptMedia(encryptMedia)
@@ -239,7 +241,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 })
                         } else if (args[0] === 'nobg') {
                             if (isMedia || isQuotedImage) {
-                                client.reply(from, `Copy that, processing...`, id)
+                                client.reply(from, `Copy that, processing!`, id)
                                 try {
                                     var encryptedMedia = isQuotedImage ? quotedMsg : message
                                     var _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
@@ -282,16 +284,16 @@ module.exports = HandleMsg = async (client, message) => {
                             if (mimetype === 'video/mp4' && message.duration <= 10 || quotedMsg.mimetype === 'video/mp4' && quotedMsg.duration <= 10) {
                                 var encryptedMedia = isQuotedVideo ? quotedMsg : message
                                 var mediaData = await decryptMedia(encryptedMedia)
-                                client.reply(from, '[WAIT] Sedang diproses⏳ silakan tunggu ± 1 min!', id)
+                                client.reply(from, 'Sedang diproses⏳ silakan tunggu ± 1 min!', id)
                                 await client.sendMp4AsSticker(from, mediaData.toString('base64'), {endTime: '00:00:09.0', log: true}, stickerMetadata)
                                     .catch(() => {
-                                        client.reply(from, 'Maaf filenya terlalu besar!', id)
+                                        client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
                                     })
                             } else {
-                                client.reply(from, `[❗] Kirim video dengan caption *${prefix}stickergif* max 10 sec!`, id)
+                                client.reply(from, `Kirim video dengan caption *${prefix}stickergif* max 10 sec!`, id)
                             }
                         } else {
-                            client.reply(from, `[❗] Kirim video dengan caption *${prefix}stickergif*`, id)
+                            client.reply(from, `Kirim video atau reply/quote video dengan caption *${prefix}stickergif* max 10 sec`, id)
                         }
                         break
 
@@ -340,8 +342,9 @@ module.exports = HandleMsg = async (client, message) => {
                                 await client.sendFileFromUrl(from, `${res}`, id)
                             })
                         break
-
+                        
                     case 'meme':
+                    case 'memefy':
                         if ((isMedia || isQuotedImage) && args.length >= 2) {
                             const top = arg.split('|')[0]
                             const bottom = arg.split('|')[1]
@@ -357,7 +360,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.reply(from, 'Ada yang error!')
                                 })
                         } else {
-                            await client.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}meme <teks_atas> | <teks_bawah>\ncontoh: ${prefix}meme teks atas | teks bawah`, id)
+                            await client.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy teks atas | teks bawah`, id)
                         }
                         break
 
@@ -369,6 +372,28 @@ module.exports = HandleMsg = async (client, message) => {
                             .catch(() => {
                                 client.reply(from, 'Ada yang Error!', id)
                             })
+                        break
+
+                    //required to install libreoffice
+                    case 'doctopdf':
+                    case 'pdf':
+                        if (!isQuotedDocs) return client.reply(from, `Convert doc docx to pdf.\n\nKirim dokumen kemudian reply dokumen dengan ${prefix}pdf`, id)
+                        if(/\.docx|\.doc/g.test(quotedMsg.filename) && isQuotedDocs){
+                            client.sendText(from, 'Copy that bro, please wait!')
+                            const encDocs = await decryptMedia(quotedMsg)
+                            toPdf(encDocs).then(
+                              (pdfBuffer) => {
+                                fs.writeFileSync("./media/result.pdf", pdfBuffer)
+
+                                client.sendFile(from, "./media/result.pdf", quotedMsg.filename.replace(/\.docx|\.doc/g, '.pdf'))
+                              }, (err) => {
+                                console.log(err)
+                                client.sendText(from, 'Maaf terjadi error!')
+                              }
+                            )
+                        }else{
+                            client.reply(from, 'Maaf format file tidak sesuai', id)
+                        }
                         break
 
                     //Islam Command
