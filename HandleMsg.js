@@ -871,6 +871,35 @@ module.exports = HandleMsg = async (client, message) => {
                         }
                         break
 
+                    case 'tod':
+                        client.reply(from, `Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilahkan Pilih:\n➥ ${prefix}truth\n➥ ${prefix}dare`, id)
+                    break
+                    case 'truth':
+                        if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa digunakan didalam grup!', id)
+                            fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/truth.txt')
+                                .then(res => res.text())
+                                .then(body => {
+                                    let truthx = body.split('\n')
+                                    let truthz = truthx[Math.floor(Math.random() * truthx.length)]
+                                    client.reply(from, truthz, id)
+                                })
+                                .catch(() => {
+                                    client.reply(from, 'Hayolohhh, ada yang error!!', id)
+                                })
+                    break
+                    case 'dare':
+                        if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa digunakan didalam grup!', id)
+                            fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/dare.txt')
+                                .then(res => res.text())
+                                .then(body => {
+                                    let darex = body.split('\n')
+                                    let darez = darex[Math.floor(Math.random() * darex.length)]
+                                    client.reply(from, darez, id)
+                                })
+                                .catch(() => {
+                                    client.reply(from, 'Hayolohhh, ada yang error!!', id)
+                                })
+                    break
                     // Other Command
                     case 'resi':
                         if (args.length !== 2) return client.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)

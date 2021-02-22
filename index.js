@@ -19,6 +19,7 @@ function start(client) {
 
     // ketika seseorang mengirim pesan
     client.onMessage(async message => {
+        client.setPresence(true)
         if (message.body === 'P' | message.body === 'p') {
           await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
         }
@@ -94,10 +95,4 @@ function start(client) {
     client.onAnyMessage((anal) => { 
         messageLog(anal.fromMe, anal.type)
     })
-
-    // set presence to online
-    (function setOnline() {
-        client.setPresence(true)
-        setTimeout(setOnline, 10000)
-    })()
 }
