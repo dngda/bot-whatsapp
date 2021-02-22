@@ -272,7 +272,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 ? client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
                                 : client.reply(from, 'Here\'s your sticker')).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
                         } else {
-                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker nobg <tanpa background>\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
+                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker nobg <tanpa background> (limited usage)\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
                         }
                         break
 
@@ -889,6 +889,10 @@ module.exports = HandleMsg = async (client, message) => {
                                 var gtts = new gTTS(dataText, args[0])
                                 gtts.save('./media/tts.mp3', function() {
                                     client.sendPtt(from, './media/tts.mp3', id)
+                                        .catch(err => {
+                                            console.log(err)
+                                            client.sendTest(from, 'Maaf, ada yang error!')
+                                        })
                                 })
                             } catch (err) {
                                 client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
@@ -900,6 +904,10 @@ module.exports = HandleMsg = async (client, message) => {
                             var gtts = new gTTS(dataText, args[0])
                                 gtts.save('./media/tts.mp3', function () {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
+                                        .catch(err => {
+                                            console.log(err)
+                                            client.sendTest(from, 'Maaf, ada yang error!')
+                                        })
                                 })
                             } catch (err) {
                                 client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
@@ -975,6 +983,10 @@ module.exports = HandleMsg = async (client, message) => {
                         try {
                             gtts.save('./media/tts.mp3', function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
+                                    .catch(err => {
+                                        console.log(err)
+                                        client.sendTest(from, 'Maaf, ada yang error!')
+                                    })
                             })
                         } catch (err) {
                             client.reply(from, err, id)
@@ -992,6 +1004,10 @@ module.exports = HandleMsg = async (client, message) => {
                         try {
                             gtts.save('./media/tts.mp3', function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
+                                    .catch(err => {
+                                        console.log(err)
+                                        client.sendTest(from, 'Maaf, ada yang error!')
+                                    })
                             })
                         } catch (err) {
                             client.reply(from, err, id)

@@ -18,7 +18,10 @@ function start(client) {
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
 
     // set presence to online
-    client.setPresence(true)
+    (function setOnline() {
+        client.setPresence(true)
+        setTimeout(setOnline, 10000)
+    })()
 
     // ketika seseorang mengirim pesan
     client.onMessage(async message => {
@@ -44,7 +47,7 @@ function start(client) {
     // ketika bot diinvite ke dalam group
     client.onAddedToGroup(async chat => {
 	const groups = await client.getAllGroups()
-	// kondisi ketika batas group bot telah tercapai,ubah di file settings/setting.json
+	// kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
 	if (groups.length > groupLimit) {
 	await client.sendText(chat.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}`).then(() => {
 	      client.leaveGroup(chat.id)
