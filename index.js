@@ -17,12 +17,6 @@ function start(client) {
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
 
-    // set presence to online
-    (function setOnline() {
-        client.setPresence(true)
-        setTimeout(setOnline, 10000)
-    })()
-
     // ketika seseorang mengirim pesan
     client.onMessage(async message => {
         if (message.body === 'P' | message.body === 'p') {
@@ -100,4 +94,10 @@ function start(client) {
     client.onAnyMessage((anal) => { 
         messageLog(anal.fromMe, anal.type)
     })
+
+    // set presence to online
+    (function setOnline() {
+        client.setPresence(true)
+        setTimeout(setOnline, 10000)
+    })()
 }
