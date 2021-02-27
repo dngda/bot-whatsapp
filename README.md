@@ -38,7 +38,17 @@ Run the Whatsapp bot
 After running it you need to scan the QR
 
 ### Information
-- bot configuration on /settings/setting.json
+- Change ownerNumber on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/setting.json#L2)
+- Change groupLimit on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/setting.json#L3)
+- Change memberLimit on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/setting.json#L4)
+- Change prefix on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/setting.json#L5)
+- Change menu on [this section](https://github.com/dngda/bot-whatsapp/blob/main/lib/menu.js#L34)
+- Add kata kasar on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/katakasar.json)
+- Change all apiKey on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/api.json)
+- Get Api NoBackground on [this website](https://www.remove.bg/)
+- Get Api Tobz on [this website](https://tobz-api.herokuapp.com/api)
+- Get Api VH on [this website](https://vhtear.com)
+- Get Api Fariaz on [this website](https://rest.farzain.com)
 ---
 
 ## Features

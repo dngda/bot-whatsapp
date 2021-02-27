@@ -20,16 +20,13 @@ const {
 } = require('remove.bg')
 
 const {
-    exec
-} = require('child_process')
-
-const {
     menuId,
     cekResi,
     urlShortener,
     meme,
     getLocationData,
     images,
+    api,
     rugaapi,
     cariKasar,
     kbbi
@@ -237,7 +234,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                                 }).catch(err => {
                                     console.log(err)
-                                    client.sendText(from, 'Maaf, ada yang error!')
+                                    client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                                 })
                         } else if (args[0] === 'nobg') {
                             if (isMedia || isQuotedImage) {
@@ -260,7 +257,7 @@ module.exports = HandleMsg = async (client, message) => {
                                             console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                                         }).catch(err => {
                                             console.log(err)
-                                            client.sendText(from, 'Maaf, ada yang error!')
+                                            client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                                         })
 
                                 } catch (err) {
@@ -285,7 +282,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 var encryptedMedia = isQuotedVideo ? quotedMsg : message
                                 var mediaData = await decryptMedia(encryptedMedia)
                                 client.reply(from, 'Sedang diproses⏳ silakan tunggu ± 1 min!', id)
-                                await client.sendMp4AsSticker(from, mediaData.toString('base64'), {endTime: '00:00:09.0', log: true}, stickerMetadata)
+                                await client.sendMp4AsSticker(from, mediaData, {endTime: '00:00:09.0', log: true}, stickerMetadata)
                                     .catch(() => {
                                         client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
                                     })
@@ -321,7 +318,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                                 })
                                 .catch(() => {
-                                    client.reply(from, `Ada yang error!`, id)
+                                    client.reply(from, `Ada yang error! Coba lagi beberapa saat kemudian.`, id)
                                 })
                         } else {
                             await client.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
@@ -337,7 +334,7 @@ module.exports = HandleMsg = async (client, message) => {
                             kata += ` ${args[i]}`
                         }
                         console.log(kata)
-                        rugaapi.qrcode(kata, 500)
+                        api.qrcode(kata, 500)
                             .then(async (res) => {
                                 await client.sendFileFromUrl(from, `${res}`, id)
                             })
@@ -357,7 +354,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.reply(from, 'Here you\'re!', id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Ada yang error!')
+                                    client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.')
                                 })
                         } else {
                             await client.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy teks atas | teks bawah`, id)
@@ -367,10 +364,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'nulis':
                         if (args.length == 0 && !isQuotedChat) return client.reply(from, `Membuat bot menulis teks yang dikirim menjadi gambar\nPemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`, id)
                         const nulisq = isQuotedChat ? quotedMsgObj.content.toString() : body.slice(7)
-                        const nulisp = await rugaapi.tulis(nulisq)
+                        const nulisp = await api.tulis(nulisq)
                         await client.sendImage(from, `${nulisp}`, '', 'Nih...', id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
 
@@ -624,9 +621,12 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'artinama':
                         if (args.length == 0) return client.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama namakamu`, id)
-                        rugaapi.artinama(body.slice(10))
+                        api.artinama(body.slice(10))
                             .then(async (res) => {
                                 await client.reply(from, `Arti : ${res}`, id)
+                            })
+                            .catch(() => {
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
 
@@ -640,7 +640,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.reply(from, randomnix, id)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
                     case 'katabijak':
@@ -652,7 +652,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.reply(from, randombijak, id)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
                     case 'pantun':
@@ -664,15 +664,18 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.reply(from, ' ' + randompantun.replace(/aruga-line/g, "\n"), id)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
                     case 'quote':
                     case 'quotes':
-                        const quotex = await rugaapi.quote()
+                        const quotex = await api.quote()
+                            .catch(() => {
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                            })
                         await client.reply(from, quotex, id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
 
@@ -688,7 +691,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.sendFileFromUrl(from, randomnimex, '', 'Nee..', id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Ada yang Error!', id)
+                                    client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                                 })
                         } else {
                             client.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}anime untuk melihat list query`)
@@ -705,7 +708,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.sendFileFromUrl(from, randomkpopx, '', 'Nee..', id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Ada yang Error!', id)
+                                    client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                                 })
                         } else {
                             client.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}kpop untuk melihat list query`)
@@ -715,19 +718,11 @@ module.exports = HandleMsg = async (client, message) => {
                         const randmeme = await meme.random()
                         client.sendFileFromUrl(from, randmeme, '', '', id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
 
                     // Search Any
-                    case 'animebatch':
-                    case 'dewabatch':
-                        if (args.length == 0) return client.reply(from, `Untuk mencari anime batch dari Dewa Batch, ketik ${prefix}animebatch judul\n\nContoh: ${prefix}animebatch naruto`, id)
-                        rugaapi.dewabatch(args[0])
-                            .then(async (res) => {
-                                await client.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
-                            })
-                        break
 
                     case 'pin':
                     case 'image':
@@ -741,7 +736,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                         await client.sendFileFromUrl(from, hasilwall, '', '', id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
 
@@ -758,7 +753,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.simulateTyping(from, false)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error! Mending cek sendiri aja ke\nhttps://sipora.staklimyogyakarta.com/radar/', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian. Mending cek sendiri aja ke\nhttps://sipora.staklimyogyakarta.com/radar/', id)
                             })
                         break
 
@@ -768,7 +763,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const hasilreddit = await images.sreddit(carireddit)
                         await client.sendFileFromUrl(from, hasilreddit, '', '', id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
                     case 'nekopoi':
@@ -789,10 +784,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'cuaca':
                         if (args.length == 0) return client.reply(from, `Untuk melihat cuaca pada suatu daerah\nketik: ${prefix}cuaca [daerah]`, id)
                         const cuacaq = body.slice(7)
-                        const cuacap = await rugaapi.cuaca(cuacaq)
+                        const cuacap = await api.cuaca(cuacaq)
                         await client.reply(from, cuacap, id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
 
@@ -851,7 +846,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     })
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
 
@@ -889,7 +884,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     })
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Ada yang Error!', id)
+                                    client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                                 })
                         } else {
                             client.reply(from, `Maaf format salah\n\nSilahkan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`, id)
@@ -909,7 +904,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.reply(from, truthz, id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Hayolohhh, ada yang error!!', id)
+                                    client.reply(from, 'Hayolohhh, Ada yang error! Coba lagi beberapa saat kemudian.!', id)
                                 })
                     break
                     case 'dare':
@@ -922,7 +917,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.reply(from, darez, id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Hayolohhh, ada yang error!!', id)
+                                    client.reply(from, 'Hayolohhh, Ada yang error! Coba lagi beberapa saat kemudian.!', id)
                                 })
                     break
                     // Other Command
@@ -945,7 +940,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                         .catch(err => {
                                             console.log(err)
-                                            client.sendTest(from, 'Maaf, ada yang error!')
+                                            client.sendTest(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                                         })
                                 })
                             } catch (err) {
@@ -960,7 +955,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
                                         .catch(err => {
                                             console.log(err)
-                                            client.sendTest(from, 'Maaf, ada yang error!')
+                                            client.sendTest(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                                         })
                                 })
                             } catch (err) {
@@ -995,22 +990,16 @@ module.exports = HandleMsg = async (client, message) => {
                         const shortlink = await urlShortener(args[0])
                         await client.sendText(from, shortlink)
                             .catch(() => {
-                                client.reply(from, 'Ada yang Error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                             })
                         break
 
                     case 'hilih':
-                        if (args.length !== 0) {
-                            rugaapi.hilihfont(body.slice(7))
-                                .then(async (res) => {
-                                    await client.reply(from, `${res}`, id)
-                                })
-                        }
-                        else if (isQuotedChat && args.length === 0) {
-                            rugaapi.hilihfont(quotedMsgObj.content.toString())
-                                .then(async (res) => {
-                                    await client.reply(from, `${res}`, quotedMsgObj.id)
-                                })
+                        if (args.length !== 0 && !isQuotedChat) {
+                            const _input = isQuotedChat ? quotedMsgObj.content.toString() : body.slice(7)
+                            const _id = isQuotedChat ? quotedMsgObj.id : id
+                            const _res = _input.replace(/[aiueo]/g, 'i')
+                            client.reply(from, _res, _id)
                         }
                         else {
                             await client.reply(from, `Mengubah kalimat menjadi hilih gitu deh\n\nketik ${prefix}hilih kalimat\natau reply chat menggunakan ${prefix}hilih`, id)
@@ -1039,7 +1028,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.sendPtt(from, './media/tts.mp3', id)
                                     .catch(err => {
                                         console.log(err)
-                                        client.sendTest(from, 'Maaf, ada yang error!')
+                                        client.sendTest(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                                     })
                             })
                         } catch (err) {
@@ -1060,7 +1049,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.sendPtt(from, './media/tts.mp3', id)
                                     .catch(err => {
                                         console.log(err)
-                                        client.sendTest(from, 'Maaf, ada yang error!')
+                                        client.sendTest(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                                     })
                             })
                         } catch (err) {
@@ -1076,7 +1065,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.reply(from, res+`\n\nMore: https://kbbi.web.id/${args[0]}`, id)
 
                             }).catch(err => {
-                                client.reply(from, 'Ada yang error!', id)
+                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
                                 console.log(err)
                             })
                         break
