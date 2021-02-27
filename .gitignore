@@ -21,3 +21,6 @@ package-lock.json
 data/*
 media/*
 logs/*
+
+# Api files
+/settings/api.json
