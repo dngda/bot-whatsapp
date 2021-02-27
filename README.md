@@ -44,7 +44,7 @@ After running it you need to scan the QR
 - Change prefix on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/setting.json#L5)
 - Change menu on [this section](https://github.com/dngda/bot-whatsapp/blob/main/lib/menu.js#L34)
 - Add kata kasar on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/katakasar.json)
-- Change all apiKey on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/api.json)
+- Change all apiKey on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/api.json.example) then *rename to api.json*
 - Get Api NoBackground on [this website](https://www.remove.bg/)
 - Get Api Tobz on [this website](https://tobz-api.herokuapp.com/api)
 - Get Api VH on [this website](https://vhtear.com)
