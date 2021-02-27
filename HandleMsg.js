@@ -995,7 +995,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'hilih':
-                        if (args.length !== 0 && isQuotedChat) {
+                        if (args.length !== 0 || isQuotedChat) {
                             const _input = isQuotedChat ? quotedMsgObj.content.toString() : body.slice(7)
                             const _id = isQuotedChat ? quotedMsgObj.id : id
                             const _res = _input.replace(/[aiueo]/g, 'i')
