@@ -227,6 +227,10 @@ module.exports = HandleMsg = async (client, message) => {
                             const encryptMedia = isQuotedImage ? quotedMsg : message
                             const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
                             const mediaData = await decryptMedia(encryptMedia)
+                                .catch(err => {
+                                    console.log(err)
+                                    client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                })
                             const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                             client.sendImageAsSticker(from, imageBase64, stickerMetadata)
                                 .then(() => {
@@ -244,6 +248,10 @@ module.exports = HandleMsg = async (client, message) => {
                                     var _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
 
                                     var mediaData = await decryptMedia(encryptedMedia)
+                                            .catch(err => {
+                                            console.log(err)
+                                            client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                        })
                                     var imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                                     base64img = imageBase64
                                     var outFile = './media/noBg.png'

@@ -3,13 +3,20 @@ const figlet = require('figlet')
 const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
+const { default: PQueue } = require("p-queue")
+const queue = new PQueue({
+  concurrency: 4,
+  autoStart:false
+   })
 
 //create session
 wa.create(options(true, start))
     .then(client => start(client))
     .catch(err => new Error(err))
 
-function start(client) {
+async function start(client) {
+    const processMessage = message => queue.add(() => HandleMsg(client, message))
+
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('  SeroBot', { font: 'Ghost', horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
@@ -17,8 +24,13 @@ function start(client) {
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
 
+    // process unread message
+    const unreadMessages = await client.getAllUnreadMessages();
+    unreadMessages.forEach(processMessage)
+    queue.start()
+
     // ketika seseorang mengirim pesan
-    client.onMessage(async message => {
+    await client.onMessage(async message => {
         client.setPresence(true)
         if (message.body === 'P' | message.body === 'p') {
           await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
@@ -30,17 +42,23 @@ function start(client) {
                     client.cutMsgCache()
                 }
             })
-        HandleMsg(client, message)
+
+        processMessage(message)
+        queue.start()
+    }).catch(err =>{
+        console.log(err)
     })
 
     // Mempertahankan sesi agar tetap nyala
-    client.onStateChanged((state) => {
+    await client.onStateChanged((state) => {
         console.log(color('[~>>]', 'red'), state)
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus()
+    }).catch(err =>{
+        console.log(err)
     })
 
     // ketika bot diinvite ke dalam group
-    client.onAddedToGroup(async chat => {
+    await client.onAddedToGroup(async chat => {
 	const groups = await client.getAllGroups()
 	// kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
 	if (groups.length > groupLimit) {
@@ -61,10 +79,12 @@ function start(client) {
         })
 	    }
 	}
+    }).catch(err =>{
+        console.log(err)
     })
 
     // ketika seseorang masuk/keluar dari group
-    client.onGlobalParicipantsChanged(async event => {
+    await client.onGlobalParicipantsChanged(async event => {
         const host = await client.getHostNumber() + '@c.us'
 		const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
 		const isWelcome = welcome.includes(event.chat)
@@ -80,19 +100,25 @@ function start(client) {
 			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
             await client.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
         }
+    }).catch(err =>{
+        console.log(err)
     })
 
-    client.onIncomingCall(async (callData) => {
+    await client.onIncomingCall(async (callData) => {
         // ketika seseorang menelpon nomor bot akan mengirim pesan
         await client.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan.\n\n~ini bot, bukan manusia.')
         .then(async () => {
             // bot akan memblock nomor itu
             await client.contactBlock(callData.peerJid)
         })
+    }).catch(err =>{
+        console.log(err)
     })
 
     // Message log for analytic
-    client.onAnyMessage((anal) => { 
+    await client.onAnyMessage((anal) => { 
         messageLog(anal.fromMe, anal.type)
+    }).catch(err =>{
+        console.log(err)
     })
 }
