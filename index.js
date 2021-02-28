@@ -5,7 +5,7 @@ const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 const { default: PQueue } = require("p-queue")
 const queue = new PQueue({
-  concurrency: 4,
+  concurrency: 8,
   autoStart:false
    })
 
@@ -23,11 +23,6 @@ async function start(client) {
     console.log(color('[DEV]'), color('Danang', 'yellow'))
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
-
-    // process unread message
-    const unreadMessages = await client.getAllUnreadMessages();
-    unreadMessages.forEach(processMessage)
-    queue.start()
 
     // ketika seseorang mengirim pesan
     await client.onMessage(async message => {
