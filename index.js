@@ -31,9 +31,6 @@ async function start(client) {
 
     // ketika seseorang mengirim pesan
     await client.onMessage(async message => {
-        if (queue.isPaused) queue.start()
-        if (queue.size() > 1) console.log(`Process in queue: ${queue.size()}`)
-
         client.setPresence(true)
         if (message.body === 'P' | message.body === 'p') {
           await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
@@ -47,6 +44,9 @@ async function start(client) {
             })
 
         processMessage(message)
+
+        if (queue.isPaused) queue.start()
+        if (queue.size() > 1) console.log(`Process in queue: ${queue.size()}`)
     }).catch(err =>{
         console.log(err)
     })
