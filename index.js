@@ -5,7 +5,7 @@ const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 const { default: PQueue } = require("p-queue")
 const queue = new PQueue({
-  concurrency: 4
+  concurrency: 2
    })
 
 //create session
@@ -44,9 +44,6 @@ async function start(client) {
             })
 
         processMessage(message)
-
-        if (queue.isPaused) queue.start()
-        if (queue.size() > 1) console.log(`Process in queue: ${queue.size()}`)
     }).catch(err =>{
         console.log(err)
     })

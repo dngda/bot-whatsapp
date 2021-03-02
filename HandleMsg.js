@@ -274,10 +274,15 @@ module.exports = HandleMsg = async (client, message) => {
                                 }
                             }
                         } else if (args.length === 1) {
-                            if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
-                            client.sendStickerfromUrl(from, url).then((r) => (!r && r !== undefined)
+                            try {
+                                if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+                                client.sendStickerfromUrl(from, url).then((r) => (!r && r !== undefined)
                                 ? client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
                                 : client.reply(from, 'Here\'s your sticker')).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+                            }catch (e) {
+                                console.log(`Sticker url err: ${e}`)
+                                client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                            }
                         } else {
                             await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker nobg <tanpa background> (limited usage)\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
                         }
