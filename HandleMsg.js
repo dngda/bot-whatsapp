@@ -351,6 +351,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'meme':
                     case 'memefy':
                         if ((isMedia || isQuotedImage) && args.length >= 2) {
+                            try{
                             const top = arg.split('|')[0]
                             const bottom = arg.split('|')[1]
                             const encryptMedia = isQuotedImage ? quotedMsg : message
@@ -364,8 +365,13 @@ module.exports = HandleMsg = async (client, message) => {
                                 .catch(() => {
                                     client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.')
                                 })
+                            }catch (err) {
+                                console.log(err)
+                                await client.reply(from, `Argumen salah, Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`, id)
+                            }
+
                         } else {
-                            await client.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy teks atas | teks bawah`, id)
+                            await client.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`, id)
                         }
                         break
 
@@ -740,6 +746,10 @@ module.exports = HandleMsg = async (client, message) => {
                         var hasilwall = ''
                         do{
                             hasilwall = await images.fdci(cariwall)
+                                .catch(e => {
+                                    console.log(`fdci err : ${e}`)
+                                    return client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                })
                         }while(hasilwall == undefined | hasilwall == null)
 
                         await client.sendFileFromUrl(from, hasilwall, '', '', id)

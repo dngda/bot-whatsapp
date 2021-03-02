@@ -5,8 +5,7 @@ const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 const { default: PQueue } = require("p-queue")
 const queue = new PQueue({
-  concurrency: 8,
-  autoStart:true
+  concurrency: 4
    })
 
 //create session
@@ -29,10 +28,12 @@ async function start(client) {
     unreadMessages.forEach(message => {
         if (!message.isGroupMsg) processMessage(message)
     })
-    // queue.start()
 
     // ketika seseorang mengirim pesan
     await client.onMessage(async message => {
+        if (queue.isPaused) queue.start()
+        if (queue.size() > 1) console.log(`Process in queue: ${queue.size()}`)
+
         client.setPresence(true)
         if (message.body === 'P' | message.body === 'p') {
           await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
@@ -46,7 +47,6 @@ async function start(client) {
             })
 
         processMessage(message)
-        // queue.start()
     }).catch(err =>{
         console.log(err)
     })
