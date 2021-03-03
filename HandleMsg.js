@@ -52,6 +52,8 @@ const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
 const antisticker = JSON.parse(createReadFileSync('./data/antisticker.json'))
 const antilink = JSON.parse(createReadFileSync('./data/antilink.json'))
 
+const kataKasar = JSON.parse(fs.readFileSync('./settings/katakasar.json'))
+
 let {
     ownerNumber,
     groupLimit,
@@ -1009,7 +1011,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'shortlink':
                         if (args.length == 0) return client.reply(from, `ketik ${prefix}shortlink <url>`, id)
-                        if (!isUrl(args[0])) return client.reply(from, 'Maaf, url yang kamu kirim tidak valid.', id)
+                        if (!isUrl(args[0])) return client.reply(from, 'Maaf, url yang kamu kirim tidak valid. pastikan berawalkan http/https', id)
                         const shortlink = await urlShortener(args[0])
                         await client.sendText(from, shortlink)
                             .catch(() => {
@@ -1187,6 +1189,16 @@ module.exports = HandleMsg = async (client, message) => {
                         } else {
                             client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
                         }
+                        break
+
+                    case 'addkasar':
+                        if (!isOwnerBot) return client.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
+                        if (args.length !== 1) {return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id)}
+                        else {
+                            kataKasar.push(args[0])
+                            fs.writeFileSync('./setting/katakasar.json', JSON.stringify(kataKasar))
+                            client.reply(from, `Kata ${args[0]} berhasil ditambahkan.`, id)
+                        } 
                         break
 
                     case 'reset':
