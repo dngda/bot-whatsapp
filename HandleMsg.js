@@ -19,7 +19,7 @@ const {
     removeBackgroundFromImageBase64
 } = require('remove.bg')
 
-const {
+let {
     menuId,
     cekResi,
     urlShortener,
@@ -32,20 +32,9 @@ const {
     kbbi
 } = require('./lib')
 
-function refreshLibModule() {
-    delete require.cache[require.resolve('./lib')];
-        let {
-            menuId,
-            cekResi,
-            urlShortener,
-            meme,
-            getLocationData,
-            images,
-            api,
-            rugaapi,
-            cariKasar,
-            kbbi
-        } = require('./lib')
+function requireUncached(module) {
+    delete require.cache[require.resolve(module)];
+    return require(module);
 }
 
 const {
@@ -1213,7 +1202,7 @@ module.exports = HandleMsg = async (client, message) => {
                         else {
                             kataKasar.push(args[0])
                             fs.writeFileSync('./settings/katakasar.json', JSON.stringify(kataKasar))
-                            refreshLibModule()
+                            cariKasar = requireUncached('./lib/kataKotor.js')
                             client.reply(from, `Kata ${args[0]} berhasil ditambahkan.`, id)
                         } 
                         break
