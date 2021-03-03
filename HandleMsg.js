@@ -1196,7 +1196,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length !== 1) {return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id)}
                         else {
                             kataKasar.push(args[0])
-                            fs.writeFileSync('./setting/katakasar.json', JSON.stringify(kataKasar))
+                            fs.writeFileSync('./settings/katakasar.json', JSON.stringify(kataKasar))
                             client.reply(from, `Kata ${args[0]} berhasil ditambahkan.`, id)
                         } 
                         break
