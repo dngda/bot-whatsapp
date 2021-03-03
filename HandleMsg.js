@@ -32,6 +32,22 @@ const {
     kbbi
 } = require('./lib')
 
+function refreshLibModule() {
+    delete require.cache[require.resolve('./lib')];
+        let {
+            menuId,
+            cekResi,
+            urlShortener,
+            meme,
+            getLocationData,
+            images,
+            api,
+            rugaapi,
+            cariKasar,
+            kbbi
+        } = require('./lib')
+}
+
 const {
     msgFilter,
     color,
@@ -1197,6 +1213,7 @@ module.exports = HandleMsg = async (client, message) => {
                         else {
                             kataKasar.push(args[0])
                             fs.writeFileSync('./settings/katakasar.json', JSON.stringify(kataKasar))
+                            refreshLibModule()
                             client.reply(from, `Kata ${args[0]} berhasil ditambahkan.`, id)
                         } 
                         break
