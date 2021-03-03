@@ -581,7 +581,7 @@ module.exports = HandleMsg = async (client, message) => {
                             jadwal += `╠➥ Ashar       : ` + jadwals.ashar + '\n'
                             jadwal += `╠➥ Maghrib  : ` + jadwals.maghrib + '\n'
                             jadwal += `╠➥ Isya'         : ` + jadwals.isya + '\n'
-                            jadwal += '╚═〘 *Air Mineral Bot* 〙'
+                            jadwal += '╚═〘 *SeroBot Bot* 〙'
                             client.reply(from, jadwal, id)
                         }
                         break
