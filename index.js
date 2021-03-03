@@ -3,10 +3,6 @@ const figlet = require('figlet')
 const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
-const { default: PQueue } = require("p-queue")
-const queue = new PQueue({
-  concurrency: 1
-   })
 
 //create session
 wa.create(options(true, start))
@@ -14,8 +10,6 @@ wa.create(options(true, start))
     .catch(err => new Error(err))
 
 async function start(client) {
-    const processMessage = message => queue.add(() => HandleMsg(client, message))
-
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('  SeroBot', { font: 'Ghost', horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
@@ -24,9 +18,9 @@ async function start(client) {
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
 
     // process unread message
-    const unreadMessages = await client.getAllUnreadMessages();
+    const unreadMessages = await client.getAllUnreadMessages()
     unreadMessages.forEach(message => {
-        if (!message.isGroupMsg) processMessage(message)
+        if (!message.isGroupMsg) HandleMsg(client, message)
     })
 
     // ketika seseorang mengirim pesan
@@ -43,7 +37,7 @@ async function start(client) {
                 }
             })
 
-        processMessage(message)
+        HandleMsg(client, message)
     }).catch(err =>{
         console.log(err)
     })
