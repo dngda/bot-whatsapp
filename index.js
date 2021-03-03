@@ -5,7 +5,7 @@ const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 const { default: PQueue } = require("p-queue")
 const queue = new PQueue({
-  concurrency: 2
+  concurrency: 1
    })
 
 //create session
