@@ -278,7 +278,8 @@ module.exports = HandleMsg = async (client, message) => {
 
                                 } catch (err) {
                                     console.log(err)
-                                    await client.reply(from, 'Maaf terjadi error atau batas penggunaan sudah tercapai!', id)
+                                    if (err[0].code === 'unknown_foreground') client.reply(from, 'Maaf batas objek dan background tidak jelas!', id)
+                                    else await client.reply(from, 'Maaf terjadi error atau batas penggunaan sudah tercapai!', id)
                                 }
                             }
                         } else if (args.length === 1) {
@@ -292,7 +293,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                             }
                         } else {
-                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker crop (square crop)\n${prefix}sticker nobg (tanpa background)\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
+                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*`, id)
                         }
                         break
 
