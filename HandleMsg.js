@@ -229,17 +229,18 @@ module.exports = HandleMsg = async (client, message) => {
                     // Sticker Creator
                     case 'sticker':
                     case 'stiker':
-                        if ((isMedia || isQuotedImage) && args.length === 0) {
+                        if ((isMedia || isQuotedImage) && (args.length === 0 || args[0] === 'crop')) {
                             client.reply(from, `Copy that, processing!`, id)
                             const encryptMedia = isQuotedImage ? quotedMsg : message
                             const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+                            const _metadata = (args[0] === 'crop') ? { pack: 'Created with', author: 'SeroBot'} : stickerMetadata
                             const mediaData = await decryptMedia(encryptMedia)
                                 .catch(err => {
                                     console.log(err)
                                     client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                                 })
                             const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
-                            client.sendImageAsSticker(from, imageBase64, stickerMetadata)
+                            client.sendImageAsSticker(from, imageBase64, _metadata)
                                 .then(() => {
                                     client.sendText(from, 'Here\'s your sticker')
                                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
@@ -291,7 +292,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
                             }
                         } else {
-                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker nobg <tanpa background> (limited usage)\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
+                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker crop (square crop)\n${prefix}sticker nobg (tanpa background)\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
                         }
                         break
 
