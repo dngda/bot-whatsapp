@@ -479,7 +479,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'surah':
-                        if (args.length == 0) return client.reply(from, `*_${prefix}surah <nomor surah> <ayat>_*\nContoh: ${prefix}surah 1 1\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id`, message.id)
+                        if (args.length == 0) return client.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id`, message.id)
                         var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
                                     console.log(err)
@@ -489,7 +489,8 @@ module.exports = HandleMsg = async (client, message) => {
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true;
-                        });
+                        })
+                        if (data[idx] === undefined) return client.reply(from, `Maaf Format salah`, id)
                         nmr = data[idx].number
                         var info = body.trim().split(' ')
                         var ayat = info[2]
@@ -520,7 +521,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'tafsir':
-                        if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nomor surah> <ayat>_*\nContoh: ${prefix}tafsir 1 1\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
+                        if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
                         var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
                                     console.log(err)
@@ -531,6 +532,7 @@ module.exports = HandleMsg = async (client, message) => {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true;
                         });
+                        if (data[idx] === undefined) return client.reply(from, `Maaf Format salah`, id)
                         nmr = data[idx].number
                         if (!isNaN(nmr)) {
                             var responsih = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + args[1])
@@ -557,6 +559,7 @@ module.exports = HandleMsg = async (client, message) => {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true;
                         });
+                        if (surah.data[idx] === undefined) return client.reply(from, `Maaf Format salah`, id)
                         nmr = surah.data[idx].number
                         if (!isNaN(nmr)) {
                             if (args.length > 2) {
