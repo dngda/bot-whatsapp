@@ -8,6 +8,6 @@ getListData('21313132', 'tugas').then(_ => {
     console.log(`get ${_}`)
 })
 
-removeListData('123132213', 'mantap', 1).then(_ => {
+removeListData('123132213', 'mantap', 0).then(_ => {
     console.log(`remove ${_}`)
 })
