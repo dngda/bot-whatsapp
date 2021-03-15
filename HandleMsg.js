@@ -10,7 +10,7 @@ const _ = require('underscore')
 const appRoot = require('app-root-path')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
-const db_group = new FileSync(appRoot + '/data/group.json')
+const db_group = new FileSync(appRoot + '/data/denda.json')
 const db = low(db_group)
 
 db.defaults({ group: [] }).write()
@@ -490,7 +490,7 @@ module.exports = HandleMsg = async (client, message) => {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true;
                         })
-                        if (data[idx] === undefined) return client.reply(from, `Maaf Format salah`, id)
+                        if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
                         nmr = data[idx].number
                         var info = body.trim().split(' ')
                         var ayat = info[2]
@@ -532,7 +532,7 @@ module.exports = HandleMsg = async (client, message) => {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true;
                         });
-                        if (data[idx] === undefined) return client.reply(from, `Maaf Format salah`, id)
+                        if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
                         nmr = data[idx].number
                         if (!isNaN(nmr)) {
                             var responsih = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + args[1])
@@ -559,7 +559,7 @@ module.exports = HandleMsg = async (client, message) => {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true;
                         });
-                        if (surah.data[idx] === undefined) return client.reply(from, `Maaf Format salah`, id)
+                        if (surah.data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
                         nmr = surah.data[idx].number
                         if (!isNaN(nmr)) {
                             if (args.length > 2) {
