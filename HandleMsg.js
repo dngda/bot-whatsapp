@@ -1223,7 +1223,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'addtolist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah: *${prefix}addtolist <nama list> <isi>* contoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021`, id)
-                        if (args.length === 1) return client.reply(from, `Format salah, isinya apa woy`, id)
+                        if (args.length === 1) return client.reply(from, `Format salah, nama dan isinya apa woy`, id)
                         const dataq = await list.addListData(groupId, args[0], arg.substr(arg.indexOf(' ') + 1))
                         if (dataq === false || dataq === undefined) {
                             return client.reply(from, `List ${args[0]} tidak ditemukan.`)
@@ -1240,7 +1240,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'delist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>* contoh: ${prefix}delist tugas 1`, id)
-                        if (args.length === 1) return client.reply(from, `Format salah, nomor berapa woy`, id)
+                        if (args.length === 1) return client.reply(from, `Format salah, nama list dan nomor berapa woy`, id)
                         const data1 = await list.removeListData(groupId, args[0], args[1]-1)
                         if (data1 === false || data1 === undefined) {
                             return client.reply(from, `List ${args[0]} tidak ditemukan.`)
