@@ -6,7 +6,7 @@ const axios = require('axios')
 const fetch = require('node-fetch')
 const gTTS = require('gtts')
 const toPdf = require("office-to-pdf")
-
+const _ = require('underscore')
 const appRoot = require('app-root-path')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
@@ -51,13 +51,12 @@ const { uploadImages } = require('./utils/fetcher')
 
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 const skripsi = JSON.parse(createReadFileSync('./settings/skripsi.json'))
+const kataKasar = JSON.parse(createReadFileSync('./settings/katakasar.json'))
+const {apiNoBg} = JSON.parse(createReadFileSync('./settings/api.json'))
+
 const banned = JSON.parse(createReadFileSync('./data/banned.json'))
 const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
 const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
-const antisticker = JSON.parse(createReadFileSync('./data/antisticker.json'))
-const antilink = JSON.parse(createReadFileSync('./data/antilink.json'))
-
-const kataKasar = JSON.parse(fs.readFileSync('./settings/katakasar.json'))
 
 let {
     ownerNumber,
@@ -65,8 +64,6 @@ let {
     memberLimit,
     prefix
 } = setting
-
-const {apiNoBg} = JSON.parse(fs.readFileSync('./settings/api.json'))
 
 function formatin(duit) {
     let reverse = duit.toString().split('').reverse().join('');
@@ -96,11 +93,10 @@ module.exports = HandleMsg = async (client, message) => {
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
         const pengirim = sender.id
-        const GroupLinkDetector = antilink.includes(chatId)
-        const AntiStickerSpam = antisticker.includes(chatId)
         const stickermsg = message.type === 'sticker'
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
         const stickerMetadata = { pack: 'Created with', author: 'SeroBot', keepScale: true}
+        const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot'}
 
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
@@ -126,7 +122,6 @@ module.exports = HandleMsg = async (client, message) => {
         // [BETA] Avoid Spam Message
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
         if (isCmd && msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
-        //
         if (!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${argx}`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
         if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
@@ -141,6 +136,33 @@ module.exports = HandleMsg = async (client, message) => {
         // Filter Banned People
         if (isBanned) {
             return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
+        }
+        //msg response
+        const resMsg = {
+            wait: _.sample([
+                'Sedang diproses! Silahkan tunggu sebentar...',
+                'Copy that, processing!',
+                'Gotcha, please wait!',
+                'Copy that bro, please wait!',
+                'Okey, tunggu sebentar...'
+            ]),
+            error: {
+                norm: 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.',
+                admin: 'Perintah ini hanya untuk admin group!',
+                owner: 'Perintah ini hanya untuk owner bot!',
+                group: 'Maaf, perintah ini hanya dapat dipakai didalam grup!',
+                botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
+            },
+            success: {
+                join: 'Berhasil join grup via link!'
+            },
+            badw : _.sample([
+                'Astaghfirullah...',
+                'Jaga ketikanmu sahabat!',
+                'Yo rasah nggo misuh cuk!',
+                'Istighfar dulu sodaraku',
+                'Hadehh...'
+            ])
         }
 
         // Ini Command nya
@@ -165,7 +187,7 @@ module.exports = HandleMsg = async (client, message) => {
                             .then(() => ((isGroupMsg) && (isGroupAdmins)) ? client.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
                         break
                     case 'menuadmin':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         await client.sendText(from, menuId.textAdmin())
                         break
                     case 'donate':
@@ -177,7 +199,7 @@ module.exports = HandleMsg = async (client, message) => {
                             .then(() => client.sendText(from, 'Jika kalian ingin request fitur silahkan chat nomor di atas'))
                         break
                     case 'join':
-                        if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot kegroup silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
+                        if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot ke group silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
                         let linkgrup = body.slice(6)
                         let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
                         let chekgrup = await client.inviteInfo(linkgrup)
@@ -185,8 +207,8 @@ module.exports = HandleMsg = async (client, message) => {
                         if (isOwnerBot) {
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
-                                    await client.sendText(from, 'Berhasil join grup via link!')
-                                    await client.sendText(chekgrup.id, `Hai minna~, Im SeroBot. To find out the commands on this Bot type ${prefix}menu`)
+                                    await client.sendText(from, resMsg.success.join)
+                                    await client.sendText(chekgrup.id, `Hai guys~, I'm SeroBot. To find out the commands on this Bot type ${prefix}menu`)
                                 })
                         } else {
                             let cgrup = await client.getAllGroups()
@@ -194,7 +216,7 @@ module.exports = HandleMsg = async (client, message) => {
                             if (cgrup.size < memberLimit) return client.reply(from, `Sorry, Bot wil not join if the group members do not exceed ${memberLimit} people`, id)
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
-                                    await client.reply(from, 'Berhasil join grup via link!', id)
+                                    await client.reply(from, resMsg.success.join, id)
                                 })
                                 .catch(() => {
                                     client.reply(from, 'Gagal!', id)
@@ -217,7 +239,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'stimg':
                         if (quotedMsg && quotedMsg.type == 'sticker') {
                             const mediaData = await decryptMedia(quotedMsg)
-                            client.reply(from, `Sedang di proses! Silahkan tunggu sebentar...`, id)
+                            client.reply(from, resMsg.wait, id)
                             const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                             await client.sendFile(from, imageBase64, 'imgsticker.jpg', 'Berhasil convert Sticker to Image!', id)
                                 .then(() => {
@@ -230,14 +252,14 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'sticker':
                     case 'stiker':
                         if ((isMedia || isQuotedImage) && (args.length === 0 || args[0] === 'crop')) {
-                            client.reply(from, `Copy that, processing!`, id)
+                            client.reply(from, resMsg.wait, id)
                             const encryptMedia = isQuotedImage ? quotedMsg : message
                             const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
-                            const _metadata = (args[0] === 'crop') ? { pack: 'Created with', author: 'SeroBot'} : stickerMetadata
+                            const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : stickerMetadata
                             const mediaData = await decryptMedia(encryptMedia)
                                 .catch(err => {
                                     console.log(err)
-                                    client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                    client.sendText(from, resMsg.error.norm)
                                 })
                             const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                             client.sendImageAsSticker(from, imageBase64, _metadata)
@@ -246,11 +268,11 @@ module.exports = HandleMsg = async (client, message) => {
                                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                                 }).catch(err => {
                                     console.log(err)
-                                    client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                    client.sendText(from, resMsg.error.norm)
                                 })
                         } else if (args[0] === 'nobg') {
                             if (isMedia || isQuotedImage) {
-                                client.reply(from, `Copy that, processing!`, id)
+                                client.reply(from, resMsg.wait, id)
                                 try {
                                     var encryptedMedia = isQuotedImage ? quotedMsg : message
                                     var _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
@@ -258,13 +280,13 @@ module.exports = HandleMsg = async (client, message) => {
                                     var mediaData = await decryptMedia(encryptedMedia)
                                             .catch(err => {
                                             console.log(err)
-                                            client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                            client.sendText(from, resMsg.error.norm)
                                         })
                                     var imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                                     base64img = imageBase64
                                     var outFile = './media/noBg.png'
                                     // kamu dapat mengambil api key dari website remove.bg dan ubahnya difolder settings/api.json
-                                    var selectedApiNoBg = apiNoBg[Math.floor(Math.random() * apiNoBg.length)]
+                                    var selectedApiNoBg = _.sample(apiNoBg)
                                     var result = await removeBackgroundFromImageBase64({ base64img, apiKey: selectedApiNoBg, size: 'auto', type: 'auto', outFile })
                                     await fs.writeFile(outFile, result.base64img)
                                     await client.sendImageAsSticker(from, `data:${_mimetype};base64,${result.base64img}`, stickerMetadata)
@@ -273,7 +295,7 @@ module.exports = HandleMsg = async (client, message) => {
                                             console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                                         }).catch(err => {
                                             console.log(err)
-                                            client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                            client.sendText(from, resMsg.error.norm)
                                         })
 
                                 } catch (err) {
@@ -290,7 +312,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 : client.reply(from, 'Here\'s your sticker')).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
                             }catch (e) {
                                 console.log(`Sticker url err: ${e}`)
-                                client.sendText(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                client.sendText(from, resMsg.error.norm)
                             }
                         } else {
                             await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*`, id)
@@ -303,8 +325,9 @@ module.exports = HandleMsg = async (client, message) => {
                             if (mimetype === 'video/mp4' && message.duration <= 10 || quotedMsg.mimetype === 'video/mp4' && quotedMsg.duration <= 10) {
                                 var encryptedMedia = isQuotedVideo ? quotedMsg : message
                                 var mediaData = await decryptMedia(encryptedMedia)
-                                client.reply(from, 'Sedang diproses⏳ silakan tunggu ± 1 min!', id)
+                                client.reply(from, resMsg.wait, id)
                                 await client.sendMp4AsSticker(from, mediaData, {endTime: '00:00:09.0', log: true}, stickerMetadata)
+                                    .then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
                                     .catch(() => {
                                         client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
                                     })
@@ -340,7 +363,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                                 })
                                 .catch(() => {
-                                    client.reply(from, `Ada yang error! Coba lagi beberapa saat kemudian.`, id)
+                                    client.reply(from, resMsg.error.norm, id)
                                 })
                         } else {
                             await client.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
@@ -350,7 +373,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'qr':
                     case 'qrcode':
                         if (args.length == 0) return client.reply(from, `Untuk membuat kode QR, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya SeroBot`, id)
-                        client.reply(from, `Okey wait...`, id);
+                        client.reply(from, resMsg.wait, id);
                         let kata = args[0]
                         for (let i = 1; i < args.length; i++) {
                             kata += ` ${args[i]}`
@@ -377,7 +400,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.reply(from, 'Here you\'re!', id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.')
+                                    client.reply(from, resMsg.error.norm)
                                 })
                             }catch (err) {
                                 console.log(err)
@@ -395,16 +418,16 @@ module.exports = HandleMsg = async (client, message) => {
                         const nulisp = await api.tulis(nulisq)
                         await client.sendImage(from, `${nulisp}`, '', 'Nih...', id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
                     //required to install libreoffice
                     case 'doctopdf':
                     case 'pdf':
-                        if (!isQuotedDocs) return client.reply(from, `Convert doc docx to pdf.\n\nKirim dokumen kemudian reply dokumen dengan ${prefix}pdf`, id)
+                        if (!isQuotedDocs) return client.reply(from, `Convert doc/docx to pdf.\n\nKirim dokumen kemudian reply dokumen dengan ${prefix}pdf`, id)
                         if(/\.docx|\.doc/g.test(quotedMsg.filename) && isQuotedDocs){
-                            client.sendText(from, 'Copy that bro, please wait!')
+                            client.sendText(from, resMsg.wait)
                             const encDocs = await decryptMedia(quotedMsg)
                             toPdf(encDocs).then(
                               (pdfBuffer) => {
@@ -413,7 +436,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.sendFile(from, "./media/result.pdf", quotedMsg.filename.replace(/\.docx|\.doc/g, '.pdf'))
                               }, (err) => {
                                 console.log(err)
-                                client.sendText(from, 'Maaf terjadi error!')
+                                client.sendText(from, resMsg.error.norm)
                               }
                             )
                         }else{
@@ -426,13 +449,13 @@ module.exports = HandleMsg = async (client, message) => {
                         try {
                             axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .then((response) => {
-                                    let hehex = '╔══✪〘 List Surah 〙✪\n'
+                                    let listsrh = '╔══✪〘 List Surah 〙✪\n'
                                     for (let i = 0; i < response.data.data.length; i++) {
-                                        hehex += `╠➥ `
-                                        hehex += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
+                                        listsrh += `╠➥ `
+                                        listsrh += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
                                     }
-                                    hehex += '╚═〘 *SeroBot* 〙'
-                                    client.reply(from, hehex, id)
+                                    listsrh += '╚═〘 *SeroBot* 〙'
+                                    client.reply(from, listsrh, id)
                                 })
                         } catch (err) {
                             client.reply(from, err, id)
@@ -596,16 +619,16 @@ module.exports = HandleMsg = async (client, message) => {
                         break
                     //Group All User
                     case 'grouplink':
-                        if (!isBotGroupAdmins) return client.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isGroupMsg) {
                             const inviteLink = await client.getGroupInviteLink(groupId);
                             client.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name}* Gunakan *${prefix}revoke* untuk mereset Link group`)
                         } else {
-                            client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+                            client.reply(from, resMsg.error.group, id)
                         }
                         break
                     case "revoke":
-                        if (!isBotGroupAdmins) return client.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isBotGroupAdmins) {
                             client.revokeGroupInviteLink(from)
                                 .then((res) => {
@@ -654,7 +677,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 await client.reply(from, `Arti : ${res}`, id)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
@@ -664,11 +687,11 @@ module.exports = HandleMsg = async (client, message) => {
                             .then(res => res.text())
                             .then(body => {
                                 let splitnix = body.split('\n')
-                                let randomnix = splitnix[Math.floor(Math.random() * splitnix.length)]
+                                let randomnix = _.sample(splitnix)
                                 client.reply(from, randomnix, id)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
                     case 'katabijak':
@@ -676,11 +699,11 @@ module.exports = HandleMsg = async (client, message) => {
                             .then(res => res.text())
                             .then(body => {
                                 let splitbijak = body.split('\n')
-                                let randombijak = splitbijak[Math.floor(Math.random() * splitbijak.length)]
+                                let randombijak = _.sample(splitbijak)
                                 client.reply(from, randombijak, id)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
                     case 'pantun':
@@ -688,22 +711,22 @@ module.exports = HandleMsg = async (client, message) => {
                             .then(res => res.text())
                             .then(body => {
                                 let splitpantun = body.split('\n')
-                                let randompantun = splitpantun[Math.floor(Math.random() * splitpantun.length)]
+                                let randompantun = _.sample(splitpantun)
                                 client.reply(from, ' ' + randompantun.replace(/aruga-line/g, "\n"), id)
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
                     case 'quote':
                     case 'quotes':
                         const quotex = await api.quote()
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         await client.reply(from, quotex, id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
@@ -715,11 +738,11 @@ module.exports = HandleMsg = async (client, message) => {
                                 .then(res => res.text())
                                 .then(body => {
                                     let randomnime = body.split('\n')
-                                    let randomnimex = randomnime[Math.floor(Math.random() * randomnime.length)]
+                                    let randomnimex = _.sample(randomnime)
                                     client.sendFileFromUrl(from, randomnimex, '', 'Nee..', id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                    client.reply(from, resMsg.error.norm, id)
                                 })
                         } else {
                             client.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}anime untuk melihat list query`)
@@ -732,11 +755,11 @@ module.exports = HandleMsg = async (client, message) => {
                                 .then(res => res.text())
                                 .then(body => {
                                     let randomkpop = body.split('\n')
-                                    let randomkpopx = randomkpop[Math.floor(Math.random() * randomkpop.length)]
+                                    let randomkpopx = _.sample(randomkpop)
                                     client.sendFileFromUrl(from, randomkpopx, '', 'Nee..', id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                    client.reply(from, resMsg.error.norm, id)
                                 })
                         } else {
                             client.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}kpop untuk melihat list query`)
@@ -746,7 +769,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const randmeme = await meme.random()
                         client.sendFileFromUrl(from, randmeme, '', '', id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
@@ -762,13 +785,13 @@ module.exports = HandleMsg = async (client, message) => {
                             hasilwall = await images.fdci(cariwall)
                                 .catch(e => {
                                     console.log(`fdci err : ${e}`)
-                                    return client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                    return client.reply(from, resMsg.error.norm, id)
                                 })
                         }while(hasilwall == undefined | hasilwall == null)
 
                         await client.sendFileFromUrl(from, hasilwall, '', '', id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
@@ -795,7 +818,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const hasilreddit = await images.sreddit(carireddit)
                         await client.sendFileFromUrl(from, hasilreddit, '', '', id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
                     case 'nekopoi':
@@ -819,7 +842,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const cuacap = await api.cuaca(cuacaq)
                         await client.reply(from, cuacap, id)
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
@@ -878,7 +901,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     })
                             })
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
@@ -916,7 +939,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     })
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                    client.reply(from, resMsg.error.norm, id)
                                 })
                         } else {
                             client.reply(from, `Maaf format salah\n\nSilahkan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`, id)
@@ -927,29 +950,29 @@ module.exports = HandleMsg = async (client, message) => {
                         client.reply(from, `Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilahkan Pilih:\n➥ ${prefix}truth\n➥ ${prefix}dare`, id)
                     break
                     case 'truth':
-                        if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa digunakan didalam grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                             fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/truth.txt')
                                 .then(res => res.text())
                                 .then(body => {
                                     let truthx = body.split('\n')
-                                    let truthz = truthx[Math.floor(Math.random() * truthx.length)]
+                                    let truthz = _.sample(truthx)
                                     client.reply(from, truthz, id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Hayolohhh, Ada yang error! Coba lagi beberapa saat kemudian.!', id)
+                                    client.reply(from, resMsg.error.norm, id)
                                 })
                     break
                     case 'dare':
-                        if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa digunakan didalam grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                             fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/dare.txt')
                                 .then(res => res.text())
                                 .then(body => {
                                     let darex = body.split('\n')
-                                    let darez = darex[Math.floor(Math.random() * darex.length)]
+                                    let darez = _.sample(darex)
                                     client.reply(from, darez, id)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Hayolohhh, Ada yang error! Coba lagi beberapa saat kemudian.!', id)
+                                    client.reply(from, resMsg.error.norm, id)
                                 })
                     break
                     // Other Command
@@ -972,7 +995,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                         .catch(err => {
                                             console.log(err)
-                                            client.sendTest(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                            client.sendTest(from, resMsg.error.norm)
                                         })
                                 })
                             } catch (err) {
@@ -987,7 +1010,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
                                         .catch(err => {
                                             console.log(err)
-                                            client.sendTest(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                            client.sendTest(from, resMsg.error.norm)
                                         })
                                 })
                             } catch (err) {
@@ -1018,11 +1041,11 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'shortlink':
                         if (args.length == 0) return client.reply(from, `ketik ${prefix}shortlink <url>`, id)
-                        if (!isUrl(args[0])) return client.reply(from, 'Maaf, url yang kamu kirim tidak valid. pastikan berawalkan http/https', id)
+                        if (!isUrl(args[0])) return client.reply(from, 'Maaf, url yang kamu kirim tidak valid. Pastikan menggunakan format http/https', id)
                         const shortlink = await urlShortener(args[0])
                         await client.sendText(from, shortlink)
                             .catch(() => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
@@ -1040,7 +1063,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'klasemen':
                     case 'klasmen':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         const klasemen = db.get('group').filter({ id: groupId }).map('members').value()[0]
                         let urut = Object.entries(klasemen).map(([key, val]) => ({ id: key, ...val })).sort((a, b) => b.denda - a.denda);
                         let textKlas = "*Klasemen Denda Sementara*\n"
@@ -1053,14 +1076,14 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'skripsi':
-                        let randomSkripsi = skripsi[Math.floor(Math.random() * skripsi.length)]
+                        let randomSkripsi = _.sample(skripsi)
                         var gtts = new gTTS(randomSkripsi, 'id')
                         try {
                             gtts.save('./media/tts.mp3', function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
                                     .catch(err => {
                                         console.log(err)
-                                        client.sendTest(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                        client.sendTest(from, resMsg.error.norm)
                                     })
                             })
                         } catch (err) {
@@ -1081,7 +1104,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.sendPtt(from, './media/tts.mp3', id)
                                     .catch(err => {
                                         console.log(err)
-                                        client.sendTest(from, 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.')
+                                        client.sendTest(from, resMsg.error.norm)
                                     })
                             })
                         } catch (err) {
@@ -1097,15 +1120,15 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.reply(from, res+`\n\nMore: https://kbbi.web.id/${args[0]}`, id)
 
                             }).catch(err => {
-                                client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian.', id)
+                                client.reply(from, resMsg.error.norm, id)
                                 console.log(err)
                             })
                         break
 
                     // Group Commands (group admin only)
                     case 'add':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (args.length !== 1) return client.reply(from, `Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`, id)
                         try {
                             await client.addParticipant(from, `${args[0]}@c.us`)
@@ -1115,9 +1138,9 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'kick':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-                        if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (mentionedJidList.length === 0) return client.reply(from, 'Maaf, format pesan salah.\nSilahkan tag satu atau lebih orang yang akan dikeluarkan', id)
                         if (mentionedJidList[0] === botNumber) return await client.reply(from, 'Maaf, format pesan salah.\nTidak dapat mengeluarkan akun bot sendiri', id)
                         await client.sendTextWithMentions(from, `Request diterima, mengeluarkan:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
@@ -1128,9 +1151,9 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'promote':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-                        if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (mentionedJidList.length !== 1) return client.reply(from, 'Maaf, hanya bisa mempromote 1 user', id)
                         if (groupAdmins.includes(mentionedJidList[0])) return await client.reply(from, 'Maaf, user tersebut sudah menjadi admin.', id)
                         if (mentionedJidList[0] === botNumber) return await client.reply(from, 'Maaf, format pesan salah.\nTidak dapat mempromote akun bot sendiri', id)
@@ -1139,9 +1162,9 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'demote':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-                        if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (mentionedJidList.length !== 1) return client.reply(from, 'Maaf, hanya bisa mendemote 1 user', id)
                         if (!groupAdmins.includes(mentionedJidList[0])) return await client.reply(from, 'Maaf, user tersebut belum menjadi admin.', id)
                         if (mentionedJidList[0] === botNumber) return await client.reply(from, 'Maaf, format pesan salah.\nTidak dapat mendemote akun bot sendiri', id)
@@ -1150,21 +1173,20 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'bye':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         await client.sendText(from, 'Good bye 👋').then(() => client.leaveGroup(groupId))
                         break
 
                     case 'del':
                         if (!quotedMsg) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
                         if (!quotedMsgObj.fromMe) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
-                        await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
-                        await client.simulateTyping(from, false)
+                        await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false).then(() => client.simulateTyping(from, false))
                         break
 
                     case 'tagall':
                     case 'alle':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         const groupMem = await client.getGroupMembers(groupId)
                         let res = '╔══✪〘 Mention All 〙✪\n'
                         for (let i = 0; i < groupMem.length; i++) {
@@ -1176,13 +1198,13 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'katakasar':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
                         break
 
                     case 'kasar':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        // if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (args.length !== 1) return client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
                         if (args[0] == 'on') {
                             ngegas.push(chatId)
@@ -1199,7 +1221,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'addkasar':
-                        if (!isOwnerBot) return client.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length !== 1) {return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id)}
                         else {
                             kataKasar.push(args[0])
@@ -1210,8 +1232,8 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'reset':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         const reset = db.get('group').find({ id: groupId }).assign({ members: [] }).write()
                         if (reset) {
                             await client.sendText(from, "Klasemen telah direset.")
@@ -1219,9 +1241,9 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'mutegrup':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-                        if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (args.length !== 1) return client.reply(from, `Untuk mengubah settingan group chat agar hanya admin saja yang bisa chat\n\nPenggunaan:\n${prefix}mutegrup on --aktifkan\n${prefix}mutegrup off --nonaktifkan`, id)
                         if (args[0] == 'on') {
                             client.setGroupToAdminsOnly(groupId, true).then(() => client.sendText(from, 'Berhasil mengubah agar hanya admin yang dapat chat!'))
@@ -1233,9 +1255,9 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'setprofile':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-                        if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isMedia && type == 'image' || isQuotedImage) {
                             const dataMedia = isQuotedImage ? quotedMsg : message
                             const _mimetype = dataMedia.mimetype
@@ -1253,9 +1275,9 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'welcome':
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-                        //if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-                        if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        //if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (args.length !== 1) return client.reply(from, `Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`, id)
                         if (args[0] == 'on') {
                             welcome.push(chatId)
@@ -1273,10 +1295,10 @@ module.exports = HandleMsg = async (client, message) => {
 
                     //Owner Group
                     case 'kickall': //mengeluarkan semua member
-                        if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         let isOwner = chat.groupMetadata.owner == pengirim
                         if (!isOwner) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai oleh owner grup!', id)
-                        if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         const allMem = await client.getGroupMembers(groupId)
                         for (let i = 0; i < allMem.length; i++) {
                             if (groupAdmins.includes(allMem[i].id)) {
@@ -1290,7 +1312,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     //Owner Bot
                     case 'ban':
-                        if (!isOwnerBot) return client.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length == 0) return client.reply(from, `Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban add 628xx --untuk mengaktifkan\n${prefix}ban del 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`, id)
                         if (args[0] == 'add') {
                             banned.push(args[1] + '@c.us')
@@ -1311,7 +1333,7 @@ module.exports = HandleMsg = async (client, message) => {
                             }
                         break
                     case 'bc': //untuk broadcast atau promosi
-                        if (!isOwnerBot) return client.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua chat ketik:\n${prefix}bc [isi chat]`)
                         let msg = body.slice(4)
                         const chatz = await client.getAllChatIds()
@@ -1324,7 +1346,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'leaveall': //mengeluarkan bot dari semua group serta menghapus chatnya
-                        if (!isOwnerBot) return client.reply(from, 'Perintah ini hanya untuk Owner bot', id)
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allChatz = await client.getAllChatIds()
                         const allGroupz = await client.getAllGroups()
                         for (let gclist of allGroupz) {
@@ -1336,7 +1358,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'clearall': //menghapus seluruh pesan diakun bot
-                        if (!isOwnerBot) return client.reply(from, 'Perintah ini hanya untuk Owner bot', id)
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allChatx = await client.getAllChats()
                         for (let dchat of allChatx) {
                             await client.deleteChat(dchat.id)
@@ -1344,7 +1366,7 @@ module.exports = HandleMsg = async (client, message) => {
                         client.reply(from, 'Success clear all chat!', id)
                         break
                     default:
-                        await client.sendText(from, 'Perintah tidak ada.\n/menu untuk melihat daftar perintah!')
+                        await client.sendText(from, `Perintah tidak ada.\n${prefix}menu untuk melihat daftar perintah!`)
                         break
                 }
 
@@ -1361,7 +1383,7 @@ module.exports = HandleMsg = async (client, message) => {
                     if (isKasar) {
                         const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + 5000).write()
                         if (denda) {
-                            await client.reply(from, "Yoo rasah nganggo misuh su!\nDenda +5.000\nTotal : Rp" + formatin(denda.denda), id)
+                            await client.reply(from, `${resMsg.badw}\nDenda +5.000\nTotal : Rp` + formatin(denda.denda), id)
                         }
                     }
                 } else {
@@ -1376,7 +1398,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                         if (isKasar) {
                             cekuser.push({ id: pengirim, denda: 5000 })
-                            await client.reply(from, "Yoo rasah nganggo misuh su!\nDenda +5.000", id)
+                            await client.reply(from, `${resMsg.badw}\nDenda +5.000`, id)
                         } else {
                             cekuser.push({ id: pengirim, denda: 0 })
                         }
@@ -1386,7 +1408,7 @@ module.exports = HandleMsg = async (client, message) => {
             } else {
                 if (isKasar) {
                     db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 5000 }] }).write()
-                    await client.reply(from, "Yoo rasah nganggo misuh su!\nDenda +5.000\nTotal : Rp5.000", id)
+                    await client.reply(from, `${resMsg.badw}\nDenda +5.000\nTotal : Rp5.000`, id)
                 } else {
                     db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 0 }] }).write()
                 }

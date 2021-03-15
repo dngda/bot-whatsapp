@@ -20,7 +20,10 @@ async function start(client) {
     // process unread message
     const unreadMessages = await client.getAllUnreadMessages()
     unreadMessages.forEach(message => {
-        if (!message.isGroupMsg) HandleMsg(client, message)
+        setTimeout(
+            function(){
+                if (!message.isGroupMsg) HandleMsg(client, message)
+            }, 100)
     })
 
     // ketika seseorang mengirim pesan
