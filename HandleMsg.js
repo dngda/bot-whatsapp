@@ -1177,7 +1177,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) {
                             let thelist = await list.getListName(groupId)
-                            client.reply(from, `${(thelist === false || thelist === '') ? 'Group ini belum memiliki list.' : `List yang ada di group: ${thelist}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
+                            client.reply(from, `${(thelist === false || thelist === '') ? 'Group ini belum memiliki list.' : `List yang ada di group: ${thelist.join(', ')}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
                                 \nUntuk membuat list gunakan perintah:\n *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)
                                 \nUntuk menghapus list beserta isinya gunakan perintah:\n *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
                                 \nUntuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* contoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021
@@ -1206,8 +1206,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas`, id)
                         const thelist = await list.getListName(groupId)
-                        const lists = thelist.toString().trim().split(" ")
-                        if (args[0].includes(lists) || args[0] === lists) {
+                        if (thelist.includes(args[0])) {
                             client.reply(from, `[❗] List ${args[0]} akan dihapus.\nKirim *${prefix}confirmdeletelist ${args[0]}* untuk mengonfirmasi, abaikan jika tidak jadi.`, id)
                         } else {
                             client.reply(from, `List ${args[0]} tidak ada.`, id)
