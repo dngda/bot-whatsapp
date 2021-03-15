@@ -1181,7 +1181,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 \nUntuk membuat list gunakan perintah:\n *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)
                                 \nUntuk menghapus list beserta isinya gunakan perintah:\n *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
                                 \nUntuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2
-                                \nUntuk menghapus *isi* list gunakan perintah:\n *${prefix}delist <nama list> <nomor isi list>*\n bisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3
+                                \nUntuk menghapus *isi* list gunakan perintah:\n *${prefix}delist <nama list> <nomor isi list>*\nBisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3
                                 `, id)
                         } else if (args.length > 0) {
                             let listData = await list.getListData(groupId, args[0])
@@ -1222,7 +1222,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'addtolist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                        if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2`, id)
+                        if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* Bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nama dan isinya apa woy`, id)
                         const thelist1 = await list.getListName(groupId)
                         if (!thelist1.includes(args[0])) {
@@ -1243,7 +1243,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'delist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                        if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>*\n bisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3`, id)
+                        if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>*\nBisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nama list dan nomor berapa woy`, id)
                         const thelist2 = await list.getListName(groupId)
                         if (!thelist2.includes(args[0])) {
@@ -1252,11 +1252,10 @@ module.exports = HandleMsg = async (client, message) => {
                             let number = arg.substr(arg.indexOf(' ') + 1).split(',').map((item) => {
                                 return item.trim()-1
                             })
-                            let data1 = []
                             number.reverse().forEach((num) => {
                                 list.removeListData(groupId, args[0], num)
                             })
-                            data1 = await list.removeListData(groupId, args[0], 9999)
+                            const data1 = await list.removeListData(groupId, args[0], 9999)
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
                             data1.forEach((data, i) => {
                                 respon += `║ ${i + 1}. ${data}\n`
