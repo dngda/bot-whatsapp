@@ -1206,7 +1206,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas`, id)
                         const thelist = await list.getListName(groupId)
-                        const lists = thelist.trim().split(" ")
+                        const lists = thelist.toString().trim().split(" ")
                         if (args[0].includes(lists) || args[0] === lists) {
                             client.reply(from, `[❗] List ${args[0]} akan dihapus.\nKirim *${prefix}confirmdeletelist ${args[0]}* untuk mengonfirmasi, abaikan jika tidak jadi.`, id)
                         } else {
@@ -1226,7 +1226,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah: *${prefix}addtolist <nama list> <isi>* contoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, isinya apa woy`, id)
                         const dataq = await list.addListData(groupId, args[0], arg.substr(arg.indexOf(' ') + 1))
-                        if (dataq === false) {
+                        if (dataq === false || dataq === undefined) {
                             return client.reply(from, `List ${args[0]} tidak ditemukan.`)
                         } else {
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
@@ -1243,7 +1243,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>* contoh: ${prefix}delist tugas 1`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nomor berapa woy`, id)
                         const data1 = await list.removeListData(groupId, args[0], args[1]-1)
-                        if (data1 === false) {
+                        if (data1 === false || data1 === undefined) {
                             return client.reply(from, `List ${args[0]} tidak ditemukan.`)
                         }else {
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
