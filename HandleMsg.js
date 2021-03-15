@@ -1252,8 +1252,8 @@ module.exports = HandleMsg = async (client, message) => {
                             let number = arg.substr(arg.indexOf(' ') + 1).split(',').map((item) => {
                                 return item.trim()-1
                             })
-                            number.reverse().forEach((num) => {
-                                list.removeListData(groupId, args[0], num)
+                            await number.reverse().forEach(async (num) => {
+                                await list.removeListData(groupId, args[0], num)
                             })
                             const data1 = await list.removeListData(groupId, args[0], 9999)
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
