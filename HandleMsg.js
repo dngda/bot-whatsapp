@@ -53,7 +53,7 @@ const { uploadImages } = require('./utils/fetcher')
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 const skripsi = JSON.parse(createReadFileSync('./settings/skripsi.json'))
 const kataKasar = JSON.parse(createReadFileSync('./settings/katakasar.json'))
-const {apiNoBg} = JSON.parse(createReadFileSync('./settings/api.json'))
+const { apiNoBg } = JSON.parse(createReadFileSync('./settings/api.json'))
 
 const banned = JSON.parse(createReadFileSync('./data/banned.json'))
 const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
@@ -96,8 +96,8 @@ module.exports = HandleMsg = async (client, message) => {
         const pengirim = sender.id
         const stickermsg = message.type === 'sticker'
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
-        const stickerMetadata = { pack: 'Created with', author: 'SeroBot', keepScale: true}
-        const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot'}
+        const stickerMetadata = { pack: 'Created with', author: 'SeroBot', keepScale: true }
+        const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
 
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
@@ -106,7 +106,7 @@ module.exports = HandleMsg = async (client, message) => {
         const args = body.trim().split(/ +/).slice(1)
         const isCmd = body.startsWith(prefix)
         const url = args.length !== 0 ? args[0] : ''
-        
+
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
         const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
         const isQuotedChat = quotedMsg && quotedMsg.type === 'chat'
@@ -156,7 +156,7 @@ module.exports = HandleMsg = async (client, message) => {
             success: {
                 join: 'Berhasil join grup via link!'
             },
-            badw : _.sample([
+            badw: _.sample([
                 'Astaghfirullah...',
                 'Jaga ketikanmu sahabat!',
                 'Yo rasah nggo misuh cuk!',
@@ -253,23 +253,29 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'stiker':
                         if ((isMedia || isQuotedImage) && (args.length === 0 || args[0] === 'crop')) {
                             client.reply(from, resMsg.wait, id)
-                            const encryptMedia = isQuotedImage ? quotedMsg : message
-                            const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
-                            const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : stickerMetadata
-                            const mediaData = await decryptMedia(encryptMedia)
-                                .catch(err => {
-                                    console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
-                                })
-                            const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
-                            client.sendImageAsSticker(from, imageBase64, _metadata)
-                                .then(() => {
-                                    client.sendText(from, 'Here\'s your sticker')
-                                    console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
-                                }).catch(err => {
-                                    console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
-                                })
+                            try {
+                                const encryptMedia = isQuotedImage ? quotedMsg : message
+                                const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+                                const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : stickerMetadata
+                                const mediaData = await decryptMedia(encryptMedia)
+                                    .catch(err => {
+                                        console.log(err)
+                                        client.sendText(from, resMsg.error.norm)
+                                    })
+                                const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+                                client.sendImageAsSticker(from, imageBase64, _metadata)
+                                    .then(() => {
+                                        client.sendText(from, 'Here\'s your sticker')
+                                        console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
+                                    }).catch(err => {
+                                        console.log(err)
+                                        client.sendText(from, resMsg.error.norm)
+                                    })
+                            } catch (err) {
+                                console.log(err)
+                                client.sendText(from, resMsg.error.norm)
+                            }
+
                         } else if (args[0] === 'nobg') {
                             if (isMedia || isQuotedImage) {
                                 client.reply(from, resMsg.wait, id)
@@ -278,7 +284,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     var _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
 
                                     var mediaData = await decryptMedia(encryptedMedia)
-                                            .catch(err => {
+                                        .catch(err => {
                                             console.log(err)
                                             client.sendText(from, resMsg.error.norm)
                                         })
@@ -308,9 +314,9 @@ module.exports = HandleMsg = async (client, message) => {
                             try {
                                 if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                                 client.sendStickerfromUrl(from, url).then((r) => (!r && r !== undefined)
-                                ? client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
-                                : client.reply(from, 'Here\'s your sticker')).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
-                            }catch (e) {
+                                    ? client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
+                                    : client.reply(from, 'Here\'s your sticker')).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+                            } catch (e) {
                                 console.log(`Sticker url err: ${e}`)
                                 client.sendText(from, resMsg.error.norm)
                             }
@@ -326,7 +332,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 var encryptedMedia = isQuotedVideo ? quotedMsg : message
                                 var mediaData = await decryptMedia(encryptedMedia)
                                 client.reply(from, resMsg.wait, id)
-                                await client.sendMp4AsSticker(from, mediaData, {endTime: '00:00:09.0', log: true}, stickerMetadata)
+                                await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
                                     .then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
                                     .catch(() => {
                                         client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
@@ -384,25 +390,25 @@ module.exports = HandleMsg = async (client, message) => {
                                 await client.sendFileFromUrl(from, `${res}`, id)
                             })
                         break
-                        
+
                     case 'meme':
                     case 'memefy':
                         if ((isMedia || isQuotedImage) && args.length >= 2) {
-                            try{
-                            const top = arg.split('|')[0]
-                            const bottom = arg.split('|')[1]
-                            const encryptMedia = isQuotedImage ? quotedMsg : message
-                            const mediaData = await decryptMedia(encryptMedia)
-                            const getUrl = await uploadImages(mediaData, false)
-                            const ImageBase64 = await meme.custom(getUrl, top, bottom)
-                            client.sendFile(from, ImageBase64, 'image.png', '', null, true)
-                                .then(() => {
-                                    client.reply(from, 'Here you\'re!', id)
-                                })
-                                .catch(() => {
-                                    client.reply(from, resMsg.error.norm)
-                                })
-                            }catch (err) {
+                            try {
+                                const top = arg.split('|')[0]
+                                const bottom = arg.split('|')[1]
+                                const encryptMedia = isQuotedImage ? quotedMsg : message
+                                const mediaData = await decryptMedia(encryptMedia)
+                                const getUrl = await uploadImages(mediaData, false)
+                                const ImageBase64 = await meme.custom(getUrl, top, bottom)
+                                client.sendFile(from, ImageBase64, 'image.png', '', null, true)
+                                    .then(() => {
+                                        client.reply(from, 'Here you\'re!', id)
+                                    })
+                                    .catch(() => {
+                                        client.reply(from, resMsg.error.norm)
+                                    })
+                            } catch (err) {
                                 console.log(err)
                                 await client.reply(from, `Argumen salah, Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`, id)
                             }
@@ -426,20 +432,20 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'doctopdf':
                     case 'pdf':
                         if (!isQuotedDocs) return client.reply(from, `Convert doc/docx to pdf.\n\nKirim dokumen kemudian reply dokumen dengan ${prefix}pdf`, id)
-                        if(/\.docx|\.doc/g.test(quotedMsg.filename) && isQuotedDocs){
+                        if (/\.docx|\.doc/g.test(quotedMsg.filename) && isQuotedDocs) {
                             client.sendText(from, resMsg.wait)
                             const encDocs = await decryptMedia(quotedMsg)
                             toPdf(encDocs).then(
-                              (pdfBuffer) => {
-                                fs.writeFileSync("./media/result.pdf", pdfBuffer)
+                                (pdfBuffer) => {
+                                    fs.writeFileSync("./media/result.pdf", pdfBuffer)
 
-                                client.sendFile(from, "./media/result.pdf", quotedMsg.filename.replace(/\.docx|\.doc/g, '.pdf'))
-                              }, (err) => {
-                                console.log(err)
-                                client.sendText(from, resMsg.error.norm)
-                              }
+                                    client.sendFile(from, "./media/result.pdf", quotedMsg.filename.replace(/\.docx|\.doc/g, '.pdf'))
+                                }, (err) => {
+                                    console.log(err)
+                                    client.sendText(from, resMsg.error.norm)
+                                }
                             )
-                        }else{
+                        } else {
                             client.reply(from, 'Maaf format file tidak sesuai', id)
                         }
                         break
@@ -464,10 +470,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'infosurah':
                         if (args.length == 0) return client.reply(from, `*_${prefix}infosurah <nama surah>_*\nMenampilkan informasi lengkap mengenai surah tertentu. Contoh penggunan: ${prefix}infosurah al-baqarah`, message.id)
                         var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                                .catch(err => {
-                                    console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
-                                })
+                            .catch(err => {
+                                console.log(err)
+                                client.sendText(from, resMsg.error.norm)
+                            })
                         var { data } = responseh.data
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -481,10 +487,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'surah':
                         if (args.length == 0) return client.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id`, message.id)
                         var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                                .catch(err => {
-                                    console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
-                                })
+                            .catch(err => {
+                                console.log(err)
+                                client.sendText(from, resMsg.error.norm)
+                            })
                         var { data } = responsh.data
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -523,10 +529,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'tafsir':
                         if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
                         var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                                .catch(err => {
-                                    console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
-                                })
+                            .catch(err => {
+                                console.log(err)
+                                client.sendText(from, resMsg.error.norm)
+                            })
                         var { data } = responsh.data
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -550,10 +556,10 @@ module.exports = HandleMsg = async (client, message) => {
                         ayat = "ayat"
                         bhs = ""
                         var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                                .catch(err => {
-                                    console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
-                                })
+                            .catch(err => {
+                                console.log(err)
+                                client.sendText(from, resMsg.error.norm)
+                            })
                         var surah = responseh.data
                         var idx = surah.data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -639,9 +645,9 @@ module.exports = HandleMsg = async (client, message) => {
                                 })
                             try {
                                 var kodek = datak.data.kota[0].id
-                            }catch(err) {
-                                    return client.reply(from, 'Kota tidak ditemukan', id)
-                                }
+                            } catch (err) {
+                                return client.reply(from, 'Kota tidak ditemukan', id)
+                            }
                             var tgl = moment(t * 1000).format('YYYY-MM-DD')
                             var datas = await axios.get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
                             var jadwals = datas.data.jadwal.data
@@ -683,7 +689,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'ytmp3':
                         if (args.length == 0) return client.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
                         const linkmp3 = args[0].substr((args[0].indexOf('=')) !== -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
-                        rugaapi.ytmp3(`https://youtu.be/${linkmp3}`)
+                        await rugaapi.ytmp3(`https://youtu.be/${linkmp3}`)
                             .then(async (res) => {
                                 if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
                                 await client.sendFileFromUrl(from, `${res.getImages}`, '', `Lagu ditemukan\n\nJudul ${res.titleInfo}\n\nSabar lagi dikirim\nJika BOT terlalu lama merespon, silahkan downliad file nya secara manual\nLink mp3: ${res.getAudio}.mp3`, id)
@@ -694,9 +700,9 @@ module.exports = HandleMsg = async (client, message) => {
                                 var dir = `./media/ytmp3/${time}.mp3`
                                 async function mp3() {
                                     console.log('Proses download sedang berlangsung')
-                                    await download(link, dir, function (err) {
+                                    download(link, dir, function (err) {
                                         if (err) {
-                                            console.error(err);
+                                            console.error(err)
                                         } else {
                                             console.log('Download Complete')
                                             client.sendPtt(from, dir, id)
@@ -705,7 +711,10 @@ module.exports = HandleMsg = async (client, message) => {
                                     });
                                 }
                                 mp3()
-
+                            })
+                            .catch(err => {
+                                console.log(err)
+                                client.reply(from, resMsg.error.norm, id)
                             })
                         break
 
@@ -819,13 +828,13 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'images':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
                         var hasilwall = ''
-                        do{
+                        do {
                             hasilwall = await images.fdci(arg)
                                 .catch(e => {
                                     console.log(`fdci err : ${e}`)
                                     return client.reply(from, resMsg.error.norm, id)
                                 })
-                        }while(hasilwall == undefined | hasilwall == null)
+                        } while (hasilwall == undefined | hasilwall == null)
 
                         await client.sendFileFromUrl(from, hasilwall, '', '', id)
                             .catch(() => {
@@ -925,9 +934,9 @@ module.exports = HandleMsg = async (client, message) => {
                                         var dir = `./media/ytmp3/${time}.mp3`
                                         async function play() {
                                             console.log('proses download sedang berlangsung')
-                                            await download(link, dir, function (err) {
+                                            download(link, dir, function (err) {
                                                 if (err) {
-                                                    console.error(err);
+                                                    console.error(err)
                                                 } else {
                                                     console.log('Download Complete')
                                                     client.sendPtt(from, dir, id)
@@ -986,33 +995,33 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'tod':
                         client.reply(from, `Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilahkan Pilih:\n➥ ${prefix}truth\n➥ ${prefix}dare`, id)
-                    break
+                        break
                     case 'truth':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                            fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/truth.txt')
-                                .then(res => res.text())
-                                .then(body => {
-                                    let truthx = body.split('\n')
-                                    let truthz = _.sample(truthx)
-                                    client.reply(from, truthz, id)
-                                })
-                                .catch(() => {
-                                    client.reply(from, resMsg.error.norm, id)
-                                })
-                    break
+                        fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/truth.txt')
+                            .then(res => res.text())
+                            .then(body => {
+                                let truthx = body.split('\n')
+                                let truthz = _.sample(truthx)
+                                client.reply(from, truthz, id)
+                            })
+                            .catch(() => {
+                                client.reply(from, resMsg.error.norm, id)
+                            })
+                        break
                     case 'dare':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                            fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/dare.txt')
-                                .then(res => res.text())
-                                .then(body => {
-                                    let darex = body.split('\n')
-                                    let darez = _.sample(darex)
-                                    client.reply(from, darez, id)
-                                })
-                                .catch(() => {
-                                    client.reply(from, resMsg.error.norm, id)
-                                })
-                    break
+                        fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/dare.txt')
+                            .then(res => res.text())
+                            .then(body => {
+                                let darex = body.split('\n')
+                                let darez = _.sample(darex)
+                                client.reply(from, darez, id)
+                            })
+                            .catch(() => {
+                                client.reply(from, resMsg.error.norm, id)
+                            })
+                        break
                     // Other Command
                     case 'resi':
                         if (args.length !== 2) return client.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
@@ -1026,10 +1035,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'say':
                         if (!isQuotedChat && args.length !== 0) {
                             try {
-                            const dataText = body.slice(8)
-                            if (dataText === '') return client.reply(from, 'Apa teksnya syg..', id)
+                                const dataText = body.slice(8)
+                                if (dataText === '') return client.reply(from, 'Apa teksnya syg..', id)
                                 var gtts = new gTTS(dataText, args[0])
-                                gtts.save('./media/tts.mp3', function() {
+                                gtts.save('./media/tts.mp3', function () {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                         .catch(err => {
                                             console.log(err)
@@ -1042,8 +1051,8 @@ module.exports = HandleMsg = async (client, message) => {
                         }
                         else if (isQuotedChat && args.length !== 0) {
                             try {
-                            const dataText = quotedMsgObj.content.toString()
-                            var gtts = new gTTS(dataText, args[0])
+                                const dataText = quotedMsgObj.content.toString()
+                                var gtts = new gTTS(dataText, args[0])
                                 gtts.save('./media/tts.mp3', function () {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
                                         .catch(err => {
@@ -1155,7 +1164,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const cariKata = kbbi(args[0])
                             .then(res => {
                                 if (res == '') return client.reply(from, `Maaf kata "${args[0]}" tidak tersedia di KBBI`, id)
-                                client.reply(from, res+`\n\nMore: https://kbbi.web.id/${args[0]}`, id)
+                                client.reply(from, res + `\n\nMore: https://kbbi.web.id/${args[0]}`, id)
 
                             }).catch(err => {
                                 client.reply(from, resMsg.error.norm, id)
@@ -1168,84 +1177,84 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) {
                             let thelist = await list.getListName(groupId)
-                            client.reply(from, `${thelist === false ? 'Group ini belum memiliki list.' : `List yang ada di group: ${thelist}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
-                                \nUntuk membuat list gunakan perintah: *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)
-                                \nUntuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
-                                \nUntuk mengisi list gunakan perintah: *${prefix}addtolist <nama list> <isi>* contoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021
-                                \nUntuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>* contoh: ${prefix}delist tugas 1
+                            client.reply(from, `${(thelist === false || thelist === '') ? 'Group ini belum memiliki list.' : `List yang ada di group: ${thelist}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
+                                \nUntuk membuat list gunakan perintah:\n *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)
+                                \nUntuk menghapus list beserta isinya gunakan perintah:\n *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
+                                \nUntuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* contoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021
+                                \nUntuk menghapus *isi* list gunakan perintah:\n *${prefix}delist <nama list> <nomor isi list>* contoh: ${prefix}delist tugas 1
                                 `, id)
-                        }else if (args.length > 0){
+                        } else if (args.length > 0) {
                             let listData = await list.getListData(groupId, args[0])
                             if (listData === false) return client.reply(from, `List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`, id)
-                            let respon = `✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
+                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
                             listData.forEach((data, i) => {
-                                respon += `${i+1} ${data}\n`
+                                respon += `║ ${i + 1}. ${data}\n`
                             })
-                            respon += '〘 *SeroBot* 〙'
+                            respon += '║\n╚═〘 *SeroBot* 〙'
                             await client.reply(from, respon, id)
                         }
-                    break
+                        break
 
                     case 'createlist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk membuat list gunakan perintah: *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)`, id)
                         const respon = await list.createList(groupId, args[0])
-                        await client.reply(from, (respon === false) ? `List ${args[0]} sudah ada, gunakan nama lain.`: `List ${args[0]} berhasil dibuat.` , id)
-                    break
+                        await client.reply(from, (respon === false) ? `List ${args[0]} sudah ada, gunakan nama lain.` : `List ${args[0]} berhasil dibuat.`, id)
+                        break
 
                     case 'deletelist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas`, id)
                         const thelist = await list.getListName(groupId)
-                        const lists = thelist.split(" ")
-                        if (args[0].includes(lists)) {
+                        const lists = thelist.trim().split(" ")
+                        if (args[0].includes(lists) || args[0] === lists) {
                             client.reply(from, `[❗] List ${args[0]} akan dihapus.\nKirim *${prefix}confirmdeletelist ${args[0]}* untuk mengonfirmasi, abaikan jika tidak jadi.`, id)
-                        }else{
+                        } else {
                             client.reply(from, `List ${args[0]} tidak ada.`, id)
                         }
-                    break
+                        break
 
                     case 'confirmdeletelist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return null
                         const respon1 = await list.deleteList(groupId, args[0])
-                        await client.reply(from, (respon1 === false) ? `List ${args[0]} tidak ada.`: `List ${args[0]} berhasil dihapus.` , id)
-                    break
+                        await client.reply(from, (respon1 === false) ? `List ${args[0]} tidak ada.` : `List ${args[0]} berhasil dihapus.`, id)
+                        break
 
                     case 'addtolist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah: *${prefix}addtolist <nama list> <isi>* contoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, isinya apa woy`, id)
                         const dataq = await list.addListData(groupId, args[0], arg.substr(arg.indexOf(' ') + 1))
-                        if (dataq === false) return client.reply(from, `List ${args[0]} tidak ditemukan.`)
-                        else {
-                            let respon = `✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
-                            listData.forEach((data, i) => {
-                                respon += `${i+1} ${data}\n`
+                        if (dataq === false) {
+                            return client.reply(from, `List ${args[0]} tidak ditemukan.`)
+                        } else {
+                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
+                            dataq.forEach((data, i) => {
+                                respon += `║ ${i + 1}. ${data}\n`
                             })
-                            respon += '〘 *SeroBot* 〙'
+                            respon += '║\n╚═〘 *SeroBot* 〙'
                             await client.reply(from, respon, id)
                         }
-                        
-                    break
+                        break
 
                     case 'delist':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>* contoh: ${prefix}delist tugas 1`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nomor berapa woy`, id)
-                        const data1 = await list.removeListData(groupId, args[0], args[1])
-                        if (data1 === false) return client.reply(from, `List ${args[0]} tidak ditemukan.`)
-                        else{
-                            let respon = `✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
-                            listData.forEach((data, i) => {
-                                respon += `${i+1} ${data}\n`
+                        const data1 = await list.removeListData(groupId, args[0], args[1]-1)
+                        if (data1 === false) {
+                            return client.reply(from, `List ${args[0]} tidak ditemukan.`)
+                        }else {
+                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
+                            data1.forEach((data, i) => {
+                                respon += `║ ${i + 1}. ${data}\n`
                             })
-                            respon += '〘 *SeroBot* 〙'
+                            respon += '║\n╚═〘 *SeroBot* 〙'
                             await client.reply(from, respon, id)
                         }
-                        
-                    break
-                    
+                        break
+
                     // Group Commands (group admin only)
                     case 'add':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
@@ -1343,13 +1352,13 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'addkasar':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        if (args.length !== 1) {return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id)}
+                        if (args.length !== 1) { return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id) }
                         else {
                             kataKasar.push(args[0])
                             fs.writeFileSync('./settings/katakasar.json', JSON.stringify(kataKasar))
                             cariKasar = requireUncached('./lib/kataKotor.js')
                             client.reply(from, `Kata ${args[0]} berhasil ditambahkan.`, id)
-                        } 
+                        }
                         break
 
                     case 'reset':
