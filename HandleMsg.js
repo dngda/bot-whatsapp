@@ -464,6 +464,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'infosurah':
                         if (args.length == 0) return client.reply(from, `*_${prefix}infosurah <nama surah>_*\nMenampilkan informasi lengkap mengenai surah tertentu. Contoh penggunan: ${prefix}infosurah al-baqarah`, message.id)
                         var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
+                                .catch(err => {
+                                    console.log(err)
+                                    client.sendText(from, resMsg.error.norm)
+                                })
                         var { data } = responseh.data
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -477,6 +481,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'surah':
                         if (args.length == 0) return client.reply(from, `*_${prefix}surah <nomor surah> <ayat>_*\nContoh: ${prefix}surah 1 1\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id`, message.id)
                         var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
+                                .catch(err => {
+                                    console.log(err)
+                                    client.sendText(from, resMsg.error.norm)
+                                })
                         var { data } = responsh.data
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -488,6 +496,10 @@ module.exports = HandleMsg = async (client, message) => {
                         console.log(nmr)
                         if (!isNaN(nmr)) {
                             var responseh2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
+                                .catch(err => {
+                                    console.log(err)
+                                    client.sendText(from, resMsg.error.norm)
+                                })
                             var { data } = responseh2.data
                             var last = function last(array, n) {
                                 if (array == null) return void 0;
@@ -510,6 +522,10 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'tafsir':
                         if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nomor surah> <ayat>_*\nContoh: ${prefix}tafsir 1 1\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
                         var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
+                                .catch(err => {
+                                    console.log(err)
+                                    client.sendText(from, resMsg.error.norm)
+                                })
                         var { data } = responsh.data
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -532,6 +548,10 @@ module.exports = HandleMsg = async (client, message) => {
                         ayat = "ayat"
                         bhs = ""
                         var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
+                                .catch(err => {
+                                    console.log(err)
+                                    client.sendText(from, resMsg.error.norm)
+                                })
                         var surah = responseh.data
                         var idx = surah.data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -553,6 +573,10 @@ module.exports = HandleMsg = async (client, message) => {
                             pesan = ""
                             if (isNaN(ayat)) {
                                 var responsih2 = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
+                                    .catch(err => {
+                                        console.log(err)
+                                        client.sendText(from, resMsg.error.norm)
+                                    })
                                 var { name, name_translations, number_of_ayah, number_of_surah, recitations } = responsih2.data
                                 pesan = pesan + "Audio Quran Surah ke-" + number_of_surah + " " + name + " (" + name_translations.ar + ") " + "dengan jumlah " + number_of_ayah + " ayat\n"
                                 pesan = pesan + "Dilantunkan oleh " + recitations[0].name + " : " + recitations[0].audio_url + "\n"
@@ -561,6 +585,10 @@ module.exports = HandleMsg = async (client, message) => {
                                 client.reply(from, pesan, message.id)
                             } else {
                                 var responsih2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
+                                    .catch(err => {
+                                        console.log(err)
+                                        client.sendText(from, resMsg.error.norm)
+                                    })
                                 var { data } = responsih2.data
                                 var last = function last(array, n) {
                                     if (array == null) return void 0;
@@ -587,6 +615,10 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length === 0) return client.reply(from, `ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\nContoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`, id)
                         if (args[0] == 'daerah') {
                             var datad = await axios.get('https://api.banghasan.com/sholat/format/json/kota')
+                                .catch(err => {
+                                    console.log(err)
+                                    client.sendText(from, resMsg.error.norm)
+                                })
                             var datas = datad.data.kota
                             let hasil = '╔══✪〘 Daftar Kota 〙✪\n'
                             for (let i = 0; i < datas.length; i++) {
@@ -598,6 +630,10 @@ module.exports = HandleMsg = async (client, message) => {
                             await client.reply(from, hasil, id)
                         } else {
                             var datak = await axios.get('https://api.banghasan.com/sholat/format/json/kota/nama/' + args[0])
+                                .catch(err => {
+                                    console.log(err)
+                                    client.sendText(from, resMsg.error.norm)
+                                })
                             try {
                                 var kodek = datak.data.kota[0].id
                             }catch(err) {
@@ -621,7 +657,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'grouplink':
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isGroupMsg) {
-                            const inviteLink = await client.getGroupInviteLink(groupId);
+                            const inviteLink = await client.getGroupInviteLink(groupId)
                             client.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name}* Gunakan *${prefix}revoke* untuk mereset Link group`)
                         } else {
                             client.reply(from, resMsg.error.group, id)
@@ -632,13 +668,13 @@ module.exports = HandleMsg = async (client, message) => {
                         if (isBotGroupAdmins) {
                             client.revokeGroupInviteLink(from)
                                 .then((res) => {
-                                    client.reply(from, `Berhasil Revoke Grup Link gunakan *${prefix}grouplink* untuk mendapatkan group invite link yang terbaru`, id);
+                                    client.reply(from, `Berhasil Revoke Grup Link gunakan *${prefix}grouplink* untuk mendapatkan group invite link yang terbaru`, id)
                                 })
                                 .catch((err) => {
-                                    console.log(`[ERR] ${err}`);
+                                    console.log(`[ERR] ${err}`)
                                 });
                         }
-                        break;
+                        break
 
                     //Media
                     case 'ytmp3':
