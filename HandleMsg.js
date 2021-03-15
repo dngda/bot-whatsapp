@@ -1226,9 +1226,11 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length === 1) return client.reply(from, `Format salah, nama dan isinya apa woy`, id)
                         const thelist1 = await list.getListName(groupId)
                         if (!thelist1.includes(args[0])) {
-                            return client.reply(from, `List ${args[0]} tidak ditemukan.`)
+                            return client.reply(from, `List ${args[0]} tidak ditemukan.`, id)
                         } else {
-                            let newlist = arg.substr(arg.indexOf(' ') + 1).split('|')
+                            let newlist = arg.substr(arg.indexOf(' ') + 1).split('|').map((item) => {
+                                return item.trim()
+                            })
                             const dataq = await list.addListData(groupId, args[0], newlist)
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
                             dataq.forEach((data, i) => {
@@ -1245,7 +1247,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length === 1) return client.reply(from, `Format salah, nama list dan nomor berapa woy`, id)
                         const thelist2 = await list.getListName(groupId)
                         if (!thelist2.includes(args[0])) {
-                            return client.reply(from, `List ${args[0]} tidak ditemukan.`)
+                            return client.reply(from, `List ${args[0]} tidak ditemukan.`, id)
                         }else {
                             const data1 = await list.removeListData(groupId, args[0], args[1]-1)
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
