@@ -29,7 +29,8 @@ let {
     api,
     rugaapi,
     cariKasar,
-    kbbi
+    kbbi,
+    list
 } = require('./lib')
 
 function requireUncached(module) {
@@ -103,7 +104,6 @@ module.exports = HandleMsg = async (client, message) => {
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const args = body.trim().split(/ +/).slice(1)
-        const argx = body.slice(0).trim().split(/ +/).shift().toLowerCase()
         const isCmd = body.startsWith(prefix)
         const url = args.length !== 0 ? args[0] : ''
         
@@ -122,7 +122,7 @@ module.exports = HandleMsg = async (client, message) => {
         // [BETA] Avoid Spam Message
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
         if (isCmd && msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
-        if (!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${argx}`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+        if (!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
         if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
@@ -818,10 +818,9 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'image':
                     case 'images':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
-                        const cariwall = body.substr(body.indexOf(' ') + 1)
                         var hasilwall = ''
                         do{
-                            hasilwall = await images.fdci(cariwall)
+                            hasilwall = await images.fdci(arg)
                                 .catch(e => {
                                     console.log(`fdci err : ${e}`)
                                     return client.reply(from, resMsg.error.norm, id)
@@ -1164,6 +1163,89 @@ module.exports = HandleMsg = async (client, message) => {
                             })
                         break
 
+                    // List creator commands
+                    case 'list':
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (args.length === 0) {
+                            let thelist = await list.getListName(groupId)
+                            client.reply(from, `${thelist === false ? 'Group ini belum memiliki list.' : `List yang ada di group: ${thelist}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
+                                \nUntuk membuat list gunakan perintah: *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)
+                                \nUntuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
+                                \nUntuk mengisi list gunakan perintah: *${prefix}addtolist <nama list> <isi>* contoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021
+                                \nUntuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>* contoh: ${prefix}delist tugas 1
+                                `, id)
+                        }else if (args.length > 0){
+                            let listData = await list.getListData(groupId, args[0])
+                            if (listData === false) return client.reply(from, `List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`, id)
+                            let respon = `✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
+                            listData.forEach((data, i) => {
+                                respon += `${i+1} ${data}\n`
+                            })
+                            respon += '〘 *SeroBot* 〙'
+                            await client.reply(from, respon, id)
+                        }
+                    break
+
+                    case 'createlist':
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (args.length === 0) return client.reply(from, `Untuk membuat list gunakan perintah: *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)`, id)
+                        const respon = await list.createList(groupId, args[0])
+                        await client.reply(from, (respon === false) ? `List ${args[0]} sudah ada, gunakan nama lain.`: `List ${args[0]} berhasil dibuat.` , id)
+                    break
+
+                    case 'deletelist':
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (args.length === 0) return client.reply(from, `Untuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas`, id)
+                        const thelist = await list.getListName(groupId)
+                        const lists = thelist.split(" ")
+                        if (args[0].includes(lists)) {
+                            client.reply(from, `[❗] List ${args[0]} akan dihapus.\nKirim *${prefix}confirmdeletelist ${args[0]}* untuk mengonfirmasi, abaikan jika tidak jadi.`, id)
+                        }else{
+                            client.reply(from, `List ${args[0]} tidak ada.`, id)
+                        }
+                    break
+
+                    case 'confirmdeletelist':
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (args.length === 0) return null
+                        const respon1 = await list.deleteList(groupId, args[0])
+                        await client.reply(from, (respon1 === false) ? `List ${args[0]} tidak ada.`: `List ${args[0]} berhasil dihapus.` , id)
+                    break
+
+                    case 'addtolist':
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah: *${prefix}addtolist <nama list> <isi>* contoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021`, id)
+                        if (args.length === 1) return client.reply(from, `Format salah, isinya apa woy`, id)
+                        const dataq = await list.addListData(groupId, args[0], arg.substr(arg.indexOf(' ') + 1))
+                        if (dataq === false) return client.reply(from, `List ${args[0]} tidak ditemukan.`)
+                        else {
+                            let respon = `✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
+                            listData.forEach((data, i) => {
+                                respon += `${i+1} ${data}\n`
+                            })
+                            respon += '〘 *SeroBot* 〙'
+                            await client.reply(from, respon, id)
+                        }
+                        
+                    break
+
+                    case 'delist':
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>* contoh: ${prefix}delist tugas 1`, id)
+                        if (args.length === 1) return client.reply(from, `Format salah, nomor berapa woy`, id)
+                        const data1 = await list.removeListData(groupId, args[0], args[1])
+                        if (data1 === false) return client.reply(from, `List ${args[0]} tidak ditemukan.`)
+                        else{
+                            let respon = `✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
+                            listData.forEach((data, i) => {
+                                respon += `${i+1} ${data}\n`
+                            })
+                            respon += '〘 *SeroBot* 〙'
+                            await client.reply(from, respon, id)
+                        }
+                        
+                    break
+                    
                     // Group Commands (group admin only)
                     case 'add':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
