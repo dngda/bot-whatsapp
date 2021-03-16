@@ -1316,9 +1316,8 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'bye':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
-                        await client.sendText(from, 'Good bye 👋').then(async() =>{
-                            await client.leaveGroup(groupId)
-                        })
+                        await client.sendText(from, 'Good bye 👋')
+                        await client.leaveGroup(groupId)
                         break
 
                     case 'del':
