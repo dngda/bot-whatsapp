@@ -63,17 +63,9 @@ async function start(client) {
 	      client.deleteChat(chat.id)
 	  }) 
 	} else {
-	// kondisi ketika batas member group belum tercapai, ubah di file settings/setting.json
-	    if (chat.groupMetadata.participants.length < memberLimit) {
-	    await client.sendText(chat.id, `Sorry, Bot comes out if the group members do not exceed ${memberLimit} people`).then(() => {
-	      client.leaveGroup(chat.id)
-	      client.deleteChat(chat.id)
-	    })
-	    } else {
         await client.simulateTyping(chat.id, true).then(async () => {
-          await client.sendText(chat.id, `Hai minna~, Im SeroBot. To find out the commands on this bot type ${prefix}menu`)
+            await client.sendText(chat.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
         })
-	    }
 	}
     }).catch(err =>{
         console.log(err)
@@ -100,12 +92,13 @@ async function start(client) {
         console.log(err)
     })
 
-    await client.onIncomingCall(async (callData) => {
+    await client.onIncomingCall(async call => {
+        console
         // ketika seseorang menelpon nomor bot akan mengirim pesan
-        await client.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan.\n\n~ini bot, bukan manusia.')
+        await client.sendText(call.peerJid._serialized, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
         .then(async () => {
             // bot akan memblock nomor itu
-            await client.contactBlock(callData.peerJid)
+            await client.contactBlock(call.peerJid._serialized)
         })
     }).catch(err =>{
         console.log(err)

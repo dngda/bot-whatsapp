@@ -183,6 +183,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'notes':
                     case 'menu':
                     case 'help':
+                    case 'start':
                         await client.sendText(from, menuId.textMenu(pushname))
                             .then(() => ((isGroupMsg) && (isGroupAdmins)) ? client.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
                         break
@@ -1315,13 +1316,16 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'bye':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
-                        await client.sendText(from, 'Good bye 👋').then(() => client.leaveGroup(groupId))
+                        await client.sendText(from, 'Good bye 👋').then(async() =>{
+                            await client.leaveGroup(groupId)
+                        })
                         break
 
                     case 'del':
                         if (!quotedMsg) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
                         if (!quotedMsgObj.fromMe) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
-                        await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false).then(() => client.simulateTyping(from, false))
+                        await client.simulateTyping(from, false)
+                        await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
                         break
 
                     case 'tagall':
@@ -1472,15 +1476,14 @@ module.exports = HandleMsg = async (client, message) => {
                                 }
                             }
                         break
+
                     case 'bc': //untuk broadcast atau promosi
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua chat ketik:\n${prefix}bc [isi chat]`)
-                        let msg = body.slice(4)
                         const chatz = await client.getAllChatIds()
                         for (let idk of chatz) {
                             var cvk = await client.getChatById(idk)
-                            if (!cvk.isReadOnly) client.sendText(idk, `══✪〘 *BOT Broadcast* 〙✪══\n\n${msg}`)
-                            if (cvk.isReadOnly) client.sendText(idk, `══✪〘 *BOT Broadcast* 〙✪══\n\n${msg}`)
+                            await client.sendText(idk, `══✪〘 *BOT Broadcast* 〙✪══\n\n${arg}`)
                         }
                         client.reply(from, 'Broadcast Success!', id)
                         break
@@ -1505,9 +1508,23 @@ module.exports = HandleMsg = async (client, message) => {
                         }
                         client.reply(from, 'Success clear all chat!', id)
                         break
+
+                    case 'refresh':
+                        if if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        try{
+                            await client.refresh().then(async() => {
+                                await client.reply(from, `Bot refreshed!`, id)
+                            })
+                        }catch (err) {
+                            console.log(color('[ERROR]', 'red'), err)
+                        }
+                            
+                    break
+                    
                     default:
                         await client.sendText(from, `Perintah tidak ada.\n${prefix}menu untuk melihat daftar perintah!`)
-                        break
+                    break
+
                 }
 
             })//typing
