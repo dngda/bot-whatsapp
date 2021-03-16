@@ -4,7 +4,7 @@ const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 
-function start(client) {
+const start = (client = new Client()) => {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('  SeroBot', { font: 'Ghost', horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
