@@ -4,27 +4,13 @@ const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 
-//create session
-wa.create(options(true, start))
-    .then(client => start(client))
-    .catch(err => new Error(err))
-
-async function start(client) {
+function start(client) {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('  SeroBot', { font: 'Ghost', horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color('[DEV]'), color('Danang', 'yellow'))
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
-
-    // process unread message
-    const unreadMessages = await client.getAllUnreadMessages()
-    unreadMessages.forEach(message => {
-        setTimeout(
-            function(){
-                if (!message.isGroupMsg) HandleMsg(client, message)
-            }, 200)
-    })
 
     // Mempertahankan sesi agar tetap nyala
     client.onStateChanged((state) => {
@@ -78,7 +64,7 @@ async function start(client) {
     })
 
     // ketika seseorang mengirim pesan
-    await client.onMessage(async message => {
+    client.onMessage(async message => {
         client.setPresence(true)
         client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
             .then((msg) => {
@@ -93,8 +79,22 @@ async function start(client) {
             console.log(err)
     })
 
+    // process unread message
+    const unreadMessages = await client.getAllUnreadMessages()
+    unreadMessages.forEach(message => {
+        setTimeout(
+            function(){
+                if (!message.isGroupMsg) HandleMsg(client, message)
+            }, 200)
+    })
+
     // Message log for analytic
     client.onAnyMessage((anal) => { 
         messageLog(anal.fromMe, anal.type)
     })
 }
+
+//create session
+wa.create(options(true, start))
+    .then(client => start(client))
+    .catch(err => new Error(err))
