@@ -93,7 +93,7 @@ async function start(client) {
     })
 
     await client.onIncomingCall(async call => {
-        console
+        console.log(color('[~>>]', 'red'), `Someone is calling bot, lol`)
         // ketika seseorang menelpon nomor bot akan mengirim pesan
         await client.sendText(call.peerJid._serialized, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
         .then(async () => {
