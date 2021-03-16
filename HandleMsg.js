@@ -144,7 +144,8 @@ module.exports = HandleMsg = async (client, message) => {
                 'Copy that, processing!',
                 'Gotcha, please wait!',
                 'Copy that bro, please wait!',
-                'Okey, tunggu sebentar...'
+                'Okey, tunggu sebentar...',
+                'Baiklah, sabar ya!'
             ]),
             error: {
                 norm: 'Maaf, Ada yang error! Coba lagi beberapa saat kemudian.',
@@ -161,14 +162,15 @@ module.exports = HandleMsg = async (client, message) => {
                 'Jaga ketikanmu sahabat!',
                 'Yo rasah nggo misuh cuk!',
                 'Istighfar dulu sodaraku',
-                'Hadehh...'
+                'Hadehh...',
+                'Apa tidak capek?'
             ])
         }
         // respon to msg
         if (['p', 'assalamualaikum'].includes(message.body.toLowerCase())) {
           await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
         }
-        if (['hi', 'hy', 'halo'].includes(message.body)) {
+        if (['hi', 'hy', 'halo'].includes(message.body.toLowerCase())) {
           await client.sendText(message.from, 'Halo 👋')
         }
 
@@ -1546,7 +1548,7 @@ module.exports = HandleMsg = async (client, message) => {
                     if (isKasar) {
                         const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + 5000).write()
                         if (denda) {
-                            await client.reply(from, `${resMsg.badw}\nDenda +5.000\nTotal : Rp` + formatin(denda.denda), id)
+                            await client.reply(from, `${resMsg.badw}\n\nDenda +5.000\nTotal : Rp` + formatin(denda.denda), id)
                         }
                     }
                 } else {
@@ -1561,7 +1563,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                         if (isKasar) {
                             cekuser.push({ id: pengirim, denda: 5000 })
-                            await client.reply(from, `${resMsg.badw}\nDenda +5.000`, id)
+                            await client.reply(from, `${resMsg.badw}\n\nDenda +5.000`, id)
                         } else {
                             cekuser.push({ id: pengirim, denda: 0 })
                         }
@@ -1571,7 +1573,7 @@ module.exports = HandleMsg = async (client, message) => {
             } else {
                 if (isKasar) {
                     db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 5000 }] }).write()
-                    await client.reply(from, `${resMsg.badw}\nDenda +5.000\nTotal : Rp5.000`, id)
+                    await client.reply(from, `${resMsg.badw}\n\nDenda +5.000\nTotal : Rp5.000`, id)
                 } else {
                     db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 0 }] }).write()
                 }
