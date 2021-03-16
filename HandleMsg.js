@@ -1510,7 +1510,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'refresh':
-                        if if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         try{
                             await client.refresh().then(async() => {
                                 await client.reply(from, `Bot refreshed!`, id)
