@@ -54,7 +54,7 @@ async function start(client) {
     })
 
     // ketika bot diinvite ke dalam group
-    await client.onAddedToGroup(async chat => {
+    client.onAddedToGroup(async chat => {
 	const groups = await client.getAllGroups()
 	// kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
 	if (groups.length > groupLimit) {
@@ -67,12 +67,10 @@ async function start(client) {
             await client.sendText(chat.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
         })
 	}
-    }).catch(err =>{
-        console.log(err)
     })
 
     // ketika seseorang masuk/keluar dari group
-    await client.onGlobalParicipantsChanged(async event => {
+    client.onGlobalParicipantsChanged(async event => {
         const host = await client.getHostNumber() + '@c.us'
 		const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
 		const isWelcome = welcome.includes(event.chat)
@@ -88,11 +86,9 @@ async function start(client) {
 			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
             await client.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
         }
-    }).catch(err =>{
-        console.log(err)
     })
 
-    await client.onIncomingCall(async call => {
+    client.onIncomingCall(async call => {
         console.log(color('[~>>]', 'red'), `Someone is calling bot, lol`)
         // ketika seseorang menelpon nomor bot akan mengirim pesan
         await client.sendText(call.peerJid._serialized, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
@@ -100,14 +96,10 @@ async function start(client) {
             // bot akan memblock nomor itu
             await client.contactBlock(call.peerJid._serialized)
         })
-    }).catch(err =>{
-        console.log(err)
     })
 
     // Message log for analytic
-    await client.onAnyMessage((anal) => { 
+    client.onAnyMessage((anal) => { 
         messageLog(anal.fromMe, anal.type)
-    }).catch(err =>{
-        console.log(err)
     })
 }
