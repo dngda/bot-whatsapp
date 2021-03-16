@@ -80,7 +80,7 @@ function start(client) {
     })
 
     // process unread message
-    const unreadMessages = await client.getAllUnreadMessages()
+    const unreadMessages = client.getAllUnreadMessages()
     unreadMessages.forEach(message => {
         setTimeout(
             function(){
