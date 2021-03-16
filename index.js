@@ -23,50 +23,29 @@ async function start(client) {
         setTimeout(
             function(){
                 if (!message.isGroupMsg) HandleMsg(client, message)
-            }, 100)
-    })
-
-    // ketika seseorang mengirim pesan
-    await client.onMessage(async message => {
-        client.setPresence(true)
-        if (message.body === 'P' | message.body === 'p') {
-          await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
-        }
-        client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
-            .then((msg) => {
-                if (msg >= 3000) {
-                    console.log('[client]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
-                    client.cutMsgCache()
-                }
-            })
-
-        HandleMsg(client, message)
-    }).catch(err =>{
-        console.log(err)
+            }, 200)
     })
 
     // Mempertahankan sesi agar tetap nyala
-    await client.onStateChanged((state) => {
+    client.onStateChanged((state) => {
         console.log(color('[~>>]', 'red'), state)
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus()
-    }).catch(err =>{
-        console.log(err)
     })
 
     // ketika bot diinvite ke dalam group
     client.onAddedToGroup(async chat => {
-	const groups = await client.getAllGroups()
-	// kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
-	if (groups.length > groupLimit) {
-	await client.sendText(chat.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}`).then(() => {
-	      client.leaveGroup(chat.id)
-	      client.deleteChat(chat.id)
-	  }) 
-	} else {
-        await client.simulateTyping(chat.id, true).then(async () => {
-            await client.sendText(chat.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
-        })
-	}
+    	const groups = await client.getAllGroups()
+    	// kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
+    	if (groups.length > groupLimit) {
+    	await client.sendText(chat.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}`).then(() => {
+    	      client.leaveGroup(chat.id)
+    	      client.deleteChat(chat.id)
+    	  }) 
+    	} else {
+            await client.simulateTyping(chat.id, true).then(async () => {
+                await client.sendText(chat.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
+            })
+    	}
     })
 
     // ketika seseorang masuk/keluar dari group
@@ -96,6 +75,22 @@ async function start(client) {
             // bot akan memblock nomor itu
             await client.contactBlock(call.peerJid._serialized)
         })
+    })
+
+    // ketika seseorang mengirim pesan
+    await client.onMessage(async message => {
+        client.setPresence(true)
+        client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
+            .then((msg) => {
+                if (msg >= 3000) {
+                    console.log('[client]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
+                    client.cutMsgCache()
+                }
+            })
+
+        HandleMsg(client, message)
+        }).catch(err =>{
+            console.log(err)
     })
 
     // Message log for analytic

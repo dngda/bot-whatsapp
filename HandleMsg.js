@@ -164,6 +164,13 @@ module.exports = HandleMsg = async (client, message) => {
                 'Hadehh...'
             ])
         }
+        // respon to msg
+        if (['p', 'assalamualaikum'].includes(message.body.toLowerCase())) {
+          await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
+        }
+        if (['hi', 'hy', 'halo'].includes(message.body)) {
+          await client.sendText(message.from, 'Halo 👋')
+        }
 
         // Ini Command nya
         if (isCmd) {
