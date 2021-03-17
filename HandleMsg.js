@@ -844,7 +844,6 @@ module.exports = HandleMsg = async (client, message) => {
                                 .catch(e => {
                                     console.log(`fdci err : ${e}`)
                                     return client.reply(from, resMsg.error.norm, id)
-                                    break
                                 })
                         } while (hasilwall == undefined | hasilwall == null)
 
