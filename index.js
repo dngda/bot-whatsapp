@@ -8,7 +8,7 @@ const { default: PQueue } = require("p-queue")
 const queue = new PQueue({concurrency: 4})
 
 queue.on('idle', () => {
-    console.log(`Queue is idle.  Size: ${queue.size}  Pending: ${queue.pending}`)
+    if (queue.size > 0 || queue.pending > 0) console.log(`Queue is idle.  Size: ${queue.size}  Pending: ${queue.pending}`)
 })
 
 //create session
@@ -60,7 +60,7 @@ async function start(client = new Client()) {
                     console.log(err)
                     queue.isPaused() ? queue.start() : null
                 })
-        
+
         queue.isPaused() ? queue.start() : null
     }).catch(err =>{
         console.log(err)
