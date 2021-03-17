@@ -1,15 +1,23 @@
-const wa = require('@open-wa/wa-automate')
+import { create, Client} from '@open-wa/wa-automate'
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
+const { default: PQueue } = require("p-queue")
+
+const queue = new PQueue({
+  concurrency: 4,
+  autoStart:false
+   })
+
+const processMessage = (message, client) => queue.add(() => HandleMsg(client, message))
 
 //create session
-wa.create(options(true, start))
+create(options(true, start))
     .then(client => start(client))
     .catch(err => new Error(err))
 
-async function start(client) {
+async function start(client = new Client()) {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('  SeroBot', { font: 'Ghost', horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
@@ -22,7 +30,7 @@ async function start(client) {
     unreadMessages.forEach(message => {
         setTimeout(
             function(){
-                if (!message.isGroupMsg) HandleMsg(client, message)
+                if (!message.isGroupMsg) processMessage(client, message)
             }, 1000)
     })
 
@@ -37,7 +45,8 @@ async function start(client) {
                 }
             })
 
-        HandleMsg(client, message)
+        processMessage(client, message)
+        queue.start()
     }).catch(err =>{
         console.log(err)
     })
@@ -45,7 +54,7 @@ async function start(client) {
     // Mempertahankan sesi agar tetap nyala
     await client.onStateChanged((state) => {
         console.log(color('[~>>]', 'red'), state)
-        if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus()
+        if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus().then(() => queue.start())
     }).catch(err =>{
         console.log(err)
     })
