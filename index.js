@@ -7,10 +7,7 @@ const { default: PQueue } = require("p-queue")
 
 const queue = new PQueue({
   concurrency: 4,
-  autoStart:false
    })
-
-const processMessage = (message, client) => queue.add(() => HandleMsg(client, message))
 
 //create session
 create(options(true, start))
@@ -30,7 +27,7 @@ async function start(client = new Client()) {
     unreadMessages.forEach(message => {
         setTimeout(
             function(){
-                if (!message.isGroupMsg) processMessage(client, message)
+                if (!message.isGroupMsg) queue.add(() => HandleMsg(client, message))
             }, 1000)
     })
 
@@ -45,8 +42,7 @@ async function start(client = new Client()) {
                 }
             })
 
-        processMessage(client, message)
-        queue.start()
+        queue.add(() => HandleMsg(client, message))
     }).catch(err =>{
         console.log(err)
     })
