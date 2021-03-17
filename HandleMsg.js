@@ -167,10 +167,10 @@ module.exports = HandleMsg = async (client, message) => {
             ])
         }
         // respon to msg
-        if (['p', 'assalamualaikum'].includes(chat && chat.toLowerCase())) {
+        if (['p', 'assalamualaikum'].includes(message.body && message.body.toLowerCase())) {
           await client.sendText(from, 'Wa\'alaikumussalam Wr. Wb.')
         }
-        if (['hi', 'hy', 'halo'].includes(chat && chat.toLowerCase())) {
+        if (['hi', 'hy', 'halo'].includes(message.body && message.body.toLowerCase())) {
           await client.sendText(from, 'Halo 👋')
         }
 
