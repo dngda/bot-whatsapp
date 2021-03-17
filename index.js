@@ -6,6 +6,9 @@ const HandleMsg = require('./HandleMsg')
 const { default: PQueue } = require("p-queue")
 
 const queue = new PQueue({concurrency: 4})
+queue.on('idle', () => {
+console.log(`Queue is idle.  Size: ${queue.size}  Pending: ${queue.pending}`)
+    })
 
 //create session
 create(options(true, start))
@@ -52,16 +55,14 @@ async function start(client = new Client()) {
                     client.cutMsgCache()
                 }
             })
+            
+        queue.size() > 0 ? console.log(`Queue Size`, queue.size()) : null
+        queue.pending() > 0 ? console.log(`Queue Pending`, queue.pending()) : null
 
         queue.add(() => HandleMsg(client, message)).catch(err => {
                     console.log(err)
                     queue.isPaused() ? queue.start() : null
                 })
-        queue.size() > 0 ? console.log(`Queue Size`, queue.size()) : null
-        queue.pending() > 0 ? console.log(`Queue Pending`, queue.pending()) : null
-        queue.on('idle', () => {
-        console.log(`Queue is idle.  Size: ${queue.size}  Pending: ${queue.pending}`);
-            })
     }).catch(err =>{
         console.log(err)
     })
