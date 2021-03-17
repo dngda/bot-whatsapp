@@ -23,7 +23,7 @@ async function start(client) {
         setTimeout(
             function(){
                 if (!message.isGroupMsg) HandleMsg(client, message)
-            }, 300)
+            }, 1000)
     })
 
     // ketika seseorang mengirim pesan
