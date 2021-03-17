@@ -1,4 +1,4 @@
-import { create, Client} from '@open-wa/wa-automate'
+const { create, Client} = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
