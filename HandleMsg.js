@@ -518,6 +518,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     console.log(err)
                                     client.sendText(from, resMsg.error.norm)
                                 })
+                            if (responseh2 === undefined) return client.reply(from, `Maaf error/format salah`, id)
                             var { data } = responseh2.data
                             var last = function last(array, n) {
                                 if (array == null) return void 0;
