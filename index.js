@@ -24,7 +24,7 @@ async function start(client = new Client()) {
     const unreadMessages = await client.getAllUnreadMessages()
     unreadMessages.forEach(message => {
         setTimeout(
-            function(){
+            async function(){
                 if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message)).catch(err => {
                     console.log(err)
                     queue.isPaused() ? queue.start() : null
