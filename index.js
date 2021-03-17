@@ -60,6 +60,8 @@ async function start(client = new Client()) {
                     console.log(err)
                     queue.isPaused() ? queue.start() : null
                 })
+        
+        queue.isPaused() ? queue.start() : null
     }).catch(err =>{
         console.log(err)
     })
