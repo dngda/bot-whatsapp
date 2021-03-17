@@ -1,5 +1,4 @@
 const { decryptMedia } = require('@open-wa/wa-automate')
-
 const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 const axios = require('axios')
@@ -261,6 +260,7 @@ module.exports = HandleMsg = async (client, message) => {
                     // Sticker Creator
                     case 'sticker':
                     case 'stiker':
+                        if (type === 'video' || isQuotedVideo) return client.reply(from, `Media yang dikirimkan harus berupa gambar, untuk video gunakan ${prefix}stickergif.`, id)
                         if ((isMedia || isQuotedImage) && (args.length === 0 || args[0] === 'crop')) {
                             client.reply(from, resMsg.wait, id)
                             try {
@@ -337,6 +337,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'stickergif':
                     case 'stikergif':
                         if (isMedia || isQuotedVideo) {
+                            if (type === 'image' || isQuotedImage) return client.reply(from, `Media yang dikirimkan harus berupa video/gif, untuk gambar gunakan ${prefix}sticker.`, id)
                             if (mimetype === 'video/mp4' && message.duration <= 10 || quotedMsg.mimetype === 'video/mp4' && quotedMsg.duration <= 10) {
                                 var encryptedMedia = isQuotedVideo ? quotedMsg : message
                                 var mediaData = await decryptMedia(encryptedMedia)
@@ -843,6 +844,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 .catch(e => {
                                     console.log(`fdci err : ${e}`)
                                     return client.reply(from, resMsg.error.norm, id)
+                                    break
                                 })
                         } while (hasilwall == undefined | hasilwall == null)
 
