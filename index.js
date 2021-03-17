@@ -32,6 +32,16 @@ async function start(client = new Client()) {
             }, 1000)
     })
 
+    await client.onIncomingCall(async call => {
+        console.log(color('[~>>]', 'red'), `Someone is calling bot, lol`)
+        // ketika seseorang menelpon nomor bot akan mengirim pesan
+        await client.sendText(call.peerJid._serialized, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
+        .then(async () => {
+            // bot akan memblock nomor itu
+            await client.contactBlock(call.peerJid._serialized)
+        })
+    })
+
     // ketika seseorang mengirim pesan
     await client.onMessage(async message => {
         client.setPresence(true)
@@ -47,6 +57,11 @@ async function start(client = new Client()) {
                     console.log(err)
                     queue.isPaused() ? queue.start() : null
                 })
+        queue.size() > 0 ? console.log(`Queue Size`, queue.size()) : null
+        queue.pending() > 0 ? console.log(`Queue Pending`, queue.pending()) : null
+        queue.on('idle', () => {
+        console.log(`Queue is idle.  Size: ${queue.size}  Pending: ${queue.pending}`);
+            })
     }).catch(err =>{
         console.log(err)
     })
@@ -92,16 +107,6 @@ async function start(client = new Client()) {
 			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
             await client.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
         }
-    })
-
-    await client.onIncomingCall(async call => {
-        console.log(color('[~>>]', 'red'), `Someone is calling bot, lol`)
-        // ketika seseorang menelpon nomor bot akan mengirim pesan
-        await client.sendText(call.peerJid._serialized, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
-        .then(async () => {
-            // bot akan memblock nomor itu
-            await client.contactBlock(call.peerJid._serialized)
-        })
     })
 
     // Message log for analytic
