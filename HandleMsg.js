@@ -488,6 +488,7 @@ module.exports = HandleMsg = async (client, message) => {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true;
                         });
+                        if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
                         var pesan = ""
                         pesan = pesan + "Nama : " + data[idx].name.transliteration.id + "\n" + "Asma : " + data[idx].name.short + "\n" + "Arti : " + data[idx].name.translation.id + "\n" + "Jumlah ayat : " + data[idx].numberOfVerses + "\n" + "Nomor surah : " + data[idx].number + "\n" + "Jenis : " + data[idx].revelation.id + "\n" + "Keterangan : " + data[idx].tafsir.id
                         client.reply(from, pesan, message.id)
@@ -1120,6 +1121,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'klasemen':
                     case 'klasmen':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isNgegas) return client.reply(from, `Anti-Toxic tidak aktif, aktifkan menggunakan perintah ${prefix}kasar on`, id)
                         const klasemen = db.get('group').filter({ id: groupId }).map('members').value()[0]
                         let urut = Object.entries(klasemen).map(([key, val]) => ({ id: key, ...val })).sort((a, b) => b.denda - a.denda);
                         let textKlas = "*Klasemen Denda Sementara*\n"
