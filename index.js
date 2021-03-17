@@ -25,7 +25,10 @@ async function start(client = new Client()) {
     unreadMessages.forEach(message => {
         setTimeout(
             function(){
-                if (!message.isGroupMsg) queue.add(() => HandleMsg(client, message))
+                if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message)).catch(err => {
+                    console.log(err)
+                    queue.isPaused() ? queue.start() : null
+                })
             }, 1000)
     })
 
@@ -40,7 +43,10 @@ async function start(client = new Client()) {
                 }
             })
 
-        queue.add(() => HandleMsg(client, message))
+        queue.add(() => HandleMsg(client, message)).catch(err => {
+                    console.log(err)
+                    queue.isPaused() ? queue.start() : null
+                })
     }).catch(err =>{
         console.log(err)
     })
@@ -49,7 +55,7 @@ async function start(client = new Client()) {
     await client.onStateChanged((state) => {
         console.log(color('[~>>]', 'red'), state)
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus().then(() => queue.start())
-    }).catch(err =>{
+    }).catch((err) => {
         console.log(err)
     })
 

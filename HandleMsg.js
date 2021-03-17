@@ -338,7 +338,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'stikergif':
                         if (isMedia || isQuotedVideo) {
                             if (type === 'image' || isQuotedImage) return client.reply(from, `Media yang dikirimkan harus berupa video/gif, untuk gambar gunakan ${prefix}sticker.`, id)
-                            if (mimetype === 'video/mp4' && message.duration <= 10 || quotedMsg.mimetype === 'video/mp4' && quotedMsg.duration <= 10) {
+                            if (mimetype === 'video/mp4' && message.duration <= 10 || (quotedMsg && quotedMsg.mimetype === 'video/mp4') && quotedMsg.duration <= 10) {
                                 var encryptedMedia = isQuotedVideo ? quotedMsg : message
                                 var mediaData = await decryptMedia(encryptedMedia)
                                 client.reply(from, resMsg.wait, id)
@@ -958,7 +958,8 @@ module.exports = HandleMsg = async (client, message) => {
                                         play()
                                     })
                             })
-                            .catch(() => {
+                            .catch(err => {
+                                console.log(err)
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
@@ -996,7 +997,8 @@ module.exports = HandleMsg = async (client, message) => {
                                         client.reply(from, teks, id)
                                     })
                                 })
-                                .catch(() => {
+                                .catch(err => {
+                                    console.log(err)
                                     client.reply(from, resMsg.error.norm, id)
                                 })
                         } else {
@@ -1016,7 +1018,8 @@ module.exports = HandleMsg = async (client, message) => {
                                 let truthz = _.sample(truthx)
                                 client.reply(from, truthz, id)
                             })
-                            .catch(() => {
+                            .catch((err) => {
+                                console.log(err)
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
@@ -1029,7 +1032,8 @@ module.exports = HandleMsg = async (client, message) => {
                                 let darez = _.sample(darex)
                                 client.reply(from, darez, id)
                             })
-                            .catch(() => {
+                            .catch((err) => {
+                                console.log(err)
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
@@ -1057,6 +1061,7 @@ module.exports = HandleMsg = async (client, message) => {
                                         })
                                 })
                             } catch (err) {
+                                console.log(err)
                                 client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
                             }
                         }
@@ -1072,6 +1077,7 @@ module.exports = HandleMsg = async (client, message) => {
                                         })
                                 })
                             } catch (err) {
+                                console.log(err)
                                 client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
                             }
                         }
@@ -1102,7 +1108,8 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isUrl(args[0])) return client.reply(from, 'Maaf, url yang kamu kirim tidak valid. Pastikan menggunakan format http/https', id)
                         const shortlink = await urlShortener(args[0])
                         await client.sendText(from, shortlink)
-                            .catch(() => {
+                            .catch((err) => {
+                                console.log(err)
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
@@ -1146,7 +1153,8 @@ module.exports = HandleMsg = async (client, message) => {
                                     })
                             })
                         } catch (err) {
-                            client.reply(from, err, id)
+                            console.log(err)
+                            client.reply(from, resMsg.error.norm, id)
                         }
                         break
 
@@ -1167,7 +1175,8 @@ module.exports = HandleMsg = async (client, message) => {
                                     })
                             })
                         } catch (err) {
-                            client.reply(from, err, id)
+                            console.log(err)
+                            client.reply(from, resMsg.error.norm, id)
                         }
                         break
 
