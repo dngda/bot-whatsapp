@@ -167,11 +167,11 @@ module.exports = HandleMsg = async (client, message) => {
             ])
         }
         // respon to msg
-        if (['p', 'assalamualaikum'].includes(message.body.toLowerCase())) {
-          await client.sendText(message.from, 'Wa\'alaikumussalam Wr. Wb.')
+        if (['p', 'assalamualaikum'].includes(body.toLowerCase())) {
+          await client.sendText(from, 'Wa\'alaikumussalam Wr. Wb.')
         }
-        if (['hi', 'hy', 'halo'].includes(message.body.toLowerCase())) {
-          await client.sendText(message.from, 'Halo 👋')
+        if (['hi', 'hy', 'halo'].includes(body.toLowerCase())) {
+          await client.sendText(from, 'Halo 👋')
         }
 
         // Ini Command nya
@@ -272,8 +272,7 @@ module.exports = HandleMsg = async (client, message) => {
                                         console.log(err)
                                         client.sendText(from, resMsg.error.norm)
                                     })
-                                const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
-                                client.sendImageAsSticker(from, imageBase64, _metadata)
+                                client.sendImageAsSticker(from, mediaData, _metadata)
                                     .then(() => {
                                         client.sendText(from, 'Here\'s your sticker')
                                         console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
