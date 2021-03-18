@@ -49,7 +49,7 @@ async function start(client = new Client()) {
         client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
             .then((msg) => {
                 if (msg >= 3000) {
-                    console.log('[client]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
+                    console.log('[Client]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
                     client.cutMsgCache()
                 }
             })
