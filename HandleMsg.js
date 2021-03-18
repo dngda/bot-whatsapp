@@ -26,7 +26,6 @@ let {
     getLocationData,
     images,
     api,
-    rugaapi,
     cariKasar,
     kbbi,
     list
@@ -205,7 +204,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
                     case 'owner':
                         await client.sendContact(from, ownerNumber)
-                            .then(() => client.sendText(from, 'Jika kalian ingin request fitur silahkan chat nomor di atas'))
+                            .then(() => client.sendText(from, 'Jika ada pertanyaan tentang bot silahkan chat nomor di atas'))
                         break
                     case 'join':
                         if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot ke group silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
@@ -700,35 +699,94 @@ module.exports = HandleMsg = async (client, message) => {
 
                     //Media
                     case 'ytmp3':
-                        if (args.length == 0) return client.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
+                        if (args.length == 0) return client.reply(from, `Maaf, fitur sedang dalam proses pengembangan! \nUntuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
                         const linkmp3 = args[0].substr((args[0].indexOf('=')) !== -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
-                        await rugaapi.ytmp3(`https://youtu.be/${linkmp3}`)
-                            .then(async (res) => {
-                                if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
-                                await client.sendFileFromUrl(from, `${res.getImages}`, '', `Lagu ditemukan\n\nJudul ${res.titleInfo}\n\nSabar lagi dikirim\nJika BOT terlalu lama merespon, silahkan downliad file nya secara manual\nLink mp3: ${res.getAudio}.mp3`, id)
-                                console.log(res.getAudio)
-                                var link = `${res.getAudio}.mp3`
+                        // await rugaapi.ytmp3(`https://youtu.be/${linkmp3}`)
+                        //     .then(async (res) => {
+                        //         if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
+                        //         await client.sendFileFromUrl(from, `${res.getImages}`, '', `Lagu ditemukan\n\nJudul ${res.titleInfo}\n\nSabar lagi dikirim\nJika BOT terlalu lama merespon, silahkan downliad file nya secara manual\nLink mp3: ${res.getAudio}.mp3`, id)
+                        //         console.log(res.getAudio)
+                        //         var link = `${res.getAudio}.mp3`
+                        //         var time = moment(t * 1000).format('mm')
+                        //         var dir = `./media/ytmp3/${time}.mp3`
+                        //         async function mp3() {
+                        //             console.log('Proses download sedang berlangsung')
+                        //             download(link, dir, function (err) {
+                        //                 if (err) {
+                        //                     console.error(err)
+                        //                 } else {
+                        //                     console.log('Download Complete')
+                        //                     client.sendPtt(from, dir, id)
+                        //                         .then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
+                        //                 }
+                        //             });
+                        //         }
+                        //         mp3()
+                        //     })
+                        //     .catch(err => {
+                        //         console.log(err)
+                        //         client.reply(from, resMsg.error.norm, id)
+                        //     })
+                        break
 
-                                var time = moment(t * 1000).format('mm')
-                                var dir = `./media/ytmp3/${time}.mp3`
-                                async function mp3() {
-                                    console.log('Proses download sedang berlangsung')
-                                    download(link, dir, function (err) {
-                                        if (err) {
-                                            console.error(err)
-                                        } else {
-                                            console.log('Download Complete')
-                                            client.sendPtt(from, dir, id)
-                                                .then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
-                                        }
-                                    });
-                                }
-                                mp3()
-                            })
-                            .catch(err => {
-                                console.log(err)
-                                client.reply(from, resMsg.error.norm, id)
-                            })
+                    case 'play'://silahkan kalian custom sendiri jika ada yang ingin diubah
+                        if (args.length == 0) return client.reply(from, `Maaf, fitur sedang dalam proses pengembangan! \nUntuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
+                        // axios.get(`http://api.arugaz.my.id/api/media/ytsearch?query=${body.slice(6)}`)
+                        //     .then(async (res) => {
+                        //         console.log(res.data.result[0].id)
+                        //         if (res.data.result[0].duration >= 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
+                        //         var estimasi = res.data.result[0].duration / 50
+                        //         var est = estimasi.toFixed(0)
+
+                        //         function format(time) {
+                        //             // Hours, minutes and seconds
+                        //             var hrs = ~~(time / 3600);
+                        //             var mins = ~~((time % 3600) / 60);
+                        //             var secs = ~~time % 60;
+
+                        //             // Output like "1:01" or "4:03:59" or "123:03:59"
+                        //             var ret = "";
+                        //             if (hrs > 0) {
+                        //                 ret += hrs + ":" + (mins < 10 ? "0" : "");
+                        //             }
+                        //             ret += mins + ":" + (secs < 10 ? "0" : "");
+                        //             ret += secs;
+                        //             return ret;
+                        //         }
+                        //         var durasi = format(res.data.result[0].duration)
+
+                        //         var n = res.data.result[0].viewCount
+                        //         var y = n.toLocaleString()
+                        //         var x = y.replace(/,/g, '.')
+
+                                // await client.sendFileFromUrl(from, `${res.data.result[0].thumbnail}`, ``, `Video ditemukan\n\nJudul: ${res.data.result[0].title}\nDurasi: ${durasi}\nUploaded: ${res.data.result[0].uploadDate}\nView: ${x}\n\nsedang dikirim ± ${est} menit`, id)
+                            //     rugaapi.ytmp3(`https://youtu.be/${res.data.result[0].id}`)
+                            //         .then(async (res) => {
+                            //             if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
+                            //             //await client.sendFileFromUrl(from, `${res.getImages}`, '', `Lagu ditemukan\n\nJudul ${res.titleInfo}\n\nSabar lagi dikirim`, id)
+                            //             console.log(res.getAudio)
+                            //             var link = `${res.getAudio}.mp3`
+                            //             var time = moment(t * 1000).format('mm')
+                            //             var dir = `./media/ytmp3/${time}.mp3`
+                            //             async function play() {
+                            //                 console.log('proses download sedang berlangsung')
+                            //                 download(link, dir, function (err) {
+                            //                     if (err) {
+                            //                         console.error(err)
+                            //                     } else {
+                            //                         console.log('Download Complete')
+                            //                         client.sendPtt(from, dir, id)
+                            //                             .then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
+                            //                     }
+                            //                 });
+                            //             }
+                            //             play()
+                            //         })
+                            // })
+                            // .catch(err => {
+                            //     console.log(err)
+                            //     client.reply(from, resMsg.error.norm, id)
+                            // })
                         break
 
                     case 'artinama':
@@ -906,66 +964,6 @@ module.exports = HandleMsg = async (client, message) => {
                             })
                         break
 
-                    case 'play'://silahkan kalian custom sendiri jika ada yang ingin diubah
-                        if (args.length == 0) return client.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
-                        axios.get(`http://api.arugaz.my.id/api/media/ytsearch?query=${body.slice(6)}`)
-                            .then(async (res) => {
-                                console.log(res.data.result[0].id)
-                                if (res.data.result[0].duration >= 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
-                                var estimasi = res.data.result[0].duration / 50
-                                var est = estimasi.toFixed(0)
-
-                                function format(time) {
-                                    // Hours, minutes and seconds
-                                    var hrs = ~~(time / 3600);
-                                    var mins = ~~((time % 3600) / 60);
-                                    var secs = ~~time % 60;
-
-                                    // Output like "1:01" or "4:03:59" or "123:03:59"
-                                    var ret = "";
-                                    if (hrs > 0) {
-                                        ret += hrs + ":" + (mins < 10 ? "0" : "");
-                                    }
-                                    ret += mins + ":" + (secs < 10 ? "0" : "");
-                                    ret += secs;
-                                    return ret;
-                                }
-                                var durasi = format(res.data.result[0].duration)
-
-                                var n = res.data.result[0].viewCount
-                                var y = n.toLocaleString()
-                                var x = y.replace(/,/g, '.')
-
-                                await client.sendFileFromUrl(from, `${res.data.result[0].thumbnail}`, ``, `Video ditemukan\n\nJudul: ${res.data.result[0].title}\nDurasi: ${durasi}\nUploaded: ${res.data.result[0].uploadDate}\nView: ${x}\n\nsedang dikirim ± ${est} menit`, id)
-                                rugaapi.ytmp3(`https://youtu.be/${res.data.result[0].id}`)
-                                    .then(async (res) => {
-                                        if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
-                                        //await client.sendFileFromUrl(from, `${res.getImages}`, '', `Lagu ditemukan\n\nJudul ${res.titleInfo}\n\nSabar lagi dikirim`, id)
-                                        console.log(res.getAudio)
-                                        var link = `${res.getAudio}.mp3`
-                                        var time = moment(t * 1000).format('mm')
-                                        var dir = `./media/ytmp3/${time}.mp3`
-                                        async function play() {
-                                            console.log('proses download sedang berlangsung')
-                                            download(link, dir, function (err) {
-                                                if (err) {
-                                                    console.error(err)
-                                                } else {
-                                                    console.log('Download Complete')
-                                                    client.sendPtt(from, dir, id)
-                                                        .then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
-                                                }
-                                            });
-                                        }
-                                        play()
-                                    })
-                            })
-                            .catch(err => {
-                                console.log(err)
-                                client.reply(from, resMsg.error.norm, id)
-                            })
-                        break
-
                     case 'whatanime':
                         if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
                             if (isMedia) {
@@ -1009,7 +1007,8 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'tod':
-                        client.reply(from, `Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilahkan Pilih:\n➥ ${prefix}truth\n➥ ${prefix}dare`, id)
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        client.reply(from, `Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilahkan Pilih:\n-> ${prefix}truth\n-> ${prefix}dare`, id)
                         break
                     case 'truth':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
