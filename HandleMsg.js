@@ -701,6 +701,7 @@ module.exports = HandleMsg = async (client, message) => {
                     //Media
                     case 'ytmp3':
                         if (args.length == 0) return client.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 <link yt>`, id)
+                        if (arg.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/) === null) return client.reply(from, `Link youtube tidak valid.`, id)
                         const ytid = args[0].substr((args[0].indexOf('=')) !== -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                         try {
                             const YD = new YoutubeMp3Downloader({
