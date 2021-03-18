@@ -1,6 +1,7 @@
 const { decryptMedia } = require('@open-wa/wa-automate')
 const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
+const YoutubeMp3Downloader = require('youtube-mp3-downloader')
 const axios = require('axios')
 const fetch = require('node-fetch')
 const gTTS = require('gtts')
@@ -700,93 +701,83 @@ module.exports = HandleMsg = async (client, message) => {
                     //Media
                     case 'ytmp3':
                         if (args.length == 0) return client.reply(from, `Maaf, fitur sedang dalam proses pengembangan! \nUntuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
-                        const linkmp3 = args[0].substr((args[0].indexOf('=')) !== -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
-                        // await rugaapi.ytmp3(`https://youtu.be/${linkmp3}`)
-                        //     .then(async (res) => {
-                        //         if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
-                        //         await client.sendFileFromUrl(from, `${res.getImages}`, '', `Lagu ditemukan\n\nJudul ${res.titleInfo}\n\nSabar lagi dikirim\nJika BOT terlalu lama merespon, silahkan downliad file nya secara manual\nLink mp3: ${res.getAudio}.mp3`, id)
-                        //         console.log(res.getAudio)
-                        //         var link = `${res.getAudio}.mp3`
-                        //         var time = moment(t * 1000).format('mm')
-                        //         var dir = `./media/ytmp3/${time}.mp3`
-                        //         async function mp3() {
-                        //             console.log('Proses download sedang berlangsung')
-                        //             download(link, dir, function (err) {
-                        //                 if (err) {
-                        //                     console.error(err)
-                        //                 } else {
-                        //                     console.log('Download Complete')
-                        //                     client.sendPtt(from, dir, id)
-                        //                         .then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
-                        //                 }
-                        //             });
-                        //         }
-                        //         mp3()
-                        //     })
-                        //     .catch(err => {
-                        //         console.log(err)
-                        //         client.reply(from, resMsg.error.norm, id)
-                        //     })
+                        const ytid = args[0].substr((args[0].indexOf('=')) !== -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
+                        try {
+                            const YD = new YoutubeMp3Downloader({
+                                "ffmpegPath": "./bin/ffmpeg.exe",
+                                "outputPath": "./media/ytmp3",
+                                "youtubeVideoQuality": "highestaudio",
+                                "queueParallelism": 4,
+                                "progressTimeout": 2000,
+                                "allowWebm": false
+                            })
+                             
+                            //Download video and save as MP3 file
+                            var time = moment(t * 1000).format('mmss')
+                            YD.download(ytid, `temp_${time}.mp3`)
+
+                            YD.on("finished", (err, data) => {
+                                client.sendPtt(from, data.file, id).then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
+                                fs.unlinkSync(data.file)
+                            })
+
+                            YD.on("error", (error) => {
+                                console.log(error)
+                                client.reply(from, resMsg.error.norm, id)
+                            })
+                        }catch (err){
+                            console.log(err)
+                            client.reply(from, resMsg.error.norm, id)
+                        }
                         break
 
-                    case 'play'://silahkan kalian custom sendiri jika ada yang ingin diubah
-                        if (args.length == 0) return client.reply(from, `Maaf, fitur sedang dalam proses pengembangan! \nUntuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
-                        // axios.get(`http://api.arugaz.my.id/api/media/ytsearch?query=${body.slice(6)}`)
-                        //     .then(async (res) => {
-                        //         console.log(res.data.result[0].id)
-                        //         if (res.data.result[0].duration >= 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
-                        //         var estimasi = res.data.result[0].duration / 50
-                        //         var est = estimasi.toFixed(0)
+                    case 'play': //silahkan kalian custom sendiri jika ada yang ingin diubah
+                        if (args.length == 0) return client.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
+                        let result = await api.ytsearch(arg).catch(err => {
+                            console.log(err)
+                            client.reply(from, resMsg.error.norm, id)
+                        })
 
-                        //         function format(time) {
-                        //             // Hours, minutes and seconds
-                        //             var hrs = ~~(time / 3600);
-                        //             var mins = ~~((time % 3600) / 60);
-                        //             var secs = ~~time % 60;
+                        if (result === undefined) return client.reply(from, resMsg.error.norm, id)
 
-                        //             // Output like "1:01" or "4:03:59" or "123:03:59"
-                        //             var ret = "";
-                        //             if (hrs > 0) {
-                        //                 ret += hrs + ":" + (mins < 10 ? "0" : "");
-                        //             }
-                        //             ret += mins + ":" + (secs < 10 ? "0" : "");
-                        //             ret += secs;
-                        //             return ret;
-                        //         }
-                        //         var durasi = format(res.data.result[0].duration)
+                        try {
+                            let duration = (result) => {
+                                const n = result.duration.split(':')
+                                if (n.length === 3) return parseInt(n[0]) * 3600 + parseInt(n[1]) * 60 + parseInt(n[2])
+                                    else return parseInt(n[0] * 60) + parseInt(n[1])
+                            }
+                            if (duration(result) > 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
+                                var estimasi = duration(result) / 50
+                                var est = estimasi.toFixed(0)
 
-                        //         var n = res.data.result[0].viewCount
-                        //         var y = n.toLocaleString()
-                        //         var x = y.replace(/,/g, '.')
+                            await client.sendFileFromUrl(from, `${result.thumbnail_src}`, ``, `Video ditemukan\n\nJudul: ${result.title}\nDurasi: ${result.duration}\nUploaded: ${result.upload_date}\nView: ${result.views}\n\nsedang dikirim ± ${est} menit`, id)
 
-                                // await client.sendFileFromUrl(from, `${res.data.result[0].thumbnail}`, ``, `Video ditemukan\n\nJudul: ${res.data.result[0].title}\nDurasi: ${durasi}\nUploaded: ${res.data.result[0].uploadDate}\nView: ${x}\n\nsedang dikirim ± ${est} menit`, id)
-                            //     rugaapi.ytmp3(`https://youtu.be/${res.data.result[0].id}`)
-                            //         .then(async (res) => {
-                            //             if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
-                            //             //await client.sendFileFromUrl(from, `${res.getImages}`, '', `Lagu ditemukan\n\nJudul ${res.titleInfo}\n\nSabar lagi dikirim`, id)
-                            //             console.log(res.getAudio)
-                            //             var link = `${res.getAudio}.mp3`
-                            //             var time = moment(t * 1000).format('mm')
-                            //             var dir = `./media/ytmp3/${time}.mp3`
-                            //             async function play() {
-                            //                 console.log('proses download sedang berlangsung')
-                            //                 download(link, dir, function (err) {
-                            //                     if (err) {
-                            //                         console.error(err)
-                            //                     } else {
-                            //                         console.log('Download Complete')
-                            //                         client.sendPtt(from, dir, id)
-                            //                             .then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
-                            //                     }
-                            //                 });
-                            //             }
-                            //             play()
-                            //         })
-                            // })
-                            // .catch(err => {
-                            //     console.log(err)
-                            //     client.reply(from, resMsg.error.norm, id)
-                            // })
+                            const YD = new YoutubeMp3Downloader({
+                                "ffmpegPath": "./bin/ffmpeg.exe",
+                                "outputPath": "./media/ytmp3",
+                                "youtubeVideoQuality": "highestaudio",
+                                "queueParallelism": 4,
+                                "progressTimeout": 2000,
+                                "allowWebm": false
+                            })
+                             
+                            //Download video and save as MP3 file
+                            var time = moment(t * 1000).format('mmss')
+                            YD.download(result.id, `temp_${time}.mp3`)
+
+                            YD.on("finished", (err, data) => {
+                                client.sendPtt(from, data.file, id).then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
+                                fs.unlinkSync(data.file)
+                            })
+
+                            YD.on("error", (error) => {
+                                console.log(error)
+                                client.reply(from, resMsg.error.norm, id)
+                            })
+                        }catch (err){
+                            console.log(err)
+                            client.reply(from, resMsg.error.norm, id)
+                        }
                         break
 
                     case 'artinama':

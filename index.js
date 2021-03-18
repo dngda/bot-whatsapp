@@ -30,7 +30,7 @@ async function start(client = new Client()) {
         setTimeout(
             async function(){
                 if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message)).catch(err => {
-                    console.log(err)
+                    console.log((err.name === 'TimeoutError') color('[~>>]', 'red'), `TimeoutError` ? : err)
                     queue.isPaused() ? queue.start() : null
                 })
             }, 1000)
@@ -40,10 +40,7 @@ async function start(client = new Client()) {
         console.log(color('[~>>]', 'red'), `Someone is calling bot, lol`)
         // ketika seseorang menelpon nomor bot akan mengirim pesan
         await client.sendText(call.peerJid._serialized, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
-        .then(async () => {
-            // bot akan memblock nomor itu
-            await client.contactBlock(call.peerJid._serialized)
-        })
+        await client.contactBlock(call.peerJid._serialized)
     })
 
     // ketika seseorang mengirim pesan
@@ -57,7 +54,7 @@ async function start(client = new Client()) {
                 }
             })
         await queue.add(() => HandleMsg(client, message)).catch(err => {
-                    console.log(err)
+                    console.log((err.name === 'TimeoutError') color('[~>>]', 'red'), `TimeoutError` ? : err)
                     queue.isPaused() ? queue.start() : null
                 })
 

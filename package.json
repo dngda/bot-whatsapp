@@ -47,7 +47,8 @@
     "sharp": "^0.27.2",
     "swagger-stats": "^0.95.18",
     "typedoc-plugin-pages": "^1.1.0",
-    "underscore": "^1.12.1"
+    "underscore": "^1.12.1",
+    "youtube-mp3-downloader": "^0.7.6"
   },
   "devDependencies": {
     "eslint-config-standard": "^16.0.1"
