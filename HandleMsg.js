@@ -1190,7 +1190,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'trans':
                     case 'translate':
-                        if (args.length === 0 || !isQuotedChat) return client.reply(from, `Translate text ke kode bahasa, penggunaan ${prefix}trans <kode bahasa> <text>\nContoh : ${prefix}trans id some english/other language text here\n${prefix}translate en beberapa kata bahasa indonesia atau bahasa lain. \nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4`, id)
+                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Translate text ke kode bahasa, penggunaan: ${prefix}trans <kode bahasa> <text>\nContoh : ${prefix}trans id some english/other language text here\n${prefix}translate en beberapa kata bahasa indonesia atau bahasa lain. \nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4`, id)
                         const lang = ['en','pt','af','sq','am','ar','hy','az','eu','be','bn','bs','bg','ca','ceb','ny','zh-CN','co','hr','cs','da','nl','eo','et','tl','fi','fr','fy','gl','ka','de','el','gu','ht','ha','haw','iw','hi','hmn','hu','is','ig','id','ga','it','ja','jw','kn','kk','km','rw','ko','ku','ky','lo','la','lv','lt','lb','mk','mg','ms','ml','mt','mi','mr','mn','my','ne','no','or','ps','fa','pl','pa','ro','ru','sm','gd','sr','st','sn','sd','si','sk','sl','so','es','su','sw','sv','tg','ta','tt','te','th','tr','tk','uk','ur','ug','uz','vi','cy','xh','yi','yo','zu','zh-TW']
 
                         if (lang.includes(args[0])) {
