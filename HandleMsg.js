@@ -1054,7 +1054,7 @@ module.exports = HandleMsg = async (client, message) => {
                                         })
                                 })
                             } catch (err) {
-                                console.log(err)
+                                console.log(err.name)
                                 client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
                             }
                         }

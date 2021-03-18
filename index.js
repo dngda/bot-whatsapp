@@ -8,7 +8,7 @@ const { default: PQueue } = require("p-queue")
 const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true, interval: 2000, intervalCap: 5, carryoverConcurrencyCount: true})
 
 queue.on('next', () => {
-    if (queue.size > 0 || queue.pending > 0) console.log(`Queue Size: ${queue.size}  Pending: ${queue.pending}`)
+    if (queue.size > 0 || queue.pending > 0) console.log(color('[~>>]', 'red'), `Queue Size: ${queue.size}  Pending: ${queue.pending}`)
 })
 
 //create session
@@ -30,7 +30,7 @@ async function start(client = new Client()) {
         setTimeout(
             async function(){
                 if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message)).catch(err => {
-                    console.log((err.name === 'TimeoutError') ? (color('[~>>]', 'red'), `TimeoutError`) : err)
+                    console.log((err.name === 'TimeoutError') ? `${color('[~>>]', 'red')} Error task process timeout!` : err)
                     queue.isPaused() ? queue.start() : null
                 })
             }, 1000)
@@ -54,7 +54,7 @@ async function start(client = new Client()) {
                 }
             })
         await queue.add(() => HandleMsg(client, message)).catch(err => {
-                    console.log((err.name === 'TimeoutError') ? (color('[~>>]', 'red'), `TimeoutError`) : err)
+                    console.log((err.name === 'TimeoutError') ? `${color('[~>>]', 'red')} Error task process timeout!` : err)
                     queue.isPaused() ? queue.start() : null
                 })
 
