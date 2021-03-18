@@ -297,6 +297,7 @@ module.exports = HandleMsg = async (client, message) => {
                                             console.log(err)
                                             client.sendText(from, resMsg.error.norm)
                                         })
+                                    if (mediaData === undefined) return client.sendText(from, resMsg.error.norm)
                                     var imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                                     base64img = imageBase64
                                     var outFile = './media/noBg.png'
