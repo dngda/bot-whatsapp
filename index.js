@@ -39,8 +39,8 @@ async function start(client = new Client()) {
     await client.onIncomingCall(async call => {
         console.log(color('[~>>]', 'red'), `Someone is calling bot, lol`)
         // ketika seseorang menelpon nomor bot akan mengirim pesan
-        await client.sendText(call.peerJid._serialized, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
-        await client.contactBlock(call.peerJid._serialized)
+        await client.sendText(call.peerJid, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
+        await client.contactBlock(call.peerJid)
     })
 
     // ketika seseorang mengirim pesan
