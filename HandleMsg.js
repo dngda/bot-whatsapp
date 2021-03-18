@@ -705,7 +705,7 @@ module.exports = HandleMsg = async (client, message) => {
                         try {
                             const YD = new YoutubeMp3Downloader({
                                 "ffmpegPath": "./bin/ffmpeg.exe",
-                                "outputPath": "./media/ytmp3",
+                                "outputPath": "./media",
                                 "youtubeVideoQuality": "highestaudio",
                                 "queueParallelism": 4,
                                 "progressTimeout": 2000,
@@ -754,7 +754,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                             const YD = new YoutubeMp3Downloader({
                                 "ffmpegPath": "./bin/ffmpeg.exe",
-                                "outputPath": "./media/ytmp3",
+                                "outputPath": "./media",
                                 "youtubeVideoQuality": "highestaudio",
                                 "queueParallelism": 4,
                                 "progressTimeout": 2000,
