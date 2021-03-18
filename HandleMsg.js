@@ -733,24 +733,24 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'play': //silahkan kalian custom sendiri jika ada yang ingin diubah
                         if (args.length == 0) return client.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
-                        let result = await api.ytsearch(arg).catch(err => {
+                        let ytresult = await api.ytsearch(arg).catch(err => {
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
                         })
 
-                        if (result === undefined) return client.reply(from, resMsg.error.norm, id)
+                        if (ytresult === undefined) return client.reply(from, resMsg.error.norm, id)
 
                         try {
-                            let duration = (result) => {
-                                const n = result.duration.split(':')
+                            let duration = (ytresult) => {
+                                const n = ytresult.duration.split(':')
                                 if (n.length === 3) return parseInt(n[0]) * 3600 + parseInt(n[1]) * 60 + parseInt(n[2])
                                     else return parseInt(n[0] * 60) + parseInt(n[1])
                             }
-                            if (duration(result) > 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
-                                var estimasi = duration(result) / 50
+                            if (duration(ytresult) > 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
+                                var estimasi = duration(ytresult) / 50
                                 var est = estimasi.toFixed(0)
 
-                            await client.sendFileFromUrl(from, `${result.thumbnail_src}`, ``, `Video ditemukan\n\nJudul: ${result.title}\nDurasi: ${result.duration}\nUploaded: ${result.upload_date}\nView: ${result.views}\n\nsedang dikirim ± ${est} menit`, id)
+                            await client.sendFileFromUrl(from, `${ytresult.thumbnail_src}`, ``, `Video ditemukan\n\nJudul: ${ytresult.title}\nDurasi: ${ytresult.duration}\nUploaded: ${ytresult.upload_date}\nView: ${ytresult.views}\n\nsedang dikirim ± ${est} menit`, id)
 
                             const YD = new YoutubeMp3Downloader({
                                 "ffmpegPath": "./bin/ffmpeg.exe",
@@ -763,7 +763,7 @@ module.exports = HandleMsg = async (client, message) => {
                              
                             //Download video and save as MP3 file
                             var time = moment(t * 1000).format('mmss')
-                            YD.download(result.id, `temp_${time}.mp3`)
+                            YD.download(ytresult.id, `temp_${time}.mp3`)
 
                             YD.on("finished", (err, data) => {
                                 client.sendPtt(from, data.file, id).then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
