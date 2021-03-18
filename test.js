@@ -1,43 +1,18 @@
-const {ytsearch} = require('./lib/api.js')
-const moment = require('moment-timezone')
-moment.tz.setDefault('Asia/Jakarta').locale('id')
-const fs = require('fs')
+const { translate } = require('free-translate')
+// import { translate } from 'free-translate';
+ 
 
-ytsearch('radioactive but im waking up').then(result => {
-
-	console.log(result)
-
-	let duration = (result) => {
-		const n = result.duration.split(':')
-		if (n.length === 3) return parseInt(n[0]) * 3600 + parseInt(n[1]) * 60 + parseInt(n[2])
-			else return parseInt(n[0] * 60) + parseInt(n[1])
-	}
-	
-	console.log(duration(result))
-
-	var YoutubeMp3Downloader = require('youtube-mp3-downloader')
-	var YD = new YoutubeMp3Downloader({
-	    "ffmpegPath": "./bin/ffmpeg.exe",
-	    "outputPath": "./media/ytmp3",
-	    "youtubeVideoQuality": "highestaudio",
-	    "queueParallelism": 4,
-	    "progressTimeout": 2000,
-	    "allowWebm": false
-	})
-	 
-	//Download video and save as MP3 file
-	t = 123
-	var time = moment(t * 1000).format('mmss')
-	YD.download(result.id, `temp_${time}.mp3`)
-
-	YD.on("finished", (err, data) => {
-	    
-	    // fs.unlinkSync(data.file)
-	})
-
-	YD.on("error", (error) => {
-
-	    console.log(error)
-	})
-
+translate(`some english text here`, { from: 'auto', to: 'ko' }).then(n => {
+	  console.log(n) // Hello World
 })
+
+var lang = ['en','pt','af','sq','am','ar','hy','az','eu','be','bn','bs','bg','ca','ceb','ny','zh-CN','co','hr','cs','da','nl','eo','et','tl','fi','fr','fy','gl','ka','de','el','gu','ht','ha','haw','iw','hi','hmn','hu','is','ig','id','ga','it','ja','jw','kn','kk','km','rw','ko','ku','ky','lo','la','lv','lt','lb','mk','mg','ms','ml','mt','mi','mr','mn','my','ne','no','or','ps','fa','pl','pa','ro','ru','sm','gd','sr','st','sn','sd','si','sk','sl','so','es','su','sw','sv','tg','ta','tt','te','th','tr','tk','uk','ur','ug','uz','vi','cy','xh','yi','yo','zu','zh-TW']
+
+var result = []
+names.forEach(function(item) {
+     if(result.indexOf(item) < 0) {
+         result.push(item)
+     }
+})
+
+console.log(result.toString())

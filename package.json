@@ -32,6 +32,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "follow-redirects": "^1.13.3",
     "form-data": "^3.0.1",
+    "free-translate": "^0.4.0",
     "fs-extra": "^9.0.1",
     "gtts": "^0.2.1",
     "lowdb": "^1.0.0",
