@@ -5,7 +5,7 @@ const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 const { default: PQueue } = require("p-queue")
 
-const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true, intervalCap: 3, carryoverConcurrencyCount: true})
+const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true, interval: 2000, intervalCap: 5, carryoverConcurrencyCount: true})
 
 queue.on('next', () => {
     if (queue.size > 0 || queue.pending > 0) console.log(`Queue Size: ${queue.size}  Pending: ${queue.pending}`)
