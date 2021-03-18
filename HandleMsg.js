@@ -1201,6 +1201,8 @@ module.exports = HandleMsg = async (client, message) => {
                                 console.log(err)
                                 client.reply(from, resMsg.error.norm, id)
                             })
+                        }else{
+                            client.reply(from, `Kode bahasa tidak valid`, id)
                         }
                         break
 
