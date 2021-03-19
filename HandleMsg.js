@@ -1544,7 +1544,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'refresh':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         await client.reply(from, `Refreshing web whatsapp page!`, id)
-                        setTimeout(() => {
+                        setTimeout(async () => {
                             try{
                                 await client.refresh().then(async() => {
                                     await console.log(`Bot refreshed!`)
