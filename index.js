@@ -36,11 +36,29 @@ async function start(client = new Client()) {
             }, 1000)
     })
 
+        // ketika bot diinvite ke dalam group
+    await client.onAddedToGroup(async chat => {
+        const groups = await client.getAllGroups()
+        // kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
+        if (groups.length > groupLimit) {
+        await client.sendText(chat.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}`).then(() => {
+              client.leaveGroup(chat.id)
+              client.deleteChat(chat.id)
+          }) 
+        } else {
+            await client.simulateTyping(chat.id, true).then(async () => {
+                await client.sendText(chat.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
+            })
+        }
+    })
+
     await client.onIncomingCall(async call => {
-        console.log(color('[~>>]', 'red'), `Someone is calling bot, lol`)
-        // ketika seseorang menelpon nomor bot akan mengirim pesan
-        await client.sendText(call.peerJid, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
-        await client.contactBlock(call.peerJid)
+        console.log(color('[~>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid} serialized.id: ${call.peerJid._serialized} server.id: ${call.peerJid.server} user.id: ${call.peerJid.user}`)
+        // ketika seseorang menelpon nomor bot akan mengirim 
+        if (!call.isGroup){
+            client.sendText(call.peerJid, 'Maaf tidak bisa menerima panggilan.\n\n~ini robot, bukan manusia. Awas kena block!')
+            client.contactBlock(call.peerJid)
+        }
     })
 
     // ketika seseorang mengirim pesan
@@ -69,22 +87,6 @@ async function start(client = new Client()) {
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus().then(() => queue.start())
     }).catch((err) => {
         console.log(err)
-    })
-
-    // ketika bot diinvite ke dalam group
-    await client.onAddedToGroup(async chat => {
-	const groups = await client.getAllGroups()
-	// kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
-	if (groups.length > groupLimit) {
-	await client.sendText(chat.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}`).then(() => {
-	      client.leaveGroup(chat.id)
-	      client.deleteChat(chat.id)
-	  }) 
-	} else {
-        await client.simulateTyping(chat.id, true).then(async () => {
-            await client.sendText(chat.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
-        })
-	}
     })
 
     // ketika seseorang masuk/keluar dari group

@@ -163,14 +163,14 @@ module.exports = HandleMsg = async (client, message) => {
                 'Yo rasah nggo misuh cuk!',
                 'Istighfar dulu sodaraku',
                 'Hadehh...',
-                'Apa tidak capek?'
+                'Ada masalah apasih?'
             ])
         }
         // respon to msg
-        if (['p', 'assalamualaikum'].includes(message.body && message.body.toLowerCase())) {
+        if (['p', 'assalamualaikum', 'assalamu\'alaikum', 'asalamualaikum', 'assalamu\'alaykum', 'punten'].includes(message.body && message.body.toLowerCase())) {
           await client.sendText(from, 'Wa\'alaikumussalam Wr. Wb.')
         }
-        if (['hi', 'hy', 'halo'].includes(message.body && message.body.toLowerCase())) {
+        if (['hi', 'hy', 'halo', 'hai'].includes(message.body && message.body.toLowerCase())) {
           await client.sendText(from, 'Halo 👋')
         }
 
@@ -1525,7 +1525,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const allChatz = await client.getAllChatIds()
                         const allGroupz = await client.getAllGroups()
                         for (let gclist of allGroupz) {
-                            await client.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}`)
+                            await client.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
                             await client.leaveGroup(gclist.contact.id)
                             await client.deleteChat(gclist.contact.id)
                         }
@@ -1543,14 +1543,17 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'refresh':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        try{
-                            await client.refresh().then(async() => {
-                                await client.reply(from, `Bot refreshed!`, id)
-                            })
-                        }catch (err) {
-                            console.log(color('[ERROR]', 'red'), err)
-                        }
-                            
+                        await client.reply(from, `Refreshing web whatsapp page!`, id)
+                        setTimeout(() => {
+                            try{
+                                await client.refresh().then(async() => {
+                                    await console.log(`Bot refreshed!`)
+                                    await client.reply(from, `Bot refreshed!`, id)
+                                })
+                            }catch (err) {
+                                console.log(color('[ERROR]', 'red'), err)
+                            }
+                        }, 2000)                         
                     break
                     
                     default:
@@ -1564,30 +1567,31 @@ module.exports = HandleMsg = async (client, message) => {
 
         // Kata kasar function
         if (!isCmd && isGroupMsg && isNgegas && chat.type !== "image") {
+            const _denda = _.sample([1000, 3000, 5000, 10000])
             const find = db.get('group').find({ id: groupId }).value()
             if (find && find.id === groupId) {
                 const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                 const isIn = inArray(pengirim, cekuser)
                 if (cekuser && isIn !== false) {
                     if (isKasar) {
-                        const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + 5000).write()
+                        const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + _denda).write()
                         if (denda) {
-                            await client.reply(from, `${resMsg.badw}\n\nDenda +5.000\nTotal : Rp` + formatin(denda.denda), id)
+                            await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda), id)
                         }
                     }
                 } else {
                     const cekMember = db.get('group').filter({ id: groupId }).map('members').value()[0]
                     if (cekMember.length === 0) {
                         if (isKasar) {
-                            db.get('group').find({ id: groupId }).set('members', [{ id: pengirim, denda: 5000 }]).write()
+                            db.get('group').find({ id: groupId }).set('members', [{ id: pengirim, denda: _denda }]).write()
                         } else {
                             db.get('group').find({ id: groupId }).set('members', [{ id: pengirim, denda: 0 }]).write()
                         }
                     } else {
                         const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                         if (isKasar) {
-                            cekuser.push({ id: pengirim, denda: 5000 })
-                            await client.reply(from, `${resMsg.badw}\n\nDenda +5.000`, id)
+                            cekuser.push({ id: pengirim, denda: _denda })
+                            await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}`, id)
                         } else {
                             cekuser.push({ id: pengirim, denda: 0 })
                         }
@@ -1596,8 +1600,8 @@ module.exports = HandleMsg = async (client, message) => {
                 }
             } else {
                 if (isKasar) {
-                    db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 5000 }] }).write()
-                    await client.reply(from, `${resMsg.badw}\n\nDenda +5.000\nTotal : Rp5.000`, id)
+                    db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: _denda }] }).write()
+                    await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp${_denda}`, id)
                 } else {
                     db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 0 }] }).write()
                 }
