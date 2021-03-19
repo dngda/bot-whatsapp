@@ -392,15 +392,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'qrcode':
                         if (args.length == 0) return client.reply(from, `Untuk membuat kode QR, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya SeroBot`, id)
                         client.reply(from, resMsg.wait, id);
-                        let kata = args[0]
-                        for (let i = 1; i < args.length; i++) {
-                            kata += ` ${args[i]}`
-                        }
-                        console.log(kata)
-                        api.qrcode(kata, 500)
-                            .then(async (res) => {
-                                await client.sendFileFromUrl(from, `${res}`, id)
-                            })
+                        await client.sendFileFromUrl(from, `http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(arg)}&size=500x500`, id)
                         break
 
                     case 'meme':
