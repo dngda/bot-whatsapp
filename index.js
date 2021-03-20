@@ -48,18 +48,17 @@ async function start(client = new Client()) {
         // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {
         console.log(color('[~>>]', 'red'), `Someone is adding bot to group, lol~ groupId: ${chat.groupMetadata.id}`)
-        client.getAllGroups().then(async (groups) => {
+        client.getAllGroups().then((groups) => {
             // kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
             console.log(color('[~>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
             if (groups.length > groupLimit) {
                 console.log(color('[~>>]', 'red'), `So this is exceeding the group limit.`)
-                await client.sendText(chat.groupMetadata.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}\nGroup in bot: ${groups.length}`).then(() => {
-                    client.leaveGroup(chat.groupMetadata.id)
-                    client.deleteChat(chat.groupMetadata.id)
-              }) 
+                client.sendText(chat.groupMetadata.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}\nGroup in bot: ${groups.length}`)
+                client.leaveGroup(chat.groupMetadata.id)
+                client.deleteChat(chat.groupMetadata.id)
             } else {
-                await client.simulateTyping(chat.groupMetadata.id, true).then(async () => {
-                    await client.sendText(chat.groupMetadata.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
+                client.simulateTyping(chat.groupMetadata.id, true).then(async () => {
+                    client.sendText(chat.groupMetadata.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
                 })
             }
         })
