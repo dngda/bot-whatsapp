@@ -39,20 +39,21 @@ async function start(client = new Client()) {
         // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {
         console.log(color('[~>>]', 'red'), `Someone is adding bot to group, lol~ groupId: ${chat.groupMetadata.id}`)
-        const groups = await client.getAllGroups()
-        // kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
-        console.log(color('[~>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
-        if (groups.length > groupLimit) {
-            console.log(color('[~>>]', 'red'), `So this is exceeding the group limit.`)
-            await client.sendText(chat.groupMetadata.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}`).then(() => {
-                client.leaveGroup(chat.groupMetadata.id)
-                client.deleteChat(chat.groupMetadata.id)
-          }) 
-        } else {
-            await client.simulateTyping(chat.groupMetadata.id, true).then(async () => {
-                await client.sendText(chat.groupMetadata.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
-            })
-        }
+        client.getAllGroups().then(async (groups) => {
+            // kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
+            console.log(color('[~>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
+            if (groups.length > groupLimit) {
+                console.log(color('[~>>]', 'red'), `So this is exceeding the group limit.`)
+                await client.sendText(chat.groupMetadata.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}`).then(() => {
+                    client.leaveGroup(chat.groupMetadata.id)
+                    client.deleteChat(chat.groupMetadata.id)
+              }) 
+            } else {
+                await client.simulateTyping(chat.groupMetadata.id, true).then(async () => {
+                    await client.sendText(chat.groupMetadata.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
+                })
+            }
+        })
     })
 
     await client.onIncomingCall(async call => {
