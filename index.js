@@ -4,6 +4,13 @@ const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 const { default: PQueue } = require("p-queue")
+const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
+let {
+    ownerNumber,
+    groupLimit,
+    memberLimit,
+    prefix
+} = setting
 
 const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true, interval: 2000, intervalCap: 5, carryoverConcurrencyCount: true})
 
@@ -44,7 +51,7 @@ async function start(client = new Client()) {
             console.log(color('[~>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
             if (groups.length > groupLimit) {
                 console.log(color('[~>>]', 'red'), `So this is exceeding the group limit.`)
-                await client.sendText(chat.groupMetadata.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}`).then(() => {
+                await client.sendText(chat.groupMetadata.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}\nGroup in bot: ${groups.length}`).then(() => {
                     client.leaveGroup(chat.groupMetadata.id)
                     client.deleteChat(chat.groupMetadata.id)
               }) 
