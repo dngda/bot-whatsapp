@@ -4,7 +4,9 @@ const options = require('./utils/options')
 const { color, messageLog } = require('./utils')
 const HandleMsg = require('./HandleMsg')
 const { default: PQueue } = require("p-queue")
-const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
+
+const fs = require('fs-extra')
+const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 let {
     ownerNumber,
     groupLimit,
