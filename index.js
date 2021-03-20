@@ -53,14 +53,14 @@ async function start(client = new Client()) {
             console.log(color('[~>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
             if (groups.length > groupLimit) {
                 console.log(color('[~>>]', 'red'), `So this is exceeding the group limit.`)
-                client.sendText(chat.groupMetadata.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}\nGroup in bot: ${groups.length}`)
+                client.sendText(chat.groupMetadata.id, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner for appeal`)
                 setTimeout(() => {
                     client.leaveGroup(chat.groupMetadata.id)
                     client.deleteChat(chat.groupMetadata.id)
                 }, 3000)
             } else {
                 client.simulateTyping(chat.groupMetadata.id, true).then(async () => {
-                    client.sendText(chat.groupMetadata.id, `Hai guys~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
+                    client.sendText(chat.groupMetadata.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
                 })
             }
         })
@@ -70,7 +70,7 @@ async function start(client = new Client()) {
         console.log(color('[~>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}}`)
         // ketika seseorang menelpon nomor bot akan mengirim 
         if (!call.isGroup){
-            client.sendText(call.peerJid, 'Maaf tidak bisa menerima panggilan.\nIni robot, bukan manusia.\nAwas kena block!~\nChat https://wa.me/6282310487958 for unblock request.')
+            client.sendText(call.peerJid, 'Maaf tidak bisa menerima panggilan.\nIni robot, bukan manusia. Awas kena block!~\nChat https://wa.me/6282310487958 for unblock request.')
             setTimeout(() => {
                 client.contactBlock(call.peerJid)
             }, 3000)

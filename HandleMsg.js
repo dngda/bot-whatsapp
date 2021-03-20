@@ -218,7 +218,7 @@ module.exports = HandleMsg = async (client, message) => {
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
                                     await client.sendText(from, resMsg.success.join)
-                                    await client.sendText(chekgrup.id, `Hai guys~, I'm SeroBot. To find out the commands on this Bot type ${prefix}menu`)
+                                    await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
                                 })
                         } else {
                             let cgrup = await client.getAllGroups()
@@ -227,6 +227,7 @@ module.exports = HandleMsg = async (client, message) => {
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
                                     await client.reply(from, resMsg.success.join, id)
+                                    await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
                                 })
                                 .catch(async () => {
                                     await client.reply(from, 'Gagal!', id)
