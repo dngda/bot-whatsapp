@@ -210,7 +210,7 @@ module.exports = HandleMsg = async (client, message) => {
                         break
                     case 'join':
                         if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot ke group silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
-                        let linkgrup = body.slice(6)
+                        linkgrup = args[0]
                         let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
                         let chekgrup = await client.inviteInfo(linkgrup)
                         if (!islink) return client.reply(from, 'Maaf link group-nya salah! silahkan kirim link yang benar', id)
@@ -228,8 +228,8 @@ module.exports = HandleMsg = async (client, message) => {
                                 .then(async () => {
                                     await client.reply(from, resMsg.success.join, id)
                                 })
-                                .catch(() => {
-                                    client.reply(from, 'Gagal!', id)
+                                .catch(async () => {
+                                    await client.reply(from, 'Gagal!', id)
                                 })
                         }
                         break

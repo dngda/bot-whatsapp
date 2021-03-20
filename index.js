@@ -54,11 +54,13 @@ async function start(client = new Client()) {
             if (groups.length > groupLimit) {
                 console.log(color('[~>>]', 'red'), `So this is exceeding the group limit.`)
                 client.sendText(chat.groupMetadata.id, `Sorry, the group on this Bot is full\nMax Group is: ${groupLimit}\nGroup in bot: ${groups.length}`)
-                client.leaveGroup(chat.groupMetadata.id)
-                client.deleteChat(chat.groupMetadata.id)
+                setTimeout(() => {
+                    client.leaveGroup(chat.groupMetadata.id)
+                    client.deleteChat(chat.groupMetadata.id)
+                }, 3000)
             } else {
                 client.simulateTyping(chat.groupMetadata.id, true).then(async () => {
-                    client.sendText(chat.groupMetadata.id, `Hai all~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
+                    client.sendText(chat.groupMetadata.id, `Hai guys~, I'm SeroBot. To find out the commands on this bot type ${prefix}menu`)
                 })
             }
         })
