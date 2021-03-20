@@ -1559,7 +1559,7 @@ module.exports = HandleMsg = async (client, message) => {
 
         // Kata kasar function
         if (!isCmd && isGroupMsg && isNgegas && chat.type !== "image") {
-            const _denda = _.sample([1000, 3000, 5000, 10000])
+            const _denda = _.sample([1000, 2000, 3000, 5000, 10000])
             const find = db.get('group').find({ id: groupId }).value()
             if (find && find.id === groupId) {
                 const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
