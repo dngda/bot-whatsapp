@@ -1344,6 +1344,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         await client.sendText(from, 'Good bye 👋')
                         await client.leaveGroup(groupId)
+                        await client.deleteChat(groupId)
                         break
 
                     case 'del':
