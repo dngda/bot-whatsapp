@@ -31,7 +31,7 @@ async function start(client = new Client()) {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color('[DEV]'), color('Danang', 'yellow'))
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
-    console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi', 'green'))
+    console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi /clearexitedgroup /refresh /addkasar', 'green'))
 
     // process unread message
     const unreadMessages = await client.getAllUnreadMessages()
