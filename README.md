@@ -1,14 +1,20 @@
 <p align="center">
-<img src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c543.png" height="128"/>
+<img src="https://user-images.githubusercontent.com/35982346/112043469-492f3180-8b7b-11eb-9217-39ebce1a9e0f.png" height="128"/>
 </p>
 <p align="center">
-<a href="https://github.com/dngda/bot-whatsapp"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
+<a href="https://github.com/dngda/bot-whatsapp"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Sero Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a></p>
+<p align="center">
+<a href="https://github.com/dngda/"><img title="Author" src="https://img.shields.io/badge/author-dngda-blue?style=for-the-badge&logo=github"></a>
 </p>
 <p align="center">
-<a href="https://github.com/dngda/"><img title="Author" src="https://img.shields.io/badge/Github-dngda-blue?style=for-the-badge&logo=github"></a>
+<a href="https://github.com/dngda/followers"><img title="Followers" src="https://img.shields.io/github/followers/dngda?color=blue&style=flat-square"></a>
+<a href="https://github.com/dngda/bot-whatsapp/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/dngda/bot-whatsapp?color=red&style=flat-square"></a>
+<a href="https://github.com/dngda/bot-whatsapp/network/members"><img title="Forks" src="https://img.shields.io/github/forks/dngda/bot-whatsapp?color=red&style=flat-square"></a>
+<a href="https://github.com/dngda/bot-whatsapp/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/dngda/bot-whatsapp?label=watchers&color=blue&style=flat-square"></a><br>
+<img src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c543.png" height="64"/>
 </p>
 
-## SeroBot
+## ReadMe-Please 🐱
 
 This project require NodeJS v12
 
@@ -55,9 +61,8 @@ After running it you need to scan the QR
 
 ✪〘 Fitur BOT 〙✪
 - ping
-- menu
 - ownerbot
-- botstat
+- stat
 - tnc
 - donate
 
@@ -66,6 +71,7 @@ After running it you need to scan the QR
 - stickertoimg
 - stickergif
 - stickergiphy
+- translate
 - memefy
 - doctopdf
 - qrcode
@@ -84,17 +90,17 @@ After running it you need to scan the QR
 - alaudio
 - jsholat
 
-✪〘 Nganu 〙✪
+✪〘 Lain-lain 〙✪
 - artinama
 - fakta
 - katabijak
 - pantun
 - quote
 - apakah
+- list
 
 ✪〘 Hiburan 〙✪
 - anime
-- animebatch
 - whatanime
 - kpop
 - memes
@@ -104,17 +110,22 @@ After running it you need to scan the QR
 - cuaca
 - resi
 - ceklokasi
+- kbbi
 
 ✪〘 Anti Toxic 〙✪
 - katakasar
 - klasemen
 - reset
 
-✪〘 Bot Conf 〙✪
+✪〘 Group 〙✪
 - join
 - bye
-- del
 - tagall
+- promote
+- demote
+- revoke
+- invite
+- kick
 
 And some hidden commands xD
 
@@ -132,5 +143,6 @@ Fix Stuck on linux, install google chrome stable:
 ## Thanks to
 - [Open-WA-Automate](https://github.com/open-wa/wa-automate-nodejs)
 - [YogaSakti](https://github.com/YogaSakti/imageToSticker)
+- [MhankBarBar](https://github.com/MhankBarBar/whatsapp-bot)
 - [ArugaZ](https://github.com/ArugaZ/whatsapp-bot)
 - [Aziz0404](https://github.com/nuraziz0404/botwa)
