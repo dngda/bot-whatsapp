@@ -1526,6 +1526,17 @@ module.exports = HandleMsg = async (client, message) => {
                         client.reply(from, 'Success leave all group!', id)
                         break
 
+                    case 'clearexitedgroup': //menghapus group yang sudah keluar
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        const allGroupzs = await client.getAllGroups()
+                        for (let gc of allGroupzs) {
+                            if (gc.groupMetadata.participants.includes(botNumber)){
+                                await client.deleteChat(gc.contact.id)
+                            }
+                        }
+                        client.reply(from, 'Success clear all exited group!', id)
+                        break
+
                     case 'clearall': //menghapus seluruh pesan diakun bot
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allChatx = await client.getAllChats()
