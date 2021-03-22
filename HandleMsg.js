@@ -1187,7 +1187,7 @@ module.exports = HandleMsg = async (client, message) => {
                         const lang = ['en','pt','af','sq','am','ar','hy','az','eu','be','bn','bs','bg','ca','ceb','ny','zh-CN','co','hr','cs','da','nl','eo','et','tl','fi','fr','fy','gl','ka','de','el','gu','ht','ha','haw','iw','hi','hmn','hu','is','ig','id','ga','it','ja','jw','kn','kk','km','rw','ko','ku','ky','lo','la','lv','lt','lb','mk','mg','ms','ml','mt','mi','mr','mn','my','ne','no','or','ps','fa','pl','pa','ro','ru','sm','gd','sr','st','sn','sd','si','sk','sl','so','es','su','sw','sv','tg','ta','tt','te','th','tr','tk','uk','ur','ug','uz','vi','cy','xh','yi','yo','zu','zh-TW']
 
                         if (lang.includes(args[0])) {
-                            translate(isQuotedChat ? quotedMsgObj.content.toString() : arg.trim().substring(body.indexOf(' ') + 1), {
+                            translate(isQuotedChat ? quotedMsgObj.content.toString() : arg.trim().substring(arg.indexOf(' ') + 1), {
                              from: 'auto', to: args[0] }).then(n => {
                                 client.reply(from, n, id)
                             }).catch(err => {
