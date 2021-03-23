@@ -1582,7 +1582,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (denda) {
                             await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda), id)
                             if (denda.denda >= 5000000) {
-                                banned.push(from)
+                                banned.push(pengirim)
                                 fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                                 client.reply(from, `══✪〘 SELAMAT 〙✪\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 5jt.\n ║ Mampos~\n╚═〘 SeroBot 〙`, id)
                             }
