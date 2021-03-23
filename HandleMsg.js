@@ -135,7 +135,9 @@ module.exports = HandleMsg = async (client, message) => {
 
         // Filter Banned People
         if (isBanned) {
-            return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
+            return client.sendText(from, `Maaf anda telah dibanned oleh bot`).then(() => {
+                console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
+            })
         }
         //msg response
         const resMsg = {
@@ -178,13 +180,10 @@ module.exports = HandleMsg = async (client, message) => {
         if (isCmd) {
             client.simulateTyping(chat.id, true).then(async () => {
                 switch (command) {
-                    case 'status':
-                        client.reply(from, `Bot aktif\nSpeed: ${processTime(t, moment())} _Second_`, id)
-                        break
                     // Menu and TnC
                     case 'speed':
                     case 'ping':
-                        await client.sendText(from, `Pong!!!!\nSpeed: ${processTime(t, moment())} _Second_`)
+                        await client.sendText(from, `Pong!!!\nSpeed: ${processTime(t, moment())} _Seconds_`)
                         break
                     case 'tnc':
                         await client.sendText(from, menuId.textTnC())
@@ -235,11 +234,12 @@ module.exports = HandleMsg = async (client, message) => {
                         }
                         break
                     case 'stat':
+                    case 'status':
                     case 'botstat': {
                         const loadedMsg = await client.getAmountOfLoadedMessages()
                         const chatIds = await client.getAllChatIds()
                         const groups = await client.getAllGroups()
-                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats`)
+                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\nSpeed: ${processTime(t, moment())} _Seconds_`)
                         break
                     }
 
@@ -1487,13 +1487,13 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args[0] == 'add') {
                             banned.push(args[1] + '@c.us')
                             fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
-                            client.reply(from, 'Success banned target!')
+                            client.reply(from, 'Success banned target!', id)
                         } else
                             if (args[0] == 'del') {
                                 let xnxx = banned.indexOf(args[1] + '@c.us')
                                 banned.splice(xnxx, 1)
                                 fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
-                                client.reply(from, 'Success unbanned target!')
+                                client.reply(from, 'Success unbanned target!', id)
                             } else {
                                 for (let i = 0; i < mentionedJidList.length; i++) {
                                     banned.push(mentionedJidList[i])
