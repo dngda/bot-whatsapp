@@ -1584,7 +1584,7 @@ module.exports = HandleMsg = async (client, message) => {
                             if (denda.denda >= 5000000) {
                                 banned.push(pengirim)
                                 fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
-                                client.reply(from, `══✪〘 SELAMAT 〙✪\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 5jt.\n ║ Mampos~\n╚═〘 SeroBot 〙`, id)
+                                client.reply(from, `╔══✪〘 SELAMAT 〙✪\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 5jt.\n ║ Mampos~\n╚═〘 SeroBot 〙`, id)
                                 db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n-5000000).write()
                             }
                         }
