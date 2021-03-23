@@ -1,7 +1,8 @@
 const { decryptMedia } = require('@open-wa/wa-automate')
 const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
-const YoutubeMp3Downloader = require('youtube-mp3-downloader')
+const ytdl = require('ytdl-core')
+const ffmpeg = require('fluent-ffmpeg')
 const { translate } = require('free-translate')
 const axios = require('axios')
 const fetch = require('node-fetch')
@@ -699,28 +700,22 @@ module.exports = HandleMsg = async (client, message) => {
                         client.sendText(from, resMsg.wait)
                         const ytid = args[0].substr((args[0].indexOf('=')) !== -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                         try {
-                            const YD = new YoutubeMp3Downloader({
-                                "ffmpegPath": "./bin/ffmpeg.exe",
-                                "outputPath": "./media",
-                                "youtubeVideoQuality": "highestaudio",
-                                "queueParallelism": 4,
-                                "progressTimeout": 2000,
-                                "allowWebm": false
-                            })
-                             
-                            //Download video and save as MP3 file
                             var time = moment(t * 1000).format('mmss')
-                            YD.download(ytid, `temp_${time}.mp3`)
+                            var path = `./media/temp_${time}.mp3`
 
-                            YD.on("finished", (err, data) => {
-                                client.sendPtt(from, data.file, id).then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
-                                fs.unlinkSync(data.file)
-                            })
-
-                            YD.on("error", (error) => {
-                                console.log(error)
-                                client.reply(from, resMsg.error.norm, id)
-                            })
+                            stream = ytdl(ytid)
+                            
+                            ffmpeg({source:stream})
+                                .setFfmpegPath('./bin/ffmpeg')
+                                .on('error', (err) => {
+                                    console.log('An error occurred: ' + err.message)
+                                    client.reply(from, resMsg.error.norm, id)
+                                  })
+                                .on('end', () => {
+                                    client.sendPtt(from, path, id).then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
+                                    fs.unlinkSync(path)
+                                  })
+                                .saveToFile(path)
                         }catch (err){
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
@@ -747,29 +742,24 @@ module.exports = HandleMsg = async (client, message) => {
                                 var est = estimasi.toFixed(0)
 
                             await client.sendFileFromUrl(from, `${ytresult.thumbnail_src}`, ``, `Video ditemukan\n\nJudul: ${ytresult.title}\nDurasi: ${ytresult.duration}\nUploaded: ${ytresult.upload_date}\nView: ${ytresult.views}\n\nAudio sedang dikirim ± ${est} menit`, id)
-
-                            const YD = new YoutubeMp3Downloader({
-                                "ffmpegPath": "./bin/ffmpeg.exe",
-                                "outputPath": "./media",
-                                "youtubeVideoQuality": "highestaudio",
-                                "queueParallelism": 4,
-                                "progressTimeout": 2000,
-                                "allowWebm": false
-                            })
-                             
+ 
                             //Download video and save as MP3 file
                             var time = moment(t * 1000).format('mmss')
-                            YD.download(ytresult.id, `temp_${time}.mp3`)
+                            var path = `./media/temp_${time}.mp3`
 
-                            YD.on("finished", (err, data) => {
-                                client.sendPtt(from, data.file, id).then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
-                                fs.unlinkSync(data.file)
-                            })
+                            stream = ytdl(ytresult.id)
+                            ffmpeg({source:stream})
+                                .setFfmpegPath('./bin/ffmpeg')
+                                .on('error', (err) => {
+                                    console.log('An error occurred: ' + err.message)
+                                    client.reply(from, resMsg.error.norm, id)
+                                  })
+                                .on('end', () => {
+                                    client.sendPtt(from, path, id).then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
+                                    fs.unlinkSync(path)
+                                  })
+                                .saveToFile(path)
 
-                            YD.on("error", (error) => {
-                                console.log(error)
-                                client.reply(from, resMsg.error.norm, id)
-                            })
                         }catch (err){
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
