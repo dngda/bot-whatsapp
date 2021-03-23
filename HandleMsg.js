@@ -226,7 +226,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 })
                         } else {
                             let cgrup = await client.getAllGroups()
-                            if (cgrup.length > groupLimit) return client.reply(from, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`, id)
+                            if (cgrup.length > groupLimit) return client.reply(from, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner for appeal`, id)
                             if (cgrup.size < memberLimit) return client.reply(from, `Sorry, Bot wil not join if the group members do not exceed ${memberLimit} people`, id)
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
