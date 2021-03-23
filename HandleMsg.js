@@ -704,7 +704,7 @@ module.exports = HandleMsg = async (client, message) => {
                             var path = `./media/temp_${time}.mp3`
 
                             stream = ytdl(ytid)
-                            
+
                             ffmpeg({source:stream})
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
@@ -1108,15 +1108,20 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'klasmen':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isNgegas) return client.reply(from, `Anti-Toxic tidak aktif, aktifkan menggunakan perintah ${prefix}kasar on`, id)
-                        const klasemen = db.get('group').filter({ id: groupId }).map('members').value()[0]
-                        let urut = Object.entries(klasemen).map(([key, val]) => ({ id: key, ...val })).sort((a, b) => b.denda - a.denda);
-                        let textKlas = "*Klasemen Denda Sementara*\n"
-                        let i = 1;
-                        urut.forEach((klsmn) => {
-                            textKlas += i + ". @" + klsmn.id.replace('@c.us', '') + " ➤ Rp" + formatin(klsmn.denda) + "\n"
-                            i++
-                        });
-                        await client.sendTextWithMentions(from, textKlas)
+                        try{
+                            const klasemen = db.get('group').filter({ id: groupId }).map('members').value()[0]
+                            let urut = Object.entries(klasemen).map(([key, val]) => ({ id: key, ...val })).sort((a, b) => b.denda - a.denda);
+                            let textKlas = "*Klasemen Denda Sementara*\n"
+                            let i = 1;
+                            urut.forEach((klsmn) => {
+                                textKlas += i + ". @" + klsmn.id.replace('@c.us', '') + " ➤ Rp" + formatin(klsmn.denda) + "\n"
+                                i++
+                            })
+                            await client.sendTextWithMentions(from, textKlas)
+                        }catch (err) {
+                            console.log(err)
+                            client.reply(from, resMsg.error.norm, id)
+                        }
                         break
 
                     case 'skripsi':

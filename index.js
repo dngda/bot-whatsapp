@@ -14,7 +14,7 @@ let {
     prefix
 } = setting
 
-const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true, interval: 2000, intervalCap: 5, carryoverConcurrencyCount: true})
+const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true})
 
 queue.on('next', () => {
     if (queue.size > 0 || queue.pending > 0) console.log(color('[~>>]', 'red'), `Queue Size: ${queue.size}  Pending: ${queue.pending}`)
