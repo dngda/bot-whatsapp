@@ -1549,8 +1549,8 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'clearallnongroup': //menghapus seluruh pesan diakun bot selain group
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        const allChatx = await client.getAllChats()
-                        for (let dchat of allChatx) {
+                        const allChat1 = await client.getAllChats()
+                        for (let dchat of allChat1) {
                             if (!dchat.isGroup) await client.deleteChat(dchat.id)
                         }
                         client.reply(from, 'Success clear all private chat!', id)
