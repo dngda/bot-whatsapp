@@ -1573,11 +1573,12 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case '>':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        client.simulateTyping(from, false)
                         try{
                             eval(arg)
-                        }catch (err) {
-                            console.log(err)
-                            client.sendText(from, err)
+                        }catch (e) {
+                            console.log(e)
+                            if (e instanceof SyntaxError) return client.sendText(from, e.message)
                         }
                     break
 
