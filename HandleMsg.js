@@ -1578,7 +1578,7 @@ module.exports = HandleMsg = async (client, message) => {
                             eval(arg)
                         }catch (e) {
                             console.log(e)
-                            client.sendText(from, e.message)
+                            client.sendText(from, `${e.name}: ${e.message}`)
                         }
                     break
 
