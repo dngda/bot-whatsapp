@@ -346,7 +346,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'stikergif':
                         if (isMedia || isQuotedVideo) {
                             if (type === 'image' || isQuotedImage) return client.reply(from, `Media yang dikirimkan harus berupa video/gif, untuk gambar gunakan ${prefix}sticker.`, id)
-                            if (mimetype === 'video/mp4' && message.duration <= 10 || (quotedMsg && quotedMsg.mimetype === 'video/mp4') && quotedMsg.duration <= 10) {
+                            if (mimetype === 'video/mp4' && message.duration <= 9 || (quotedMsg && quotedMsg.mimetype === 'video/mp4') && quotedMsg.duration <= 9) {
                                 var encryptedMedia = isQuotedVideo ? quotedMsg : message
                                 var mediaData = await decryptMedia(encryptedMedia)
                                 client.reply(from, resMsg.wait, id)
@@ -356,10 +356,10 @@ module.exports = HandleMsg = async (client, message) => {
                                         client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
                                     })
                             } else {
-                                client.reply(from, `Kirim video dengan caption *${prefix}stickergif* max 10 sec!`, id)
+                                client.reply(from, `Kirim video dengan caption *${prefix}stickergif* max 8 secs!`, id)
                             }
                         } else {
-                            client.reply(from, `Kirim video atau reply/quote video dengan caption *${prefix}stickergif* max 10 sec`, id)
+                            client.reply(from, `Kirim video atau reply/quote video dengan caption *${prefix}stickergif* max 8 secs`, id)
                         }
                         break
 
