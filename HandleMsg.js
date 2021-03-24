@@ -1575,7 +1575,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length === 0) return client.reply(from, `Untuk unblock kontak, ${prefix}unblock 628xxx`, id)
                         await client.contactUnblock(`${arg}@c.us`).then(() => {
-                            client.reply(from, `Berhasil unblock ${arg}.`)
+                            client.reply(from, `Berhasil unblock ${arg}.`, id)
                         }).catch(e => {
                             console.log(e)
                             client.reply(from, resMsg.error.norm, id)
