@@ -1531,8 +1531,8 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allGroupzs = await client.getAllGroups()
                         for (let gc of allGroupzs) {
-                            if (gc.groupMetadata.participants.includes(botNumber)){
-                                await client.deleteChat(gc.contact.id)
+                            if (gc.isReadOnly){
+                                await client.deleteChat(gc.id)
                             }
                         }
                         client.reply(from, 'Success clear all exited group!', id)
@@ -1545,6 +1545,15 @@ module.exports = HandleMsg = async (client, message) => {
                             await client.deleteChat(dchat.id)
                         }
                         client.reply(from, 'Success clear all chat!', id)
+                        break
+
+                    case 'clearallnongroup': //menghapus seluruh pesan diakun bot selain group
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        const allChatx = await client.getAllChats()
+                        for (let dchat of allChatx) {
+                            if (!dchat.isGroup) await client.deleteChat(dchat.id)
+                        }
+                        client.reply(from, 'Success clear all private chat!', id)
                         break
 
                     case 'refresh':
