@@ -1570,7 +1570,17 @@ module.exports = HandleMsg = async (client, message) => {
                             }
                         }, 2000)                         
                     break
-                    
+
+                    case '>':
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        try{
+                            eval(arg)
+                        }catch (err) {
+                            console.log(err)
+                            client.sendText(from, err)
+                        }
+                    break
+
                     default:
                         await client.sendText(from, `Perintah tidak ada.\n${prefix}menu untuk melihat daftar perintah!`)
                     break
