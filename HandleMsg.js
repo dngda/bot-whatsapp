@@ -756,7 +756,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
                                     console.log('An error occurred: ' + err.message)
-                                    client.reply(from, resMsg.error.norm, id)
+                                    return client.reply(from, resMsg.error.norm, id)
                                   })
                                 .on('end', () => {
                                     client.sendPtt(from, path, id).then(console.log(`Audio Processed for ${processTime(t, moment())} Second`))
@@ -879,19 +879,21 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'image':
                     case 'images':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
-                        var hasilwall = ''
+                        var result = false
                         do {
-                            hasilwall = await images.fdci(arg)
+                            await images.fdci(arg)
+                                .then(res => result = res)
                                 .catch(e => {
                                     console.log(`fdci err : ${e}`)
                                     return client.reply(from, resMsg.error.norm, id)
                                 })
-                        } while (hasilwall == undefined | hasilwall == null)
-
-                        await client.sendFileFromUrl(from, hasilwall, '', '', id)
-                            .catch(() => {
-                                client.reply(from, resMsg.error.norm, id)
-                            })
+                        } while (result == undefined || result == null)
+                        if (result != false) {
+                            await client.sendFileFromUrl(from, result, '', '', id)
+                                .catch(() => {
+                                    return client.reply(from, resMsg.error.norm, id)
+                                })
+                        }
                         break
 
                     case 'crjogja':
