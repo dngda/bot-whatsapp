@@ -730,7 +730,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length == 0) return client.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`, id)
                         let ytresult = await api.ytsearch(arg).catch(err => {
                             console.log(err)
-                            client.reply(from, resMsg.error.norm, id)
+                            return client.reply(from, resMsg.error.norm, id)
                         })
 
                         if (ytresult === undefined) return client.reply(from, resMsg.error.norm, id)
@@ -745,7 +745,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 var estimasi = duration(ytresult) / 100
                                 var est = estimasi.toFixed(0)
 
-                            await client.sendFileFromUrl(from, `${ytresult.thumbnail_src}`, ``, `Video ditemukan\n\nJudul: ${ytresult.title}\nDurasi: ${ytresult.duration}\nUploaded: ${ytresult.upload_date}\nView: ${ytresult.views}\n\nAudio sedang dikirim ± ${est} menit`, id)
+                            await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``, `Video ditemukan\n\nJudul: ${ytresult.judul}\nDurasi: ${ytresult.duration}\nUploaded: ${ytresult.published_at}\nView: ${ytresult.views}\n\nAudio sedang dikirim ± ${est} menit`, id)
  
                             //Download video and save as MP3 file
                             var time = moment(t * 1000).format('mmss')
