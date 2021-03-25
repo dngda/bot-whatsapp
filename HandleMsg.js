@@ -140,7 +140,7 @@ module.exports = HandleMsg = async (client, message) => {
                 console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
             })
         }
-        if (isBanned) {
+        else if (isBanned) {
             return console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
         }
         
@@ -887,6 +887,7 @@ module.exports = HandleMsg = async (client, message) => {
                                     console.log(`fdci err : ${e}`)
                                     return client.reply(from, resMsg.error.norm, id)
                                 })
+                                return
                         } while (result == undefined || result == null)
                         if (result != false) {
                             await client.sendFileFromUrl(from, result, '', '', id)
