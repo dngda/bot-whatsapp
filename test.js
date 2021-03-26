@@ -1,14 +1,5 @@
-const ytdl = require('ytdl-core')
-const ffmpeg = require('fluent-ffmpeg')
+const pint = require('./lib/pinterest.js')
 
-stream = ytdl('Afja_qKKBk0')
-
-ffmpeg({source:stream})
-	.setFfmpegPath('./bin/ffmpeg')
-	.on('error', (err) => {
-	    console.log('An error occurred: ' + err.message)
-	  })
-	.on('end', () => {
-	    console.log('Stream finished !')
-	  })
-	.saveToFile('./media/temp1213.mp3')
+pint('heejin').then(n => {
+	console.log(n)
+})
