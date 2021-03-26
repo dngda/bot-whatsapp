@@ -107,8 +107,8 @@ const recache = (module, call = () => { }) => {
     fs.watchFile(require.resolve(module), async () => {
         await uncache(require.resolve(module))
         call(module)
+        return require(module)
     })
-    return require(module)
 }
 
 /**
