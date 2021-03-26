@@ -10,6 +10,7 @@ const gTTS = require('gtts')
 const toPdf = require("office-to-pdf")
 const _ = require('underscore')
 const appRoot = require('app-root-path')
+const { recache } = require('./utils')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const db_group = new FileSync(appRoot + '/data/denda.json')
@@ -33,6 +34,15 @@ let {
     kbbi,
     list
 } = require('./lib')
+
+recache(appRoot + '/lib/api.js', module => {
+    api = require(module)
+    console.log(`'${getModuleName(module)}' Updated!`)
+})
+recache(appRoot + '/lib/menu.js', module => {
+    menuId = require(module)
+    console.log(`'${getModuleName(module)}' Updated!`)
+})
 
 function requireUncached(module) {
     delete require.cache[require.resolve(module)]

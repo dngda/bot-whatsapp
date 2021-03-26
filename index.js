@@ -7,9 +7,10 @@ const fs = require('fs-extra')
 const getModuleName = (module) => {
     return module.split('/')[module.split('/').length - 1]
 }
-let HandleMsg = recache(appRoot + '/HandleMsg.js', module => console.log(`'${getModuleName(module)}' Updated!`))
-recache(appRoot + '/lib/menu.js', module => console.log(`'${getModuleName(module)}' Updated!`))
-recache(appRoot + '/lib/api.js', module => console.log(`'${getModuleName(module)}' Updated!`))
+let HandleMsg = recache(appRoot + '/HandleMsg.js', module => {
+    HandleMsg = require(module)
+    console.log(`'${getModuleName(module)}' Updated!`)
+})
 
 const { default: PQueue } = require("p-queue")
 
