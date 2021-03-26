@@ -35,6 +35,10 @@ let {
     list
 } = require('./lib')
 
+const getModuleName = (module) => {
+    return module.split('/')[module.split('/').length - 1]
+}
+
 recache(appRoot + '/lib/api.js', module => {
     api = require(module)
     console.log(`'${getModuleName(module)}' Updated!`)
