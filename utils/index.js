@@ -139,5 +139,6 @@ module.exports = {
     download,
     redir,
     createReadFileSync,
-    recache
+    recache,
+    uncache
 }

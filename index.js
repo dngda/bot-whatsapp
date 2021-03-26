@@ -1,7 +1,7 @@
 const { create, Client} = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
-const { color, messageLog, recache } = require('./utils')
+const { color, messageLog, recache, uncache } = require('./utils')
 const appRoot = require('app-root-path')
 const fs = require('fs-extra')
 const getModuleName = (module) => {
