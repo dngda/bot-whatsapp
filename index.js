@@ -1,15 +1,13 @@
 const { create, Client} = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
-const { color, messageLog, recache } = require('./utils')
+const { color, messageLog, recache, getModuleName } = require('./utils')
 const appRoot = require('app-root-path')
 const fs = require('fs-extra')
-const getModuleName = (module) => {
-    return module.split('/')[module.split('/').length - 1]
-}
+
 let HandleMsg = recache(appRoot + '/HandleMsg.js', module => {
     HandleMsg = require(module)
-    console.log(`'${getModuleName(module)}' Updated!`)
+    console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
 })
 
 const { default: PQueue } = require("p-queue")

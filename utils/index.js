@@ -97,13 +97,17 @@ const createReadFileSync = (path) => {
     }
 }
 
+const getModuleName = (module) => {
+    return module.split('/')[module.split('/').length - 1]
+}
+
 /**
  * recache if there is file change
  * @param {string} module Module name or path
  * @param {function} cb <optional> 
  */
 const recache = (module, call = () => { }) => {
-    console.log(color('[WATCH]', 'orange'), color(`=> '${module}'`, 'yellow'), 'file is now being watched by node!')
+    console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'file is now being watched by node!')
     fs.watchFile(require.resolve(module), async () => {
         await uncache(require.resolve(module))
         call(module)
@@ -140,5 +144,6 @@ module.exports = {
     redir,
     createReadFileSync,
     recache,
-    uncache
+    uncache,
+    getModuleName
 }
