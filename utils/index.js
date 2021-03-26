@@ -109,6 +109,7 @@ const recache = (module, call = () => { }) => {
         call(module)
         return require(module)
     })
+    return require(module)
 }
 
 /**
