@@ -673,7 +673,7 @@ module.exports = HandleMsg = async (client, message) => {
                             var tgl = moment(t * 1000).format('YYYY-MM-DD')
                             var datas = await axios.get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
                             var jadwals = datas.data.jadwal.data
-                            let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0]} 〙✪\n`
+                            let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n`
                             jadwal += `╠➥ Imsak      : ` + jadwals.imsak + '\n'
                             jadwal += `╠➥ Subuh      : ` + jadwals.subuh + '\n'
                             jadwal += `╠➥ Dzuhur    : ` + jadwals.dzuhur + '\n'
