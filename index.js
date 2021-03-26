@@ -2,11 +2,12 @@ const { create, Client} = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { color, messageLog, recache } = require('./utils')
+const appRoot = require('app-root-path')
 
-let HandleMsg = recache('./HandleMsg.js', module => console.log(`'${module}' Updated!`))
-recache('./lib/menu.js', module => console.log(`'${module}' Updated!`))
-recache('./lib/api.js', module => console.log(`'${module}' Updated!`))
-recache('./lib/kataKotor.js', module => console.log(`'${module}' Updated!`))
+let HandleMsg = recache(appRoot + '/HandleMsg.js', module => console.log(`'${module}' Updated!`))
+recache(appRoot + '/lib/menu.js', module => console.log(`'${module}' Updated!`))
+recache(appRoot + '/lib/api.js', module => console.log(`'${module}' Updated!`))
+recache(appRoot + '/lib/kataKotor.js', module => console.log(`'${module}' Updated!`))
 
 const { default: PQueue } = require("p-queue")
 
