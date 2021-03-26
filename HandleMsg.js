@@ -1607,7 +1607,7 @@ module.exports = HandleMsg = async (client, message) => {
                     break
 
                     default:
-                        await client.sendText(from, `Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`)
+                        await client.reply(from, `Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`, id)
                     break
 
                 }
