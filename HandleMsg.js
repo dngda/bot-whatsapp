@@ -1396,7 +1396,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length !== 1) { return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id) }
                         else {
-                            if (kataKasar.indexOf(args[0]) === -1) return client.reply(from, `Kata ${args[0]} sudah ada.`, id)
+                            if (kataKasar.indexOf(args[0]) != -1) return client.reply(from, `Kata ${args[0]} sudah ada.`, id)
                             kataKasar.push(args[0])
                             fs.writeFileSync('./settings/katakasar.json', JSON.stringify(kataKasar))
                             cariKasar = requireUncached('./lib/kataKotor.js')
