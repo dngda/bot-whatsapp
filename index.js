@@ -3,15 +3,24 @@ const figlet = require('figlet')
 const options = require('./utils/options')
 const { color, messageLog, recache } = require('./utils')
 const appRoot = require('app-root-path')
+const fs = require('fs-extra')
+const getModuleName = (module) => {
+    return module.split('/')[module.split('/').length - 1]
+}
+let HandleMsg = recache(appRoot + '/HandleMsg.js', module => console.log(`'${getModuleName(module)}' Updated!`))
+recache(appRoot + '/lib/menu.js', module => console.log(`'${getModuleName(module)}' Updated!`))
+recache(appRoot + '/lib/api.js', module => console.log(`'${getModuleName(module)}' Updated!`))
 
-let HandleMsg = recache(appRoot + '/HandleMsg.js', module => console.log(`'${module}' Updated!`))
-recache(appRoot + '/lib/menu.js', module => console.log(`'${module}' Updated!`))
-recache(appRoot + '/lib/api.js', module => console.log(`'${module}' Updated!`))
-recache(appRoot + '/lib/kataKotor.js', module => console.log(`'${module}' Updated!`))
+fs.watchFile(appRoot + '/settings/katakasar.js', async () => {
+        module = appRoot + '/lib/kataKotor.js'
+        await uncache(require.resolve(module))
+        require(module)
+        console.log(`'${getModuleName(module)}' Updated!`)
+    })
 
 const { default: PQueue } = require("p-queue")
 
-const fs = require('fs-extra')
+
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 let {
     ownerNumber,
