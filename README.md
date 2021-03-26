@@ -55,6 +55,7 @@ After running it you need to scan the QR
 - Get Api Tobz on [this website](https://tobz-api.herokuapp.com/api)
 - Get Api VH on [this website](https://vhtear.com)
 - Get Api Fariaz on [this website](https://rest.farzain.com)
+- Get Api Itech on [this website](https://api.i-tech.id)
 ---
 
 ## Features
