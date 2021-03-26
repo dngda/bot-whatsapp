@@ -135,12 +135,12 @@ module.exports = HandleMsg = async (client, message) => {
         client.sendSeen(chatId)
 
         // Filter Banned People
-        if (isBanned && !isGroupMsg) {
+        if (isBanned && !isGroupMsg && isCmd) {
             return client.sendText(from, `Maaf anda telah dibanned oleh bot karena melanggar tnc`).then(() => {
                 console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
             })
         }
-        else if (isBanned) {
+        else if (isBanned && isCmd) {
             return console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
         }
         
