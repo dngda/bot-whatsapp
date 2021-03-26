@@ -781,10 +781,10 @@ module.exports = HandleMsg = async (client, message) => {
                         break
 
                     case 'artinama':
-                        if (args.length == 0) return client.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama namakamu`, id)
+                        if (args.length == 0) return client.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama nama kamu`, id)
                         api.artinama(arg)
-                            .then(async (res) => {
-                                await client.reply(from, `Arti : ${res}`, id)
+                            .then(res => {
+                                client.reply(from, `Arti : ${res}`, id)
                             })
                             .catch(() => {
                                 client.reply(from, resMsg.error.norm, id)
