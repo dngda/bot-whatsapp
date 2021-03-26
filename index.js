@@ -11,7 +11,7 @@ let HandleMsg = recache(appRoot + '/HandleMsg.js', module => console.log(`'${get
 recache(appRoot + '/lib/menu.js', module => console.log(`'${getModuleName(module)}' Updated!`))
 recache(appRoot + '/lib/api.js', module => console.log(`'${getModuleName(module)}' Updated!`))
 
-fs.watch('./settings/katakasar.js', async (eventType) => {
+fs.watch(appRoot + '/settings/katakasar.js', async (eventType) => {
     if (eventType === 'change') {
         module = appRoot + '/lib/kataKotor.js'
         delete require.cache[require.resolve(module)]
