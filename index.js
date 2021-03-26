@@ -1,7 +1,7 @@
 const { create, Client} = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
-const { color, messageLog, recache, uncache } = require('./utils')
+const { color, messageLog, recache } = require('./utils')
 const appRoot = require('app-root-path')
 const fs = require('fs-extra')
 const getModuleName = (module) => {
@@ -11,12 +11,14 @@ let HandleMsg = recache(appRoot + '/HandleMsg.js', module => console.log(`'${get
 recache(appRoot + '/lib/menu.js', module => console.log(`'${getModuleName(module)}' Updated!`))
 recache(appRoot + '/lib/api.js', module => console.log(`'${getModuleName(module)}' Updated!`))
 
-fs.watchFile(appRoot + '/settings/katakasar.js', async () => {
+fs.watch('./settings/katakasar.js', async (eventType) => {
+    if (eventType === 'change') {
         module = appRoot + '/lib/kataKotor.js'
-        await uncache(require.resolve(module))
+        delete require.cache[require.resolve(module)]
         require(module)
         console.log(`'${getModuleName(module)}' Updated!`)
-    })
+    }
+})
 
 const { default: PQueue } = require("p-queue")
 
