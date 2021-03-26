@@ -97,6 +97,35 @@ const createReadFileSync = (path) => {
     }
 }
 
+/**
+ * recache if there is file change
+ * @param {string} module Module name or path
+ * @param {function} cb <optional> 
+ */
+const recache = (module, call = () => { }) => {
+    console.log(color('[WATCH]', 'orange'), color(`=> '${module}'`, 'yellow'), 'file is now being watched by node!')
+    fs.watchFile(require.resolve(module), async () => {
+        await uncache(require.resolve(module))
+        call(module)
+    })
+    return require(module)
+}
+
+/**
+ * Uncache a module
+ * @param {string} module Module name or path
+ */
+const uncache = (module = '.') => {
+    return new Promise((resolve, reject) => {
+        try {
+            delete require.cache[require.resolve(module)]
+            resolve()
+        } catch (err) {
+            reject(err)
+        }
+    })
+}
+
 module.exports = {
     msgFilter: {
         isFiltered,
@@ -108,5 +137,6 @@ module.exports = {
     messageLog,
     download,
     redir,
-    createReadFileSync
+    createReadFileSync,
+    recache
 }

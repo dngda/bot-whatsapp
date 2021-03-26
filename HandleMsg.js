@@ -34,10 +34,10 @@ let {
     list
 } = require('./lib')
 
-function requireUncached(module) {
-    delete require.cache[require.resolve(module)];
-    return require(module);
-}
+// function requireUncached(module) {
+//     delete require.cache[require.resolve(module)]
+//     return require(module)
+// }
 
 const {
     msgFilter,
@@ -1398,7 +1398,7 @@ module.exports = HandleMsg = async (client, message) => {
                         else {
                             kataKasar.push(args[0])
                             fs.writeFileSync('./settings/katakasar.json', JSON.stringify(kataKasar))
-                            cariKasar = requireUncached('./lib/kataKotor.js')
+                            // cariKasar = requireUncached('./lib/kataKotor.js')
                             client.reply(from, `Kata ${args[0]} berhasil ditambahkan.`, id)
                         }
                         break

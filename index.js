@@ -1,8 +1,13 @@
 const { create, Client} = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
-const { color, messageLog } = require('./utils')
-const HandleMsg = require('./HandleMsg')
+const { color, messageLog, recache } = require('./utils')
+
+let HandleMsg = recache('./HandleMsg', module => console.log(`'${module}' Updated!`))
+recache('./lib/menu', module => console.log(`'${module}' Updated!`))
+recache('./lib/api', module => console.log(`'${module}' Updated!`))
+recache('./lib/kataKotor.js', module => console.log(`'${module}' Updated!`))
+
 const { default: PQueue } = require("p-queue")
 
 const fs = require('fs-extra')
