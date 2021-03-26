@@ -11,15 +11,6 @@ let HandleMsg = recache(appRoot + '/HandleMsg.js', module => console.log(`'${get
 recache(appRoot + '/lib/menu.js', module => console.log(`'${getModuleName(module)}' Updated!`))
 recache(appRoot + '/lib/api.js', module => console.log(`'${getModuleName(module)}' Updated!`))
 
-fs.watch(appRoot + '/settings/katakasar.json', async (eventType) => {
-    if (eventType === 'change') {
-        module = appRoot + '/lib/kataKotor.js'
-        delete require.cache[require.resolve(module)]
-        require(module)
-        console.log(`'${getModuleName(module)}' Updated!`)
-    }
-})
-
 const { default: PQueue } = require("p-queue")
 
 
