@@ -1606,6 +1606,23 @@ module.exports = HandleMsg = async (client, message) => {
                         }
                     break
 
+                    case 'gitpull': {
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        const { exec } = require('child_process')
+                        exec('git pull', (err, stdout, stderr) => {
+                          if (err) {
+                            //some err occurred
+                            console.error(err)
+                          } else {
+                           // the *entire* stdout and stderr (buffered)
+                           client.sendText(from, stdout)
+                           console.log(`stdout: ${stdout}`)
+                           console.log(`stderr: ${stderr}`)
+                          }
+                        })
+                    }
+                    break
+
                     default:
                         await client.reply(from, `Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`, id)
                     break
