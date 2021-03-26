@@ -32,8 +32,7 @@ let {
     api,
     cariKasar,
     kbbi,
-    list,
-    pint
+    list
 } = require('./lib')
 
 recache(appRoot + '/lib/api.js', module => {
