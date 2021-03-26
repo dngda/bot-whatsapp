@@ -782,7 +782,7 @@ module.exports = HandleMsg = async (client, message) => {
 
                     case 'artinama':
                         if (args.length == 0) return client.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama namakamu`, id)
-                        api.artinama(body.slice(10))
+                        api.artinama(arg)
                             .then(async (res) => {
                                 await client.reply(from, `Arti : ${res}`, id)
                             })
