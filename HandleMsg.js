@@ -893,7 +893,7 @@ module.exports = HandleMsg = async (client, message) => {
                         await images.fdci(arg)
                             .then(res => {
                                 if (res === null || res === undefined) return client.reply(from, resMsg.error.norm, id)
-                                    
+
                                 client.sendFileFromUrl(from, res, '', '', id)
                                     .catch(e => {
                                         console.log(`fdci err : ${e}`)
@@ -904,8 +904,7 @@ module.exports = HandleMsg = async (client, message) => {
                                 console.log(`fdci err : ${e}`)
                                 return client.reply(from, resMsg.error.norm, id)
                             })
-                        }
-                        break
+                    break
 
                     case 'crjogja':
                         const url1 = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
