@@ -1356,9 +1356,9 @@ const HandleMsg = async (client, message) => {
                         break
 
                     case 'del':
+                        await client.simulateTyping(from, false)
                         if (!quotedMsg) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
                         if (!quotedMsgObj.fromMe) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
-                        await client.simulateTyping(from, false)
                         await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
                         break
 
