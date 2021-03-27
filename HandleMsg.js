@@ -83,11 +83,11 @@ const inArray = (needle, haystack) => {
     }
     return false;
 }
-module.exports = reCacheModule = (vars, _data) => {
+const reCacheModule = (vars, _data) => {
     eval(vars) = _data
 }
 
-module.exports = HandleMsg = async (client, message) => {
+const HandleMsg = async (client, message) => {
     try {
         const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
@@ -1700,3 +1700,5 @@ module.exports = HandleMsg = async (client, message) => {
         console.log(color('[ERROR]', 'red'), err)
     }
 }
+
+module.exports = { HandleMsg, reCacheModule }

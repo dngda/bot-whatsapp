@@ -4,9 +4,9 @@ const options = require('./utils/options')
 const { color, messageLog, recache, getModuleName } = require('./utils')
 const appRoot = require('app-root-path')
 const fs = require('fs-extra')
-const {reCacheModule} = require('./HandleMsg.js').reCacheModule
+const { reCacheModule } = require('./HandleMsg.js')
 
-let HandleMsg = recache(appRoot + '/HandleMsg.js', module => {
+let { HandleMsg } = recache(appRoot + '/HandleMsg.js', module => {
     HandleMsg = require(module)
     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
 })
