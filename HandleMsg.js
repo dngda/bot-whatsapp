@@ -1522,31 +1522,47 @@ module.exports = HandleMsg = async (client, message) => {
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua chat ketik:\n${prefix}bc [isi chat]`)
                         const chatz = await client.getAllChatIds()
                         for (let idk of chatz) {
-                            var cvk = await client.getChatById(idk)
-                            await client.sendText(idk, `══✪〘 *BOT Broadcast* 〙✪══\n\n${arg}`)
+                            setTimeout(async() => {
+                                await client.sendText(idk, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)  
+                            }, 1000)
                         }
-                        client.reply(from, 'Broadcast Success!', id)
-                        break
+                        client.reply(from, `Broadcast Success! Total: ${chatz.length} chats`, id)
+                    break
+                    
+                    case 'bcgroup': //untuk broadcast atau promosi ke group
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua group ketik:\n${prefix}bcgroup [isi chat]`)
+                        const groupz = await client.getAllGroups()
+                        for (let idk of groupz) {
+                            setTimeout(async() => {
+                                await client.sendText(idk, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)  
+                            }, 1000)
+                        }
+                        client.reply(from, `Broadcast Success! Total: ${groupz.length} groups`, id)
+                    break
 
                     case 'leaveall': //mengeluarkan bot dari semua group serta menghapus chatnya
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        const allChatz = await client.getAllChatIds()
                         const allGroupz = await client.getAllGroups()
                         for (let gclist of allGroupz) {
-                            await client.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
-                            await client.leaveGroup(gclist.contact.id)
-                            await client.deleteChat(gclist.contact.id)
+                            setTimeout(async() => {
+                                await client.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
+                                await client.leaveGroup(gclist.contact.id)
+                                await client.deleteChat(gclist.contact.id)
+                            }, 1000)
                         }
-                        client.reply(from, 'Success leave all group!', id)
+                        client.reply(from, `Success leave all group! Total: ${allGroupz.length}`, id)
                         break
 
                     case 'clearexitedgroup': //menghapus group yang sudah keluar
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allGroupzs = await client.getAllGroups()
                         for (let gc of allGroupzs) {
-                            if (gc.isReadOnly){
-                                await client.deleteChat(gc.id)
-                            }
+                            setTimeout(async() => {
+                                if (gc.isReadOnly){
+                                    await client.deleteChat(gc.id)
+                                }
+                            }, 1000)
                         }
                         client.reply(from, 'Success clear all exited group!', id)
                         break
@@ -1555,16 +1571,20 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allChatx = await client.getAllChats()
                         for (let dchat of allChatx) {
-                            await client.deleteChat(dchat.id)
+                            setTimeout(async() => {
+                                await client.deleteChat(dchat.id)
+                            }, 1000)
                         }
                         client.reply(from, 'Success clear all chat!', id)
                         break
 
-                    case 'clearallnongroup': //menghapus seluruh pesan diakun bot selain group
+                    case 'clearpm': //menghapus seluruh pesan diakun bot selain group
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allChat1 = await client.getAllChats()
                         for (let dchat of allChat1) {
-                            if (!dchat.isGroup) await client.deleteChat(dchat.id)
+                            setTimeout(async() => {
+                                if (!dchat.isGroup) await client.deleteChat(dchat.id)
+                            }, 1000)
                         }
                         client.reply(from, 'Success clear all private chat!', id)
                         break
@@ -1600,7 +1620,11 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         client.simulateTyping(from, false)
                         try{
-                            eval(arg)
+                            eval(`(async => {
+                                ${arg}.catch(e => {
+                                    client.sendText(from, e.name + ': ' +e.message)
+                                })
+                            })()`)
                         }catch (e) {
                             console.log(e)
                             client.sendText(from, `${e.name}: ${e.message}`)
