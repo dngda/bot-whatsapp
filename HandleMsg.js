@@ -83,8 +83,8 @@ const inArray = (needle, haystack) => {
     }
     return false;
 }
-const reCacheModule = (vars, _data) => {
-    eval(vars) = _data
+const reCacheModule = (funcs, _data) => {
+    eval(funcs)
 }
 
 const HandleMsg = async (client, message) => {

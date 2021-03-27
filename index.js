@@ -11,11 +11,11 @@ let { HandleMsg } = recache(appRoot + '/HandleMsg.js', module => {
     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
 })
 recache(appRoot + '/lib/api.js', module => {
-    reCacheModule('api', require(module))
+    reCacheModule('api = _data', require(module))
     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
 })
 recache(appRoot + '/lib/menu.js', module => {
-    reCacheModule('menuId', require(module))
+    reCacheModule('menuId = _data', require(module))
     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
 })
 
