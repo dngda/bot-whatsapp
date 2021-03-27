@@ -112,7 +112,7 @@ module.exports = HandleMsg = async (client, message) => {
         const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
 
         // Bot Prefix
-        regex = /^\/|^!|^~|^@|^#|^\$|^%|^&|^\+|^\?|^;|^:|^=/g
+        regex = /^\/|^!|^~|^@|^#|^\$|^%|^&|^\+|^\?|^;|^:|^=|^\.|^,/g
         body = (type === 'chat' && body.replace(regex, '/').startsWith(prefix)) ? body.replace(regex, '/') : ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, '/').startsWith(prefix)) ? caption.replace(regex, '/') : ''
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
