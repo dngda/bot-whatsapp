@@ -230,7 +230,9 @@ const HandleMsg = async (client, message) => {
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
                                     await client.sendText(from, resMsg.success.join)
-                                    await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
+                                    setTimeout(async() => {
+                                        await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
+                                    }, 2000)
                                 })
                         } else {
                             let cgrup = await client.getAllGroups()
