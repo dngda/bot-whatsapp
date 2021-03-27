@@ -1621,11 +1621,7 @@ module.exports = HandleMsg = async (client, message) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         client.simulateTyping(from, false)
                         try{
-                            eval(`(async => {
-                                ${arg}.catch(e => {
-                                    client.sendText(from, e.name + ': ' +e.message)
-                                })
-                            })()`)
+                            eval(arg)
                         }catch (e) {
                             console.log(e)
                             client.sendText(from, `${e.name}: ${e.message}`)
