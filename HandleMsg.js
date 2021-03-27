@@ -191,7 +191,7 @@ module.exports = HandleMsg = async (client, message) => {
           await client.sendText(from, 'Wa\'alaikumussalam Wr. Wb.')
         }
         if (['hi', 'hy', 'halo', 'hai'].includes(message.body && message.body.toLowerCase())) {
-          await client.sendText(from, 'Halo 👋')
+          await client.sendText(from, `Halo ${pushname} 👋`)
         }
 
         // Ini Command nya
@@ -210,7 +210,7 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'menu':
                     case 'help':
                     case 'start':
-                        await client.sendText(from, menuId.textMenu(pushname))
+                        await client.sendText(from, menuId.textMenu(pushname, t))
                             .then(() => ((isGroupMsg) && (isGroupAdmins)) ? client.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
                         break
                     case 'menuadmin':
