@@ -6,7 +6,8 @@ const appRoot = require('app-root-path')
 const fs = require('fs-extra')
 
 let { reCacheModule, HandleMsg } = recache(appRoot + '/HandleMsg.js', module => {
-    { reCacheModule, HandleMsg } = require(module)
+    HandleMsg = require(module).HandleMsg
+    reCacheModule = require(module).reCacheModule
     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
 })
 recache(appRoot + '/lib/api.js', module => {
