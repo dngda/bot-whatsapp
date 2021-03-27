@@ -890,21 +890,20 @@ module.exports = HandleMsg = async (client, message) => {
                     case 'image':
                     case 'images':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
-                        var result = false
-                        do {
-                            await images.fdci(arg)
-                                .then(res => result = res)
-                                .catch(e => {
-                                    console.log(`fdci err : ${e}`)
-                                    return client.reply(from, resMsg.error.norm, id)
-                                })
-                                return
-                        } while (result == undefined || result == null)
-                        if (result != false) {
-                            await client.sendFileFromUrl(from, result, '', '', id)
-                                .catch(() => {
-                                    return client.reply(from, resMsg.error.norm, id)
-                                })
+                        await images.fdci(arg)
+                            .then(res => {
+                                if (res === null || res === undefined) return client.reply(from, resMsg.error.norm, id)
+                                    
+                                client.sendFileFromUrl(from, res, '', '', id)
+                                    .catch(e => {
+                                        console.log(`fdci err : ${e}`)
+                                        client.reply(from, resMsg.error.norm, id)
+                                    })
+                            })
+                            .catch(e => {
+                                console.log(`fdci err : ${e}`)
+                                return client.reply(from, resMsg.error.norm, id)
+                            })
                         }
                         break
 
