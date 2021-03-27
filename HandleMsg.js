@@ -36,15 +36,6 @@ let {
     pint
 } = require('./lib')
 
-recache(appRoot + '/lib/api.js', module => {
-    api = require(module)
-    console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
-})
-recache(appRoot + '/lib/menu.js', module => {
-    menuId = require(module)
-    console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
-})
-
 function requireUncached(module) {
     delete require.cache[require.resolve(module)]
     return require(module)
@@ -91,6 +82,9 @@ const inArray = (needle, haystack) => {
         if (haystack[i].id == needle) return i;
     }
     return false;
+}
+module.exports = reCacheModule = (vars, _data) => {
+    eval(vars) = _data
 }
 
 module.exports = HandleMsg = async (client, message) => {
