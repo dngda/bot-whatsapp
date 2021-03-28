@@ -522,7 +522,7 @@ const HandleMsg = async (client, message) => {
                         if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
                         nmr = data[idx].number
                         var info = body.trim().split(' ')
-                        var ayat = info[2] | 0
+                        var ayat = info[2] | 1
                         console.log(nmr)
                         if (!isNaN(nmr)) {
                             var responseh2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
