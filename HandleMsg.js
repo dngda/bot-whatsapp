@@ -510,7 +510,7 @@ const HandleMsg = async (client, message) => {
                     case 'surah':{
                         if (args.length == 0) return client.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama/nomor surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id\n${prefix}surah 1 1 id`, message.id)
                         nmr = 0
-                        if(!isNaN(args[0])){
+                        if(isNaN(args[0])){
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
                                     console.log(err)
@@ -558,7 +558,7 @@ const HandleMsg = async (client, message) => {
                     case 'tafsir':{
                         if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama/nomor surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
                         nmr = 0
-                        if(!isNaN(args[0])){
+                        if(isNaN(args[0])){
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
                                     console.log(err)
@@ -591,7 +591,7 @@ const HandleMsg = async (client, message) => {
                     case 'alaudio':{
                         if (args.length == 0) return client.reply(from, `*_${prefix}ALaudio <nama/nomor surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`, message.id)
                         nmr = 0
-                        if(!isNaN(args[0])){
+                        if(isNaN(args[0])){
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
                                     console.log(err)
@@ -1386,7 +1386,7 @@ const HandleMsg = async (client, message) => {
                         break
 
                     case 'tagall':
-                    case 'alle':
+                    case 'alle':{
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         const groupMem = await client.getGroupMembers(groupId)
                         let res = '╔══✪〘 Mention All 〙✪\n'
@@ -1396,6 +1396,7 @@ const HandleMsg = async (client, message) => {
                         }
                         res += '╚═〘 *SeroBot* 〙'
                         await client.sendTextWithMentions(from, res)
+                    }
                         break
 
                     case 'katakasar':
