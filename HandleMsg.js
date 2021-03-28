@@ -507,7 +507,7 @@ const HandleMsg = async (client, message) => {
                         client.reply(from, pesan, message.id)
                         break
 
-                    case 'surah':
+                    case 'surah':{
                         if (args.length == 0) return client.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama/nomor surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id\n${prefix}surah 1 1 id`, message.id)
                         nmr = 0
                         if(!isNaN(args[0])){
@@ -552,9 +552,10 @@ const HandleMsg = async (client, message) => {
                             pesan = pesan + "\n\n(Q.S. " + data.surah.name.transliteration.id + ":" + ayat + ")"
                             await client.reply(from, pesan.trim(), message.id)
                         }
+                    }
                         break
 
-                    case 'tafsir':
+                    case 'tafsir':{
                         if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama/nomor surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
                         nmr = 0
                         if(!isNaN(args[0])){
@@ -584,6 +585,7 @@ const HandleMsg = async (client, message) => {
                             pesan = pesan + "_" + data.translation.id + "_" + "\n\n" + data.tafsir.id.long
                             client.reply(from, pesan, message.id)
                         }
+                    }
                         break
 
                     case 'alaudio':{
