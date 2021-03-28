@@ -122,6 +122,7 @@ const HandleMsg = async (client, message) => {
         const isQuotedDocs = quotedMsg && quotedMsg.type === 'document'
 
         // [IDENTIFY]
+        isKasar = false
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
