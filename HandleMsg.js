@@ -545,7 +545,7 @@ const HandleMsg = async (client, message) => {
                             } else {
                                 pesan = pesan + data.translation.id
                             }
-                            pesan = pesan + "\n\n(Q.S. " + data.surah.name.transliteration.id + ":" + args[1] + ")"
+                            pesan = pesan + "\n\n(Q.S. " + data.surah.name.transliteration.id + ":" + ayat + ")"
                             await client.reply(from, pesan, message.id)
                         }
                         break
