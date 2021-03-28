@@ -501,7 +501,7 @@ const HandleMsg = async (client, message) => {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true
                         })
-                        if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
+                        if (data[idx] === undefined) return client.reply(from, `Maaf format salah atau nama surah tidak sesuai`, id)
                         var pesan = ""
                         pesan = pesan + "Nama : " + data[idx].name.transliteration.id + "\n" + "Asma : " + data[idx].name.short + "\n" + "Arti : " + data[idx].name.translation.id + "\n" + "Jumlah ayat : " + data[idx].numberOfVerses + "\n" + "Nomor surah : " + data[idx].number + "\n" + "Jenis : " + data[idx].revelation.id + "\n" + "Keterangan : " + data[idx].tafsir.id
                         client.reply(from, pesan, message.id)
@@ -521,7 +521,7 @@ const HandleMsg = async (client, message) => {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
-                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
+                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah atau nama surah tidak sesuai`, id)
                             nmr = data[idx].number
                         }else{
                             nmr = args[0]
@@ -537,9 +537,9 @@ const HandleMsg = async (client, message) => {
                             if (responseh2 === undefined) return client.reply(from, `Maaf error/format salah`, id)
                             var { data } = responseh2.data
                             var last = function last(array, n) {
-                                if (array == null) return void 0;
-                                if (n == null) return array[array.length - 1];
-                                return array.slice(Math.max(array.length - n, 0));
+                                if (array == null) return void 0
+                                if (n == null) return array[array.length - 1]
+                                return array.slice(Math.max(array.length - n, 0))
                             }
                             bhs = last(args)
                             pesan = ""
@@ -569,7 +569,7 @@ const HandleMsg = async (client, message) => {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
-                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
+                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah atau nama surah tidak sesuai`, id)
                             nmr = data[idx].number
                         }else{
                             nmr = args[0]
@@ -602,7 +602,7 @@ const HandleMsg = async (client, message) => {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
-                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
+                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah atau nama surah tidak sesuai`, id)
                             nmr = data[idx].number
                         }else{
                             nmr = args[0]
@@ -615,9 +615,9 @@ const HandleMsg = async (client, message) => {
                             }
                             if (args.length == 2) {
                                 var last = function last(array, n) {
-                                    if (array == null) return void 0;
-                                    if (n == null) return array[array.length - 1];
-                                    return array.slice(Math.max(array.length - n, 0));
+                                    if (array == null) return void 0
+                                    if (n == null) return array[array.length - 1]
+                                    return array.slice(Math.max(array.length - n, 0))
                                 }
                                 ayat = last(args)
                             }
@@ -642,9 +642,9 @@ const HandleMsg = async (client, message) => {
                                     })
                                 var { data } = responsih2.data
                                 var last = function last(array, n) {
-                                    if (array == null) return void 0;
-                                    if (n == null) return array[array.length - 1];
-                                    return array.slice(Math.max(array.length - n, 0));
+                                    if (array == null) return void 0
+                                    if (n == null) return array[array.length - 1]
+                                    return array.slice(Math.max(array.length - n, 0))
                                 }
                                 bhs = last(args)
                                 pesan = ""
@@ -695,12 +695,12 @@ const HandleMsg = async (client, message) => {
                             var datas = await axios.get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
                             var jadwals = datas.data.jadwal.data
                             let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n`
-                            jadwal += `╠➥ Imsak      : ` + jadwals.imsak + '\n'
-                            jadwal += `╠➥ Subuh      : ` + jadwals.subuh + '\n'
-                            jadwal += `╠➥ Dzuhur    : ` + jadwals.dzuhur + '\n'
-                            jadwal += `╠➥ Ashar       : ` + jadwals.ashar + '\n'
-                            jadwal += `╠➥ Maghrib  : ` + jadwals.maghrib + '\n'
-                            jadwal += `╠➥ Isya'         : ` + jadwals.isya + '\n'
+                            jadwal += `╠➥ Imsak\t\t: ` + jadwals.imsak + '\n'
+                            jadwal += `╠➥ Subuh\t\t: ` + jadwals.subuh + '\n'
+                            jadwal += `╠➥ Dzuhur\t\t: ` + jadwals.dzuhur + '\n'
+                            jadwal += `╠➥ Ashar\t\t: ` + jadwals.ashar + '\n'
+                            jadwal += `╠➥ Maghrib\t: ` + jadwals.maghrib + '\n'
+                            jadwal += `╠➥ Isya'\t\t: ` + jadwals.isya + '\n'
                             jadwal += '╚═〘 *SeroBot Bot* 〙'
                             client.reply(from, jadwal, id)
                         }
