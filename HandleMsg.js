@@ -1374,8 +1374,12 @@ const HandleMsg = async (client, message) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         await client.sendText(from, 'Good bye 👋')
-                        await client.leaveGroup(groupId)
-                        await client.deleteChat(groupId)
+                        setTimeout(async() => {
+                            await client.leaveGroup(groupId)
+                        }, 2000)
+                        setTimeout(async() => {
+                            await client.deleteChat(groupId)
+                        }, 2000)
                         break
 
                     case 'del':
