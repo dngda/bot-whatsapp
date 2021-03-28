@@ -479,7 +479,7 @@ const HandleMsg = async (client, message) => {
                                 .then((response) => {
                                     let listsrh = '╔══✪〘 List Surah 〙✪\n'
                                     for (let i = 0; i < response.data.data.length; i++) {
-                                        listsrh += `╠➥ `
+                                        listsrh += `╠ ${response.data.data[i].number}. `
                                         listsrh += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
                                     }
                                     listsrh += '╚═〘 *SeroBot* 〙'
@@ -499,8 +499,8 @@ const HandleMsg = async (client, message) => {
                         var { data } = responseh.data
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
-                                return true;
-                        });
+                                return true
+                        })
                         if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
                         var pesan = ""
                         pesan = pesan + "Nama : " + data[idx].name.transliteration.id + "\n" + "Asma : " + data[idx].name.short + "\n" + "Arti : " + data[idx].name.translation.id + "\n" + "Jumlah ayat : " + data[idx].numberOfVerses + "\n" + "Nomor surah : " + data[idx].number + "\n" + "Jenis : " + data[idx].revelation.id + "\n" + "Keterangan : " + data[idx].tafsir.id
@@ -508,21 +508,25 @@ const HandleMsg = async (client, message) => {
                         break
 
                     case 'surah':
-                        if (args.length == 0) return client.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id`, message.id)
-                        var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                            .catch(err => {
-                                console.log(err)
-                                return client.sendText(from, resMsg.error.norm)
+                        if (args.length == 0) return client.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama/nomor surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id\n${prefix}surah 1 1 id`, message.id)
+                        nmr = 0
+                        if(!isNaN(args[0])){
+                            var res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
+                                .catch(err => {
+                                    console.log(err)
+                                    return client.sendText(from, resMsg.error.norm)
+                                })
+                            var { data } = res.data
+                            var idx = data.findIndex(function (post, index) {
+                                if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
+                                    return true
                             })
-                        var { data } = responsh.data
-                        var idx = data.findIndex(function (post, index) {
-                            if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
-                                return true
-                        })
-                        if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
-                        nmr = data[idx].number
-                        var info = body.trim().split(' ')
-                        var ayat = info[2] | 1
+                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
+                            nmr = data[idx].number
+                        }else{
+                            nmr = args[0]
+                        }
+                        var ayat = args[1] | 1
                         console.log(nmr)
                         if (!isNaN(nmr)) {
                             var responseh2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
@@ -551,21 +555,28 @@ const HandleMsg = async (client, message) => {
                         break
 
                     case 'tafsir':
-                        if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
-                        var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                            .catch(err => {
-                                console.log(err)
-                                client.sendText(from, resMsg.error.norm)
+                        if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama/nomor surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
+                        nmr = 0
+                        if(!isNaN(args[0])){
+                            var res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
+                                .catch(err => {
+                                    console.log(err)
+                                    return client.sendText(from, resMsg.error.norm)
+                                })
+                            var { data } = res.data
+                            var idx = data.findIndex(function (post, index) {
+                                if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
+                                    return true
                             })
-                        var { data } = responsh.data
-                        var idx = data.findIndex(function (post, index) {
-                            if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
-                                return true;
-                        });
-                        if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
-                        nmr = data[idx].number
+                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
+                            nmr = data[idx].number
+                        }else{
+                            nmr = args[0]
+                        }
+                        var ayat = args[1] | 1
+                        console.log(nmr)
                         if (!isNaN(nmr)) {
-                            var responsih = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + args[1])
+                            var responsih = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                             var { data } = responsih.data
                             pesan = ""
                             pesan = pesan + "Tafsir Q.S. " + data.surah.name.transliteration.id + ":" + args[1] + "\n\n"
@@ -575,22 +586,27 @@ const HandleMsg = async (client, message) => {
                         }
                         break
 
-                    case 'alaudio':
-                        if (args.length == 0) return client.reply(from, `*_${prefix}ALaudio <nama surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`, message.id)
-                        ayat = "ayat"
-                        bhs = ""
-                        var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                            .catch(err => {
-                                console.log(err)
-                                client.sendText(from, resMsg.error.norm)
+                    case 'alaudio':{
+                        if (args.length == 0) return client.reply(from, `*_${prefix}ALaudio <nama/nomor surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`, message.id)
+                        nmr = 0
+                        if(!isNaN(args[0])){
+                            var res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
+                                .catch(err => {
+                                    console.log(err)
+                                    return client.sendText(from, resMsg.error.norm)
+                                })
+                            var { data } = res.data
+                            var idx = data.findIndex(function (post, index) {
+                                if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
+                                    return true
                             })
-                        var surah = responseh.data
-                        var idx = surah.data.findIndex(function (post, index) {
-                            if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
-                                return true;
-                        });
-                        if (surah.data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
-                        nmr = surah.data[idx].number
+                            if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
+                            nmr = data[idx].number
+                        }else{
+                            nmr = args[0]
+                        }
+                        var ayat = args[1] | 1
+                        console.log(nmr)
                         if (!isNaN(nmr)) {
                             if (args.length > 2) {
                                 ayat = args[1]
@@ -600,7 +616,7 @@ const HandleMsg = async (client, message) => {
                                     if (array == null) return void 0;
                                     if (n == null) return array[array.length - 1];
                                     return array.slice(Math.max(array.length - n, 0));
-                                };
+                                }
                                 ayat = last(args)
                             }
                             pesan = ""
@@ -640,8 +656,9 @@ const HandleMsg = async (client, message) => {
                                 await client.sendFileFromUrl(from, data.audio.secondary[0])
                                 await client.reply(from, pesan, message.id)
                             }
-                        }
+                        }                        
                         break
+                    }
 
                     case 'jsholat':
                     case 'jsolat':
