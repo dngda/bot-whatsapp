@@ -630,11 +630,12 @@ const HandleMsg = async (client, message) => {
                                     })
                                 var { name, name_translations, number_of_ayah, number_of_surah, recitations } = responsih2.data
                                 pesan = pesan + "Audio Quran Surah ke-" + number_of_surah + " " + name + " (" + name_translations.ar + ") " + "dengan jumlah " + number_of_ayah + " ayat\n"
-                                pesan = pesan + "Dilantunkan oleh " + recitations[0].name + " : " + recitations[0].audio_url + "\n"
-                                pesan = pesan + "Dilantunkan oleh " + recitations[1].name + " : " + recitations[1].audio_url + "\n"
-                                pesan = pesan + "Dilantunkan oleh " + recitations[2].name + " : " + recitations[2].audio_url + "\n"
+                                pesan = pesan + "Dilantunkan oleh " + recitations[0].name + " :\n" + recitations[0].audio_url + "\n"
+                                pesan = pesan + "Dilantunkan oleh " + recitations[1].name + " :\n" + recitations[1].audio_url + "\n"
+                                pesan = pesan + "Dilantunkan oleh " + recitations[2].name + " :\n" + recitations[2].audio_url + "\n"
                                 client.reply(from, pesan, message.id)
                             } else {
+                                ayat = args[1] | 1
                                 var responsih2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                                     .catch(err => {
                                         console.log(err)
@@ -645,7 +646,7 @@ const HandleMsg = async (client, message) => {
                                     if (array == null) return void 0;
                                     if (n == null) return array[array.length - 1];
                                     return array.slice(Math.max(array.length - n, 0));
-                                };
+                                }
                                 bhs = last(args)
                                 pesan = ""
                                 pesan = pesan + data.text.arab + "\n\n"
