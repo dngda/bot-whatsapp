@@ -607,7 +607,7 @@ const HandleMsg = async (client, message) => {
                         }else{
                             nmr = args[0]
                         }
-                        var ayat = args[1] | 1
+                        var ayat = args[1]
                         console.log(nmr)
                         if (!isNaN(nmr)) {
                             if (args.length > 2) {
@@ -635,7 +635,6 @@ const HandleMsg = async (client, message) => {
                                 pesan = pesan + "Dilantunkan oleh " + recitations[2].name + " :\n" + recitations[2].audio_url + "\n"
                                 client.reply(from, pesan, message.id)
                             } else {
-                                ayat = args[1] | 1
                                 var responsih2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                                     .catch(err => {
                                         console.log(err)
