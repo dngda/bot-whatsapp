@@ -125,7 +125,7 @@ const HandleMsg = async (client, message) => {
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
-        const isKasar = await cariKasar(chats)
+        if (isNgegas) isKasar = await cariKasar(chats)
 
         // [BETA] Avoid Spam Message
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
