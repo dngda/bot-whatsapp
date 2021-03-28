@@ -512,12 +512,12 @@ const HandleMsg = async (client, message) => {
                         var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                             .catch(err => {
                                 console.log(err)
-                                client.sendText(from, resMsg.error.norm)
+                                return client.sendText(from, resMsg.error.norm)
                             })
                         var { data } = responsh.data
                         var idx = data.findIndex(function (post, index) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
-                                return true;
+                                return true
                         })
                         if (data[idx] === undefined) return client.reply(from, `Maaf format salah`, id)
                         nmr = data[idx].number
@@ -528,7 +528,7 @@ const HandleMsg = async (client, message) => {
                             var responseh2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                                 .catch(err => {
                                     console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
+                                    return client.sendText(from, resMsg.error.norm)
                                 })
                             if (responseh2 === undefined) return client.reply(from, `Maaf error/format salah`, id)
                             var { data } = responseh2.data
@@ -536,7 +536,7 @@ const HandleMsg = async (client, message) => {
                                 if (array == null) return void 0;
                                 if (n == null) return array[array.length - 1];
                                 return array.slice(Math.max(array.length - n, 0));
-                            };
+                            }
                             bhs = last(args)
                             pesan = ""
                             pesan = pesan + data.text.arab + "\n\n"
@@ -546,7 +546,7 @@ const HandleMsg = async (client, message) => {
                                 pesan = pesan + data.translation.id
                             }
                             pesan = pesan + "\n\n(Q.S. " + data.surah.name.transliteration.id + ":" + args[1] + ")"
-                            client.reply(from, pesan, message.id)
+                            await client.reply(from, pesan, message.id)
                         }
                         break
 
