@@ -69,6 +69,36 @@ let {
     prefix
 } = setting
 
+//default msg response
+const resMsg = {
+    wait: _.sample([
+        'Sedang diproses! Silahkan tunggu sebentar...',
+        'Copy that, processing!',
+        'Gotcha, please wait!',
+        'Copy that bro, please wait!',
+        'Okey, tunggu sebentar...',
+        'Baiklah, sabar ya!'
+    ]),
+    error: {
+        norm: 'Maaf, Ada yang error! Coba lagi beberapa menit kemudian.',
+        admin: 'Perintah ini hanya untuk admin group!',
+        owner: 'Perintah ini hanya untuk owner bot!',
+        group: 'Maaf, perintah ini hanya dapat dipakai didalam grup!',
+        botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
+    },
+    success: {
+        join: 'Berhasil join grup via link!'
+    },
+    badw: _.sample([
+        'Astaghfirullah...',
+        'Jaga ketikanmu sahabat!',
+        'Yo rasah nggo misuh cuk!',
+        'Istighfar dulu sodaraku',
+        'Hadehh...',
+        'Ada masalah apasih?'
+    ])
+}
+
 function formatin(duit) {
     let reverse = duit.toString().split('').reverse().join('');
     let ribuan = reverse.match(/\d{1,3}/g);
@@ -97,7 +127,6 @@ const HandleMsg = async (client, message) => {
         const botNumber = await client.getHostNumber() + '@c.us'
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
-        const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
         const pengirim = sender.id
         const stickermsg = message.type === 'sticker'
@@ -111,18 +140,17 @@ const HandleMsg = async (client, message) => {
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const args = body.trim().split(/ +/).slice(1)
-        const isCmd = body.startsWith(prefix)
-
         const url = args.length !== 0 ? args[0] : ''
 
+        // [IDENTIFY]
+        isKasar = false
+        const isCmd = body.startsWith(prefix)
+        const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
         const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
         const isQuotedChat = quotedMsg && quotedMsg.type === 'chat'
         const isQuotedLocation = quotedMsg && quotedMsg.type === 'location'
         const isQuotedDocs = quotedMsg && quotedMsg.type === 'document'
-
-        // [IDENTIFY]
-        isKasar = false
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
@@ -152,35 +180,6 @@ const HandleMsg = async (client, message) => {
             return console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
         }
         
-        //msg response
-        const resMsg = {
-            wait: _.sample([
-                'Sedang diproses! Silahkan tunggu sebentar...',
-                'Copy that, processing!',
-                'Gotcha, please wait!',
-                'Copy that bro, please wait!',
-                'Okey, tunggu sebentar...',
-                'Baiklah, sabar ya!'
-            ]),
-            error: {
-                norm: 'Maaf, Ada yang error! Coba lagi beberapa menit kemudian.',
-                admin: 'Perintah ini hanya untuk admin group!',
-                owner: 'Perintah ini hanya untuk owner bot!',
-                group: 'Maaf, perintah ini hanya dapat dipakai didalam grup!',
-                botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
-            },
-            success: {
-                join: 'Berhasil join grup via link!'
-            },
-            badw: _.sample([
-                'Astaghfirullah...',
-                'Jaga ketikanmu sahabat!',
-                'Yo rasah nggo misuh cuk!',
-                'Istighfar dulu sodaraku',
-                'Hadehh...',
-                'Ada masalah apasih?'
-            ])
-        }
         // respon to msg
         if (['p', 'assalamualaikum', 'assalamu\'alaikum', 'asalamualaikum', 'assalamu\'alaykum', 'punten'].includes(message.body && message.body.toLowerCase())) {
           await client.sendText(from, 'Wa\'alaikumussalam Wr. Wb.')
