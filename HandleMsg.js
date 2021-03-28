@@ -701,7 +701,7 @@ const HandleMsg = async (client, message) => {
                             jadwal += `╠➥ Ashar\t: ` + jadwals.ashar + '\n'
                             jadwal += `╠➥ Maghrib\t: ` + jadwals.maghrib + '\n'
                             jadwal += `╠➥ Isya'\t\t: ` + jadwals.isya + '\n'
-                            jadwal += '╚═〘 *SeroBot Bot* 〙'
+                            jadwal += '╚═〘 *SeroBot* 〙'
                             client.reply(from, jadwal, id)
                         }
                         break
