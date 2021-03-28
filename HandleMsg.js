@@ -254,7 +254,9 @@ const HandleMsg = async (client, message) => {
                         const loadedMsg = await client.getAmountOfLoadedMessages()
                         const chatIds = await client.getAllChatIds()
                         const groups = await client.getAllGroups()
-                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\nSpeed: ${processTime(t, moment())} _Seconds_`)
+                        const time = process.uptime()
+                        const uptime = (time + "").toDHms()
+                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\nSpeed: ${processTime(t, moment())} _Seconds_\nUptime: ${uptime}`)
                         break
                     }
 
