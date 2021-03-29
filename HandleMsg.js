@@ -695,12 +695,12 @@ const HandleMsg = async (client, message) => {
                             var datas = await axios.get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
                             var jadwals = datas.data.jadwal.data
                             let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n`
-                            jadwal += `╠➥ Imsak\t: ` + jadwals.imsak + '\n'
-                            jadwal += `╠➥ Subuh\t: ` + jadwals.subuh + '\n'
-                            jadwal += `╠➥ Dzuhur\t: ` + jadwals.dzuhur + '\n'
-                            jadwal += `╠➥ Ashar\t: ` + jadwals.ashar + '\n'
-                            jadwal += `╠➥ Maghrib\t: ` + jadwals.maghrib + '\n'
-                            jadwal += `╠➥ Isya'\t\t: ` + jadwals.isya + '\n'
+                            jadwal += `╠➥ Imsak\t\t: ` + jadwals.imsak + '\n'
+                            jadwal += `╠➥ Subuh\t\t: ` + jadwals.subuh + '\n'
+                            jadwal += `╠➥ Dzuhur\t\t: ` + jadwals.dzuhur + '\n'
+                            jadwal += `╠➥ Ashar\t\t: ` + jadwals.ashar + '\n'
+                            jadwal += `╠➥ Maghrib\t\t: ` + jadwals.maghrib + '\n'
+                            jadwal += `╠➥ Isya'\t\t\t: ` + jadwals.isya + '\n'
                             jadwal += '╚═〘 *SeroBot* 〙'
                             client.reply(from, jadwal, id)
                         }
