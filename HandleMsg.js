@@ -918,33 +918,42 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendFileFromUrl(from, res, '', '', id)
                                     .catch(e => {
                                         console.log(`fdci err : ${e}`)
-                                        client.reply(from, resMsg.error.norm, id)
+                                        client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /image2', id)
                                     })
                             })
                             .catch(e => {
                                 console.log(`fdci err : ${e}`)
+                                return client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /image2', id)
+                            })
+                    break
+                    }
+
+                    case 'image2':
+                    case 'images2':
+                    case 'pin2': {
+                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest v2. Gunakan apabila /images atau /pin error\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto`, id)
+                        const img = await pint(browser, arg).catch(e => {
+                            console.log(`pin2 err : ${e}`)
+                            return client.reply(from, resMsg.error.norm, id)
+                        })
+                        await client.sendFileFromUrl(from, img, '', '', id).catch(e => {
+                                console.log(`send pin2 err : ${e}`)
                                 return client.reply(from, resMsg.error.norm, id)
                             })
                     break
                     }
 
-                    case 'pin2': {
-                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto`, id)
-                        const img = await pint(browser, arg).catch(e => {
-                            console.log(`pin2 err : ${e}`)
-                            return client.reply(from, resMsg.error.norm, id)
-                        })
-                        await client.sendFileFromUrl(from, img, '', '', id)
-                    break
-                    }
-
+                    case 'gimg':
                     case 'gimage': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari google image\nketik: ${prefix}gimage [search]\ncontoh: ${prefix}gimage naruto`, id)
                         const img = await gimage(browser, arg).catch(e => {
                             console.log(`gimage err : ${e}`)
                             return client.reply(from, resMsg.error.norm, id)
                         })
-                        await client.sendFileFromUrl(from, img, '', '', id)
+                        await client.sendFileFromUrl(from, img, '', '', id).catch(e => {
+                                console.log(`send gimage err : ${e}`)
+                                return client.reply(from, resMsg.error.norm, id)
+                            })
                     break
                     }
 
