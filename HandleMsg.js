@@ -908,9 +908,8 @@ const HandleMsg = async (client, message, browser) => {
                     // Search Any
 
                     case 'pin':
-                    case 'image':
-                    case 'images': {
-                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
+                    case 'pinterest': {
+                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`, id)
                         await images.fdci(arg)
                             .then(res => {
                                 if (res === null || res === undefined) return client.reply(from, resMsg.error.norm, id)
@@ -928,10 +927,9 @@ const HandleMsg = async (client, message, browser) => {
                     break
                     }
 
-                    case 'image2':
-                    case 'images2':
+                    case 'pinterest2':
                     case 'pin2': {
-                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest v2. Gunakan apabila /images atau /pin error\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto`, id)
+                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest v2. Gunakan apabila /pinterest atau /pin error\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto`, id)
                         const img = await pint(browser, arg).catch(e => {
                             console.log(`pin2 err : ${e}`)
                             return client.reply(from, resMsg.error.norm, id)
@@ -943,6 +941,8 @@ const HandleMsg = async (client, message, browser) => {
                     break
                     }
 
+                    case 'image':
+                    case 'images':
                     case 'gimg':
                     case 'gimage': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari google image\nketik: ${prefix}gimage [search]\ncontoh: ${prefix}gimage naruto`, id)
