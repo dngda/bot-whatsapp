@@ -49,12 +49,26 @@ async function start(client = new Client()) {
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Hidden Command: /ban /bc /leaveall /clearall /nekopoi /clearexitedgroup /refresh /addkasar', 'green'))
 
+    const browser = await puppeteer.launch({
+        executablePath: path,
+        killProcessOnBrowserClose: true,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--aggressive-cache-discard',
+            '--disable-cache',
+            '--disable-application-cache',
+            '--disable-offline-load-stale-cache',
+            '--disk-cache-size=0'
+        ]
+    })
+
     // process unread message
     const unreadMessages = await client.getAllUnreadMessages()
     unreadMessages.forEach(message => {
         setTimeout(
             async function(){
-                if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message)).catch(err => {
+                if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
                     console.log((err.name === 'TimeoutError') ? `${color('[~>>]', 'red')} Error task process timeout!` : err)
                     queue.isPaused ? queue.start() : null
                 })
@@ -103,7 +117,7 @@ async function start(client = new Client()) {
                     client.cutMsgCache()
                 }
             })
-        await queue.add(() => HandleMsg(client, message)).catch(err => {
+        await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
                     console.log((err.name === 'TimeoutError') ? `${color('[~>>]', 'red')} Error task process timeout!` : err)
                     queue.isPaused ? queue.start() : null
                 })

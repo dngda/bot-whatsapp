@@ -33,7 +33,8 @@ let {
     cariKasar,
     kbbi,
     list,
-    pint
+    pint,
+    gimage
 } = require('./lib')
 
 function requireUncached(module) {
@@ -117,7 +118,7 @@ const reCacheModule = (funcs, _data) => {
     eval(funcs)
 }
 
-const HandleMsg = async (client, message) => {
+const HandleMsg = async (client, message, browser) => {
     try {
         const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
@@ -908,7 +909,7 @@ const HandleMsg = async (client, message) => {
 
                     case 'pin':
                     case 'image':
-                    case 'images':
+                    case 'images': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
                         await images.fdci(arg)
                             .then(res => {
@@ -925,6 +926,27 @@ const HandleMsg = async (client, message) => {
                                 return client.reply(from, resMsg.error.norm, id)
                             })
                     break
+                    }
+
+                    case 'pin2': {
+                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto`, id)
+                        const img = await pint(browser, arg).catch(e => {
+                            console.log(`pin2 err : ${e}`)
+                            return client.reply(from, resMsg.error.norm, id)
+                        })
+                        await client.sendFileFromUrl(from, img, '', '', id)
+                    break
+                    }
+
+                    case 'gimage': {
+                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari google image\nketik: ${prefix}gimage [search]\ncontoh: ${prefix}gimage naruto`, id)
+                        const img = await gimage(browser, arg).catch(e => {
+                            console.log(`gimage err : ${e}`)
+                            return client.reply(from, resMsg.error.norm, id)
+                        })
+                        await client.sendFileFromUrl(from, img, '', '', id)
+                    break
+                    }
 
                     case 'crjogja':
                         const url1 = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
