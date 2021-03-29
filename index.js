@@ -33,7 +33,7 @@ let {
 const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true})
 
 queue.on('next', () => {
-    if (queue.size > 0 || queue.pending > 0) console.log(color('[~>>]', 'red'), `In Process: ${queue.pending} In Queue: ${queue.size}`)
+    if (queue.size > 0 || queue.pending > 0) console.log(color('[~>>]', 'red'), `In-process: ${queue.pending} In-queue: ${queue.size}`)
 })
 
 //create session
