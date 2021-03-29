@@ -929,7 +929,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'pinterest2':
                     case 'pin2': {
-                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest v2. Gunakan apabila /pinterest atau /pin error\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto`, id)
+                        if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest v2.\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto\n\nGunakan apabila /pinterest atau /pin error`, id)
                         const img = await pint(browser, arg).catch(e => {
                             console.log(`pin2 err : ${e}`)
                             return client.reply(from, resMsg.error.norm, id)
