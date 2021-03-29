@@ -934,6 +934,7 @@ const HandleMsg = async (client, message, browser) => {
                             console.log(`pin2 err : ${e}`)
                             return client.reply(from, resMsg.error.norm, id)
                         })
+                        if (img === null) return client.reply(from, resMsg.error.norm, id).then(() => console.log(`img return null`))
                         await client.sendFileFromUrl(from, img, '', '', id).catch(e => {
                                 console.log(`send pin2 err : ${e}`)
                                 return client.reply(from, resMsg.error.norm, id)
@@ -950,6 +951,7 @@ const HandleMsg = async (client, message, browser) => {
                             console.log(`gimage err : ${e}`)
                             return client.reply(from, resMsg.error.norm, id)
                         })
+                        if (img === null) return client.reply(from, resMsg.error.norm, id).then(() => console.log(`img return null`))
                         await client.sendFileFromUrl(from, img, '', '', id).catch(e => {
                                 console.log(`send gimage err : ${e}`)
                                 return client.reply(from, resMsg.error.norm, id)

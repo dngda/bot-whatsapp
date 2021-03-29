@@ -1,9 +1,11 @@
 const gimage = require('./lib/gimage.js')
+const pint = require('./lib/pinterest.js')
 const puppeteer = require('puppeteer')
 const path = require('chrome-launcher').Launcher.getInstallations()[0];
 
 (async () => {
 	const browser = await puppeteer.launch({
+		headless: false,
 		executablePath: path,
 	    killProcessOnBrowserClose: true,
 	    args: [
@@ -17,10 +19,7 @@ const path = require('chrome-launcher').Launcher.getInstallations()[0];
 	    ]
 	})
 
-	gimage(browser, 'heejin').then(n => {
-		console.log(n)
-	})
-	gimage(browser, 'valorant').then(n => {
+	pint(browser, 'heejin').then(n => {
 		console.log(n)
 	})
 
