@@ -358,7 +358,7 @@ const HandleMsg = async (client, message) => {
                     case 'stikergif':
                         if (isMedia || isQuotedVideo) {
                             if (type === 'image' || isQuotedImage) return client.reply(from, `Media yang dikirimkan harus berupa video/gif, untuk gambar gunakan ${prefix}sticker.`, id)
-                            if (mimetype === 'video/mp4' && message.duration <= 9 || (quotedMsg && quotedMsg.mimetype === 'video/mp4') && quotedMsg.duration <= 9) {
+                            if (mimetype === 'video/mp4' && message.duration <= 99 || (quotedMsg && quotedMsg.mimetype === 'video/mp4') && quotedMsg.duration <= 99) {
                                 var encryptedMedia = isQuotedVideo ? quotedMsg : message
                                 var mediaData = await decryptMedia(encryptedMedia)
                                 client.reply(from, resMsg.wait, id)
@@ -371,7 +371,7 @@ const HandleMsg = async (client, message) => {
                                 client.reply(from, `Kirim video dengan caption *${prefix}stickergif* max 8 secs!`, id)
                             }
                         } else {
-                            client.reply(from, `Kirim video atau reply/quote video dengan caption *${prefix}stickergif* max 8 secs`, id)
+                            client.reply(from, `Membuat sticker animasi. Kirim video atau reply/quote video dengan caption *${prefix}stickergif* max 8 secs. Selebihnya akan dipotong otomatis`, id)
                         }
                         break
 
