@@ -83,7 +83,7 @@ const resMsg = {
         norm: 'Maaf, Ada yang error! Coba lagi beberapa menit kemudian.',
         admin: 'Perintah ini hanya untuk admin group!',
         owner: 'Perintah ini hanya untuk owner bot!',
-        group: 'Maaf, perintah ini hanya dapat dipakai didalam grup!',
+        group: 'Maaf, perintah ini hanya dapat dipakai didalam group!',
         botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
     },
     success: {
