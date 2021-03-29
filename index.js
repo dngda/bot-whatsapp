@@ -4,6 +4,8 @@ const options = require('./utils/options')
 const { color, messageLog, recache, getModuleName } = require('./utils')
 const appRoot = require('app-root-path')
 const fs = require('fs-extra')
+const puppeteer = require('puppeteer')
+const path = require('chrome-launcher').Launcher.getInstallations()[0]
 
 let { reCacheModule, HandleMsg } = recache(appRoot + '/HandleMsg.js', module => {
     HandleMsg = require(module).HandleMsg
