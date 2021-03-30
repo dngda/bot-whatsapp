@@ -1268,7 +1268,7 @@ const HandleMsg = async (client, message, browser) => {
                         // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) {
                             let thelist = await list.getListName(groupId)
-                            client.reply(from, `${(thelist === false || thelist === '') ? 'Group/chat ini belum memiliki list.' : `List yang ada di group: ${thelist.join(', ')}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
+                            client.reply(from, `${(thelist === false || thelist === '') ? `${isGroupMsg ? `Group` : `Chat`} ini belum memiliki list.` : `List yang ada di ${isGroupMsg ? `group` : `chat`}: ${thelist.join(', ')}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
                                 \nUntuk membuat list gunakan perintah:\n *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)
                                 \nUntuk menghapus list beserta isinya gunakan perintah:\n *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
                                 \nUntuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2
