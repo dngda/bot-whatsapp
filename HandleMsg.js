@@ -133,6 +133,7 @@ const HandleMsg = async (client, message, browser) => {
         const stickermsg = message.type === 'sticker'
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
         const stickerMetadata = { pack: 'Created with', author: 'SeroBot', keepScale: true }
+        const stickerMetadataCircle = { pack: 'Created with', author: 'SeroBot', circle:true }
         const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
 
         // Bot Prefix
@@ -282,12 +283,12 @@ const HandleMsg = async (client, message, browser) => {
                     case 'sticker':
                     case 'stiker':
                         if (type === 'video' || isQuotedVideo) return client.reply(from, `Media yang dikirimkan harus berupa gambar, untuk video gunakan ${prefix}stickergif.`, id)
-                        if ((isMedia || isQuotedImage) && (args.length === 0 || args[0] === 'crop')) {
+                        if ((isMedia || isQuotedImage) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle')) {
                             client.reply(from, resMsg.wait, id)
                             try {
                                 const encryptMedia = isQuotedImage ? quotedMsg : message
                                 const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
-                                const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : stickerMetadata
+                                const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
                                 const mediaData = await decryptMedia(encryptMedia)
                                     .catch(err => {
                                         console.log(err)
@@ -352,7 +353,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendText(from, resMsg.error.norm)
                             }
                         } else {
-                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*`, id)
+                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*`, id)
                         }
                         break
 
