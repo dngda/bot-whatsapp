@@ -1617,7 +1617,7 @@ const HandleMsg = async (client, message, browser) => {
                         const allGroupzs = await client.getAllGroups()
                         for (let gc of allGroupzs) {
                             setTimeout(async() => {
-                                if (gc.isReadOnly){
+                                if (gc.isReadOnly || !gc.canSend) {
                                     await client.deleteChat(gc.id)
                                 }
                             }, 1000)
