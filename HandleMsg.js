@@ -1265,10 +1265,10 @@ const HandleMsg = async (client, message, browser) => {
 
                     // List creator commands
                     case 'list':
-                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) {
                             let thelist = await list.getListName(groupId)
-                            client.reply(from, `${(thelist === false || thelist === '') ? 'Group ini belum memiliki list.' : `List yang ada di group: ${thelist.join(', ')}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
+                            client.reply(from, `${(thelist === false || thelist === '') ? 'Group/chat ini belum memiliki list.' : `List yang ada di group: ${thelist.join(', ')}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
                                 \nUntuk membuat list gunakan perintah:\n *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)
                                 \nUntuk menghapus list beserta isinya gunakan perintah:\n *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
                                 \nUntuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2
@@ -1287,14 +1287,14 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'createlist':
-                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk membuat list gunakan perintah: *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)`, id)
                         const respon = await list.createList(groupId, args[0])
                         await client.reply(from, (respon === false) ? `List ${args[0]} sudah ada, gunakan nama lain.` : `List ${args[0]} berhasil dibuat.`, id)
                         break
 
                     case 'deletelist':
-                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas`, id)
                         const thelist = await list.getListName(groupId)
                         if (thelist.includes(args[0])) {
@@ -1305,14 +1305,14 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'confirmdeletelist':
-                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return null
                         const respon1 = await list.deleteList(groupId, args[0])
                         await client.reply(from, (respon1 === false) ? `List ${args[0]} tidak ada.` : `List ${args[0]} berhasil dihapus.`, id)
                         break
 
                     case 'addtolist':
-                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* Bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nama dan isinya apa woy`, id)
                         const thelist1 = await list.getListName(groupId)
@@ -1333,7 +1333,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'delist':
-                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>*\nBisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nama list dan nomor berapa woy`, id)
                         const thelist2 = await list.getListName(groupId)
