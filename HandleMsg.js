@@ -353,7 +353,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendText(from, resMsg.error.norm)
                             }
                         } else {
-                            await client.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*`, id)
+                            await client.reply(from, `Tidak ada gambar!\nUntuk menggunakan ${prefix}sticker, kirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*`, id)
                         }
                         break
 
