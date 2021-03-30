@@ -183,12 +183,13 @@ const HandleMsg = async (client, message, browser) => {
         
         // respon to msg
         if (['p', 'assalamualaikum', 'assalamu\'alaikum', 'asalamualaikum', 'assalamu\'alaykum', 'punten'].includes(message.body && message.body.toLowerCase())) {
-          await client.sendText(from, 'Wa\'alaikumussalam Wr. Wb.')
+          await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
         }
         if (['hi', 'hy', 'halo', 'hai'].includes(message.body && message.body.toLowerCase())) {
-          await client.sendText(from, `Halo ${pushname} 👋`)
+          await client.reply(from, `Halo ${pushname} 👋`, id)
         }
-        if (message.mentionedJidList.includes(botNumber)) client.reply(from, `Ada apa?`, id)
+        // Jika bot dimention maka akan merespon pesan
+        if (message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
 
         // Ini Command nya
         if (isCmd) {
