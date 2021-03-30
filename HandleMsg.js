@@ -445,7 +445,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0 && !isQuotedChat) return client.reply(from, `Membuat bot menulis teks yang dikirim menjadi gambar\nPemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`, id)
                         const nulisq = isQuotedChat ? quotedMsgObj.content.toString() : body.slice(7)
                         const nulisp = await api.tulis(nulisq)
-                        await client.sendImage(from, nulisp, '', 'Nih...', id)
+                        await client.sendFileFromUrl(from, nulisp, '', 'Nih...', id)
                             .catch(() => {
                                 client.reply(from, resMsg.error.norm, id)
                             })
