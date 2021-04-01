@@ -1,12 +1,13 @@
 let {
-	createList,
-	deleteList,
-	getListName,
-	addListData,
-	getListData,
-	removeListData
-} = require('./lib/list.js')
+	getTebakGambar,
+	getAns,
+	delData
+} = require('./lib/tebakgb.js')
 
-addListData('231231212313@c.us', 'namaListnyaCOK', ['isi listnya 1', 'isi listnya 2', 'isi listnya 3']).then(n => {
+// getTebakGambar('231231212313@c.us').then(n => {
+// 	console.log(n)
+// })
+
+delData('231231212313@c.us').then(n => {
 	console.log(n)
 })
