@@ -190,7 +190,7 @@ const HandleMsg = async (client, message, browser) => {
           await client.reply(from, `Halo ${pushname} 👋`, id)
         }
         // Jika bot dimention maka akan merespon pesan
-        if (message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
+        if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
 
         // Ini Command nya
         if (isCmd) {
