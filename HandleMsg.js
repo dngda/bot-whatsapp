@@ -44,6 +44,10 @@ function requireUncached(module) {
     return require(module)
 }
 
+const sleep = (delay) => new Promise((resolve, reject) => {
+    setTimeout(() => {  resolve(true) }, delay)
+})
+
 const {
     createReadFileSync,
     processTime,
@@ -910,7 +914,6 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     // Search Any
-
                     case 'pin':
                     case 'pinterest': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`, id)
@@ -928,7 +931,7 @@ const HandleMsg = async (client, message, browser) => {
                                 console.log(`fdci err : ${e}`)
                                 return client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /image2', id)
                             })
-                    break
+                        break
                     }
 
                     case 'pinterest2':
@@ -943,7 +946,7 @@ const HandleMsg = async (client, message, browser) => {
                                 console.log(`send pin2 err : ${e}`)
                                 return client.reply(from, resMsg.error.norm, id)
                             })
-                    break
+                        break
                     }
 
                     case 'image':
@@ -960,7 +963,7 @@ const HandleMsg = async (client, message, browser) => {
                                 console.log(`send gimage err : ${e}`)
                                 return client.reply(from, resMsg.error.norm, id)
                             })
-                    break
+                        break
                     }
 
                     case 'crjogja':
@@ -989,6 +992,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
+
                     case 'nekopoi':
                         if (isGroupMsg) {
                             client.reply(from, 'Untuk Fitur Nekopoi Silahkan Lakukan di Private Message', id)
@@ -1056,10 +1060,12 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         break
 
+                    //Hiburan
                     case 'tod':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         client.reply(from, `Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilahkan Pilih:\n-> ${prefix}truth\n-> ${prefix}dare`, id)
                         break
+
                     case 'truth':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/truth.txt')
@@ -1074,6 +1080,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
+
                     case 'dare':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/dare.txt')
@@ -1088,6 +1095,57 @@ const HandleMsg = async (client, message, browser) => {
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
+
+                    //Tebak Gambar
+                    case 'tgb':
+                    case 'tebakgambar':{
+                        await tebakgb.getTebakGambar(from).then(res => {
+                            await client.sendFileFromUrl(from, res.soal_gbr, '', `Tebak Gambar diatas. \nJawab dengan perintah *${prefix}ans (jawaban)*\n\nWaktunya 1 menit.`, null)
+                                .then(() => {
+                                    sleep(20000).then(async() => {
+                                        const ans = await tebakgb.getAns(from)
+                                        if (ans === false) break
+                                            else client.sendText(from, `⏳ 40 detik lagi`)
+                                        sleep(20000).then(async() => {
+                                            const ans1 = await tebakgb.getAns(from)
+                                            if (ans1 === false) break
+                                                else client.sendText(from, `⏳ 20 detik lagi`)
+                                            sleep(10000).then(async() => {
+                                            const ans = await tebakgb.getAns(from)
+                                            if (ans === false) break
+                                                else client.sendText(from, `⏳ 10 detik lagi`)
+                                            sleep(10000).then(async() => {
+                                                const ans = await tebakgb.getAns(from)
+                                                if (ans === false) break
+                                                    else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: ${res.jawaban}`)
+                                                    tebakgb.delData(from)
+                                                })
+                                            })
+                                        })
+                                    })
+                                })
+                        })
+                        break
+                    }
+
+                    case 'ans':{
+                        if (args.length === 0 ) return client.reply(from, `Jawab dengan menyertakan jawaban yang benar`, id)
+                        await tebakgb.getAns(from).then(res => {
+                            if (res !== false) {
+                                if (res.ans.toLowerCase() === arg.toLowerCase()) {
+                                    client.reply(from, `✅ Jawaban benar! : *${res.ans}*`, id)
+                                    tebakgb.delData(from)
+                                } else {
+                                    client.reply(from, `❌ Salah!`, id)
+                                }
+                            } else {
+                                client.reply(from, `Tidak ada sesi tebak gambar yang berlangsung! Ketik ${prefix}tgb untuk mulai`, id)
+                            }
+                        })
+                        break
+                    }
+
+
                     // Other Command
                     case 'resi':
                         if (args.length !== 2) return client.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
@@ -1268,7 +1326,6 @@ const HandleMsg = async (client, message, browser) => {
 
                     // List creator commands
                     case 'list':
-                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) {
                             let thelist = await list.getListName(from)
                             client.reply(from, `${(thelist === false || thelist === '') ? `${isGroupMsg ? `Group` : `Chat`} ini belum memiliki list.` : `List yang ada di ${isGroupMsg ? `group` : `chat`}: ${thelist.join(', ')}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
@@ -1290,14 +1347,12 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'createlist':
-                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk membuat list gunakan perintah: *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)`, id)
                         const respon = await list.createList(from, args[0])
                         await client.reply(from, (respon === false) ? `List ${args[0]} sudah ada, gunakan nama lain.` : `List ${args[0]} berhasil dibuat.`, id)
                         break
 
                     case 'deletelist':
-                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas`, id)
                         const thelist = await list.getListName(from)
                         if (thelist.includes(args[0])) {
@@ -1308,14 +1363,12 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'confirmdeletelist':
-                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return null
                         const respon1 = await list.deleteList(from, args[0])
                         await client.reply(from, (respon1 === false) ? `List ${args[0]} tidak ada.` : `List ${args[0]} berhasil dihapus.`, id)
                         break
 
                     case 'addtolist':
-                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* Bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nama dan isinya apa woy`, id)
                         const thelist1 = await list.getListName(from)
@@ -1336,7 +1389,6 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'delist':
-                        // if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>*\nBisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nama list dan nomor berapa woy`, id)
                         const thelist2 = await list.getListName(from)
