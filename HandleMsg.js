@@ -1101,21 +1101,22 @@ const HandleMsg = async (client, message, browser) => {
                     case 'tebakgambar':{
                         await tebakgb.getTebakGambar(from).then(async res => {
                             let waktu = res.jawaban.split(' ').length-1
+                            let detik = waktu*60
                             await client.sendFileFromUrl(from, res.soal_gbr, '', `Tebak Gambar diatas. \nJawab dengan perintah *${prefix}ans (jawaban)*\n\nWaktunya ${waktu} menit.`, null)
                                 .then(() => {
-                                    sleep(waktu*10000/4).then(async() => {
+                                    sleep(detik*10000/4).then(async() => {
                                         const ans = await tebakgb.getAns(from)
                                         if (ans === false) return true
-                                            else client.sendText(from, `⏳ ${((waktu*10000)-(waktu*10000/4))/1000} detik lagi`)
-                                        sleep(waktu*10000/4).then(async() => {
+                                            else client.sendText(from, `⏳ ${((detik*10000)-(detik*10000/4*4))/1000} detik lagi`)
+                                        sleep(detik*10000/4).then(async() => {
                                             const ans1 = await tebakgb.getAns(from)
                                             if (ans1 === false) return true
-                                                else client.sendText(from, `⏳ ${((waktu*10000)-(waktu*10000/4))/1000} detik lagi`)
-                                            sleep(waktu*10000/4).then(async() => {
+                                                else client.sendText(from, `⏳ ${((detik*10000)-(detik*10000/4*3))/1000} detik lagi`)
+                                            sleep(detik*10000/4).then(async() => {
                                             const ans = await tebakgb.getAns(from)
                                             if (ans === false) return true
-                                                else client.sendText(from, `⏳ ${((waktu*10000)-(waktu*10000/4))/1000} detik lagi`)
-                                            sleep(waktu*10000/4).then(async() => {
+                                                else client.sendText(from, `⏳ ${((detik*10000)-(detik*10000/4*2))/1000} detik lagi`)
+                                            sleep(detik*10000/4).then(async() => {
                                                 const ans = await tebakgb.getAns(from)
                                                 if (ans === false) return true
                                                     else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: ${res.jawaban}`)
