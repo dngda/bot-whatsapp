@@ -1099,9 +1099,8 @@ const HandleMsg = async (client, message, browser) => {
                     case 'say':
                         if (!isQuotedChat && args.length !== 0) {
                             try {
-                                const dataText = body.slice(8)
-                                if (dataText === '') return client.reply(from, 'Apa teksnya syg..', id)
-                                var gtts = new gTTS(dataText, args[0])
+                                if (arg === '') return client.reply(from, 'Apa teksnya syg..', id)
+                                var gtts = new gTTS(arg, args[0])
                                 gtts.save('./media/tts.mp3', function () {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                         .catch(err => {
