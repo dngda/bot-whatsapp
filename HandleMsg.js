@@ -1,21 +1,21 @@
+const { recache, getModuleName } = require('./utils')
 const { decryptMedia } = require('@open-wa/wa-automate')
-const moment = require('moment-timezone')
-moment.tz.setDefault('Asia/Jakarta').locale('id')
-const ytdl = require('ytdl-core')
-const ffmpeg = require('fluent-ffmpeg')
 const { translate } = require('free-translate')
+const appRoot = require('app-root-path')
+const db_group = new FileSync(appRoot + '/data/denda.json')
+const FileSync = require('lowdb/adapters/FileSync')
+const moment = require('moment-timezone')
+const ffmpeg = require('fluent-ffmpeg')
+const ytdl = require('ytdl-core')
 const axios = require('axios')
 const fetch = require('node-fetch')
 const gTTS = require('gtts')
 const toPdf = require("office-to-pdf")
-const _ = require('underscore')
-const appRoot = require('app-root-path')
-const { recache, getModuleName } = require('./utils')
 const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
-const db_group = new FileSync(appRoot + '/data/denda.json')
 const db = low(db_group)
+const _ = require('underscore')
 
+moment.tz.setDefault('Asia/Jakarta').locale('id')
 db.defaults({ group: [] }).write()
 
 const {
@@ -23,18 +23,20 @@ const {
 } = require('remove.bg')
 
 let {
-    menuId,
-    cekResi,
-    urlShortener,
-    meme,
     getLocationData,
-    images,
-    api,
+    urlShortener,
     cariKasar,
+    cekResi,
+    tebakgb,
+    menuId,
+    gimage,
+    images,
+    resep,
+    meme,
     kbbi,
     list,
     pint,
-    gimage
+    api
 } = require('./lib')
 
 function requireUncached(module) {
@@ -43,12 +45,12 @@ function requireUncached(module) {
 }
 
 const {
-    msgFilter,
-    color,
+    createReadFileSync,
     processTime,
-    isUrl,
+    msgFilter,
     download,
-    createReadFileSync
+    color,
+    isUrl
 } = require('./utils')
 
 const fs = require('fs-extra')
@@ -65,8 +67,8 @@ const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
 
 let {
     ownerNumber,
-    groupLimit,
     memberLimit,
+    groupLimit,
     prefix
 } = setting
 
