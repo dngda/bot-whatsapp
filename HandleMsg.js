@@ -1106,7 +1106,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                         .catch(err => {
                                             console.log(err)
-                                            client.sendTest(from, resMsg.error.norm)
+                                            client.sendText(from, resMsg.error.norm)
                                         })
                                 })
                             } catch (err) {
@@ -1122,7 +1122,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
                                         .catch(err => {
                                             console.log(err)
-                                            client.sendTest(from, resMsg.error.norm)
+                                            client.sendText(from, resMsg.error.norm)
                                         })
                                 })
                             } catch (err) {
@@ -1203,7 +1203,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendPtt(from, './media/tts.mp3', id)
                                     .catch(err => {
                                         console.log(err)
-                                        client.sendTest(from, resMsg.error.norm)
+                                        client.sendText(from, resMsg.error.norm)
                                     })
                             })
                         } catch (err) {
@@ -1225,7 +1225,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendPtt(from, './media/tts.mp3', id)
                                     .catch(err => {
                                         console.log(err)
-                                        client.sendTest(from, resMsg.error.norm)
+                                        client.sendText(from, resMsg.error.norm)
                                     })
                             })
                         } catch (err) {
