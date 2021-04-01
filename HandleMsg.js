@@ -1104,19 +1104,19 @@ const HandleMsg = async (client, message, browser) => {
                                 .then(() => {
                                     sleep(20000).then(async() => {
                                         const ans = await tebakgb.getAns(from)
-                                        if (ans === false) break
+                                        if (ans === false) return true
                                             else client.sendText(from, `⏳ 40 detik lagi`)
                                         sleep(20000).then(async() => {
                                             const ans1 = await tebakgb.getAns(from)
-                                            if (ans1 === false) break
+                                            if (ans1 === false) return true
                                                 else client.sendText(from, `⏳ 20 detik lagi`)
                                             sleep(10000).then(async() => {
                                             const ans = await tebakgb.getAns(from)
-                                            if (ans === false) break
+                                            if (ans === false) return true
                                                 else client.sendText(from, `⏳ 10 detik lagi`)
                                             sleep(10000).then(async() => {
                                                 const ans = await tebakgb.getAns(from)
-                                                if (ans === false) break
+                                                if (ans === false) return true
                                                     else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: ${res.jawaban}`)
                                                     tebakgb.delData(from)
                                                 })
