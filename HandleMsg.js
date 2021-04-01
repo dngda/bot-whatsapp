@@ -1099,6 +1099,8 @@ const HandleMsg = async (client, message, browser) => {
                     //Tebak Gambar
                     case 'tgb':
                     case 'tebakgambar':{
+                        const cek = await tebakgb.getAns(from)
+                        if (cek !== false) return client.reply(from, `Sesi tebak gambar sedang berlangsung.`, id)
                         await tebakgb.getTebakGambar(from).then(async res => {
                             let waktu = res.jawaban.split(' ').length-1
                             let detik = waktu*60
