@@ -1099,7 +1099,7 @@ const HandleMsg = async (client, message, browser) => {
                     //Tebak Gambar
                     case 'tgb':
                     case 'tebakgambar':{
-                        await tebakgb.getTebakGambar(from).then(res => {
+                        await tebakgb.getTebakGambar(from).then(async res => {
                             await client.sendFileFromUrl(from, res.soal_gbr, '', `Tebak Gambar diatas. \nJawab dengan perintah *${prefix}ans (jawaban)*\n\nWaktunya 1 menit.`, null)
                                 .then(() => {
                                     sleep(20000).then(async() => {
