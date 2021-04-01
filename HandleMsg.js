@@ -1100,7 +1100,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'tgb':
                     case 'tebakgambar':{
                         const cek = await tebakgb.getAns(from)
-                        if (cek !== false) return client.reply(from, `Sesi tebak gambar sedang berlangsung.`, id)
+                        if (cek !== false) return client.reply(from, `Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`, id)
                         await tebakgb.getTebakGambar(from).then(async res => {
                             let waktu = res.jawaban.split(' ').length-1
                             let detik = waktu*60
@@ -1146,6 +1146,12 @@ const HandleMsg = async (client, message, browser) => {
                                 client.reply(from, `Tidak ada sesi tebak gambar yang berlangsung! Ketik ${prefix}tgb untuk mulai`, id)
                             }
                         })
+                        break
+                    }
+
+                    case 'skip':{
+                        tebakgb.delData(from)
+                        client.reply(from, `Sesi tebak gambar telah diskip!`, id)
                         break
                     }
 
