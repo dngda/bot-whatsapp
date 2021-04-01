@@ -713,7 +713,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isGroupMsg) {
                             const inviteLink = await client.getGroupInviteLink(groupId)
-                            client.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name}* Gunakan *${prefix}revoke* untuk mereset Link group`)
+                            client.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name || formattedTitle}* Gunakan *${prefix}revoke* untuk mereset Link group`)
                         } else {
                             client.reply(from, resMsg.error.group, id)
                         }
