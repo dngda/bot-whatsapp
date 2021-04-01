@@ -1121,7 +1121,7 @@ const HandleMsg = async (client, message, browser) => {
                                             sleep(detik*1000/4).then(async() => {
                                                 const ans = await tebakgb.getAns(from)
                                                 if (ans === false) return true
-                                                    else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: ${res.jawaban}`)
+                                                    else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: *${res.jawaban}*`)
                                                     tebakgb.delData(from)
                                                 })
                                             })
@@ -1150,8 +1150,10 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'skip':{
-                        tebakgb.delData(from)
-                        client.reply(from, `Sesi tebak gambar telah diskip!`, id)
+                        tebakgb.getAns(from).then(res => {
+                            client.reply(from, `Sesi tebak gambar telah diskip!\nJawabannya: *${res.ans}*`, id)
+                            tebakgb.delData(from)
+                        })
                         break
                     }
 
