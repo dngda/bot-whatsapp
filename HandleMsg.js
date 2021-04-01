@@ -1663,6 +1663,14 @@ const HandleMsg = async (client, message, browser) => {
                         }, 2000)                         
                     break
 
+                    case 'restart': {
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        client.reply(from, `Server Bot akan direstart!`, id)
+                        const { spawn } = require('child_process')
+                        spawn('restart.cmd')
+                    break
+                    }
+
                     case 'unblock': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length === 0) return client.reply(from, `Untuk unblock kontak, ${prefix}unblock 628xxx`, id)
