@@ -1078,7 +1078,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'truth':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                        fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/truth.txt')
+                        fetch('./random/truth.txt')
                             .then(res => res.text())
                             .then(body => {
                                 let truthx = body.split('\n')
@@ -1093,7 +1093,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'dare':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                        fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/dare.txt')
+                        fetch('./random/dare.txt')
                             .then(res => res.text())
                             .then(body => {
                                 let darex = body.split('\n')
