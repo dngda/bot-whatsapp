@@ -35,7 +35,7 @@ let {
 const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true})
 
 queue.on('next', () => {
-    if (queue.size > 0 || queue.pending > 0) console.log(color('[~>>]', 'red'), `In-process: ${queue.pending} In-queue: ${queue.size}`)
+    if (queue.size > 0 || queue.pending > 0) console.log(color('[==>>]', 'red'), `In-process: ${queue.pending} In-queue: ${queue.size}`)
 })
 
 //create session
@@ -71,7 +71,7 @@ async function start(client = new Client()) {
         setTimeout(
             async function(){
                 if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
-                    console.log((err.name === 'TimeoutError') ? `${color('[~>>]', 'red')} Error task process timeout!` : err)
+                    console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
                     queue.isPaused ? queue.start() : null
                 })
             }, 1000)
@@ -79,12 +79,12 @@ async function start(client = new Client()) {
 
         // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {
-        console.log(color('[~>>]', 'red'), `Someone is adding bot to group, lol~ groupId: ${chat.groupMetadata.id}`)
+        console.log(color('[==>>]', 'red'), `Someone is adding bot to group, lol~ groupId: ${chat.groupMetadata.id}`)
         client.getAllGroups().then((groups) => {
             // kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
-            console.log(color('[~>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
+            console.log(color('[==>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
             if (groups.length > groupLimit) {
-                console.log(color('[~>>]', 'red'), `So this is exceeding the group limit.`)
+                console.log(color('[==>>]', 'red'), `So this is exceeding the group limit.`)
                 client.sendText(chat.groupMetadata.id, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner for appeal`)
                 setTimeout(() => {
                     client.leaveGroup(chat.groupMetadata.id)
@@ -99,7 +99,7 @@ async function start(client = new Client()) {
     })
 
     await client.onIncomingCall(async call => {
-        console.log(color('[~>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}}`)
+        console.log(color('[==>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}}`)
         // ketika seseorang menelpon nomor bot akan mengirim 
         if (!call.isGroup){
             client.sendText(call.peerJid, 'Maaf tidak bisa menerima panggilan.\nIni robot, bukan manusia. Awas kena block!~\nChat https://wa.me/6282310487958 for unblock request.')
@@ -115,12 +115,12 @@ async function start(client = new Client()) {
         client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
             .then((msg) => {
                 if (msg >= 3000) {
-                    console.log('[Client]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
+                    console.log('[CLNT]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
                     client.cutMsgCache()
                 }
             })
         await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
-                    console.log((err.name === 'TimeoutError') ? `${color('[~>>]', 'red')} Error task process timeout!` : err)
+                    console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
                     queue.isPaused ? queue.start() : null
                 })
 
@@ -131,7 +131,7 @@ async function start(client = new Client()) {
 
     // Mempertahankan sesi agar tetap nyala
     await client.onStateChanged((state) => {
-        console.log(color('[~>>]', 'red'), state)
+        console.log(color('[~>>>]', 'red'), state)
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus().then(() => queue.start())
     }).catch((err) => {
         console.log(err)

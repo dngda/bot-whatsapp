@@ -280,7 +280,7 @@ const HandleMsg = async (client, message, browser) => {
                             const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                             await client.sendFile(from, imageBase64, 'imgsticker.jpg', 'Berhasil convert Sticker to Image!', id)
                                 .then(() => {
-                                    console.log(`Sticker to Image Processed for ${processTime(t, moment())} Seconds`)
+                                    console.log(color('[LOGS]', 'grey'), `Sticker to Image Processed for ${processTime(t, moment())} Seconds`)
                                 })
                         } else if (!quotedMsg) return client.reply(from, `Silakan tag/reply sticker yang ingin dijadikan gambar dengan command!`, id)
                         break
@@ -303,7 +303,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendImageAsSticker(from, mediaData, _metadata)
                                     .then(() => {
                                         client.sendText(from, 'Here\'s your sticker')
-                                        console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
+                                        console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                     }).catch(err => {
                                         console.log(err)
                                         client.sendText(from, resMsg.error.norm)
@@ -336,7 +336,7 @@ const HandleMsg = async (client, message, browser) => {
                                     await client.sendImageAsSticker(from, `data:${_mimetype};base64,${result.base64img}`, stickerMetadata)
                                         .then(() => {
                                             client.sendText(from, 'Here\'s your sticker')
-                                            console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
+                                            console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                         }).catch(err => {
                                             console.log(err)
                                             client.sendText(from, resMsg.error.norm)
@@ -372,7 +372,7 @@ const HandleMsg = async (client, message, browser) => {
                                 var mediaData = await decryptMedia(encryptedMedia)
                                 client.reply(from, resMsg.wait, id)
                                 await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
-                                    .then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+                                    .then(() => console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`))
                                     .catch(() => {
                                         client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
                                     })
@@ -396,7 +396,7 @@ const HandleMsg = async (client, message, browser) => {
                             const smallGifUrl = 'https://media.giphy.com/media/' + giphyCode + '/giphy-downsized.gif'
                             client.sendGiphyAsSticker(from, smallGifUrl).then(() => {
                                 client.reply(from, 'Here\'s your sticker')
-                                console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
+                                console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                             }).catch((err) => console.log(err))
                         } else if (isMediaGiphy) {
                             const gifUrl = url.match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'))
@@ -405,7 +405,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.sendGiphyAsSticker(from, smallGifUrl)
                                 .then(() => {
                                     client.reply(from, 'Here\'s your sticker')
-                                    console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
+                                    console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                 })
                                 .catch(() => {
                                     client.reply(from, resMsg.error.norm, id)
