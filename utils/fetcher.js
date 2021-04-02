@@ -48,7 +48,7 @@ const fetchText = (url, options) => {
 
 const fetchBase64 = (url, mimetype) => {
     return new Promise((resolve, reject) => {
-        console.log('Get base64 from:', url)
+        // console.log('Get base64 from:', url)
         return fetch(url)
             .then((res) => {
                 const _mimetype = mimetype || res.headers.get('content-type')
@@ -77,7 +77,7 @@ const uploadImages = (buffData, type) => {
         const _buffData = type ? await resizeImage(buffData, false) : buffData
         fs.writeFile(filePath, _buffData, { encoding: 'base64' }, (err) => {
             if (err) return reject(err)
-            console.log('Uploading image to telegra.ph server...')
+            // console.log('Uploading image to telegra.ph server...')
             const fileData = fs.readFileSync(filePath)
             const form = new FormData()
             form.append('file', fileData, 'tmp.' + ext)

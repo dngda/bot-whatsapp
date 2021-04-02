@@ -810,6 +810,14 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         break
 
+                    case 'tiktok': {
+                        if (args.length === 0) return client.reply(form, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>`, id)
+                        if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+                        const result = await api.tiktod(url).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        await client.sendFileFromUrl(from, result.link, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        break
+                    }
+
                     case 'artinama':
                         if (args.length == 0) return client.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama nama kamu`, id)
                         api.artinama(arg)
@@ -1181,7 +1189,7 @@ const HandleMsg = async (client, message, browser) => {
                                         })
                                 })
                             } catch (err) {
-                                console.log(err.name)
+                                console.log(color('[ERR>]', 'red'), err.name, err.message)
                                 client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
                             }
                         }
@@ -1197,7 +1205,7 @@ const HandleMsg = async (client, message, browser) => {
                                         })
                                 })
                             } catch (err) {
-                                console.log(err)
+                                console.log(color('[ERR>]', 'red'), err.name, err.message)
                                 client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
                             }
                         }
@@ -1834,7 +1842,7 @@ const HandleMsg = async (client, message, browser) => {
             }
         }
     } catch (err) {
-        console.log(color('[ERROR]', 'red'), err)
+        console.log(color('[ERR>]', 'red'), err)
     }
 }
 
