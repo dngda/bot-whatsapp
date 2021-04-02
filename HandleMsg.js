@@ -1778,7 +1778,7 @@ const HandleMsg = async (client, message, browser) => {
                             console.error(err)
                           } else {
                            // the *entire* stdout and stderr (buffered)
-                           client.sendText(from, stdout)
+                           client.sendText(from, stdout+'\n'+stderr)
                            console.log(`stdout: ${stdout}`)
                            console.log(`stderr: ${stderr}`)
                           }
