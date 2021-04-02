@@ -49,7 +49,8 @@ async function start(client = new Client()) {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color('[DEV]'), color('Danang', 'yellow'))
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
-    console.log(color('[>..]'), color('Owner Commands: /ban /bc /leaveall /clearall /clearexitedgroup /refresh /addkasar', 'green'))
+    console.log(color('[>..]'), color('Owner Commands: /ban /bc /bcgroup /leaveall /clearall /clearexitedgroup /clearpm', 'green'))
+    console.log(color('[>..]'), color('/addkasar /gitpull /restart /refresh /unblock />', 'green'))
 
     const browser = await puppeteer.launch({
         executablePath: path,
