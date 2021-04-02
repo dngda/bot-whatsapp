@@ -297,19 +297,21 @@ const HandleMsg = async (client, message, browser) => {
                                 const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
                                 const mediaData = await decryptMedia(encryptMedia)
                                     .catch(err => {
-                                        console.log(err)
+                                        console.log(err.name, err.message)
                                         client.sendText(from, resMsg.error.norm)
                                     })
-                                client.sendImageAsSticker(from, mediaData, _metadata)
+                                if (mediaData){
+                                await client.sendImageAsSticker(from, mediaData, _metadata)
                                     .then(() => {
                                         client.sendText(from, 'Here\'s your sticker')
                                         console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                     }).catch(err => {
-                                        console.log(err)
+                                        console.log(err.name, err.message)
                                         client.sendText(from, resMsg.error.norm)
                                     })
+                                }
                             } catch (err) {
-                                console.log(err)
+                                console.log(err.name, err.message)
                                 client.sendText(from, resMsg.error.norm)
                             }
 
