@@ -1113,7 +1113,7 @@ const HandleMsg = async (client, message, browser) => {
                                         sleep(detik*1000/4).then(async() => {
                                             const ans1 = await tebakgb.getAns(from)
                                             if (ans1 === false) return true
-                                                else client.sendText(from, `⏳ ${((detik*1000)-(detik*1000/4*2))/1000} detik lagi\nHint: ${res.jawaban.replace(/\s/g,'   ').replace(/\w/g,'_ ')}`)
+                                                else client.sendText(from, `⏳ ${((detik*1000)-(detik*1000/4*2))/1000} detik lagi\nHint: ${res.jawaban.replace(/\s/g,'   ').replace(/[^aeiou]/g,'_ ')}`)
                                             sleep(detik*1000/4).then(async() => {
                                             const ans = await tebakgb.getAns(from)
                                             if (ans === false) return true
