@@ -1078,17 +1078,20 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'truth':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                        fetch(appRoot+'/random/truth.txt')
-                            .then(res => res.text())
-                            .then(body => {
-                                let truthx = body.split('\n')
-                                let truthz = _.sample(truthx)
-                                client.reply(from, truthz, id)
-                            })
+                        let truths = fs.readFileSync('./random/truth.txt')
+                        let _truth = _.sample(truths.split('\n'))
+                        await client.reply(from, _truth, id)
                             .catch((err) => {
                                 console.log(err)
                                 client.reply(from, resMsg.error.norm, id)
                             })
+                        // fetch(appRoot+'/random/truth.txt')
+                        //     .then(res => res.text())
+                        //     .then(body => {
+                        //         let truthx = body.split('\n')
+                        //         let truthz = _.sample(truthx)
+                        //         client.reply(from, truthz, id)
+                        //     })
                         break
 
                     case 'dare':
