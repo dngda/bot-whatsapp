@@ -756,7 +756,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.reply(from, resMsg.error.norm, id)
                                   })
                                 .on('end', () => {
-                                    client.sendPtt(from, path, id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                    client.sendFile(from, path,`${ytid}.mp3`,'', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                     fs.unlinkSync(path)
                                   })
                                 .saveToFile(path)
@@ -799,7 +799,7 @@ const HandleMsg = async (client, message, browser) => {
                                     return client.reply(from, resMsg.error.norm, id)
                                   })
                                 .on('end', () => {
-                                    client.sendPtt(from, path, id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                    client.sendFile(from, path,`${ytresult.judul.substring(0, 15).replace(/\s/g, '-')}.mp3`,'', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                     fs.unlinkSync(path)
                                   })
                                 .saveToFile(path)
