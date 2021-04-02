@@ -142,7 +142,7 @@ String.prototype.toDHms = function () {
     if (hours   < 10) {hours   = "0"+hours}
     if (minutes < 10) {minutes = "0"+minutes}
     if (seconds < 10) {seconds = "0"+seconds}
-    var time    = days+'D '+hours+'H '+minutes+'m '+seconds+'s'
+    var time    = days+' day(s) '+hours+' hour(s) '+minutes+' minute(s) '+seconds+' sec(s)'
     return time
 }
 
