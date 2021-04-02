@@ -61,10 +61,8 @@ const fs = require('fs-extra')
 const { uploadImages } = require('./utils/fetcher')
 
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
-const skripsi = JSON.parse(createReadFileSync('./settings/skripsi.json'))
 const kataKasar = JSON.parse(createReadFileSync('./settings/katakasar.json'))
 const { apiNoBg } = JSON.parse(createReadFileSync('./settings/api.json'))
-
 const banned = JSON.parse(createReadFileSync('./data/banned.json'))
 const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
 const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
@@ -1269,8 +1267,9 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'skripsi':
-                        let randomSkripsi = _.sample(skripsi)
-                        var gtts = new gTTS(randomSkripsi, 'id')
+                        let skripsis = fs.readFileSync('./random/skripsi.txt', 'utf8')
+                        let _skrps = _.sample(skripsis.split('\n'))
+                        var gtts = new gTTS(_skrps, 'id')
                         try {
                             gtts.save('./media/tts.mp3', function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
