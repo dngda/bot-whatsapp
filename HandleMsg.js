@@ -1078,7 +1078,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'truth':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                        let truths = fs.readFileSync('./random/truth.txt')
+                        let truths = fs.readFileSync('./random/truth.txt', 'utf8')
                         let _truth = _.sample(truths.split('\n'))
                         await client.reply(from, _truth, id)
                             .catch((err) => {
