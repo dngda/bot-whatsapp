@@ -1753,10 +1753,12 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         client.simulateTyping(from, false)
                         try{
-                            eval(arg)
+                            eval(`(async() => {
+                                ${arg}    
+                            })()`)
                         }catch (e) {
                             console.log(e)
-                            client.sendText(from, `${e.name}: ${e.message}`)
+                            await client.sendText(from, `${e.name}: ${e.message}`)
                         }
                     break
 
