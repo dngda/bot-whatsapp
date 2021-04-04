@@ -536,7 +536,7 @@ const HandleMsg = async (client, message, browser) => {
                             nmr = args[0]
                         }
                         var ayat = args[1] | 1
-                        
+
                         if (!isNaN(nmr)) {
                             var responseh2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                                 .catch(err => {
@@ -1740,7 +1740,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'unblock': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length === 0) return client.reply(from, `Untuk unblock kontak, ${prefix}unblock 628xxx`, id)
-                        await client.contactUnblock(`${arg}@c.us`).then(() => {
+                        await client.contactUnblock(`${arg.replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'')}@c.us`).then(() => {
                             client.reply(from, `Berhasil unblock ${arg}.`, id)
                         }).catch(e => {
                             console.log(e)
