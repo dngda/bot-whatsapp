@@ -1763,10 +1763,11 @@ const HandleMsg = async (client, message, browser) => {
                         }
                     break
 
-                    case 'gitpull': {
+                    case 'shell':
+                    case '#': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const { exec } = require('child_process')
-                        exec('git pull', (err, stdout, stderr) => {
+                        exec(arg, (err, stdout, stderr) => {
                           if (err) {
                             //some err occurred
                             console.error(err)
