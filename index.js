@@ -26,7 +26,6 @@ const { default: PQueue } = require("p-queue")
 
 
 const jobList = JSON.parse(fs.readFileSync('./data/schedule.json'))
-console.log(jobList)
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 let {
     ownerNumber,
@@ -161,11 +160,11 @@ async function start(client = new Client()) {
 
     //Load Scheduled Job
     //client, from, quotedId, content, date, isQuoted
+        console.log(jobList.job)
     try {
         jobList.job.forEach(async (job) => {
             await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted)
         })
-        console.log(jobList)
         console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
     }catch (e){
         console.log(e)
