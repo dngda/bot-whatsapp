@@ -32,6 +32,8 @@ let {
     memberLimit,
     prefix
 } = setting
+//Load Scheduled Job
+const jobList = fs.readFileSync('./data/schedule.json')
 
 const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true})
 
@@ -53,8 +55,6 @@ async function start(client = new Client()) {
     console.log(color('[>..]'), color('Owner Commands: /ban /bc /bcgroup /leaveall /clearall /clearexitedgroup /clearpm', 'green'))
     console.log(color('[>..]'), color('/addkasar /gitpull /restart /refresh /unblock />', 'green'))
 
-    //Load Scheduled Job
-    jobList = fs.readFileSync('./data/schedule.json')
     //client, from, quotedId, content, date, isQuoted
     jobList.forEach(job => {
         loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted)
