@@ -1356,7 +1356,11 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'sfx': {
                         let sfx = ['kumenangis']
-                        if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx)${sfx.forEach(n => `\n -> ${n}`)}`, id)
+                        let sfxlist = ''
+                        sfx.forEach(n => {
+                            sfxlist = sfxlist + '\n -> ' + n
+                        })
+                        if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx) ${sfxlist}`, id)
                         if (sfx.includes(arg)) {
                             path = `./random/sfx/${arg}.mp3`
                             _id = message.hasOwnProperty('quotedMsg') ? quotedMsgObj.id : id
