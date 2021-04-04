@@ -1,6 +1,7 @@
 const { create, Client} = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
+const { loadJob } = require('./lib/schedule')
 const { color, messageLog, recache, getModuleName } = require('./utils')
 const appRoot = require('app-root-path')
 const fs = require('fs-extra')
@@ -51,6 +52,9 @@ async function start(client = new Client()) {
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Owner Commands: /ban /bc /bcgroup /leaveall /clearall /clearexitedgroup /clearpm', 'green'))
     console.log(color('[>..]'), color('/addkasar /gitpull /restart /refresh /unblock />', 'green'))
+
+    //Load Scheduled Job
+    
 
     const browser = await puppeteer.launch({
         headless: true,
