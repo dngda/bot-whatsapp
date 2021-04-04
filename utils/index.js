@@ -144,7 +144,6 @@ module.exports = {
     processTime,
     isUrl,
     color,
-    messageLog,
     download,
     redir,
     createReadFileSync,
