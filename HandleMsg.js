@@ -1752,7 +1752,6 @@ const HandleMsg = async (client, message, browser) => {
 
                     case '>':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        client.simulateTyping(from, false)
                         try{
                             eval(`(async() => {
                                 ${arg}    
@@ -1761,6 +1760,7 @@ const HandleMsg = async (client, message, browser) => {
                             console.log(e)
                             await client.sendText(from, `${e.name}: ${e.message}`)
                         }
+                        client.simulateTyping(from, false)
                     break
 
                     case 'shell':
@@ -1778,6 +1778,7 @@ const HandleMsg = async (client, message, browser) => {
                            console.log(`stderr: ${stderr}`)
                           }
                         })
+                        client.simulateTyping(from, false)
                     }
                     break
 
@@ -1788,6 +1789,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
             })//typing
+            client.simulateTyping(from, false)
         }
 
         // Kata kasar function
