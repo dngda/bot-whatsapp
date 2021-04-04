@@ -53,8 +53,7 @@ async function start(client = new Client()) {
     console.log(color('[>..]'), color('/addkasar /gitpull /restart /refresh /unblock />', 'green'))
 
     const browser = await puppeteer.launch({
-        executablePath: path,
-        killProcessOnBrowserClose: true,
+        headless: true,
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',

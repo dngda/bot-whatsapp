@@ -12,7 +12,6 @@ module.exports = options = (headless, start) => {
         authTimeout: 0,
         restartOnCrash: start,
         cacheEnabled: false,
-        useChrome: true,
         killProcessOnBrowserClose: true,
         throwErrorOnTosBlock: false,
         chromiumArgs: [
