@@ -26,6 +26,7 @@ const { default: PQueue } = require("p-queue")
 
 
 const jobList = JSON.parse(fs.readFileSync('./data/schedule.json'))
+console.log(jobList)
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 let {
     ownerNumber,
