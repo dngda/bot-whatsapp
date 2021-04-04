@@ -812,7 +812,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'tiktok': {
-                        if (args.length === 0) return client.reply(form, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>`, id)
+                        if (args.length === 0) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>`, id)
                         if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         const result = await api.tiktod(url).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         await client.sendFileFromUrl(from, result.link, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
@@ -1356,7 +1356,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'sfx': {
                         let sfx = ['kumenangis']
-                        if (args.length === 0) return client.reply(form, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx)${sfx.forEach(n => `\n -> ${n}`)}`, id)
+                        if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx)${sfx.forEach(n => `\n -> ${n}`)}`, id)
                         if (sfx.includes(arg)) {
                             path = fs.readFileSync(`./random/sfx/${arg}.mp3`)
                             _id = message.hasOwnProperty('quotedMsg') ? quotedMsgObj.id : id
