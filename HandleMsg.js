@@ -536,7 +536,7 @@ const HandleMsg = async (client, message, browser) => {
                             nmr = args[0]
                         }
                         var ayat = args[1] | 1
-                        console.log(nmr)
+                        
                         if (!isNaN(nmr)) {
                             var responseh2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                                 .catch(err => {
