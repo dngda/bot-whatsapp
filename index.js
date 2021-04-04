@@ -164,7 +164,7 @@ async function start(client = new Client()) {
         jobList.job.forEach(async (job) => {
             await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted)
         })
-        console.log(color('[LOGS]', 'grey'), `${job.length} ScheduledJobs Loaded`)
+        console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
     }catch (e){
         console.log(e)
     }
