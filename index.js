@@ -2,9 +2,9 @@ const { create, Client} = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { loadJob } = require('./lib/schedule')
-const { color, messageLog, recache, getModuleName } = require('./utils')
-const appRoot = require('app-root-path')
+const { color, recache, getModuleName } = require('./utils')
 const fs = require('fs-extra')
+const appRoot = require('app-root-path')
 const puppeteer = require('puppeteer')
 const path = require('chrome-launcher').Launcher.getInstallations()[0]
 
@@ -53,13 +53,6 @@ async function start(client = new Client()) {
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
     console.log(color('[>..]'), color('Owner Commands: /ban /bc /bcgroup /leaveall /clearall /clearexitedgroup /clearpm', 'green'))
     console.log(color('[>..]'), color('/addkasar /gitpull /restart /refresh /unblock />', 'green'))
-
-    //Load Scheduled Job
-    //client, from, quotedId, content, date, isQuoted
-    jobList.forEach(async (job) => {
-        await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted)
-    })
-    console.log(color('[LOGS]', 'grey'), `${job.length} ScheduledJobs Loaded`)
 
     const browser = await puppeteer.launch({
         headless: true,
@@ -165,8 +158,10 @@ async function start(client = new Client()) {
         }
     })
 
-    // Message log for analytic
-    await client.onAnyMessage((anal) => { 
-        messageLog(anal.fromMe, anal.type)
+    //Load Scheduled Job
+    //client, from, quotedId, content, date, isQuoted
+    jobList.forEach(async (job) => {
+        await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted)
     })
+    console.log(color('[LOGS]', 'grey'), `${job.length} ScheduledJobs Loaded`)
 }
