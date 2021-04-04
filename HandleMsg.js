@@ -1339,7 +1339,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'remind': {
-                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Reminder ${prefix}remind <HM> <Text>\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nMaka bot akan mengirimkan ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.`, id)
+                        if (args.length === 0 && !message.hasOwnProperty('quotedMsg')) return client.reply(from, `Reminder ${prefix}remind <HM> <Text>\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nMaka bot akan mengirimkan ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.`, id)
                         const hh = args[0].match(/.(h|H)/g)
                         const mm = args[0].match(/.(m|M)/g)
                         if (hh === null && mm === null) return client.reply(from, `Format salah! masukkan waktu`, id)
@@ -1349,7 +1349,7 @@ const HandleMsg = async (client, message, browser) => {
 
                         milis = parseInt((h*60*60*1000)+(m*60*1000))
                         content = arg.trim().substring(arg.indexOf(' ') + 1)
-                        schedule.futureMilis(client, message, content, milis, isQuotedChat)
+                        schedule.futureMilis(client, message, content, milis, message.hasOwnProperty('quotedMsg'))
                         await client.reply(from, `Reminder Set!`, id)
                         break
                     }
