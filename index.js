@@ -161,12 +161,12 @@ async function start(client = new Client()) {
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome) {
     			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
-                await client.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
+                await client.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us 👋✨`)
             }
             // kondisi ketika seseorang dikick/keluar dari group
             if (event.action === 'remove' && event.who !== host) {
     			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
-                await client.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
+                await client.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you 👋✨`)
             }
         })
     }catch (err) {
