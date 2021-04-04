@@ -78,10 +78,9 @@ async function start(client = new Client()) {
                 })
             }, 1000)
     })
-    
+
     //Load Scheduled Job
     //client, from, quotedId, content, date, isQuoted
-    console.log(jobList.job)
     try {
         jobList.job.forEach(async (job) => {
             await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted)
@@ -152,21 +151,25 @@ async function start(client = new Client()) {
     })
 
     // ketika seseorang masuk/keluar dari group
-    await client.onGlobalParicipantsChanged(async event => {
-        const host = await client.getHostNumber() + '@c.us'
-		const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
-		const isWelcome = welcome.includes(event.chat)
-		let profile = await client.getProfilePicFromServer(event.who)
-		if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
-        // kondisi ketika seseorang diinvite/join group lewat link
-        if (event.action === 'add' && event.who !== host && isWelcome) {
-			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
-            await client.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
-        }
-        // kondisi ketika seseorang dikick/keluar dari group
-        if (event.action === 'remove' && event.who !== host) {
-			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
-            await client.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
-        }
-    })
+    try {
+        await client.onGlobalParicipantsChanged(async event => {
+            const host = await client.getHostNumber() + '@c.us'
+    		const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
+    		const isWelcome = welcome.includes(event.chat)
+    		let profile = await client.getProfilePicFromServer(event.who)
+    		if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
+            // kondisi ketika seseorang diinvite/join group lewat link
+            if (event.action === 'add' && event.who !== host && isWelcome) {
+    			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
+                await client.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
+            }
+            // kondisi ketika seseorang dikick/keluar dari group
+            if (event.action === 'remove' && event.who !== host) {
+    			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
+                await client.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
+            }
+        })
+    }catch (err) {
+        console.log(color('[ERR>]', 'red'), err)
+    }
 }
