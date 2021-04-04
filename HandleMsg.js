@@ -1340,11 +1340,11 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'remind': {
                         if (args.length === 0 && !isQuotedChat) return client.reply(from, `Reminder ${prefix}remind <HM> <Text>\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nMaka bot akan mengirimkan ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.`, id)
-                        hh = args[0].match(/.(h|H)/g)
-                        mm = args[0].match(/.(m|M)/g)
+                        const hh = args[0].match(/.(h|H)/g).toString()
+                        const mm = args[0].match(/.(m|M)/g).toString()
 
-                        h = hh !== null ? hh.replace(/h|H/g, '') : 0
-                        m = mm !== null ? mm.replace(/m|M/g, '') : 0
+                        let h = hh !== null ? hh.replace(/h|H/g, '') : 0
+                        let m = mm !== null ? mm.replace(/m|M/g, '') : 0
 
                         milis = parseInt((h*60*60*1000)+(m*60*1000))
                         content = arg.trim().substring(arg.indexOf(' ') + 1)
