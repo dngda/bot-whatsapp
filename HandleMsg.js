@@ -1358,7 +1358,7 @@ const HandleMsg = async (client, message, browser) => {
                         let sfx = ['kumenangis']
                         if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx)${sfx.forEach(n => `\n -> ${n}`)}`, id)
                         if (sfx.includes(arg)) {
-                            path = fs.readFileSync(`./random/sfx/${arg}.mp3`)
+                            path = `./random/sfx/${arg}.mp3`
                             _id = message.hasOwnProperty('quotedMsg') ? quotedMsgObj.id : id
                             await client.sendAudio(from, path, _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         }else {
