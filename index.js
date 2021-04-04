@@ -54,7 +54,12 @@ async function start(client = new Client()) {
     console.log(color('[>..]'), color('/addkasar /gitpull /restart /refresh /unblock />', 'green'))
 
     //Load Scheduled Job
-    
+    jobList = fs.readFileSync('./data/schedule.json')
+    //client, from, quotedId, content, date, isQuoted
+    jobList.forEach(job => {
+        loadJob(client, job.form, job.quotedId, job.content, job.date, job.isQuoted)
+    })
+    console.log(color('[LOGS]', 'grey'), `${job.length} ScheduledJobs Loaded`)
 
     const browser = await puppeteer.launch({
         headless: true,
