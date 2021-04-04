@@ -1740,8 +1740,9 @@ const HandleMsg = async (client, message, browser) => {
                     case 'unblock': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length === 0) return client.reply(from, `Untuk unblock kontak, ${prefix}unblock 628xxx`, id)
-                        await client.contactUnblock(`${arg.replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'')}@c.us`).then(() => {
-                            client.reply(from, `Berhasil unblock ${arg}.`, id)
+                        await client.contactUnblock(`${arg.replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'')}@c.us`).then((n) => {
+                            if(n) return client.reply(from, `Berhasil unblock ${arg}.`, id)
+                                else client.reply(from, `Nomor ${arg} tidak diblock.`, id)
                         }).catch(e => {
                             console.log(e)
                             client.reply(from, resMsg.error.norm, id)
