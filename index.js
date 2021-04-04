@@ -152,7 +152,7 @@ async function start(client = new Client()) {
 
     // ketika seseorang masuk/keluar dari group
     try {
-        await client.onGlobalParicipantsChanged(async event => {
+        await client.onGlobalParticipantsChanged(async event => {
             const host = await client.getHostNumber() + '@c.us'
     		const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
     		const isWelcome = welcome.includes(event.chat)
