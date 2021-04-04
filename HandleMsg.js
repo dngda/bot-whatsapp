@@ -1338,6 +1338,7 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         break
 
+                    case 'reminder'
                     case 'remind': {
                         if (args.length === 0 && !message.hasOwnProperty('quotedMsg')) return client.reply(from, `Reminder ${prefix}remind <HM> <Text>\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nMaka bot akan mengirimkan ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.`, id)
                         const hh = args[0].match(/\d+(h|H)/g)
