@@ -1764,7 +1764,7 @@ const HandleMsg = async (client, message, browser) => {
                     break
 
                     case 'shell':
-                    case '#': {
+                    case '=': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const { exec } = require('child_process')
                         exec(arg, (err, stdout, stderr) => {
