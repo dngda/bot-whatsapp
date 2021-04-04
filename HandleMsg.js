@@ -1344,7 +1344,7 @@ const HandleMsg = async (client, message, browser) => {
                         mm = args[0].match(/.(m|M)/g)
 
                         h = hh !== null ? hh.replace(/h|H/g, '') : 0
-                        m = mm !== null ? hh.replace(/m|M/g, '') : 0
+                        m = mm !== null ? mm.replace(/m|M/g, '') : 0
 
                         milis = parseInt((h*60*60*1000)+(m*60*1000))
                         content = arg.trim().substring(arg.indexOf(' ') + 1)
