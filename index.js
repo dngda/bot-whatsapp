@@ -160,13 +160,12 @@ async function start(client = new Client()) {
     		if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome) {
-    			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
-                await client.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')}\n\nHave fun with us 👋✨`)
+    			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Hello, welcome to the group!\n\nHave fun with us 👋✨`)
+                // await client.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')}\n\nHave fun with us 👋✨`)
             }
             // kondisi ketika seseorang dikick/keluar dari group
             if (event.action === 'remove' && event.who !== host) {
-    			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
-                await client.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}\n\nWe'll miss you 👋✨`)
+                await client.sendText(event.chat, `Good bye! We'll miss you 👋✨`)
             }
         })
     }catch (err) {

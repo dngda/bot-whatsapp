@@ -1351,7 +1351,7 @@ const HandleMsg = async (client, message, browser) => {
                         milis = parseInt((h*60*60*1000)+(m*60*1000))
                         content = arg.trim().substring(arg.indexOf(' ') + 1)
                         schedule.futureMilis(client, message, content, milis, message.hasOwnProperty('quotedMsg'))
-                        await client.reply(from, `Reminder Set! And will be fire at ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')}`, id)
+                        await client.reply(from, `Reminder Set!\nAnd will be fired at ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')}`, id)
                         break
                     }
 
