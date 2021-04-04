@@ -1364,6 +1364,7 @@ const HandleMsg = async (client, message, browser) => {
                         }else {
                             await client.reply(from, `SFX tidak tersedia`, id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         }
+                        break
                     }
 
                     // List creator commands
