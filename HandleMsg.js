@@ -1340,15 +1340,18 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'reminder':
                     case 'remind': {
-                        if (args.length === 0 && !message.hasOwnProperty('quotedMsg')) return client.reply(from, `Reminder ${prefix}remind <HM> <Text>\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nMaka bot akan mengirimkan ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.`, id)
+                        if (args.length === 0 && !message.hasOwnProperty('quotedMsg')) return client.reply(from, `Reminder ${prefix}remind <Waktu selanjutnya tanpa spasi> <Text atau isinya>\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nMaka bot akan mengirimkan ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.\n Misal waktu 1d1h1m = 1 hari lebih 1 jam lebih 1 menit`, id)
+                        const dd = args[0].match(/\d+(d|D)/g)
                         const hh = args[0].match(/\d+(h|H)/g)
                         const mm = args[0].match(/\d+(m|M)/g)
-                        if (hh === null && mm === null) return client.reply(from, `Format salah! masukkan waktu`, id)
+                        if (dd === null && hh === null && mm === null) return client.reply(from, `Format salah! masukkan waktu`, id)
 
+                        let d = dd !== null ? dd[0].replace(/d|D/g, '') : 0
                         let h = hh !== null ? hh[0].replace(/h|H/g, '') : 0
                         let m = mm !== null ? mm[0].replace(/m|M/g, '') : 0
 
-                        milis = parseInt((h*60*60*1000)+(m*60*1000))
+                        milis = parseInt((d*24*60*60*1000)+(h*60*60*1000)+(m*60*1000))
+                        if (milis >= 864000000) return client.reply(from, `Kelamaan cuy, total waktu maksimal 10 hari`, id)
                         content = arg.trim().substring(arg.indexOf(' ') + 1)
                         await schedule.futureMilis(client, message, content, milis, message.hasOwnProperty('quotedMsg')).catch(e => console.log(e))
                         await client.reply(from, `Reminder Set!\nAnd will be fired at ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')}`, id)
