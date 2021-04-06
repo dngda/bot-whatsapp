@@ -1340,7 +1340,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'reminder':
                     case 'remind': {
-                        if (args.length === 0 && !message.hasOwnProperty('quotedMsg')) return client.reply(from, `Reminder ${prefix}remind <Waktu selanjutnya tanpa spasi> <Text atau isinya>\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nMaka bot akan mengirimkan ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.\n Misal waktu 1d1h1m = 1 hari lebih 1 jam lebih 1 menit`, id)
+                        if (args.length === 0 && !message.hasOwnProperty('quotedMsg')) return client.reply(from, `Reminder ${prefix}remind <Waktu> <Text atau isinya>\nMisal waktu 1d1h1m = 1 hari lebih 1 jam lebih 1 menit\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nBot akan kirim ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.`, id)
                         const dd = args[0].match(/\d+(d|D)/g)
                         const hh = args[0].match(/\d+(h|H)/g)
                         const mm = args[0].match(/\d+(m|M)/g)
