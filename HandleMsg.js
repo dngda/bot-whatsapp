@@ -562,8 +562,8 @@ const HandleMsg = async (client, message, browser) => {
                             pesan = pesan + "\n\n(Q.S. " + data.surah.name.transliteration.id + ":" + ayat + ")"
                             await client.reply(from, pesan.trim(), message.id)
                         }
-                    }
                         break
+                    }
 
                     case 'tafsir':{
                         if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama/nomor surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
@@ -595,8 +595,8 @@ const HandleMsg = async (client, message, browser) => {
                             pesan = pesan + "_" + data.translation.id + "_" + "\n\n" + data.tafsir.id.long
                             client.reply(from, pesan, message.id)
                         }
-                    }
                         break
+                    }
 
                     case 'alaudio':{
                         if (args.length == 0) return client.reply(from, `*_${prefix}ALaudio <nama/nomor surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`, message.id)
@@ -1690,7 +1690,7 @@ const HandleMsg = async (client, message, browser) => {
                             }, 1000)
                         }
                         client.reply(from, `Broadcast Success! Total: ${chatz.length} chats`, id)
-                    break
+                        break
                     
                     case 'bcgroup': //untuk broadcast atau promosi ke group
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
@@ -1702,7 +1702,7 @@ const HandleMsg = async (client, message, browser) => {
                             }, 1000)
                         }
                         client.reply(from, `Broadcast Success! Total: ${groupz.length} groups`, id)
-                    break
+                        break
 
                     case 'leaveall': //mengeluarkan bot dari semua group serta menghapus chatnya
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
@@ -1765,14 +1765,14 @@ const HandleMsg = async (client, message, browser) => {
                                 console.log(color('[ERROR]', 'red'), err)
                             }
                         }, 2000)                         
-                    break
+                        break
 
                     case 'restart': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         client.reply(from, `Server Bot akan direstart!`, id)
                         const { spawn } = require('child_process')
                         spawn('restart.cmd')
-                    break
+                        break
                     }
 
                     case 'unblock': {
@@ -1799,7 +1799,7 @@ const HandleMsg = async (client, message, browser) => {
                             await client.sendText(from, `${e.name}: ${e.message}`)
                         }
                         client.simulateTyping(from, false)
-                    break
+                        break
 
                     case 'shell':
                     case '=': {
@@ -1817,12 +1817,12 @@ const HandleMsg = async (client, message, browser) => {
                           }
                         })
                         client.simulateTyping(from, false)
+                        break
                     }
-                    break
 
                     default:
                         await client.reply(from, `Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`, id)
-                    break
+                        break
 
                 await client.simulateTyping(from, false)
                 }
