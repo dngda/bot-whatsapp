@@ -1824,10 +1824,10 @@ const HandleMsg = async (client, message, browser) => {
                         await client.reply(from, `Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`, id)
                     break
 
+                await client.simulateTyping(from, false)
                 }
 
             })//typing
-            client.simulateTyping(from, false)
         }
 
         // Kata kasar function
