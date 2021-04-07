@@ -183,7 +183,7 @@ const HandleMsg = async (client, message, browser) => {
                 console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
             })
         }
-        else if (isBanned && isCmd) {
+        else if (isBanned) {
             return console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
         }
         
