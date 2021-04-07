@@ -1842,11 +1842,11 @@ const HandleMsg = async (client, message, browser) => {
                         const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + _denda).write()
                         if (denda) {
                             await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda), id)
-                            if (denda.denda >= 5000000) {
+                            if (denda.denda >= 3000000) {
                                 banned.push(pengirim)
                                 fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
-                                client.reply(from, `╔══✪〘 SELAMAT 〙✪\n║\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 5 Juta.\n║ Mampos~\n║\n║ Denda -5.000.000\n║\n╚═〘 SeroBot 〙`, id)
-                                db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n-5000000).write()
+                                client.reply(from, `╔══✪〘 SELAMAT 〙✪\n║\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 5 Juta.\n║ Mampos~\n║\n║ Denda -3.000.000\n║\n╚═〘 SeroBot 〙`, id)
+                                db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n-3000000).write()
                             }
                         }
                     }
