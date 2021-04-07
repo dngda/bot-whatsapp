@@ -1541,8 +1541,7 @@ const HandleMsg = async (client, message, browser) => {
                         const groupMem = await client.getGroupMembers(groupId)
                         let res = '╔══✪〘 Mention All 〙✪\n'
                         for (let i = 0; i < groupMem.length; i++) {
-                            res += '╠➥'
-                            res += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
+                            res += `╠➥ @${groupMem[i].id.replace(/@c\.us/g, '')}\n`
                         }
                         res += '╚═〘 *SeroBot* 〙'
                         await client.sendTextWithMentions(from, res)
