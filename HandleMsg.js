@@ -161,21 +161,6 @@ const HandleMsg = async (client, message, browser) => {
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
-        if (isNgegas) isKasar = await cariKasar(chats)
-
-        // [BETA] Avoid Spam Message
-        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
-        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
-        if (!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
-        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`),`:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname)) }
-        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`),`:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
-
-
-        //[BETA] Avoid Spam Message
-        msgFilter.addFilter(from)
-
-        //[AUTO READ] Auto read message 
-        client.sendSeen(chatId)
 
         // Filter Banned People
         if (isBanned && !isGroupMsg && isCmd) {
@@ -186,6 +171,21 @@ const HandleMsg = async (client, message, browser) => {
         else if (isBanned) {
             return console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
         }
+
+        if (isNgegas) isKasar = await cariKasar(chats)
+
+        // [BETA] Avoid Spam Message
+        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
+        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)), client.reply(from, 'Mohon untuk tidak melakukan spam', id) }
+        if (!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`),`:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname)) }
+        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`),`:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+
+        //[BETA] Avoid Spam Message
+        msgFilter.addFilter(from)
+
+        //[AUTO READ] Auto read message 
+        client.sendSeen(chatId)
         
         // respon to msg
         if (['p', 'assalamualaikum', 'assalamu\'alaikum', 'asalamualaikum', 'assalamu\'alaykum', 'punten'].includes(message.body && message.body.toLowerCase())) {
