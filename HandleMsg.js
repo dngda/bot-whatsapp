@@ -1351,8 +1351,7 @@ const HandleMsg = async (client, message, browser) => {
                         const hh = args[0].match(/\d+(h|H)/g)
                         const mm = args[0].match(/\d+(m|M)/g)
                         const hhmm = args[0].match(/\d{2}:\d{2}/g)
-                        let DDMM = args[0].match(/\d\d?\/\d\d?/g)
-                        if (DDMM === null) DDMM = moment(t*1000).format('DD/MM')
+                        let DDMM = args[0].match(/\d\d?\/\d\d?/g) || [moment(t*1000).format('DD/MM')]
 
                         let milis = 0
                         if (dd === null && hh === null && mm === null && hhmm === null ) {
