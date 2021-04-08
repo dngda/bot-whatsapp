@@ -1355,7 +1355,7 @@ const HandleMsg = async (client, message, browser) => {
                         const DDMM = args[0].match(/\d\d?\/\d\d?/g) || moment(t*1000).format('DD/MM')
 
                         let milis = 0
-                        if ((dd === null && hh === null && mm === null) || hhmm === null ) {
+                        if ((dd === null && hh === null && mm === null) || hhmm !== null ) {
                             return client.reply(from, `Format salah! masukkan waktu`, id)
                         } else if (hhmm === null) {
                             let d = dd !== null ? dd[0].replace(/d|D/g, '') : 0
