@@ -1365,7 +1365,7 @@ const HandleMsg = async (client, message, browser) => {
                         } else {
                             let DD = DDMM[0].replace(/\/\d\d?/g, '')
                             let MM = DDMM[0].replace(/\d\d?\//g, '')
-                            milis = Date.parse(`${moment(t*1000).format('YYYY')}-${MM}-${DD} ${hhmm[0]}:00 GMT+7`) - moment((t*1000)
+                            milis = Date.parse(`${moment(t*1000).format('YYYY')}-${MM}-${DD} ${hhmm[0]}:00 GMT+7`) - moment(t*1000)
                         }
                         if (milis < 0) return client.reply(from, `Reminder untuk masa lalu? Hmm menarik...\n\nYa gabisa lah`, id)
                         if (milis >= 864000000) return client.reply(from, `Kelamaan cuy, total waktu maksimal 10 hari`, id)
