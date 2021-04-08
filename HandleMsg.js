@@ -1346,19 +1346,33 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'reminder':
                     case 'remind': {
-                        if (args.length === 0 && !message.hasOwnProperty('quotedMsg')) return client.reply(from, `Reminder ${prefix}remind <Waktu> <Text atau isinya>\nMisal waktu 1d1h1m = 1 hari lebih 1 jam lebih 1 menit\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nBot akan kirim ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.`, id)
+                        if (args.length === 0 && !message.hasOwnProperty('quotedMsg')) return client.reply(from, `Kirim pesan pada waktu tertentu.\n${prefix}remind <Waktu> <Text atau isinya>\nMisal waktu 1d1h1m = 1 hari lebih 1 jam lebih 1 menit\nContoh: ${prefix}remind 1h5m Jangan Lupa minum!\nBot akan kirim ulang pesan 'Jangan Lupa minum!' setelah 1 jam 5 menit.\n\n${prefix}remind <DD/MM-hh:mm> <Text atau isinya>\nContoh: ${prefix}remind 15/04-12:00 Jangan Lupa minum!\nBot akan kirim ulang pesan 'Jangan Lupa minum!' Pada tanggal 15 bulan 4 jam 12:00 tahun sekarang.`, id)
                         const dd = args[0].match(/\d+(d|D)/g)
                         const hh = args[0].match(/\d+(h|H)/g)
                         const mm = args[0].match(/\d+(m|M)/g)
-                        if (dd === null && hh === null && mm === null) return client.reply(from, `Format salah! masukkan waktu`, id)
 
-                        let d = dd !== null ? dd[0].replace(/d|D/g, '') : 0
-                        let h = hh !== null ? hh[0].replace(/h|H/g, '') : 0
-                        let m = mm !== null ? mm[0].replace(/m|M/g, '') : 0
+                        const hhmm = args[0].match(/\d{2}:\d{2}/g)
+                        const DDMM = args[0].match(/\d\d?\/\d\d?/g) || moment(t*1000).format('DD/MM')
 
-                        milis = parseInt((d*24*60*60*1000)+(h*60*60*1000)+(m*60*1000))
+                        let milis = 0
+                        if ((dd === null && hh === null && mm === null) || hhmm === null ) {
+                            return client.reply(from, `Format salah! masukkan waktu`, id)
+                        } else if (hhmm === null && ddMM === null) {
+                            let d = dd !== null ? dd[0].replace(/d|D/g, '') : 0
+                            let h = hh !== null ? hh[0].replace(/h|H/g, '') : 0
+                            let m = mm !== null ? mm[0].replace(/m|M/g, '') : 0
+
+                            milis = parseInt((d*24*60*60*1000)+(h*60*60*1000)+(m*60*1000))
+                        } else {
+                            let DD = DDMM[0].replace(/\/\d\d?/g, '')
+                            let MM = DDMM[0].replace(/\d\d?\//g, '')
+                            milis = Date.parse(`${moment(t*1000).format('YYYY')}-${MM}-${DD} ${hhmm[0]}:00 GMT+7`) - moment((t*1000)
+                        }
+                        if (milis < 0) return client.reply(from, `Reminder untuk masa lalu? Hmm menarik...\n\nYa gabisa lah`, id)
                         if (milis >= 864000000) return client.reply(from, `Kelamaan cuy, total waktu maksimal 10 hari`, id)
-                        content = arg.trim().substring(arg.indexOf(' ') + 1)
+
+                        let content = arg.trim().substring(arg.indexOf(' ') + 1)
+                        if (content === '') return client.reply(from, `Format salah! Isi pesannya apa?`, id)
                         await schedule.futureMilis(client, message, content, milis, message.hasOwnProperty('quotedMsg')).catch(e => console.log(e))
                         await client.reply(from, `Reminder Set!\nAnd will be fired at ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')}`, id)
                         break
