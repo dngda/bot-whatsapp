@@ -165,11 +165,11 @@ const HandleMsg = async (client, message, browser) => {
         // Filter Banned People
         if (isBanned && !isGroupMsg && isCmd) {
             return client.sendText(from, `Maaf anda telah dibanned oleh bot karena melanggar tnc`).then(() => {
-                console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
+                console.log(color('[BANd]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
             })
         }
         else if (isBanned) {
-            return console.log(color('[BAN\'d]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
+            return console.log(color('[BANd]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle))
         }
 
         if (isNgegas) isKasar = await cariKasar(chats)
