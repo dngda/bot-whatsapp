@@ -29,14 +29,13 @@ let {
     schedule,
     cekResi,
     tebakgb,
+    scraper,
     menuId,
-    gimage,
     images,
     resep,
     meme,
     kbbi,
     list,
-    pint,
     api
 } = require('./lib')
 
@@ -954,7 +953,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'pinterest2':
                     case 'pin2': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest v2.\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto\n\nGunakan apabila /pinterest atau /pin error`, id)
-                        const img = await pint(browser, arg).catch(e => {
+                        const img = await scraper.pinterest(browser, arg).catch(e => {
                             console.log(`pin2 err : ${e}`)
                             return client.reply(from, resMsg.error.norm, id)
                         })
@@ -971,7 +970,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'gimg':
                     case 'gimage': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari google image\nketik: ${prefix}gimage [search]\ncontoh: ${prefix}gimage naruto`, id)
-                        const img = await gimage(browser, arg).catch(e => {
+                        const img = await scraper.gimage(browser, arg).catch(e => {
                             console.log(`gimage err : ${e}`)
                             return client.reply(from, resMsg.error.norm, id)
                         })
@@ -1396,6 +1395,17 @@ const HandleMsg = async (client, message, browser) => {
                         }else {
                             await client.reply(from, `SFX tidak tersedia`, id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         }
+                        break
+                    }
+
+                    case 'urltoimg':
+                    case 'ssweb': {
+                        if (args.length === 0) return client.reply(from, `Screenshot website. ${prefix}ssweb <url>`, id)
+                        if (url === '') return client.reply(from, `Url tidak valid`, id)
+                        const path = './media/ssweb.png'
+                        scraper.ssweb(browser, path, url).then(async res => {
+                            if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${url}`).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        })
                         break
                     }
 

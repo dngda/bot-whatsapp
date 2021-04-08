@@ -43,6 +43,7 @@
     "sastrawijs": "^1.0.3",
     "sharp": "^0.27.2",
     "underscore": "^1.12.1",
+    "user-agents": "^1.0.616",
     "ytdl-core": "^4.5.0"
   },
   "devDependencies": {},
