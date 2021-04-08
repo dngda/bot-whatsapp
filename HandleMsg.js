@@ -1351,7 +1351,7 @@ const HandleMsg = async (client, message, browser) => {
                         const hh = args[0].match(/\d+(h|H)/g)
                         const mm = args[0].match(/\d+(m|M)/g)
                         const hhmm = args[0].match(/\d{2}:\d{2}/g)
-                        const DDMM = args[0].match(/\d\d?\/\d\d?/g) || moment(t*1000).format('DD/MM')
+                        let DDMM = args[0].match(/\d\d?\/\d\d?/g) || moment(t*1000).format('DD/MM')
 
                         let milis = 0
                         if (dd === null && hh === null && mm === null && hhmm === null ) {
@@ -1372,6 +1372,7 @@ const HandleMsg = async (client, message, browser) => {
 
                         let content = arg.trim().substring(arg.indexOf(' ') + 1)
                         if (content === '') return client.reply(from, `Format salah! Isi pesannya apa?`, id)
+                        if (milis === null) return client.reply(from, `Maaf ada yang error!`, id)
                         await schedule.futureMilis(client, message, content, milis, message.hasOwnProperty('quotedMsg')).catch(e => console.log(e))
                         await client.reply(from, `Reminder Set!\nAnd will be fired at ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')}`, id)
                         break
