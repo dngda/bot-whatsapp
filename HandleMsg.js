@@ -1381,7 +1381,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'sfx': {
-                        let sfx = ['kumenangis', 'kekw']
+                        let sfx = ['kumenangis', 'kekw', 'headshot']
                         let sfxlist = ''
                         sfx.forEach(n => {
                             sfxlist = sfxlist + '\n -> ' + n
