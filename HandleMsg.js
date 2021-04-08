@@ -745,7 +745,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     //Media
-                    case 'ytmp3':
+                    case 'ytmp3': {
                         if (args.length == 0) return client.reply(from, `Untuk mendownload audio dari youtube\nketik: ${prefix}ytmp3 <link yt> (don't include <> symbol)`, id)
                         if (arg.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/) === null) return client.reply(from, `Link youtube tidak valid.`, id)
                         client.sendText(from, resMsg.wait)
@@ -754,7 +754,7 @@ const HandleMsg = async (client, message, browser) => {
                             var time = moment(t * 1000).format('mmss')
                             var path = `./media/temp_${time}.mp3`
 
-                            stream = ytdl(ytid)
+                            stream = ytdl(ytid, { quality: 'highestaudio' })
 
                             ffmpeg({source:stream})
                                 .setFfmpegPath('./bin/ffmpeg')
@@ -772,8 +772,9 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, resMsg.error.norm, id)
                         }
                         break
+                    }
 
-                    case 'play': //silahkan kalian custom sendiri jika ada yang ingin diubah
+                    case 'play': {//silahkan kalian custom sendiri jika ada yang ingin diubah
                         if (args.length == 0) return client.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`, id)
                         let ytresult = await api.ytsearch(arg).catch(err => {
                             console.log(err)
@@ -798,7 +799,7 @@ const HandleMsg = async (client, message, browser) => {
                             var time = moment(t * 1000).format('mmss')
                             var path = `./media/temp_${time}.mp3`
 
-                            stream = ytdl(ytresult.id)
+                            stream = ytdl(ytresult.id, { quality: 'highestaudio' })
                             ffmpeg({source:stream})
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
@@ -816,6 +817,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, resMsg.error.norm, id)
                         }
                         break
+                    }
 
                     case 'tiktok': {
                         if (args.length === 0) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>`, id)
