@@ -1381,12 +1381,14 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'sfx': {
-                        let sfx = ['kumenangis', 'kekw', 'headshot']
-                        let sfxlist = ''
+                        let sfx = fs.readdirSync('./random/sfx/').map(item => {
+                                        return item.replace('.mp3', '')
+                                    })
+                        let listMsg = ''
                         sfx.forEach(n => {
-                            sfxlist = sfxlist + '\n -> ' + n
+                            listMsg = listMsg + '\n -> ' + n
                         })
-                        if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx) ${sfxlist}`, id)
+                        if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx) ${listMsg}`, id)
                         if (sfx.includes(arg)) {
                             path = `./random/sfx/${arg}.mp3`
                             _id = message.hasOwnProperty('quotedMsg') ? quotedMsgObj.id : id
