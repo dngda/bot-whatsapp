@@ -1404,7 +1404,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isUrl(args[0])) return client.reply(from, `Url tidak valid`, id)
                         const path = './media/ssweb.png'
                         scraper.ssweb(browser, path, args[0]).then(async res => {
-                            if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${url}`).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                            if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${args[0]}`).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         })
                         break
                     }
