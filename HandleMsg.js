@@ -1502,7 +1502,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (args.length !== 1) return client.reply(from, `Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`, id)
                         try {
-                            await client.addParticipant(from, `${args[0]}@c.us`)
+                            await client.addParticipant(from, `${args[0].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'')}@c.us`)
                         } catch {
                             client.reply(from, 'Tidak dapat menambahkan target', id)
                         }
@@ -1695,12 +1695,12 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length == 0) return client.reply(from, `Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban add 628xx --untuk mengaktifkan\n${prefix}ban del 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`, id)
                         if (args[0] == 'add') {
-                            banned.push(args[1] + '@c.us')
+                            banned.push(args[1].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'') + '@c.us')
                             fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                             client.reply(from, 'Success banned target!', id)
                         } else
                             if (args[0] == 'del') {
-                                let xnxx = banned.indexOf(args[1] + '@c.us')
+                                let xnxx = banned.indexOf(args[1].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'') + '@c.us')
                                 banned.splice(xnxx, 1)
                                 fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                                 client.reply(from, 'Success unbanned target!', id)
