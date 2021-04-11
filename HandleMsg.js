@@ -209,6 +209,7 @@ const HandleMsg = async (client, message, browser) => {
                     // Menu and TnC
                     case 'speed':
                     case 'ping':
+                    case 'p':
                         await client.sendText(from, `Pong!!!\nSpeed: ${processTime(t, moment())} _Seconds_`)
                         break
                     case 'tnc':
@@ -292,6 +293,7 @@ const HandleMsg = async (client, message, browser) => {
                     // Sticker Creator
                     case 'sticker':
                     case 'stiker':
+                    case 's':
                         if (type === 'video' || isQuotedVideo) return client.reply(from, `Media yang dikirimkan harus berupa gambar, untuk video gunakan ${prefix}stickergif.`, id)
                         if ((isMedia || isQuotedImage) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle')) {
                             client.reply(from, resMsg.wait, id)
@@ -371,6 +373,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'stickergif':
                     case 'stikergif':
+                    case 'sg':
                         if (isMedia || isQuotedVideo) {
                             if (type === 'image' || isQuotedImage) return client.reply(from, `Media yang dikirimkan harus berupa video/gif, untuk gambar gunakan ${prefix}sticker.`, id)
                             if (mimetype === 'video/mp4' && message.duration <= 99 || (quotedMsg && quotedMsg.mimetype === 'video/mp4') && quotedMsg.duration <= 99) {
@@ -933,20 +936,31 @@ const HandleMsg = async (client, message, browser) => {
                     case 'pin':
                     case 'pinterest': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`, id)
+                        if (args[0] === '+'){
+                            await images.fdci(arg.trim().substring(arg.indexOf(' ') + 1))
+                                .then(res => {
+                                    img = _.sample(res, 10)
+                                    img.forEach(i => {
+                                        await client.sendFileFromUrl(from, i, '', '', id)
+                                    })
+                                })
+                        }else {
                         await images.fdci(arg)
                             .then(res => {
-                                if (res === null || res === undefined) return client.reply(from, resMsg.error.norm, id)
+                                img = _.sample(res)
+                                if (img === null || img === undefined) return client.reply(from, resMsg.error.norm, id)
 
-                                client.sendFileFromUrl(from, res, '', '', id)
+                                client.sendFileFromUrl(from, img, '', '', id)
                                     .catch(e => {
                                         console.log(`fdci err : ${e}`)
-                                        client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /image2', id)
+                                        client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /pinterest2', id)
                                     })
                             })
                             .catch(e => {
                                 console.log(`fdci err : ${e}`)
-                                return client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /image2', id)
+                                return client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /pinterest2', id)
                             })
+                        }
                         break
                     }
 
