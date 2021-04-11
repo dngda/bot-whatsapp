@@ -941,7 +941,7 @@ const HandleMsg = async (client, message, browser) => {
                                 .then(res => {
                                     img = _.sample(res, 10)
                                     img.forEach(async i => {
-                                        await client.sendFileFromUrl(from, i, '', '', id)
+                                        if (i !== null) await client.sendFileFromUrl(from, i, '', '', id)
                                     })
                                 })
                         }else {
