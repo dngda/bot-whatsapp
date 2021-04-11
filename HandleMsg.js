@@ -940,7 +940,7 @@ const HandleMsg = async (client, message, browser) => {
                             await images.fdci(arg.trim().substring(arg.indexOf(' ') + 1))
                                 .then(res => {
                                     img = _.sample(res, 10)
-                                    img.forEach(i => {
+                                    img.forEach(async i => {
                                         await client.sendFileFromUrl(from, i, '', '', id)
                                     })
                                 })
