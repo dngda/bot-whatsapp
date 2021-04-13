@@ -827,7 +827,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isUrl(arg)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
                         const result = await zrapi.keeptiktok(arg).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        await client.sendFileFromUrl(from, result, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        await client.sendFileFromUrl(from, result, 'download.mp4', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
 
