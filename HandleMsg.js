@@ -833,7 +833,9 @@ const HandleMsg = async (client, message, browser) => {
                         const req = https.get(result, (res) => {
                             res.pipe(file)
                         })
-                        await client.sendFile(from, path, '', '', id).then(() => fs.unlinkSync(path)).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        file.on('finish', async () => {
+                            await client.sendFile(from, path, '', '', id).then(() => fs.unlinkSync(path)).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        })
                         break
                     }
 
