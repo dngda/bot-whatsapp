@@ -832,8 +832,8 @@ const HandleMsg = async (client, message, browser) => {
                         const result = await zrapi.keeptiktok(arg).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         const req = https.get(result, (res) => {
                             res.pipe(file)
-                            client.sendFile(from, path, '', '', id).then(() => fs.unlinkSync(path)).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         })
+                        await client.sendFile(from, path, '', '', id).then(() => fs.unlinkSync(path)).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
 
