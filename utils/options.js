@@ -8,6 +8,7 @@ module.exports = options = (headless, start) => {
     const options = {
         sessionId: 'session',
         headless: headless,
+        useChrome: true,
         qrTimeout: 0,
         authTimeout: 0,
         restartOnCrash: start,
