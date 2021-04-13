@@ -472,7 +472,7 @@ const HandleMsg = async (client, message, browser) => {
                     //required to install libreoffice
                     case 'doctopdf':
                     case 'pdf':
-                        if (!isQuotedDocs) return client.reply(from, `Convert doc/docx/ppt/pptx to pdf.\n\nKirim dokumen kemudian reply dokumen dengan ${prefix}pdf`, id)
+                        if (!isQuotedDocs) return client.reply(from, `Convert doc/docx/ppt/pptx to pdf.\n\nKirim dokumen kemudian reply dokumen/filenya dengan ${prefix}pdf`, id)
                         if (/\.docx|\.doc|\.pptx|\.ppt/g.test(quotedMsg.filename) && isQuotedDocs) {
                             client.sendText(from, resMsg.wait)
                             const encDocs = await decryptMedia(quotedMsg)
