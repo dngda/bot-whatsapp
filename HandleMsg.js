@@ -826,10 +826,10 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length === 0) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>`, id)
                         if (!isUrl(arg)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
-                        const http = require('http')
+                        const https = require('https')
                         const file = fs.createWriteStream(`${t}.mp4`)
                         const result = await zrapi.keeptiktok(arg).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        const req = http.get(result, (res) => {
+                        const req = https.get(result, (res) => {
                             res.pipe(file)
                         })
                         await client.sendFile(from, file, `{t}.mp4`, '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
