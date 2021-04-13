@@ -824,9 +824,9 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'tiktok': {
                         if (args.length === 0) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>`, id)
-                        if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+                        if (!isUrl(arg)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
-                        const result = await zrapi.keeptiktok(url).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        const result = await zrapi.keeptiktok(arg).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         await client.sendFileFromUrl(from, result, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
@@ -998,15 +998,15 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'crjogja':
+                    case 'crjogja': {
                         const url1 = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
                         const url2 = 'https://screenshotapi.net/api/v1/screenshot?token=FREB5SDBA2FRMO4JDMSHXAEGNYLKYCA4&url=https%3A%2F%2Fsipora.staklimyogyakarta.com%2Fradar%2F&width=600&height=600&fresh=true&output=image'
                         const isTrue1 = Boolean(Math.round(Math.random()))
-                        const url = isTrue1 ? url1 : url2
+                        const urL = isTrue1 ? url1 : url2
 
                         await client.sendText(from, 'Gotcha, please wait!')
                         await client.simulateTyping(from, true)
-                        await client.sendFileFromUrl(from, url, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/')
+                        await client.sendFileFromUrl(from, urL, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/')
                             .then(() => {
                                 client.simulateTyping(from, false)
                             })
@@ -1014,6 +1014,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.reply(from, 'Ada yang error! Coba lagi beberapa saat kemudian. Mending cek sendiri aja ke\nhttps://sipora.staklimyogyakarta.com/radar/', id)
                             })
                         break
+                    }
 
                     case 'sreddit':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
