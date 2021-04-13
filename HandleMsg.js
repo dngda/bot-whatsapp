@@ -6,6 +6,7 @@ const FileSync = require('lowdb/adapters/FileSync')
 const db_group = new FileSync(appRoot + '/data/denda.json')
 const moment = require('moment-timezone')
 const ffmpeg = require('fluent-ffmpeg')
+const zrapi = require('zrapi')
 const ytdl = require('ytdl-core')
 const axios = require('axios')
 const fetch = require('node-fetch')
@@ -824,8 +825,9 @@ const HandleMsg = async (client, message, browser) => {
                     case 'tiktok': {
                         if (args.length === 0) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>`, id)
                         if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
-                        const result = await api.tiktod(url).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        await client.sendFileFromUrl(from, result.link, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        await client.reply(from, resMsg.wait, id)
+                        const result = await zrapi.keeptiktok(url).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        await client.sendFileFromUrl(from, result, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
 
