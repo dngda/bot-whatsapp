@@ -461,10 +461,13 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'nulis':
                         if (args.length == 0 && !isQuotedChat) return client.reply(from, `Membuat bot menulis teks yang dikirim menjadi gambar\nPemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`, id)
-                        const nulisq = isQuotedChat ? quotedMsgObj.content.toString() : body.slice(7)
+                        const nulisq = isQuotedChat ? quotedMsgObj.content.toString() : arg
                         const nulisp = await api.tulis(nulisq)
-                        await client.sendFileFromUrl(from, nulisp, '', 'Nih...', id)
-                            .catch(() => {
+                        console.log(nulisp)
+                        client.reply(from, `Result versi HD: ${nulisp}`, id)
+                        await client.sendFileFromUrl(from, nulisp, '', '', id)
+                            .catch((e) => {
+                                console.log(e)
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
