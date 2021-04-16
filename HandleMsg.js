@@ -147,7 +147,7 @@ const HandleMsg = async (client, message, browser) => {
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const args = body.trim().split(/ +/).slice(1)
-        const url = args.length !== 0 ? args[0] : ''
+        const url = args.length != 0 ? args[0] : ''
 
         // [IDENTIFY]
         isKasar = false
@@ -360,7 +360,7 @@ const HandleMsg = async (client, message, browser) => {
                         } else if (args.length === 1) {
                             try {
                                 if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
-                                client.sendStickerfromUrl(from, url).then((r) => (!r && r !== undefined)
+                                client.sendStickerfromUrl(from, url).then((r) => (!r && r != undefined)
                                     ? client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
                                     : client.reply(from, 'Here\'s your sticker')).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
                             } catch (e) {
@@ -396,7 +396,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'stikergiphy':
                     case 'stickergiphy':
-                        if (args.length !== 1) return client.reply(from, `Maaf, format pesan salah.\nKetik pesan dengan ${prefix}stickergiphy <link_giphy> (don't include <> symbol)`, id)
+                        if (args.length != 1) return client.reply(from, `Maaf, format pesan salah.\nKetik pesan dengan ${prefix}stickergiphy <link_giphy> (don't include <> symbol)`, id)
                         const isGiphy = url.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'))
                         const isMediaGiphy = url.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'))
                         if (isGiphy) {
@@ -752,7 +752,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0) return client.reply(from, `Untuk mendownload audio dari youtube\nketik: ${prefix}ytmp3 <link yt> (don't include <> symbol)`, id)
                         if (arg.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/) === null) return client.reply(from, `Link youtube tidak valid.`, id)
                         client.sendText(from, resMsg.wait)
-                        const ytid = args[0].substr((args[0].indexOf('=')) !== -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
+                        const ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                         try {
                             var time = moment(t * 1000).format('mmss')
                             var path = `./media/temp_${time}.mp3`
@@ -943,7 +943,7 @@ const HandleMsg = async (client, message, browser) => {
                                 .then(res => {
                                     img = _.sample(res, 10)
                                     img.forEach(async i => {
-                                        if (i !== null) await client.sendFileFromUrl(from, i, '', '', id)
+                                        if (i != null) await client.sendFileFromUrl(from, i, '', '', id)
                                     })
                                 })
                         }else {
@@ -1125,7 +1125,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'tgb':
                     case 'tebakgambar':{
                         const cek = await tebakgb.getAns(from)
-                        if (cek !== false) return client.reply(from, `Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`, id)
+                        if (cek != false) return client.reply(from, `Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`, id)
                         await tebakgb.getTebakGambar(from).then(async res => {
                             let waktu = res.jawaban.split(' ').length-1
                             let detik = waktu*60
@@ -1160,7 +1160,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'ans':{
                         if (args.length === 0 ) return client.reply(from, `Jawab dengan menyertakan jawaban yang benar`, id)
                         await tebakgb.getAns(from).then(res => {
-                            if (res !== false) {
+                            if (res != false) {
                                 if (res.ans.toLowerCase() === arg.toLowerCase()) {
                                     client.reply(from, `✅ Jawaban benar! : *${res.ans}*`, id)
                                     tebakgb.delData(from)
@@ -1185,7 +1185,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     // Other Command
                     case 'resi':
-                        if (args.length !== 2) return client.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
+                        if (args.length != 2) return client.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
                         const kurirs = ['jne', 'pos', 'tiki', 'wahana', 'jnt', 'rpx', 'sap', 'sicepat', 'pcp', 'jet', 'dse', 'first', 'ninja', 'lion', 'idl', 'rex']
                         if (!kurirs.includes(args[0])) return client.sendText(from, `Maaf, jenis ekspedisi pengiriman tidak didukung layanan ini hanya mendukung ekspedisi pengiriman ${kurirs.join(', ')} Tolong periksa kembali.`)
                         console.log('Memeriksa No Resi', args[1], 'dengan ekspedisi', args[0])
@@ -1194,7 +1194,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'tts':
                     case 'say':
-                        if (!isQuotedChat && args.length !== 0) {
+                        if (!isQuotedChat && args.length != 0) {
                             try {
                                 if (arg === '') return client.reply(from, 'Apa teksnya syg..', id)
                                 var gtts = new gTTS(arg, args[0])
@@ -1210,7 +1210,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.reply(from, err.name + '! ' + err.message + '\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4', id)
                             }
                         }
-                        else if (isQuotedChat && args.length !== 0) {
+                        else if (isQuotedChat && args.length != 0) {
                             try {
                                 const dataText = quotedMsgObj.content.toString()
                                 var gtts = new gTTS(dataText, args[0])
@@ -1237,7 +1237,7 @@ const HandleMsg = async (client, message, browser) => {
                         client.reply(from, 'Okey sebentar...', id)
                         console.log(`Request Status Zona Penyebaran Covid-19 (${quotedMsg.lat}, ${quotedMsg.lng}).`)
                         const zoneStatus = await getLocationData(quotedMsg.lat, quotedMsg.lng)
-                        if (zoneStatus.kode !== 200) client.sendText(from, 'Maaf, Terjadi error ketika memeriksa lokasi yang anda kirim.')
+                        if (zoneStatus.kode != 200) client.sendText(from, 'Maaf, Terjadi error ketika memeriksa lokasi yang anda kirim.')
                         let datax = ''
                         for (let i = 0; i < zoneStatus.data.length; i++) {
                             const { zone, region } = zoneStatus.data[i]
@@ -1260,7 +1260,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'hilih':
-                        if (args.length !== 0 || isQuotedChat) {
+                        if (args.length != 0 || isQuotedChat) {
                             const _input = isQuotedChat ? quotedMsgObj.content.toString() : body.slice(7)
                             const _id = isQuotedChat ? quotedMsgObj.id : id
                             const _res = _input.replace(/[aiueo]/g, 'i')
@@ -1332,7 +1332,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'kbbi':
-                        if (args.length !== 1) return client.reply(from, `Mencari arti kata dalam KBBI\nPenggunaan: ${prefix}kbbi <kata>\ncontoh: ${prefix}kbbi apel`, id)
+                        if (args.length != 1) return client.reply(from, `Mencari arti kata dalam KBBI\nPenggunaan: ${prefix}kbbi <kata>\ncontoh: ${prefix}kbbi apel`, id)
                         const cariKata = kbbi(args[0])
                             .then(res => {
                                 if (res == '') return client.reply(from, `Maaf kata "${args[0]}" tidak tersedia di KBBI`, id)
@@ -1375,9 +1375,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (dd === null && hh === null && mm === null && hhmm === null ) {
                             return client.reply(from, `Format salah! masukkan waktu`, id)
                         } else if (hhmm === null) {
-                            let d = dd !== null ? dd[0].replace(/d|D/g, '') : 0
-                            let h = hh !== null ? hh[0].replace(/h|H/g, '') : 0
-                            let m = mm !== null ? mm[0].replace(/m|M/g, '') : 0
+                            let d = dd != null ? dd[0].replace(/d|D/g, '') : 0
+                            let h = hh != null ? hh[0].replace(/h|H/g, '') : 0
+                            let m = mm != null ? mm[0].replace(/m|M/g, '') : 0
 
                             milis = parseInt((d*24*60*60*1000)+(h*60*60*1000)+(m*60*1000))
                         } else {
@@ -1391,7 +1391,7 @@ const HandleMsg = async (client, message, browser) => {
                         let content = arg.trim().substring(arg.indexOf(' ') + 1)
                         if (content === '') return client.reply(from, `Format salah! Isi pesannya apa?`, id)
                         if (milis === null) return client.reply(from, `Maaf ada yang error!`, id)
-                        await schedule.futureMilis(client, message, content, milis, message.hasOwnProperty('quotedMsg')).catch(e => console.log(e))
+                        await schedule.futureMilis(client, message, content, milis, (quotedMsg != null)).catch(e => console.log(e))
                         await client.reply(from, `Reminder Set!\nAnd will be fired at ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')}`, id)
                         break
                     }
@@ -1407,7 +1407,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx) ${listMsg}`, id)
                         if (sfx.includes(arg)) {
                             path = `./random/sfx/${arg}.mp3`
-                            _id = message.hasOwnProperty('quotedMsg') ? quotedMsgObj.id : id
+                            _id = (quotedMsg != null) ? quotedMsgObj.id : id
                             await client.sendAudio(from, path, _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         }else {
                             await client.reply(from, `SFX tidak tersedia`, id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
@@ -1517,7 +1517,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'add':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
-                        if (args.length !== 1) return client.reply(from, `Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`, id)
+                        if (args.length != 1) return client.reply(from, `Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`, id)
                         try {
                             await client.addParticipant(from, `${args[0].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'')}@c.us`)
                         } catch {
@@ -1542,7 +1542,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
-                        if (mentionedJidList.length !== 1) return client.reply(from, 'Maaf, hanya bisa mempromote 1 user', id)
+                        if (mentionedJidList.length != 1) return client.reply(from, 'Maaf, hanya bisa mempromote 1 user', id)
                         if (groupAdmins.includes(mentionedJidList[0])) return await client.reply(from, 'Maaf, user tersebut sudah menjadi admin.', id)
                         if (mentionedJidList[0] === botNumber) return await client.reply(from, 'Maaf, format pesan salah.\nTidak dapat mempromote akun bot sendiri', id)
                         await client.promoteParticipant(groupId, mentionedJidList[0])
@@ -1553,7 +1553,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
-                        if (mentionedJidList.length !== 1) return client.reply(from, 'Maaf, hanya bisa mendemote 1 user', id)
+                        if (mentionedJidList.length != 1) return client.reply(from, 'Maaf, hanya bisa mendemote 1 user', id)
                         if (!groupAdmins.includes(mentionedJidList[0])) return await client.reply(from, 'Maaf, user tersebut belum menjadi admin.', id)
                         if (mentionedJidList[0] === botNumber) return await client.reply(from, 'Maaf, format pesan salah.\nTidak dapat mendemote akun bot sendiri', id)
                         if (mentionedJidList[0] === ownerNumber) return await client.reply(from, 'Maaf, tidak bisa mendemote owner, hahahaha', id)
@@ -1590,8 +1590,14 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         res += '╚═〘 *SeroBot* 〙'
                         await client.sendTextWithMentions(from, res)
-                    }
                         break
+                    }
+
+                    case 'tag':{
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        client.reply(from, `Feature coming soon`, id)
+                        break
+                    }
 
                     case 'katakasar':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
@@ -1601,14 +1607,17 @@ const HandleMsg = async (client, message, browser) => {
                     case 'kasar':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
-                        if (args.length !== 1) return client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
-                        if (args[0] == 'on') {
+                        if (args.length != 1) return client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
+                        if (args[0] === 'on') {
+                            let pos = ngegas.indexOf(chatId)
+                                if (pos != -1) return client.reply(from, 'Fitur anti kata kasar sudah aktif!', id)
                             ngegas.push(chatId)
                             fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
                             client.reply(from, 'Fitur Anti Kasar sudah di Aktifkan', id)
-                        } else if (args[0] == 'off') {
-                            let nixx = ngegas.indexOf(chatId)
-                            ngegas.splice(nixx, 1)
+                        } else if (args[0] === 'off') {
+                            let pos = ngegas.indexOf(chatId)
+                                if (pos === -1) return client.reply(from, 'Fitur anti kata memang belum aktif!', id)
+                            ngegas.splice(pos, 1)
                             fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
                             client.reply(from, 'Fitur Anti Kasar sudah di non-Aktifkan', id)
                         } else {
@@ -1618,7 +1627,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'addkasar':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        if (args.length !== 1) { return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id) }
+                        if (args.length != 1) { return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id) }
                         else {
                             if (kataKasar.indexOf(args[0]) != -1) return client.reply(from, `Kata ${args[0]} sudah ada.`, id)
                             kataKasar.push(args[0])
@@ -1641,7 +1650,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
-                        if (args.length !== 1) return client.reply(from, `Untuk mengubah settingan group chat agar hanya admin saja yang bisa chat\n\nPenggunaan:\n${prefix}mutegrup on --aktifkan\n${prefix}mutegrup off --nonaktifkan`, id)
+                        if (args.length != 1) return client.reply(from, `Untuk mengubah settingan group chat agar hanya admin saja yang bisa chat\n\nPenggunaan:\n${prefix}mutegrup on --aktifkan\n${prefix}mutegrup off --nonaktifkan`, id)
                         if (args[0] == 'on') {
                             client.setGroupToAdminsOnly(groupId, true).then(() => client.sendText(from, 'Berhasil mengubah agar hanya admin yang dapat chat!'))
                         } else if (args[0] == 'off') {
@@ -1663,7 +1672,7 @@ const HandleMsg = async (client, message, browser) => {
                             await client.setGroupIcon(groupId, imageBase64)
                         } else if (args.length === 1) {
                             if (!isUrl(url)) { await client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
-                            client.setGroupIconByUrl(groupId, url).then((r) => (!r && r !== undefined)
+                            client.setGroupIconByUrl(groupId, url).then((r) => (!r && r != undefined)
                                 ? client.reply(from, 'Maaf, link yang kamu kirim tidak memuat gambar.', id)
                                 : client.reply(from, 'Berhasil mengubah profile group', id))
                         } else {
@@ -1675,7 +1684,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         //if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
-                        if (args.length !== 1) return client.reply(from, `Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`, id)
+                        if (args.length != 1) return client.reply(from, `Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`, id)
                         if (args[0] == 'on') {
                             welcome.push(chatId)
                             fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
@@ -1711,21 +1720,29 @@ const HandleMsg = async (client, message, browser) => {
                     case 'ban':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length == 0) return client.reply(from, `Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban add 628xx --untuk mengaktifkan\n${prefix}ban del 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`, id)
+                        const numId = args[1].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'') + '@c.us'
                         if (args[0] == 'add') {
-                            banned.push(args[1].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'') + '@c.us')
+                            let pos = banned.indexOf(numId)
+                            if (pos != -1) return client.reply(from, 'Target already banned!', id)
+                            banned.push(numId)
                             fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                             client.reply(from, 'Success banned target!', id)
                         } else
                             if (args[0] == 'del') {
-                                let xnxx = banned.indexOf(args[1].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'') + '@c.us')
-                                banned.splice(xnxx, 1)
+                                let pos = banned.indexOf(numId)
+                                if (pos === -1) return client.reply(from, 'Not found!', id)
+                                banned.splice(pos, 1)
                                 fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                                 client.reply(from, 'Success unbanned target!', id)
                             } else {
                                 for (let i = 0; i < mentionedJidList.length; i++) {
-                                    banned.push(mentionedJidList[i])
-                                    fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
-                                    client.reply(from, 'Success ban target!', id)
+                                    let pos = banned.indexOf(mentionedJidList[i])
+                                    if (pos != -1) client.reply(from, 'Target already banned!', id)
+                                        else {
+                                            banned.push(mentionedJidList[i])
+                                            fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
+                                            client.reply(from, `Success ban ${mentionedJidList[i].replace('@c.us', '')}!`, id)
+                                        }
                                 }
                             }
                         break
@@ -1881,13 +1898,13 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         // Kata kasar function
-        if (!isCmd && isGroupMsg && isNgegas && chat.type !== "image") {
+        if (!isCmd && isGroupMsg && isNgegas && chat.type != "image") {
             const _denda = _.sample([1000, 2000, 3000, 5000, 10000])
             const find = db.get('group').find({ id: groupId }).value()
             if (find && find.id === groupId) {
                 const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                 const isIn = inArray(pengirim, cekuser)
-                if (cekuser && isIn !== false) {
+                if (cekuser && isIn != false) {
                     if (isKasar) {
                         const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + _denda).write()
                         if (denda) {
