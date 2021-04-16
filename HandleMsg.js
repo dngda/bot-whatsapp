@@ -463,9 +463,8 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0 && !isQuotedChat) return client.reply(from, `Membuat bot menulis teks yang dikirim menjadi gambar\nPemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`, id)
                         const content = isQuotedChat ? quotedMsgObj.content.toString() : arg
                         const ress = await api.tulis(content)
-                        if (ress === undefined) return client.reply(from, resMsg.error.norm, id)
-                        client.reply(from, `Result versi HD: ${ress}`, id)
-                        await client.sendFileFromUrl(from, ress, '', '', id)
+                        if (ress.status !== 200) return client.reply(from, `Maaf terjadi error atau terdapat huruf simbol atau emoji yang tidak sesuai.`, id)
+                        await client.sendFileFromUrl(from, ress.image, '', `Result versi HD: ${ress.image}`, id)
                             .catch((e) => {
                                 console.log(e)
                                 client.reply(from, resMsg.error.norm, id)
