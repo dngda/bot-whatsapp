@@ -464,7 +464,7 @@ const HandleMsg = async (client, message, browser) => {
                         const content = isQuotedChat ? quotedMsgObj.content.toString() : arg
                         const ress = await api.tulis(content)
                         if (ress.status != 200) return client.reply(from, `Maaf terjadi error atau terdapat huruf simbol atau emoji yang tidak sesuai.`, id)
-                        await client.sendFileFromUrl(from, ress.result, '', ``, id)
+                        await client.sendImage(from, ress.result, '', ``, id)
                             .catch((e) => {
                                 console.log(e)
                                 client.reply(from, resMsg.error.norm, id)
