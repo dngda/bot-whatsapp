@@ -1432,16 +1432,20 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length === 0) {
                             let thelist = await list.getListName(from)
                             client.reply(from, `${(thelist === false || thelist === '') ? `${isGroupMsg ? `Group` : `Chat`} ini belum memiliki list.` : `List yang ada di ${isGroupMsg ? `group` : `chat`}: ${thelist.join(', ')}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan: *${prefix}list <nama list>*
-                                \nUntuk membuat list gunakan perintah:\n *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)
+                                \nUntuk membuat list gunakan perintah:\n *${prefix}createlist <nama list> | <Keterangan>* contoh: ${prefix}createlist tugas | Tugas PTI 17
                                 \nUntuk menghapus list beserta isinya gunakan perintah:\n *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
                                 \nUntuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2
                                 \nUntuk menghapus *isi* list gunakan perintah:\n *${prefix}delist <nama list> <nomor isi list>*\nBisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3
                                 `, id)
                         } else if (args.length > 0) {
-                            let listData = await list.getListData(from, args[0])
-                            if (listData === false) return client.reply(from, `List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`, id)
-                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
-                            listData.forEach((data, i) => {
+                            let res = await list.getListData(from, args[0])
+                            if (res === false) return client.reply(from, `List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`, id)
+                            let desc = ''
+                            if (res.desc !== 'Tidak ada'){
+                                desc = `\n║ ${res.desc}`
+                            }
+                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
+                            res.listData.forEach((data, i) => {
                                 respon += `║ ${i + 1}. ${data}\n`
                             })
                             respon += '║\n╚═〘 *SeroBot* 〙'
@@ -1450,8 +1454,9 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'createlist':
-                        if (args.length === 0) return client.reply(from, `Untuk membuat list gunakan perintah: *${prefix}createlist <nama list>* contoh: ${prefix}createlist tugas (mohon hanya gunakan 1 kata untuk nama list)`, id)
-                        const respon = await list.createList(from, args[0])
+                        if (args.length === 0) return client.reply(from, `Untuk membuat list gunakan perintah: *${prefix}createlist <nama list> | <Keterangan>* contoh: ${prefix}createlist tugas | Tugas PTI 17\n(mohon hanya gunakan 1 kata untuk nama list)`, id)
+                        const desc = arg.split('|')[1]?.trim() ?? 'Tidak ada'
+                        const respon = await list.createList(from, args[0], desc)
                         await client.reply(from, (respon === false) ? `List ${args[0]} sudah ada, gunakan nama lain.` : `List ${args[0]} berhasil dibuat.`, id)
                         break
 
@@ -1481,9 +1486,13 @@ const HandleMsg = async (client, message, browser) => {
                             let newlist = arg.substr(arg.indexOf(' ') + 1).split('|').map((item) => {
                                 return item.trim()
                             })
-                            const dataq = await list.addListData(from, args[0], newlist)
-                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
-                            dataq.forEach((data, i) => {
+                            let res = await list.addListData(from, args[0], newlist)
+                            let desc = ''
+                            if (res.desc !== 'Tidak ada'){
+                                desc = `\n║ ${res.desc}`
+                            }
+                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
+                            res.listData.forEach((data, i) => {
                                 respon += `║ ${i + 1}. ${data}\n`
                             })
                             respon += '║\n╚═〘 *SeroBot* 〙'
@@ -1504,9 +1513,13 @@ const HandleMsg = async (client, message, browser) => {
                             await number.reverse().forEach(async (num) => {
                                 await list.removeListData(from, args[0], num)
                             })
-                            const data1 = await list.removeListData(from, args[0], 9999)
-                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n║\n`
-                            data1.forEach((data, i) => {
+                            let res = await list.removeListData(from, args[0], 9999)
+                            let desc = ''
+                            if (res.desc !== 'Tidak ada'){
+                                desc = `\n║ ${res.desc}`
+                            }
+                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
+                            res.listData.forEach((data, i) => {
                                 respon += `║ ${i + 1}. ${data}\n`
                             })
                             respon += '║\n╚═〘 *SeroBot* 〙'
