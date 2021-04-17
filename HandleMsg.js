@@ -1442,7 +1442,7 @@ const HandleMsg = async (client, message, browser) => {
                             if (res === false) return client.reply(from, `List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`, id)
                             let desc = ''
                             if (res.desc !== 'Tidak ada'){
-                                desc = `\n║ ${res.desc}`
+                                desc = `║ _${res.desc}_\n`
                             }
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
                             res.listData.forEach((data, i) => {
@@ -1489,7 +1489,7 @@ const HandleMsg = async (client, message, browser) => {
                             let res = await list.addListData(from, args[0], newlist)
                             let desc = ''
                             if (res.desc !== 'Tidak ada'){
-                                desc = `\n║ ${res.desc}`
+                                desc = `║ _${res.desc}_\n`
                             }
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
                             res.listData.forEach((data, i) => {
@@ -1516,7 +1516,7 @@ const HandleMsg = async (client, message, browser) => {
                             let res = await list.removeListData(from, args[0], 9999)
                             let desc = ''
                             if (res.desc !== 'Tidak ada'){
-                                desc = `\n║ ${res.desc}`
+                                desc = `║ _${res.desc}_\n`
                             }
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
                             res.listData.forEach((data, i) => {
