@@ -1766,8 +1766,8 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua chat ketik:\n${prefix}bc [isi chat]`)
                         const chatz = await client.getAllChatIds()
                         for (let idk of chatz) {
-                            setTimeout(async() => {
-                                await client.sendText(idk, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)  
+                            setTimeout(() => {
+                                client.sendText(idk, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)
                             }, 1000)
                         }
                         client.reply(from, `Broadcast Success! Total: ${chatz.length} chats`, id)
@@ -1778,8 +1778,8 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua group ketik:\n${prefix}bcgroup [isi chat]`)
                         const groupz = await client.getAllGroups()
                         for (let idk of groupz) {
-                            setTimeout(async() => {
-                                await client.sendText(idk, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)  
+                            setTimeout(() => {
+                                client.sendText(idk, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)
                             }, 1000)
                         }
                         client.reply(from, `Broadcast Success! Total: ${groupz.length} groups`, id)
@@ -1789,10 +1789,10 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allGroupz = await client.getAllGroups()
                         for (let gclist of allGroupz) {
-                            setTimeout(async() => {
-                                await client.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
-                                await client.leaveGroup(gclist.contact.id)
-                                await client.deleteChat(gclist.contact.id)
+                            setTimeout(() => {
+                                client.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
+                                client.leaveGroup(gclist.contact.id)
+                                client.deleteChat(gclist.contact.id)
                             }, 1000)
                         }
                         client.reply(from, `Success leave all group! Total: ${allGroupz.length}`, id)
@@ -1802,9 +1802,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allGroupzs = await client.getAllGroups()
                         for (let gc of allGroupzs) {
-                            setTimeout(async() => {
+                            setTimeout(() => {
                                 if (gc.isReadOnly || !gc.canSend) {
-                                    await client.deleteChat(gc.id)
+                                    client.deleteChat(gc.id)
                                 }
                             }, 1000)
                         }
@@ -1815,8 +1815,8 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allChatx = await client.getAllChats()
                         for (let dchat of allChatx) {
-                            setTimeout(async() => {
-                                await client.deleteChat(dchat.id)
+                            setTimeout(() => {
+                                client.deleteChat(dchat.id)
                             }, 1000)
                         }
                         client.reply(from, 'Success clear all chat!', id)
@@ -1826,8 +1826,8 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allChat1 = await client.getAllChats()
                         for (let dchat of allChat1) {
-                            setTimeout(async() => {
-                                if (!dchat.isGroup) await client.deleteChat(dchat.id)
+                            setTimeout(() => {
+                                if (!dchat.isGroup) client.deleteChat(dchat.id)
                             }, 1000)
                         }
                         client.reply(from, 'Success clear all private chat!', id)
@@ -1836,11 +1836,11 @@ const HandleMsg = async (client, message, browser) => {
                     case 'refresh':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         await client.reply(from, `Refreshing web whatsapp page!`, id)
-                        setTimeout(async () => {
+                        setTimeout(() => {
                             try{
-                                await client.refresh().then(async() => {
-                                    await console.log(`Bot refreshed!`)
-                                    await client.reply(from, `Bot refreshed!`, id)
+                                client.refresh().then(async() => {
+                                    console.log(`Bot refreshed!`)
+                                    client.reply(from, `Bot refreshed!`, id)
                                 })
                             }catch (err) {
                                 console.log(color('[ERROR]', 'red'), err)
