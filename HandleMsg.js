@@ -1912,13 +1912,13 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         // Kata kasar function
-        if (!isCmd && isGroupMsg && isNgegas && chat.type != "image") {
+        if (!isCmd && isGroupMsg && isNgegas && chat.type !== "image") {
             const _denda = _.sample([1000, 2000, 3000, 5000, 10000])
             const find = db.get('group').find({ id: groupId }).value()
             if (find && find.id === groupId) {
                 const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                 const isIn = inArray(pengirim, cekuser)
-                if (cekuser && isIn != false) {
+                if (cekuser && isIn !== false) {
                     if (isKasar) {
                         const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + _denda).write()
                         if (denda) {
