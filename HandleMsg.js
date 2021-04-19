@@ -211,7 +211,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'speed':
                     case 'ping':
                     case 'p':
-                        await client.sendText(from, `Pong!!!\nSpeed: ${processTime(t, moment())} _Seconds_`)
+                        await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
                         break
                     case 'tnc':
                         await client.sendText(from, menuId.textTnC())
@@ -271,7 +271,7 @@ const HandleMsg = async (client, message, browser) => {
                         const groups = await client.getAllGroups()
                         const time = process.uptime()
                         const uptime = (time + "").toDHms()
-                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\nSpeed: ${processTime(t, moment())} _Seconds_\nUptime: _${uptime}_`)
+                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
                         break
                     }
 
