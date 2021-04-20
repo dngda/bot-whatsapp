@@ -1591,7 +1591,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!quotedMsg) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
                         if (!quotedMsgObj.fromMe) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
                         client.simulateTyping(from, false)
-                        await client.deleteMessage(from, quotedMsgObj.id, false).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        await client.deleteMessage(from, quotedMsg.id, false).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
 
                     case 'tagall':
