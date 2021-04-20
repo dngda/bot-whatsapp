@@ -956,12 +956,12 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendFileFromUrl(from, img, '', '', id)
                                     .catch(e => {
                                         console.log(`fdci err : ${e}`)
-                                        client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /pinterest2', id)
+                                        client.reply(from, resMsg.error.norm+'\nCoba gunakan /pin2 atau /pinterest2', id)
                                     })
                             })
                             .catch(e => {
                                 console.log(`fdci err : ${e}`)
-                                return client.reply(from, resMsg.error.norm+'\n Coba gunakan /pin2 atau /pinterest2', id)
+                                return client.reply(from, resMsg.error.norm+'\nCoba gunakan /pin2 atau /pinterest2', id)
                             })
                         }
                         break
@@ -1031,7 +1031,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (isGroupMsg) {
                             client.reply(from, 'Untuk Fitur Nekopoi Silahkan Lakukan di Private Message', id)
                         } else {
-                            var data = await axios.get('https://api.arugaz.my.id/api/anime/nekopoi/random')
+                            var data = await axios.get('https://arugaz.herokuapp.com/api/anime/nekopoi/random')
                             var x = Math.floor((Math.random() * 7) + 0);
                             var poi = data.data[x]
                             console.log(poi)
