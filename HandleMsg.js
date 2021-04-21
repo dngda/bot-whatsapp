@@ -1094,6 +1094,15 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         break
 
+                    case 'lirik':
+                    case 'lyric': {
+                        if (args.length === 0) return client.reply(from, `Untuk mencari lirik dengan nama lagu atau potongan lirik\nketik: ${prefix}lirik <qeury>\nContoh: ${prefix}lirik lathi`, id)
+                        let res = await api.lirik(arg).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        await client.reply(from, res, id)
+                        break
+                    }
+
+
                     //Hiburan
                     case 'tod':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
