@@ -1463,14 +1463,15 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         break
 
-                    case 'createlist':
+                    case 'createlist': {
                         if (args.length === 0) return client.reply(from, `Untuk membuat list gunakan perintah: *${prefix}createlist <nama list> | <Keterangan>* contoh: ${prefix}createlist tugas | Tugas PTI 17\n(mohon hanya gunakan 1 kata untuk nama list)`, id)
                         const desc = arg.split('|')[1]?.trim() ?? 'Tidak ada'
                         const respon = await list.createList(from, args[0], desc)
                         await client.reply(from, (respon === false) ? `List ${args[0]} sudah ada, gunakan nama lain.` : `List ${args[0]} berhasil dibuat.`, id)
                         break
+                    }
 
-                    case 'deletelist':
+                    case 'deletelist': {
                         if (args.length === 0) return client.reply(from, `Untuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas`, id)
                         const thelist = await list.getListName(from)
                         if (thelist.includes(args[0])) {
@@ -1479,14 +1480,16 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, `List ${args[0]} tidak ada.`, id)
                         }
                         break
+                    }
 
-                    case 'confirmdeletelist':
+                    case 'confirmdeletelist': {
                         if (args.length === 0) return null
                         const respon1 = await list.deleteList(from, args[0])
                         await client.reply(from, (respon1 === false) ? `List ${args[0]} tidak ada.` : `List ${args[0]} berhasil dihapus.`, id)
                         break
+                    }
 
-                    case 'addtolist':
+                    case 'addtolist': {
                         if (args.length === 0) return client.reply(from, `Untuk mengisi list gunakan perintah:\n *${prefix}addtolist <nama list> <isi>* Bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2`, id)
                         if (args.length === 1) return client.reply(from, `Format salah, nama dan isinya apa woy`, id)
                         const thelist1 = await list.getListName(from)
@@ -1509,21 +1512,18 @@ const HandleMsg = async (client, message, browser) => {
                             await client.reply(from, respon, id)
                         }
                         break
+                    }
 
-                    case 'delist':
-                        if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>*\nBisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3`, id)
-                        if (args.length === 1) return client.reply(from, `Format salah, nama list dan nomor berapa woy`, id)
-                        const thelist2 = await list.getListName(from)
-                        if (!thelist2.includes(args[0])) {
+                    case 'editlist': {
+                        if (args.length === 0) return client.reply(from, `Untuk mengedit list gunakan perintah:\n *${prefix}editlist <nama list> <nomor> <isi>* \ncontoh: ${prefix}editlist tugas 1 Matematika Bab 2 deadline 2021`, id)
+                        if (args.length < 3) return client.reply(from, `Format salah. pastikan ada namalist, index, sama isinya`, id)
+                        const thelist1 = await list.getListName(from)
+                        if (!thelist1.includes(args[0])) {
                             return client.reply(from, `List ${args[0]} tidak ditemukan.`, id)
-                        }else {
-                            let number = arg.substr(arg.indexOf(' ') + 1).split(',').map((item) => {
-                                return item.trim()-1
-                            })
-                            await number.reverse().forEach(async (num) => {
-                                await list.removeListData(from, args[0], num)
-                            })
-                            let res = await list.removeListData(from, args[0], 9999)
+                        } else {
+                            let n = arg.substr(arg.indexOf(' ') + 1)
+                            let newlist = n.substr(n.indexOf(' ') + 1)
+                            let res = await list.editListData(from, args[0], args[1]-1, newlist)
                             let desc = ''
                             if (res.desc !== 'Tidak ada'){
                                 desc = `║ _${res.desc}_\n`
@@ -1536,6 +1536,35 @@ const HandleMsg = async (client, message, browser) => {
                             await client.reply(from, respon, id)
                         }
                         break
+                    }
+
+                    case 'delist': {
+                        if (args.length === 0) return client.reply(from, `Untuk menghapus *isi* list gunakan perintah: *${prefix}delist <nama list> <nomor isi list>*\nBisa lebih dari 1 menggunakan pemisah comma (,) contoh: ${prefix}delist tugas 1, 2, 3`, id)
+                        if (args.length === 1) return client.reply(from, `Format salah, nama list dan nomor berapa woy`, id)
+                        const thelist2 = await list.getListName(from)
+                        if (!thelist2.includes(args[0])) {
+                            return client.reply(from, `List ${args[0]} tidak ditemukan.`, id)
+                        }else {
+                            let number = arg.substr(arg.indexOf(' ') + 1).split(',').map((item) => {
+                                return item.trim()-1
+                            })
+                            await number.reverse().forEach(async (num) => {
+                                await list.removeListData(from, args[0], num)
+                            })
+                            let res = await list.getListData(from, args[0])
+                            let desc = ''
+                            if (res.desc !== 'Tidak ada'){
+                                desc = `║ _${res.desc}_\n`
+                            }
+                            let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
+                            res.listData.forEach((data, i) => {
+                                respon += `║ ${i + 1}. ${data}\n`
+                            })
+                            respon += '║\n╚═〘 *SeroBot* 〙'
+                            await client.reply(from, respon, id)
+                        }
+                        break
+                    }
 
                     // Group Commands (group admin only)
                     case 'add':
