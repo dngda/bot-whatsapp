@@ -1523,7 +1523,7 @@ const HandleMsg = async (client, message, browser) => {
                         } else {
                             let n = arg.substr(arg.indexOf(' ') + 1)
                             let newlist = n.substr(n.indexOf(' ') + 1)
-                            let res = await list.editListData(from, args[0], args[1]-1, newlist)
+                            let res = await list.editListData(from, args[0], newlist, args[1]-1)
                             let desc = ''
                             if (res.desc !== 'Tidak ada'){
                                 desc = `║ _${res.desc}_\n`
