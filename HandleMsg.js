@@ -300,7 +300,7 @@ const HandleMsg = async (client, message, browser) => {
                         if ((isMedia || isQuotedImage) || (isQuotedDocs && quotedMsg.filename.includes('.png')) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle')) {
                             client.reply(from, resMsg.wait, id)
                             try {
-                                const encryptMedia = isQuotedImage ? quotedMsg : message
+                                const encryptMedia = (isQuotedImage || isQuotedDocs) ? quotedMsg : message
                                 const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
                                 const mediaData = await decryptMedia(encryptMedia)
                                     .catch(err => {
@@ -379,8 +379,6 @@ const HandleMsg = async (client, message, browser) => {
                                 .catch(() => {
                                     client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
                                 })
-                        } else if (isQuotedDocs && quotedMsg.filename.includes(/\.png/g)){
-
                         } else {
                             await client.reply(from, `Tidak ada gambar/video!\nUntuk menggunakan ${prefix}sticker, kirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*\nTanpa simbol <>\n\nUntuk membuat sticker animasi. Kirim video atau reply/quote video dengan caption *${prefix}sticker* max 8 secs. Selebihnya akan dipotong otomatis`, id)
                         }
