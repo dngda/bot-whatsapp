@@ -825,7 +825,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'tiktokmp3': {
-                        if (args.length === 0) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktok <url>\nTanpa simbol <>`, id)
+                        if (args.length === 0) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
                         if (!isUrl(arg)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
                         const result = await tiktok.ssstik(arg).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
