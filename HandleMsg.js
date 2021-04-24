@@ -816,19 +816,21 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'tiktok': {
-                        if (args.length === 0) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>\nTanpa simbol <>`, id)
-                        if (!isUrl(arg)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+                        if (args.length === 0 || !isQuotedChat) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>\nTanpa simbol <>`, id)
+                        let urls = isQuotedChat ? quotedMsg.content : arg
+                        if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
-                        let result = await tiktok.ssstik(arg).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         await client.sendFileFromUrl(from, result.videonowm2, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
 
                     case 'tiktokmp3': {
-                        if (args.length === 0) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
-                        if (!isUrl(arg)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+                        if (args.length === 0 || !isQuotedChat) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
+                        let urls = isQuotedChat ? quotedMsg.content : arg
+                        if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
-                        let result = await tiktok.ssstik(arg).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         await client.sendFileFromUrl(from, result.music, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
