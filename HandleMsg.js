@@ -292,15 +292,15 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     // Sticker Creator
+                    case 'stickergif':
+                    case 'stikergif':
                     case 'sticker':
                     case 'stiker':
                     case 's':
-                        if (type === 'video' || isQuotedVideo) return client.reply(from, `Media yang dikirimkan harus berupa gambar, untuk video gunakan ${prefix}stickergif.`, id)
-                        if ((isMedia || isQuotedImage) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle')) {
+                        if ((isMedia || isQuotedImage) || (isQuotedDocs && quotedMsg.filename.includes(/\.png/g)) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle')) {
                             client.reply(from, resMsg.wait, id)
                             try {
                                 const encryptMedia = isQuotedImage ? quotedMsg : message
-                                const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
                                 const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
                                 const mediaData = await decryptMedia(encryptMedia)
                                     .catch(err => {
@@ -367,30 +367,22 @@ const HandleMsg = async (client, message, browser) => {
                                 console.log(`Sticker url err: ${e}`)
                                 client.sendText(from, resMsg.error.norm)
                             }
-                        } else {
-                            await client.reply(from, `Tidak ada gambar!\nUntuk menggunakan ${prefix}sticker, kirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>\nTanpa simbol <>*`, id)
-                        }
-                        break
+                        } else if ((isMedia && mimetype === 'video/mp4') || isQuotedVideo){
+                            var encryptedMedia = isQuotedVideo ? quotedMsg : message
+                            var mediaData = await decryptMedia(encryptedMedia)
+                            client.reply(from, resMsg.wait, id)
+                            await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
+                                .then(() => { 
+                                    client.sendText(from, 'Here\'s your sticker')
+                                    console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
+                                })
+                                .catch(() => {
+                                    client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
+                                })
+                        } else if (isQuotedDocs && quotedMsg.filename.includes(/\.png/g)){
 
-                    case 'stickergif':
-                    case 'stikergif':
-                    case 'sg':
-                        if (isMedia || isQuotedVideo) {
-                            if (type === 'image' || isQuotedImage) return client.reply(from, `Media yang dikirimkan harus berupa video/gif, untuk gambar gunakan ${prefix}sticker.`, id)
-                            if (mimetype === 'video/mp4' && message.duration <= 99 || (quotedMsg && quotedMsg.mimetype === 'video/mp4') && quotedMsg.duration <= 99) {
-                                var encryptedMedia = isQuotedVideo ? quotedMsg : message
-                                var mediaData = await decryptMedia(encryptedMedia)
-                                client.reply(from, resMsg.wait, id)
-                                await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
-                                    .then(() => console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`))
-                                    .catch(() => {
-                                        client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
-                                    })
-                            } else {
-                                client.reply(from, `Kirim video dengan caption *${prefix}stickergif* max 8 secs!`, id)
-                            }
                         } else {
-                            client.reply(from, `Membuat sticker animasi. Kirim video atau reply/quote video dengan caption *${prefix}stickergif* max 8 secs. Selebihnya akan dipotong otomatis`, id)
+                            await client.reply(from, `Tidak ada gambar/video!\nUntuk menggunakan ${prefix}sticker, kirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*\nTanpa simbol <>\n\nUntuk membuat sticker animasi. Kirim video atau reply/quote video dengan caption *${prefix}sticker* max 8 secs. Selebihnya akan dipotong otomatis`, id)
                         }
                         break
 
