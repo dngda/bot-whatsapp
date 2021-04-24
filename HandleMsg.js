@@ -821,7 +821,8 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
                         let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        await client.sendFileFromUrl(from, result.videonowm2, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        let _id = isQuoted ? quotedMsg.id : id
+                        await client.sendFileFromUrl(from, result.videonowm2, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
 
@@ -831,6 +832,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
                         let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        let _id = isQuoted ? quotedMsg.id : id
                         await client.sendFileFromUrl(from, result.music, '', '', id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
