@@ -380,7 +380,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
                                 })
                         } else {
-                            await client.reply(from, `Tidak ada gambar/video!\nUntuk menggunakan ${prefix}sticker, kirim gambar dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*\nTanpa simbol <>\n\nUntuk membuat sticker animasi. Kirim video atau reply/quote video dengan caption *${prefix}sticker* max 8 secs. Selebihnya akan dipotong otomatis`, id)
+                            await client.reply(from, `Tidak ada gambar/video!\nUntuk menggunakan ${prefix}sticker, kirim gambar/reply gambar atau file png dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*\nTanpa simbol <>\nUntuk membuat sticker animasi. Kirim video atau reply/quote video dengan caption *${prefix}sticker* max 8 secs. Selebihnya akan dipotong otomatis`, id)
                         }
                         break
 
