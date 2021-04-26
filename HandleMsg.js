@@ -194,20 +194,26 @@ const HandleMsg = async (client, message, browser) => {
         client.sendSeen(chatId)
         
         // respon to msg
+        const textBody = message?.body.toLowerCase()
         switch (true) {
-            case /^p$|assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum|^punten/.test(message?.body.toLowerCase()): {
+            case /^p$/.test(textbody): {
+                await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
+                break
+            }
+            case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(textBody): {
                 await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
-
+            case /hi|hy|halo|hai|hei|hello/.test(textBody): {
+                await client.reply(from, `Halo ${pushname} 👋`, id)
+                break
+            }
+            case /ping/.test(textbody): {
+                await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
+                break
+            }
             default:
             break
-        }
-        // if (['p', 'assalamualaikum', 'assalamu\'alaikum', 'asalamualaikum', 'assalamu\'alaykum', 'punten'].includes(message?.body.toLowerCase())) {
-        //   await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
-        // }
-        if (['hi', 'hy', 'halo', 'hai'].includes(message?.body.toLowerCase())) {
-          await client.reply(from, `Halo ${pushname} 👋`, id)
         }
         // Jika bot dimention maka akan merespon pesan
         if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
@@ -217,11 +223,6 @@ const HandleMsg = async (client, message, browser) => {
             client.simulateTyping(chat.id, true).then(async () => {
                 switch (command) {
                     // Menu and TnC
-                    case 'speed':
-                    case 'ping':
-                    case 'p':
-                        await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
-                        break
                     case 'tnc':
                         await client.sendText(from, menuId.textTnC())
                         break
