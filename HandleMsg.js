@@ -208,7 +208,7 @@ const HandleMsg = async (client, message, browser) => {
                 return await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
-            case /^(hi|hy|halo|hai|hei|hello)$/.test(lowerCaseBody): {
+            case /\b(hi|hy|halo|hai|hei|hello)\b/.test(lowerCaseBody): {
                 return await client.reply(from, `Halo ${pushname} 👋`, id)
                 break
             }
@@ -216,7 +216,7 @@ const HandleMsg = async (client, message, browser) => {
                 return await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
                 break
             }
-            case new RegExp(sfx.join("|")).test(lowerCaseBody): {
+            case new RegExp(`\\b(${sfx.join("|")})\\b`).test(lowerCaseBody): {
                 const theSFX = lowerCaseBody.match(new RegExp(sfx.join("|")))
                 path = `./random/sfx/${theSFX}.mp3`
                 _id = (quotedMsg != null) ? quotedMsgObj.id : id
