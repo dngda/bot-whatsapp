@@ -194,7 +194,7 @@ const HandleMsg = async (client, message, browser) => {
         client.sendSeen(chatId)
         
         // respon to msg contain this case
-        const textBody = message?.body.toLowerCase()
+        let textBody = message.body?.toLowerCase()
         switch (true) {
             case /^p$/.test(textbody): {
                 await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
@@ -213,7 +213,6 @@ const HandleMsg = async (client, message, browser) => {
                 break
             }
             default:
-            break
         }
         // Jika bot dimention maka akan merespon pesan
         if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
