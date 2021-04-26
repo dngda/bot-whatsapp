@@ -197,19 +197,19 @@ const HandleMsg = async (client, message, browser) => {
         // respon to msg contain this case
         switch (true) {
             case /^p$/.test(lowerCaseBody): {
-                await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
+                return await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
                 break
             }
             case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(lowerCaseBody): {
-                await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
+                return await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
             case /hi|hy|halo|hai|hei|hello/.test(lowerCaseBody): {
-                await client.reply(from, `Halo ${pushname} 👋`, id)
+                return await client.reply(from, `Halo ${pushname} 👋`, id)
                 break
             }
             case /ping/.test(lowerCaseBody): {
-                await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
+                return await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
                 break
             }
             default:
