@@ -194,21 +194,20 @@ const HandleMsg = async (client, message, browser) => {
         client.sendSeen(chatId)
         
         // respon to msg contain this case
-        let textBody = message.body?.toLowerCase()
         switch (true) {
-            case /^p$/.test(textbody): {
+            case /^p$/.test(body): {
                 await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
                 break
             }
-            case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(textBody): {
+            case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(body): {
                 await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
-            case /hi|hy|halo|hai|hei|hello/.test(textBody): {
+            case /hi|hy|halo|hai|hei|hello/.test(body): {
                 await client.reply(from, `Halo ${pushname} 👋`, id)
                 break
             }
-            case /ping/.test(textbody): {
+            case /ping/.test(body): {
                 await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
                 break
             }
