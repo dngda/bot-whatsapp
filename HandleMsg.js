@@ -193,7 +193,7 @@ const HandleMsg = async (client, message, browser) => {
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
         
-        // respon to msg
+        // respon to msg contain this case
         const textBody = message?.body.toLowerCase()
         switch (true) {
             case /^p$/.test(textbody): {
