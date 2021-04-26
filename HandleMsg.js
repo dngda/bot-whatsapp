@@ -144,6 +144,7 @@ const HandleMsg = async (client, message, browser) => {
         // Bot Prefix
         regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-|^\\)(?=\w+)/g
         body = (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) ? body.replace(regex, prefix) : ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
+        const lowerCaseBody = body.toLowerCase()
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const args = body.trim().replace(prefix, '').split(/\s/)
@@ -195,19 +196,19 @@ const HandleMsg = async (client, message, browser) => {
         
         // respon to msg contain this case
         switch (true) {
-            case /^p$/.test(body): {
+            case /^p$/.test(lowerCaseBody): {
                 await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
                 break
             }
-            case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(body): {
+            case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(lowerCaseBody): {
                 await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
-            case /hi|hy|halo|hai|hei|hello/.test(body): {
+            case /hi|hy|halo|hai|hei|hello/.test(lowerCaseBody): {
                 await client.reply(from, `Halo ${pushname} 👋`, id)
                 break
             }
-            case /ping/.test(body): {
+            case /ping/.test(lowerCaseBody): {
                 await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
                 break
             }
