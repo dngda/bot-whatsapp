@@ -163,6 +163,10 @@ const HandleMsg = async (client, message, browser) => {
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
 
+        const sfx = fs.readdirSync('./random/sfx/').map(item => {
+            return item.replace('.mp3', '')
+        })
+
         // Filter Banned People
         if (isBanned && !isGroupMsg && isCmd) {
             return client.sendText(from, `Maaf anda telah dibanned oleh bot karena melanggar tnc`).then(() => {
@@ -193,7 +197,7 @@ const HandleMsg = async (client, message, browser) => {
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
-        
+
         // respon to msg contain this case
         switch (true) {
             case /^p$/.test(lowerCaseBody): {
@@ -210,6 +214,13 @@ const HandleMsg = async (client, message, browser) => {
             }
             case /ping/.test(lowerCaseBody): {
                 return await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
+                break
+            }
+            case new RegExp(sfx.join("|")).test(lowerCaseBody): {
+                const theSFX = lowerCaseBody.match(new RegExp(sfx.join("|")))
+                path = `./random/sfx/${theSFX}.mp3`
+                _id = (quotedMsg != null) ? quotedMsgObj.id : id
+                await client.sendAudio(from, path, _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                 break
             }
             default:
@@ -1420,9 +1431,6 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'sfx': {
-                        let sfx = fs.readdirSync('./random/sfx/').map(item => {
-                                        return item.replace('.mp3', '')
-                                    })
                         let listMsg = ''
                         sfx.forEach(n => {
                             listMsg = listMsg + '\n -> ' + n
