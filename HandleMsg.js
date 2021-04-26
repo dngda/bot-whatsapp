@@ -204,7 +204,7 @@ const HandleMsg = async (client, message, browser) => {
                 return await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
-            case /hi|hy|halo|hai|hei|hello/.test(lowerCaseBody): {
+            case /^(hi|hy|halo|hai|hei|hello)$/.test(lowerCaseBody): {
                 return await client.reply(from, `Halo ${pushname} 👋`, id)
                 break
             }
