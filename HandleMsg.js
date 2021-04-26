@@ -194,10 +194,19 @@ const HandleMsg = async (client, message, browser) => {
         client.sendSeen(chatId)
         
         // respon to msg
-        if (['p', 'assalamualaikum', 'assalamu\'alaikum', 'asalamualaikum', 'assalamu\'alaykum', 'punten'].includes(message.body && message.body.toLowerCase())) {
-          await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
+        switch (true) {
+            case /^p$|assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum|^punten/.test(body.toLowerCase()): {
+                await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
+                break
+            }
+
+            default:
+            break
         }
-        if (['hi', 'hy', 'halo', 'hai'].includes(message.body && message.body.toLowerCase())) {
+        // if (['p', 'assalamualaikum', 'assalamu\'alaikum', 'asalamualaikum', 'assalamu\'alaykum', 'punten'].includes(message?.body.toLowerCase())) {
+        //   await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
+        // }
+        if (['hi', 'hy', 'halo', 'hai'].includes(message?.body.toLowerCase())) {
           await client.reply(from, `Halo ${pushname} 👋`, id)
         }
         // Jika bot dimention maka akan merespon pesan
