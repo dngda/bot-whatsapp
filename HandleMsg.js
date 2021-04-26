@@ -147,7 +147,7 @@ const HandleMsg = async (client, message, browser) => {
         const lowerCaseBody = body.toLowerCase()
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
-        const args = body.trim().replace(prefix, '').split(/\s/)
+        const args = body.trim().split(/\s/).slice(1)
         const url = args.length !== 0 ? args[0] : ''
 
         // [IDENTIFY]
