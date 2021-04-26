@@ -143,11 +143,11 @@ const HandleMsg = async (client, message, browser) => {
 
         // Bot Prefix
         regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-|^\\)(?=\w+)/g
-        body = (type === 'chat' && body.replace(regex, '/').startsWith(prefix)) ? body.replace(regex, '/') : ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, '/').startsWith(prefix)) ? caption.replace(regex, '/') : ''
-        const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
+        body = (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) ? body.replace(regex, prefix) : ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
+        const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
-        const args = body.trim().split(/ +/).slice(1)
-        const url = args.length != 0 ? args[0] : ''
+        const args = body.trim().replace(prefix, '').split(/\s/)
+        const url = args.length !== 0 ? args[0] : ''
 
         // [IDENTIFY]
         isKasar = false
@@ -195,7 +195,7 @@ const HandleMsg = async (client, message, browser) => {
         
         // respon to msg
         switch (true) {
-            case /^p$|assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum|^punten/.test(body.toLowerCase()): {
+            case /^p$|assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum|^punten/.test(message?.body.toLowerCase()): {
                 await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
