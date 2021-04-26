@@ -144,7 +144,7 @@ const HandleMsg = async (client, message, browser) => {
         // Bot Prefix
         regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-|^\\)(?=\w+)/g
         body = (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) ? body.replace(regex, prefix) : ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
-        const lowerCaseBody = body.toLowerCase()
+        const lowerCaseBody = message.body?.toLowerCase() ?? caption?.toLowerCase() ?? ''
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const args = body.trim().split(/\s/).slice(1)
