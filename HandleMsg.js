@@ -213,7 +213,7 @@ const HandleMsg = async (client, message, browser) => {
                 return await client.reply(from, `Halo ${pushname} 👋`, id)
                 break
             }
-            case /ping/.test(lowerCaseBody): {
+            case /\bping\b/.test(lowerCaseBody): {
                 return await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
                 break
             }
@@ -1436,7 +1436,7 @@ const HandleMsg = async (client, message, browser) => {
                         sfx.forEach(n => {
                             listMsg = listMsg + '\n -> ' + n
                         })
-                        if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: ${prefix}sfx (nama sfx) ${listMsg}`, id)
+                        if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: caranya langung ketik nama sfx ${listMsg}`, id)
                         if (sfx.includes(arg)) {
                             path = `./random/sfx/${arg}.mp3`
                             _id = (quotedMsg != null) ? quotedMsgObj.id : id
