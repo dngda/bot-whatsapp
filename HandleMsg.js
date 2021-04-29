@@ -147,6 +147,7 @@ const HandleMsg = async (client, message, browser) => {
         const lowerCaseBody = message.body?.toLowerCase() ?? caption?.toLowerCase() ?? ''
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
+        const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
         const args = body.trim().split(/\s/).slice(1)
         const url = args.length !== 0 ? args[0] : ''
 
@@ -1230,8 +1231,8 @@ const HandleMsg = async (client, message, browser) => {
                     case 'say':
                         if (!isQuotedChat && args.length != 0) {
                             try {
-                                if (arg === '') return client.reply(from, 'Apa teksnya syg..', id)
-                                var gtts = new gTTS(arg, args[0])
+                                if (arg1 === '') return client.reply(from, 'Apa teksnya syg..', id)
+                                var gtts = new gTTS(arg1, args[0])
                                 gtts.save('./media/tts.mp3', function () {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                         .catch(err => {
