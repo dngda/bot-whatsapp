@@ -75,36 +75,6 @@ let {
     prefix
 } = setting
 
-//default msg response
-const resMsg = {
-    wait: _.sample([
-        'Sedang diproses! Silahkan tunggu sebentar...',
-        'Copy that, processing!',
-        'Gotcha, please wait!',
-        'Copy that bro, please wait!',
-        'Okey, tunggu sebentar...',
-        'Baiklah, sabar ya!'
-    ]),
-    error: {
-        norm: 'Maaf, Ada yang error! Coba lagi beberapa menit kemudian.',
-        admin: 'Perintah ini hanya untuk admin group!',
-        owner: 'Perintah ini hanya untuk owner bot!',
-        group: 'Maaf, perintah ini hanya dapat dipakai didalam group!',
-        botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
-    },
-    success: {
-        join: 'Berhasil join grup via link!'
-    },
-    badw: _.sample([
-        'Astaghfirullah...',
-        'Jaga ketikanmu sahabat!',
-        'Yo rasah nggo misuh cuk!',
-        'Istighfar dulu sodaraku',
-        'Hadehh...',
-        'Ada masalah apasih?'
-    ])
-}
-
 function formatin(duit) {
     let reverse = duit.toString().split('').reverse().join('');
     let ribuan = reverse.match(/\d{1,3}/g);
@@ -124,6 +94,36 @@ const reCacheModule = (funcs, _data) => {
 }
 
 const HandleMsg = async (client, message, browser) => {
+    //default msg response
+    const resMsg = {
+        wait: _.sample([
+            'Sedang diproses! Silahkan tunggu sebentar...',
+            'Copy that, processing!',
+            'Gotcha, please wait!',
+            'Copy that bro, please wait!',
+            'Okey, tunggu sebentar...',
+            'Baiklah, sabar ya!'
+        ]),
+        error: {
+            norm: 'Maaf, Ada yang error! Coba lagi beberapa menit kemudian.',
+            admin: 'Perintah ini hanya untuk admin group!',
+            owner: 'Perintah ini hanya untuk owner bot!',
+            group: 'Maaf, perintah ini hanya dapat dipakai didalam group!',
+            botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
+        },
+        success: {
+            join: 'Berhasil join grup via link!'
+        },
+        badw: _.sample([
+            'Astaghfirullah...',
+            'Jaga ketikanmu sahabat!',
+            'Yo rasah nggo misuh cuk!',
+            'Istighfar dulu sodaraku',
+            'Hadehh...',
+            'Ada masalah apasih?'
+        ])
+    }
+
     try {
         const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
