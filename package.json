@@ -17,7 +17,7 @@
   "homepage": "https://github.com/dngda/bot-whatsapp",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.11.1",
+    "@open-wa/wa-automate": "^3.11.4",
     "app-root-path": "^3.0.0",
     "axios": "^0.21.0",
     "bufferutil": "^4.0.3",
