@@ -766,6 +766,7 @@ const HandleMsg = async (client, message, browser) => {
                         client.sendText(from, resMsg.wait)
                         const ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                         try {
+                            ytid = ytid.replace(/&.+/g,'')
                             var time = moment(t * 1000).format('mmss')
                             var path = `./media/temp_${time}.mp3`
 
