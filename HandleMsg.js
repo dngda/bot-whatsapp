@@ -1664,8 +1664,8 @@ const HandleMsg = async (client, message, browser) => {
                     case 'alle': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         const groupMem = await client.getGroupMembers(groupId)
-                        if (args.length !== 0) {
-                            let res = `${arg}\nCC: `
+                        if (args.length != 0) {
+                            let res = `${arg}\n`
                             for (let i = 0; i < groupMem.length; i++) {
                                 res += `@${groupMem[i].id.replace(/@c\.us/g, '')} `
                             }
