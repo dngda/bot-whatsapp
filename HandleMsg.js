@@ -1428,7 +1428,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (content === '') return client.reply(from, `Format salah! Isi pesannya apa?`, id)
                         if (milis === null) return client.reply(from, `Maaf ada yang error!`, id)
                         await schedule.futureMilis(client, message, content, milis, (quotedMsg != null)).catch(e => console.log(e))
-                        await client.reply(from, `Reminder Set!\nAnd will be fired at ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')}`, id)
+                        await client.reply(from, `Reminder for ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')} sets!`, id)
                         break
                     }
 
@@ -1657,15 +1657,23 @@ const HandleMsg = async (client, message, browser) => {
                         break
 
                     case 'tagall':
-                    case 'alle':{
+                    case 'alle': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         const groupMem = await client.getGroupMembers(groupId)
-                        let res = '╔══✪〘 Mention All 〙✪\n'
-                        for (let i = 0; i < groupMem.length; i++) {
-                            res += `╠➥ @${groupMem[i].id.replace(/@c\.us/g, '')}\n`
+                        if (args.length !== 0) {
+                            let res = `${arg}\nCC: `
+                            for (let i = 0; i < groupMem.length; i++) {
+                                res += `@${groupMem[i].id.replace(/@c\.us/g, '')} `
+                            }
+                            await client.sendTextWithMentions(from, res)
+                        }else {
+                            let res = '╔══✪〘 Mention All 〙✪\n'
+                            for (let i = 0; i < groupMem.length; i++) {
+                                res += `╠➥ @${groupMem[i].id.replace(/@c\.us/g, '')}\n`
+                            }
+                            res += '╚═〘 *SeroBot* 〙'
+                            await client.sendTextWithMentions(from, res)
                         }
-                        res += '╚═〘 *SeroBot* 〙'
-                        await client.sendTextWithMentions(from, res)
                         break
                     }
 
