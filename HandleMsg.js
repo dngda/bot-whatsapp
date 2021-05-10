@@ -205,7 +205,7 @@ const HandleMsg = async (client, message, browser) => {
                 return await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
                 break
             }
-            case /\b(menu|start|help)\b/.test(lowerCaseBody): {
+            case /^(menu|start|help)/.test(lowerCaseBody): {
                 return await client.sendText(from, `Untuk menampilkan menu, kirim pesan *${prefix}menu*`)
                 break
             }
