@@ -205,6 +205,10 @@ const HandleMsg = async (client, message, browser) => {
                 return await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
                 break
             }
+            case /\b(menu|start|help)\b/.test(lowerCaseBody): {
+                return await client.sendText(from, `Untuk menampilkan menu, kirim pesan *${prefix}menu*`)
+                break
+            }
             case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(lowerCaseBody): {
                 return await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
@@ -1920,7 +1924,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'restart': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        client.reply(from, `Server Bot akan direstart!`, id)
+                        client.reply(from, `Server bot akan direstart!`, id)
                         const { spawn } = require('child_process')
                         spawn('restart.cmd')
                         break
