@@ -1840,11 +1840,11 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua chat ketik:\n${prefix}bc [isi chat]`)
                         const chatz = await client.getAllChatIds()
                         for (let idk of chatz) {
-                            setTimeout(() => {
-                                client.sendText(idk, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)
+                            setTimeout(async () => {
+                                await client.sendText(idk.id, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)
                             }, 1000)
                         }
-                        client.reply(from, `Broadcast Success! Total: ${chatz.length} chats`, id)
+                        client.reply(from, `Broadcast in progress! Total: ${chatz.length} chats`, id)
                         break
                     
                     case 'bcgroup': //untuk broadcast atau promosi ke group
@@ -1852,11 +1852,11 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua group ketik:\n${prefix}bcgroup [isi chat]`)
                         const groupz = await client.getAllGroups()
                         for (let idk of groupz) {
-                            setTimeout(() => {
-                                client.sendText(idk, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)
+                            setTimeout(async () => {
+                                await client.sendText(idk.id, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)
                             }, 1000)
                         }
-                        client.reply(from, `Broadcast Success! Total: ${groupz.length} groups`, id)
+                        client.reply(from, `Broadcast in progress! Total: ${groupz.length} groups`, id)
                         break
 
                     case 'leaveall': //mengeluarkan bot dari semua group serta menghapus chatnya
