@@ -840,6 +840,8 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'tiktok': {
+                        return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
+
                         if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>\nTanpa simbol <>`, id)
                         let urls = isQuotedChat ? quotedMsg.body : arg
                         if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
@@ -851,6 +853,8 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'tiktokmp3': {
+                        return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
+                        
                         if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
                         let urls = isQuotedChat ? quotedMsg.body : arg
                         if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
