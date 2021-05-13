@@ -202,7 +202,7 @@ const HandleMsg = async (client, message, browser) => {
         // respon to msg contain this case
         switch (true) {
             case /^p$/.test(lowerCaseBody): {
-                return await client.reply(from, `Nyapa kek! Salam kek! Pa Pe Pa Pe mulu gada tata krama`, id)
+                return await client.reply(from, `Alangkah baiknya ucapkan salam atau menyapa!\nP P P mulu gada tata krama`, id)
                 break
             }
             case /^(menu|start|help)/.test(lowerCaseBody): {
