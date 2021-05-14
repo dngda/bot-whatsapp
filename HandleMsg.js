@@ -854,7 +854,7 @@ const HandleMsg = async (client, message, browser) => {
 
                         ffmpeg(inpath)
                             .setFfmpegPath('./bin/ffmpeg')
-                            .audioFilters('volume=100')
+                            .audioFilters('volume=70')
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 fs.unlinkSync(inpath)
@@ -863,6 +863,33 @@ const HandleMsg = async (client, message, browser) => {
                               })
                             .on('end', () => {
                                 client.sendFile(from, outpath,'earrape.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
+                              })
+                            .saveToFile(outpath)
+                        break
+                    }
+
+                    case 'nightcore': {
+                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
+                        const _inp = await decryptMedia(quotedMsg)
+
+                        var time = moment(t * 1000).format('mmss')
+                        var inpath = `./media/innightcore_${time}.mp3`
+                        var outpath = `./media/outnightcore_${time}.mp3`
+                        fs.writeFileSync(inpath, _inp)
+
+                        ffmpeg(inpath)
+                            .setFfmpegPath('./bin/ffmpeg')
+                            .audioFilters('atempo=1.06,asetrate=44100*1.25')
+                            .on('error', (err) => {
+                                console.log('An error occurred: ' + err.message)
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
+                                return client.reply(from, resMsg.error.norm, id)
+                              })
+                            .on('end', () => {
+                                client.sendFile(from, outpath,'nightcore.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                               })
