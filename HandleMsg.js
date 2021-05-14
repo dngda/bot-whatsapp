@@ -843,12 +843,12 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'earrape': {
                         if(!isQuotedPtt || !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
-                        const in = await decryptMedia(quotedMsg)
+                        const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
                         var path = `./media/earrape_${time}.mp3`
 
-                        ffmpeg({source:in})
+                        ffmpeg({source:_inp})
                             .setFfmpegPath('./bin/ffmpeg')
                             .audioFilters('volume=100')
                             .on('error', (err) => {
