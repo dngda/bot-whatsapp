@@ -962,7 +962,7 @@ const HandleMsg = async (client, message, browser) => {
 
                         ffmpeg(inpath)
                             .setFfmpegPath('./bin/ffmpeg')
-                            .complexFilter(`vibrato=f=4`)
+                            .complexFilter(`vibrato=f=6`)
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 fs.unlinkSync(inpath)
