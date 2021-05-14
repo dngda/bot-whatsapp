@@ -782,6 +782,7 @@ const HandleMsg = async (client, message, browser) => {
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
                                     console.log('An error occurred: ' + err.message)
+                                    fs.unlinkSync(path)
                                     client.reply(from, resMsg.error.norm, id)
                                   })
                                 .on('end', () => {
@@ -826,6 +827,7 @@ const HandleMsg = async (client, message, browser) => {
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
                                     console.log('An error occurred: ' + err.message)
+                                    fs.unlinkSync(path)
                                     return client.reply(from, resMsg.error.norm, id)
                                   })
                                 .on('end', () => {
@@ -846,20 +848,25 @@ const HandleMsg = async (client, message, browser) => {
                         const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
-                        var path = `./media/earrape_${time}.mp3`
+                        var inpath = `./media/inearrape_${time}.mp3`
+                        var outpath = `./media/outearrape_${time}.mp3`
+                        fs.writeFileSync(inpath, _inp)
 
-                        ffmpeg({source:_inp})
+                        ffmpeg(inpath)
                             .setFfmpegPath('./bin/ffmpeg')
                             .audioFilters('volume=100')
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
                                 return client.reply(from, resMsg.error.norm, id)
                               })
                             .on('end', () => {
-                                client.sendFile(from, path,'earrape.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                                fs.unlinkSync(path)
+                                client.sendFile(from, outpath,'earrape.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
                               })
-                            .saveToFile(path)
+                            .saveToFile(outpath)
                         break
                     }
 
