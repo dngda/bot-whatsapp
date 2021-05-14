@@ -855,7 +855,6 @@ const HandleMsg = async (client, message, browser) => {
                         ffmpeg(inpath)
                             .setFfmpegPath('./bin/ffmpeg')
                             .complexFilter('acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1')
-                            // .audioFilters('volume=70')
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 fs.unlinkSync(inpath)
@@ -864,6 +863,33 @@ const HandleMsg = async (client, message, browser) => {
                               })
                             .on('end', () => {
                                 client.sendFile(from, outpath,'earrape.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
+                              })
+                            .saveToFile(outpath)
+                        break
+                    }
+
+                    case 'robot': {
+                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}robot`, id)
+                        const _inp = await decryptMedia(quotedMsg)
+
+                        var time = moment(t * 1000).format('mmss')
+                        var inpath = `./media/inrobot_${time}.mp3`
+                        var outpath = `./media/outrobot_${time}.mp3`
+                        fs.writeFileSync(inpath, _inp)
+
+                        ffmpeg(inpath)
+                            .setFfmpegPath('./bin/ffmpeg')
+                            .complexFilter(`afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75`)
+                            .on('error', (err) => {
+                                console.log('An error occurred: ' + err.message)
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
+                                return client.reply(from, resMsg.error.norm, id)
+                              })
+                            .on('end', () => {
+                                client.sendFile(from, outpath,'robot.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                               })
