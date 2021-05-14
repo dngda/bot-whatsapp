@@ -854,9 +854,7 @@ const HandleMsg = async (client, message, browser) => {
 
                         ffmpeg(inpath)
                             .setFfmpegPath('./bin/ffmpeg')
-                            .complexFilter([
-                                "acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1"
-                                ])
+                            .complexFilter('acrusher=level_in=8:level_out=18:bits=8:mode=log:aa=1')
                             // .audioFilters('volume=70')
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
