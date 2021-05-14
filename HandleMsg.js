@@ -842,7 +842,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'earrape': {
-                        if(!isQuotedPtt || !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
+                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
