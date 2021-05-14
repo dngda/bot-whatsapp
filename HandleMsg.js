@@ -160,6 +160,8 @@ const HandleMsg = async (client, message, browser) => {
         const isQuotedChat = quotedMsg && quotedMsg.type === 'chat'
         const isQuotedLocation = quotedMsg && quotedMsg.type === 'location'
         const isQuotedDocs = quotedMsg && quotedMsg.type === 'document'
+        const isQuotedAudio = quotedMsg && quotedMsg.type === 'audio'
+        const isQuotedPtt = quotedMsg && quotedMsg.type === 'ptt'
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
@@ -836,6 +838,28 @@ const HandleMsg = async (client, message, browser) => {
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
                         }
+                        break
+                    }
+
+                    case 'earrape': {
+                        if(!isQuotedPtt || !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
+                        const in = await decryptMedia(quotedMsg)
+
+                        var time = moment(t * 1000).format('mmss')
+                        var path = `./media/earrape_${time}.mp3`
+
+                        ffmpeg({source:in})
+                            .setFfmpegPath('./bin/ffmpeg')
+                            .audioFilters('volume=100')
+                            .on('error', (err) => {
+                                console.log('An error occurred: ' + err.message)
+                                return client.reply(from, resMsg.error.norm, id)
+                              })
+                            .on('end', () => {
+                                client.sendFile(from, path,'earrape.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                fs.unlinkSync(path)
+                              })
+                            .saveToFile(path)
                         break
                     }
 
