@@ -897,6 +897,33 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
+                    case 'reverse': {
+                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}reverse`, id)
+                        const _inp = await decryptMedia(quotedMsg)
+
+                        var time = moment(t * 1000).format('mmss')
+                        var inpath = `./media/inreverse_${time}.mp3`
+                        var outpath = `./media/outreverse_${time}.mp3`
+                        fs.writeFileSync(inpath, _inp)
+
+                        ffmpeg(inpath)
+                            .setFfmpegPath('./bin/ffmpeg')
+                            .complexFilter(`areverse`)
+                            .on('error', (err) => {
+                                console.log('An error occurred: ' + err.message)
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
+                                return client.reply(from, resMsg.error.norm, id)
+                              })
+                            .on('end', () => {
+                                client.sendFile(from, outpath,'reverse.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
+                              })
+                            .saveToFile(outpath)
+                        break
+                    }
+
                     case 'nightcore': {
                         if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}nightcore`, id)
                         const _inp = await decryptMedia(quotedMsg)
