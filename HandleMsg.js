@@ -2039,7 +2039,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.deleteChat(gclist.contact.id)
                             }, 1000)
                         }
-                        client.reply(from, `Success leave all group! Total: ${allGroupz.length}`, id)
+                        client.reply(from, `Processed to leave all group! Total: ${allGroupz.length}`, id)
                         break
 
                     case 'clearexitedgroup': //menghapus group yang sudah keluar
@@ -2052,10 +2052,10 @@ const HandleMsg = async (client, message, browser) => {
                                 }
                             }, 1000)
                         }
-                        client.reply(from, 'Success clear all exited group!', id)
+                        client.reply(from, 'Processed to clear all exited group!', id)
                         break
 
-                    case 'clearall': //menghapus seluruh pesan diakun bot
+                    case 'deleteall': //menghapus seluruh pesan diakun bot
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const allChatx = await client.getAllChats()
                         for (let dchat of allChatx) {
@@ -2063,7 +2063,18 @@ const HandleMsg = async (client, message, browser) => {
                                 client.deleteChat(dchat.id)
                             }, 1000)
                         }
-                        client.reply(from, 'Success clear all chat!', id)
+                        client.reply(from, 'Processed to delete all chat!', id)
+                        break
+
+                    case 'clearall': //menghapus seluruh pesan tanpa menghapus chat diakun bot
+                        if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
+                        const allChatx = await client.getAllChats()
+                        for (let dchat of allChatx) {
+                            setTimeout(() => {
+                                client.clearChat(dchat.id)
+                            }, 1000)
+                        }
+                        client.reply(from, 'Processed to clear all chat!', id)
                         break
 
                     case 'clearpm': //menghapus seluruh pesan diakun bot selain group
@@ -2074,7 +2085,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (!dchat.isGroup) client.deleteChat(dchat.id)
                             }, 1000)
                         }
-                        client.reply(from, 'Success clear all private chat!', id)
+                        client.reply(from, 'Processed to clear all private chat!', id)
                         break
 
                     case 'refresh':
