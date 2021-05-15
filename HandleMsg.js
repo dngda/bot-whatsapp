@@ -2068,8 +2068,8 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'clearall': //menghapus seluruh pesan tanpa menghapus chat diakun bot
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        const allChatx = await client.getAllChats()
-                        for (let dchat of allChatx) {
+                        const allChatxy = await client.getAllChats()
+                        for (let dchat of allChatxy) {
                             setTimeout(() => {
                                 client.clearChat(dchat.id)
                             }, 1000)
