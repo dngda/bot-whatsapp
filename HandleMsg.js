@@ -74,19 +74,26 @@ let {
 } = setting
 
 function formatin(duit) {
-    let reverse = duit.toString().split('').reverse().join('');
-    let ribuan = reverse.match(/\d{1,3}/g);
-    ribuan = ribuan.join('.').split('').reverse().join('');
-    return ribuan;
+    let reverse = duit.toString().split('').reverse().join('')
+    let ribuan = reverse.match(/\d{1,3}/g)
+    ribuan = ribuan.join('.').split('').reverse().join('')
+    return ribuan
 }
 
 const inArray = (needle, haystack) => {
-    let length = haystack.length;
+    let length = haystack.length
     for (let i = 0; i < length; i++) {
-        if (haystack[i].id == needle) return i;
+        if (haystack[i].id == needle) return i
     }
-    return false;
+    return -1
 }
+
+const last = (array, n) => {
+    if (array == null) return void 0
+    if (n == null) return array[array.length - 1]
+    return array.slice(Math.max(array.length - n, 0))
+}
+
 const reCacheModule = (funcs, _data) => {
     eval(funcs)
 }
@@ -123,7 +130,7 @@ const HandleMsg = async (client, message, browser) => {
     }
 
     try {
-        const { type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
+        let { type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
         var { name, formattedTitle } = chat
         let { pushname, verifiedName, formattedName } = sender
@@ -131,7 +138,10 @@ const HandleMsg = async (client, message, browser) => {
         const botNumber = await client.getHostNumber() + '@c.us'
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
-        const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
+
+        if (type === 'chat') var chats = body
+        else var chats = (type === 'image' || type === 'video') ? caption : ''
+
         const pengirim = sender.id
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
         const stickerMetadata = { pack: 'Created with', author: 'SeroBot', keepScale: true }
@@ -139,8 +149,11 @@ const HandleMsg = async (client, message, browser) => {
         const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
 
         // Bot Prefix
-        regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-)(?=\w+)/g
-        body = (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) ? body.replace(regex, prefix) : ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
+        const regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-)(?=\w+)/g
+
+        if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
+        else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
+
         const lowerCaseBody = message.body?.toLowerCase() ?? caption?.toLowerCase() ?? ''
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
@@ -149,7 +162,7 @@ const HandleMsg = async (client, message, browser) => {
         const url = args.length !== 0 ? args[0] : ''
 
         // [IDENTIFY]
-        isKasar = false
+        var isKasar = false
         const isCmd = body.startsWith(prefix)
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
@@ -169,7 +182,7 @@ const HandleMsg = async (client, message, browser) => {
 
         // Filter Banned People
         if (isBanned && !isGroupMsg && isCmd) {
-            return client.sendText(from, `Maaf anda telah dibanned oleh bot karena melanggar tnc`).then(() => {
+            return client.sendText(from, `Maaf anda telah dibanned oleh bot karena melanggar TnC`).then(() => {
                 console.log(color('[BANd]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
             })
         }
@@ -180,17 +193,29 @@ const HandleMsg = async (client, message, browser) => {
         if (isNgegas) isKasar = await cariKasar(chats)
 
         // [BETA] Avoid Spam Message
-        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname)), client.reply(from, 'Mohon untuk perintah diberi jeda sedetik!', id) }
+        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isOwnerBot) {
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
+            return client.reply(from, 'Mohon untuk perintah diberi jeda sedetik!', id)
+        }
 
-        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)), client.reply(from, 'Mohon untuk perintah diberi jeda sedetik!', id) }
+        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot) {
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle))
+            return client.reply(from, 'Mohon untuk perintah diberi jeda sedetik!', id)
+        }
 
         // Avoid kasar spam and Log
-        if (msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot && isKasar) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)), client.reply(from, 'Mohon untuk tidak melakukan spam kata kasar!', id) }
+        if (msgFilter.isFiltered(from) && isGroupMsg && !isOwnerBot && isKasar) {
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle))
+            return client.reply(from, 'Mohon untuk tidak melakukan spam kata kasar!', id)
+        }
         if (!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
         // Log Commands
-        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), `:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname)) }
-        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), `:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+        if (args.length === 0) var argsLog = color('with no args', 'grey')
+        else var argsLog = (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg
+
+        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname)) }
+        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
         //[BETA] Avoid Spam Message
         msgFilter.addFilter(from)
@@ -217,8 +242,8 @@ const HandleMsg = async (client, message, browser) => {
             }
             case new RegExp(`\\b(${sfx.join("|")})\\b`).test(lowerCaseBody): {
                 const theSFX = lowerCaseBody.match(new RegExp(sfx.join("|")))
-                path = `./random/sfx/${theSFX}.mp3`
-                _id = (quotedMsg != null) ? quotedMsgObj.id : id
+                const path = `./random/sfx/${theSFX}.mp3`
+                const _id = (quotedMsg != null) ? quotedMsgObj.id : id
                 await client.sendAudio(from, path, _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                 break
             }
@@ -256,7 +281,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     case 'join':
                         if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot ke group silahkan invite atau dengan\nketik ${prefix}join <link group>\nTanpa simbol <>`, id)
-                        linkgrup = args[0]
+                        const linkgrup = args[0]
                         let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
                         let chekgrup = await client.inviteInfo(linkgrup)
                         if (!islink) return client.reply(from, 'Maaf link group-nya salah! silahkan kirim link yang benar', id)
@@ -285,11 +310,11 @@ const HandleMsg = async (client, message, browser) => {
                     case 'stat':
                     case 'status':
                     case 'botstat': {
-                        const loadedMsg = await client.getAmountOfLoadedMessages()
-                        const chatIds = await client.getAllChatIds()
-                        const groups = await client.getAllGroups()
-                        const time = process.uptime()
-                        const uptime = (time + "").toDHms()
+                        let loadedMsg = await client.getAmountOfLoadedMessages()
+                        let chatIds = await client.getAllChatIds()
+                        let groups = await client.getAllGroups()
+                        let time = process.uptime()
+                        let uptime = (time + "").toDHms()
                         client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
                         break
                     }
@@ -300,9 +325,9 @@ const HandleMsg = async (client, message, browser) => {
                     case 'stickertoimg':
                     case 'stimg':
                         if (quotedMsg && quotedMsg.type == 'sticker') {
-                            const mediaData = await decryptMedia(quotedMsg)
+                            let mediaData = await decryptMedia(quotedMsg)
                             client.reply(from, resMsg.wait, id)
-                            const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                            let imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                             await client.sendFile(from, imageBase64, 'imgsticker.jpg', 'Berhasil convert Sticker to Image!', id)
                                 .then(() => {
                                     console.log(color('[LOGS]', 'grey'), `Sticker to Image Processed for ${processTime(t, moment())} Seconds`)
@@ -320,8 +345,9 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, resMsg.wait, id)
                             try {
                                 const encryptMedia = (isQuotedImage || isQuotedDocs) ? quotedMsg : message
-                                const _metadata = (args[0] === 'crop') ? stickerMetadataCrop : (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
-                                const mediaData = await decryptMedia(encryptMedia)
+                                if (args[0] === 'crop') var _metadata = stickerMetadataCrop
+                                else var _metadata = (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
+                                let mediaData = await decryptMedia(encryptMedia)
                                     .catch(err => {
                                         console.log(err.name, err.message)
                                         client.sendText(from, resMsg.error.norm)
@@ -345,21 +371,20 @@ const HandleMsg = async (client, message, browser) => {
                             if (isMedia || isQuotedImage) {
                                 client.reply(from, resMsg.wait, id)
                                 try {
-                                    var encryptedMedia = isQuotedImage ? quotedMsg : message
-                                    var _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+                                    let encryptedMedia = isQuotedImage ? quotedMsg : message
+                                    let _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
 
-                                    var mediaData = await decryptMedia(encryptedMedia)
+                                    let mediaData = await decryptMedia(encryptedMedia)
                                         .catch(err => {
                                             console.log(err)
                                             client.sendText(from, resMsg.error.norm)
                                         })
                                     if (mediaData === undefined) return client.sendText(from, resMsg.error.norm)
-                                    var imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
-                                    base64img = imageBase64
-                                    var outFile = './media/noBg.png'
+                                    let imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+                                    let outFile = './media/noBg.png'
                                     // kamu dapat mengambil api key dari website remove.bg dan ubahnya difolder settings/api.json
-                                    var selectedApiNoBg = _.sample(apiNoBg)
-                                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: selectedApiNoBg, size: 'auto', type: 'auto', outFile })
+                                    let selectedApiNoBg = _.sample(apiNoBg)
+                                    let result = await removeBackgroundFromImageBase64({ base64img: imageBase64, apiKey: selectedApiNoBg, size: 'auto', type: 'auto', outFile })
                                     await fs.writeFile(outFile, result.base64img)
                                     await client.sendImageAsSticker(from, `data:${_mimetype};base64,${result.base64img}`, stickerMetadata)
                                         .then(() => {
@@ -387,8 +412,8 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendText(from, resMsg.error.norm)
                             }
                         } else if ((isMedia && mimetype === 'video/mp4') || isQuotedVideo) {
-                            var encryptedMedia = isQuotedVideo ? quotedMsg : message
-                            var mediaData = await decryptMedia(encryptedMedia)
+                            let encryptedMedia = isQuotedVideo ? quotedMsg : message
+                            let mediaData = await decryptMedia(encryptedMedia)
                             client.reply(from, resMsg.wait, id)
                             await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
                                 .then(() => {
@@ -445,12 +470,12 @@ const HandleMsg = async (client, message, browser) => {
                     case 'memefy':
                         if ((isMedia || isQuotedImage) && args.length >= 2) {
                             try {
-                                const top = arg.split('|')[0]
-                                const bottom = arg.split('|')[1]
-                                const encryptMedia = isQuotedImage ? quotedMsg : message
-                                const mediaData = await decryptMedia(encryptMedia)
-                                const getUrl = await uploadImages(mediaData, false)
-                                const ImageBase64 = await meme.custom(getUrl, top, bottom)
+                                let top = arg.split('|')[0]
+                                let bottom = arg.split('|')[1]
+                                let encryptMedia = isQuotedImage ? quotedMsg : message
+                                let mediaData = await decryptMedia(encryptMedia)
+                                let getUrl = await uploadImages(mediaData, false)
+                                let ImageBase64 = await meme.custom(getUrl, top, bottom)
                                 client.sendFile(from, ImageBase64, 'image.png', '', null, true)
                                     .then(() => {
                                         client.reply(from, 'Here you\'re!', id)
@@ -507,10 +532,10 @@ const HandleMsg = async (client, message, browser) => {
                             axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .then((response) => {
                                     let listsrh = '╔══✪〘 List Surah 〙✪\n'
-                                    for (let i = 0; i < response.data.data.length; i++) {
-                                        listsrh += `╠ ${response.data.data[i].number}. `
-                                        listsrh += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
-                                    }
+                                    response.data.data.forEach((data, i) => {
+                                        listsrh += `╠ ${data[i].number}. `
+                                        listsrh += data[i].name.transliteration.id.toLowerCase() + '\n'
+                                    })
                                     listsrh += '╚═〘 *SeroBot* 〙'
                                     client.reply(from, listsrh, id)
                                 })
@@ -518,7 +543,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, err, id)
                         }
                         break
-                    case 'infosurah':
+                    case 'infosurah': {
                         if (args.length == 0) return client.reply(from, `*_${prefix}infosurah <nama surah>_*\nMenampilkan informasi lengkap mengenai surah tertentu. Contoh penggunan: ${prefix}infosurah al-baqarah`, message.id)
                         var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                             .catch(err => {
@@ -526,7 +551,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendText(from, resMsg.error.norm)
                             })
                         var { data } = responseh.data
-                        var idx = data.findIndex(function (post) {
+                        let idx = data.findIndex(function (post) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true
                         })
@@ -535,10 +560,11 @@ const HandleMsg = async (client, message, browser) => {
                         pesan = pesan + "Nama : " + data[idx].name.transliteration.id + "\n" + "Asma : " + data[idx].name.short + "\n" + "Arti : " + data[idx].name.translation.id + "\n" + "Jumlah ayat : " + data[idx].numberOfVerses + "\n" + "Nomor surah : " + data[idx].number + "\n" + "Jenis : " + data[idx].revelation.id + "\n" + "Keterangan : " + data[idx].tafsir.id
                         client.reply(from, pesan, message.id)
                         break
+                    }
 
                     case 'surah': {
                         if (args.length == 0) return client.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama/nomor surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id\n${prefix}surah 1 1 id`, message.id)
-                        nmr = 0
+                        let nmr = 0
                         if (isNaN(args[0])) {
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
@@ -546,7 +572,7 @@ const HandleMsg = async (client, message, browser) => {
                                     return client.sendText(from, resMsg.error.norm)
                                 })
                             var { data } = res.data
-                            var idx = data.findIndex(function (post) {
+                            let idx = data.findIndex(function (post) {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
@@ -565,13 +591,8 @@ const HandleMsg = async (client, message, browser) => {
                                 })
                             if (responseh2 === undefined) return client.reply(from, `Maaf error/format salah`, id)
                             var { data } = responseh2.data
-                            var last = function last(array, n) {
-                                if (array == null) return void 0
-                                if (n == null) return array[array.length - 1]
-                                return array.slice(Math.max(array.length - n, 0))
-                            }
-                            bhs = last(args)
-                            pesan = ""
+                            let bhs = last(args)
+                            let pesan = ""
                             pesan = pesan + data.text.arab + "\n\n"
                             if (bhs == "en") {
                                 pesan = pesan + data.translation.en
@@ -586,7 +607,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'tafsir': {
                         if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama/nomor surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
-                        nmr = 0
+                        let nmr = 0
                         if (isNaN(args[0])) {
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
@@ -594,7 +615,7 @@ const HandleMsg = async (client, message, browser) => {
                                     return client.sendText(from, resMsg.error.norm)
                                 })
                             var { data } = res.data
-                            var idx = data.findIndex(function (post) {
+                            let idx = data.findIndex(function (post) {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
@@ -619,7 +640,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'alaudio': {
                         if (args.length == 0) return client.reply(from, `*_${prefix}ALaudio <nama/nomor surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`, message.id)
-                        nmr = 0
+                        let nmr = 0
                         if (isNaN(args[0])) {
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
@@ -627,7 +648,7 @@ const HandleMsg = async (client, message, browser) => {
                                     return client.sendText(from, resMsg.error.norm)
                                 })
                             var { data } = res.data
-                            var idx = data.findIndex(function (post) {
+                            let idx = data.findIndex(function (post) {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
@@ -643,16 +664,11 @@ const HandleMsg = async (client, message, browser) => {
                                 ayat = args[1]
                             }
                             if (args.length == 2) {
-                                var last = function last(array, n) {
-                                    if (array == null) return void 0
-                                    if (n == null) return array[array.length - 1]
-                                    return array.slice(Math.max(array.length - n, 0))
-                                }
                                 ayat = last(args)
                             }
                             pesan = ""
                             if (isNaN(ayat)) {
-                                var responsih2 = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
+                                let responsih2 = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
                                     .catch(err => {
                                         console.log(err)
                                         client.sendText(from, resMsg.error.norm)
@@ -664,19 +680,14 @@ const HandleMsg = async (client, message, browser) => {
                                 pesan = pesan + "Dilantunkan oleh " + recitations[2].name + " :\n" + recitations[2].audio_url + "\n"
                                 client.reply(from, pesan, message.id)
                             } else {
-                                var responsih2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
+                                let responsih2 = await axios.get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                                     .catch(err => {
                                         console.log(err)
                                         client.sendText(from, resMsg.error.norm)
                                     })
                                 var { data } = responsih2.data
-                                var last = function last(array, n) {
-                                    if (array == null) return void 0
-                                    if (n == null) return array[array.length - 1]
-                                    return array.slice(Math.max(array.length - n, 0))
-                                }
-                                bhs = last(args)
-                                pesan = ""
+                                let bhs = last(args)
+                                let pesan = ""
                                 pesan = pesan + data.text.arab + "\n\n"
                                 if (bhs == "en") {
                                     pesan = pesan + data.translation.en
@@ -702,8 +713,8 @@ const HandleMsg = async (client, message, browser) => {
                                 })
                             var datas = datad.data.kota
                             let hasil = '╔══✪〘 Daftar Kota 〙✪\n'
-                            for (let i = 0; i < datas.length; i++) {
-                                var kota = datas[i].nama
+                            for (let d of datas) {
+                                var kota = d.nama
                                 hasil += '╠➥ '
                                 hasil += `${kota}\n`
                             }
@@ -765,8 +776,8 @@ const HandleMsg = async (client, message, browser) => {
                         let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                         try {
                             ytid = ytid.replace(/&.+/g, '')
-                            var time = moment(t * 1000).format('mmss')
-                            var path = `./media/temp_${time}.mp3`
+                            let time = moment(t * 1000).format('mmss')
+                            let path = `./media/temp_${time}.mp3`
 
                             stream = ytdl(ytid, { quality: 'highestaudio' })
 
@@ -805,14 +816,14 @@ const HandleMsg = async (client, message, browser) => {
                                 else return parseInt(n[0] * 60) + parseInt(n[1])
                             }
                             if (duration(ytresult) > 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
-                            var estimasi = duration(ytresult) / 100
-                            var est = estimasi.toFixed(0)
+                            let estimasi = duration(ytresult) / 100
+                            let est = estimasi.toFixed(0)
 
                             await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``, `Video ditemukan\n\nJudul: ${ytresult.judul}\nDurasi: ${ytresult.duration}\nUploaded: ${ytresult.published_at}\nView: ${ytresult.views}\n\nAudio sedang dikirim ± ${est} menit`, id)
 
                             //Download video and save as MP3 file
-                            var time = moment(t * 1000).format('mmss')
-                            var path = `./media/temp_${time}.mp3`
+                            let time = moment(t * 1000).format('mmss')
+                            let path = `./media/temp_${time}.mp3`
 
                             stream = ytdl(ytresult.id, { quality: 'highestaudio' })
                             ffmpeg({ source: stream })
@@ -839,9 +850,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
-                        var time = moment(t * 1000).format('mmss')
-                        var inpath = `./media/inearrape_${time}.mp3`
-                        var outpath = `./media/outearrape_${time}.mp3`
+                        let time = moment(t * 1000).format('mmss')
+                        let inpath = `./media/inearrape_${time}.mp3`
+                        let outpath = `./media/outearrape_${time}.mp3`
                         fs.writeFileSync(inpath, _inp)
 
                         ffmpeg(inpath)
@@ -866,9 +877,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}robot`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
-                        var time = moment(t * 1000).format('mmss')
-                        var inpath = `./media/inrobot_${time}.mp3`
-                        var outpath = `./media/outrobot_${time}.mp3`
+                        let time = moment(t * 1000).format('mmss')
+                        let inpath = `./media/inrobot_${time}.mp3`
+                        let outpath = `./media/outrobot_${time}.mp3`
                         fs.writeFileSync(inpath, _inp)
 
                         ffmpeg(inpath)
@@ -893,9 +904,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}reverse`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
-                        var time = moment(t * 1000).format('mmss')
-                        var inpath = `./media/inreverse_${time}.mp3`
-                        var outpath = `./media/outreverse_${time}.mp3`
+                        let time = moment(t * 1000).format('mmss')
+                        let inpath = `./media/inreverse_${time}.mp3`
+                        let outpath = `./media/outreverse_${time}.mp3`
                         fs.writeFileSync(inpath, _inp)
 
                         ffmpeg(inpath)
@@ -920,9 +931,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}samarkan`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
-                        var time = moment(t * 1000).format('mmss')
-                        var inpath = `./media/insamarkan_${time}.mp3`
-                        var outpath = `./media/outsamarkan_${time}.mp3`
+                        let time = moment(t * 1000).format('mmss')
+                        let inpath = `./media/insamarkan_${time}.mp3`
+                        let outpath = `./media/outsamarkan_${time}.mp3`
                         fs.writeFileSync(inpath, _inp)
 
                         ffmpeg(inpath)
@@ -947,9 +958,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}vibrato`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
-                        var time = moment(t * 1000).format('mmss')
-                        var inpath = `./media/invibrato_${time}.mp3`
-                        var outpath = `./media/outvibrato_${time}.mp3`
+                        let time = moment(t * 1000).format('mmss')
+                        let inpath = `./media/invibrato_${time}.mp3`
+                        let outpath = `./media/outvibrato_${time}.mp3`
                         fs.writeFileSync(inpath, _inp)
 
                         ffmpeg(inpath)
@@ -974,9 +985,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}nightcore`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
-                        var time = moment(t * 1000).format('mmss')
-                        var inpath = `./media/innightcore_${time}.mp3`
-                        var outpath = `./media/outnightcore_${time}.mp3`
+                        let time = moment(t * 1000).format('mmss')
+                        let inpath = `./media/innightcore_${time}.mp3`
+                        let outpath = `./media/outnightcore_${time}.mp3`
                         fs.writeFileSync(inpath, _inp)
 
                         ffmpeg(inpath)
@@ -1133,7 +1144,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (args[0] === '+') {
                             await images.fdci(arg.trim().substring(arg.indexOf(' ') + 1))
                                 .then(res => {
-                                    img = _.sample(res, 10)
+                                    let img = _.sample(res, 10)
                                     img.forEach(async i => {
                                         if (i != null) await client.sendFileFromUrl(from, i, '', '', id)
                                     })
@@ -1141,7 +1152,7 @@ const HandleMsg = async (client, message, browser) => {
                         } else {
                             await images.fdci(arg)
                                 .then(res => {
-                                    img = _.sample(res)
+                                    let img = _.sample(res)
                                     if (img === null || img === undefined) return client.reply(from, resMsg.error.norm, id)
 
                                     client.sendFileFromUrl(from, img, '', '', id)
@@ -1161,7 +1172,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'pinterest2':
                     case 'pin2': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest v2.\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto\n\nGunakan apabila /pinterest atau /pin error`, id)
-                        const img = await scraper.pinterest(browser, arg).catch(e => {
+                        let img = await scraper.pinterest(browser, arg).catch(e => {
                             console.log(`pin2 err : ${e}`)
                             return client.reply(from, resMsg.error.norm, id)
                         })
@@ -1218,21 +1229,21 @@ const HandleMsg = async (client, message, browser) => {
                             })
                         break
 
-                    case 'nekopoi':
+                    case 'nekopoi': {
                         if (isGroupMsg) {
                             client.reply(from, 'Untuk Fitur Nekopoi Silahkan Lakukan di Private Message', id)
                         } else {
-                            var data = await axios.get('https://arugaz.herokuapp.com/api/anime/nekopoi/random')
-                            var x = Math.floor((Math.random() * 7) + 0);
-                            var poi = data.data[x]
+                            let data = await axios.get('https://arugaz.herokuapp.com/api/anime/nekopoi/random')
+                            let x = Math.floor((Math.random() * 7) + 0);
+                            let poi = data.data[x]
                             console.log(poi)
                             let hasilpoi = 'Note[❗]: 18+ ONLY[❗]'
                             hasilpoi += '\nJudul: ' + poi.title
                             hasilpoi += '\nLink: ' + poi.link
                             client.reply(from, hasilpoi, id)
                         }
-
                         break
+                    }
                     case 'cuaca':
                         if (args.length == 0) return client.reply(from, `Untuk melihat cuaca pada suatu daerah\nketik: ${prefix}cuaca [daerah]`, id)
                         const cuacaq = body.slice(7)
@@ -1341,12 +1352,12 @@ const HandleMsg = async (client, message, browser) => {
                                             if (ans1 === false) return true
                                             else client.sendText(from, `⏳ ${((detik * 1000) - (detik * 1000 / 4 * 2)) / 1000} detik lagi\nHint: ${res.jawaban.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')}`)
                                             sleep(detik * 1000 / 4).then(async () => {
-                                                const ans = await tebakgb.getAns(from)
-                                                if (ans === false) return true
+                                                const ans2 = await tebakgb.getAns(from)
+                                                if (ans2 === false) return true
                                                 else client.sendText(from, `⏳ ${((detik * 1000) - (detik * 1000 / 4 * 3)) / 1000} detik lagi`)
                                                 sleep(detik * 1000 / 4).then(async () => {
-                                                    const ans = await tebakgb.getAns(from)
-                                                    if (ans === false) return true
+                                                    const ans3 = await tebakgb.getAns(from)
+                                                    if (ans3 === false) return true
                                                     else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: *${res.jawaban}*`)
                                                     tebakgb.delData(from)
                                                 })
@@ -1399,7 +1410,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isQuotedChat && args.length != 0) {
                             try {
                                 if (arg1 === '') return client.reply(from, 'Apa teksnya syg..', id)
-                                var gtts = new gTTS(arg1, args[0])
+                                let gtts = new gTTS(arg1, args[0])
                                 gtts.save('./media/tts.mp3', function () {
                                     client.sendPtt(from, './media/tts.mp3', id)
                                         .catch(err => {
@@ -1415,7 +1426,7 @@ const HandleMsg = async (client, message, browser) => {
                         else if (isQuotedChat && args.length != 0) {
                             try {
                                 const dataText = quotedMsgObj.content.toString()
-                                var gtts = new gTTS(dataText, args[0])
+                                let gtts = new gTTS(dataText, args[0])
                                 gtts.save('./media/tts.mp3', function () {
                                     client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id)
                                         .catch(err => {
@@ -1441,11 +1452,11 @@ const HandleMsg = async (client, message, browser) => {
                         const zoneStatus = await getLocationData(quotedMsg.lat, quotedMsg.lng)
                         if (zoneStatus.kode != 200) client.sendText(from, 'Maaf, Terjadi error ketika memeriksa lokasi yang anda kirim.')
                         let datax = ''
-                        for (let i = 0; i < zoneStatus.data.length; i++) {
-                            const { zone, region } = zoneStatus.data[i]
+                        zoneStatus.data.forEach((z, i) => {
+                            const { zone, region } = z
                             const _zone = zone == 'green' ? 'Hijau* (Aman) \n' : zone == 'yellow' ? 'Kuning* (Waspada) \n' : 'Merah* (Bahaya) \n'
                             datax += `${i + 1}. Kel. *${region}* Berstatus *Zona ${_zone}`
-                        }
+                        })
                         const text = `*CEK LOKASI PENYEBARAN COVID-19*\nHasil pemeriksaan dari lokasi yang anda kirim adalah *${zoneStatus.status}* ${zoneStatus.optional}\n\nInformasi lokasi terdampak disekitar anda:\n${datax}`
                         client.sendText(from, text)
                         break
@@ -1493,10 +1504,10 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         break
 
-                    case 'skripsi':
+                    case 'skripsi': {
                         let skripsis = fs.readFileSync('./random/skripsi.txt', 'utf8')
                         let _skrps = _.sample(skripsis.split('\n'))
-                        var gtts = new gTTS(_skrps, 'id')
+                        let gtts = new gTTS(_skrps, 'id')
                         try {
                             gtts.save('./media/tts.mp3', function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
@@ -1510,8 +1521,9 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, resMsg.error.norm, id)
                         }
                         break
+                    }
 
-                    case 'apakah':
+                    case 'apakah': {
                         const isTrue = Boolean(Math.round(Math.random()))
                         var result = ''
                         if (args.length === 0) result = 'Apakah apa woy yang jelas dong! Misalnya, apakah aku ganteng?'
@@ -1532,6 +1544,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, resMsg.error.norm, id)
                         }
                         break
+                    }
 
                     case 'kbbi':
                         if (args.length != 1) return client.reply(from, `Mencari arti kata dalam KBBI\nPenggunaan: ${prefix}kbbi <kata>\ncontoh: ${prefix}kbbi apel`, id)
@@ -1627,10 +1640,17 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     // List creator commands
-                    case 'list':
+                    case 'list': {
                         if (args.length === 0) {
                             let thelist = await list.getListName(from)
-                            client.reply(from, `${(thelist === false || thelist === '') ? `${isGroupMsg ? `Group` : `Chat`} ini belum memiliki list.` : `List yang ada di ${isGroupMsg ? `group` : `chat`}: ${thelist.join(', ')}`}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}list <nama list>*
+                            let _what = isGroupMsg ? `Group` : `Chat`
+                            let _msg
+                            if (thelist === false || thelist === '') {
+                                _msg = `${_what} ini belum memiliki list.`
+                            } else {
+                                _msg = `List yang ada di ${_what}: ${thelist.join(', ')}`
+                            }
+                            client.reply(from, `${_msg}\n\nMenampilkan list/daftar yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}list <nama list>*
                                 \nUntuk membuat list gunakan perintah:\n-> *${prefix}createlist <nama list> | <Keterangan>* contoh: ${prefix}createlist tugas | Tugas PTI 17
                                 \nUntuk menghapus list beserta isinya gunakan perintah:\n *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas
                                 \nUntuk mengisi list gunakan perintah:\n-> *${prefix}addtolist <nama list> <isi>* bisa lebih dari 1 menggunakan pemisah | \ncontoh: ${prefix}addtolist tugas Matematika Bab 1 deadline 2021 | Pengantar Akuntansi Bab 2
@@ -1652,6 +1672,7 @@ const HandleMsg = async (client, message, browser) => {
                             await client.reply(from, respon, id)
                         }
                         break
+                    }
 
                     case 'createlist': {
                         if (args.length === 0) return client.reply(from, `Untuk membuat list gunakan perintah: *${prefix}createlist <nama list> | <Keterangan>* contoh: ${prefix}createlist tugas | Tugas PTI 17\n(mohon hanya gunakan 1 kata untuk nama list)`, id)
@@ -1775,9 +1796,9 @@ const HandleMsg = async (client, message, browser) => {
                         if (mentionedJidList.length === 0) return client.reply(from, 'Maaf, format pesan salah.\nSilahkan tag satu atau lebih orang yang akan dikeluarkan', id)
                         if (mentionedJidList[0] === botNumber) return await client.reply(from, 'Maaf, format pesan salah.\nTidak dapat mengeluarkan akun bot sendiri', id)
                         await client.sendTextWithMentions(from, `Request diterima, mengeluarkan:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
-                        for (let i = 0; i < mentionedJidList.length; i++) {
-                            if (groupAdmins.includes(mentionedJidList[i])) return await client.sendText(from, 'Gagal, kamu tidak bisa mengeluarkan admin grup.')
-                            await client.removeParticipant(groupId, mentionedJidList[i])
+                        for (let ment of mentionedJidList) {
+                            if (groupAdmins.includes(ment)) return await client.sendText(from, 'Gagal, kamu tidak bisa mengeluarkan admin grup.')
+                            await client.removeParticipant(groupId, ment)
                         }
                         break
 
@@ -1829,14 +1850,14 @@ const HandleMsg = async (client, message, browser) => {
                         const groupMem = await client.getGroupMembers(groupId)
                         if (args.length != 0) {
                             let res = `${arg}\n`
-                            for (let i = 0; i < groupMem.length; i++) {
-                                res += `@${groupMem[i].id.replace(/@c\.us/g, '')} `
+                            for (let m of groupMem) {
+                                res += `@${m.id.replace(/@c\.us/g, '')} `
                             }
                             await client.sendTextWithMentions(from, res)
                         } else {
                             let res = '╔══✪〘 Mention All 〙✪\n'
-                            for (let i = 0; i < groupMem.length; i++) {
-                                res += `╠➥ @${groupMem[i].id.replace(/@c\.us/g, '')}\n`
+                            for (let m of groupMem) {
+                                res += `╠➥ @${m.id.replace(/@c\.us/g, '')}\n`
                             }
                             res += '╚═〘 *SeroBot* 〙'
                             await client.sendTextWithMentions(from, res)
@@ -1916,10 +1937,10 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isMedia && type == 'image' || isQuotedImage) {
-                            const dataMedia = isQuotedImage ? quotedMsg : message
-                            const _mimetype = dataMedia.mimetype
-                            const mediaData = await decryptMedia(dataMedia)
-                            const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+                            let dataMedia = isQuotedImage ? quotedMsg : message
+                            let _mimetype = dataMedia.mimetype
+                            let mediaData = await decryptMedia(dataMedia)
+                            let imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                             await client.setGroupIcon(groupId, imageBase64)
                         } else if (args.length === 1) {
                             if (!isUrl(url)) { await client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
@@ -1957,11 +1978,10 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwner) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai oleh owner grup!', id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         const allMem = await client.getGroupMembers(groupId)
-                        for (let i = 0; i < allMem.length; i++) {
-                            if (groupAdmins.includes(allMem[i].id)) {
-
+                        for (let m of allMem) {
+                            if (groupAdmins.includes(m.id)) {
                             } else {
-                                await client.removeParticipant(groupId, allMem[i].id)
+                                await client.removeParticipant(groupId, m.id)
                             }
                         }
                         client.reply(from, 'Success kick all member', id)
@@ -1986,13 +2006,13 @@ const HandleMsg = async (client, message, browser) => {
                                 fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                                 client.reply(from, 'Success unbanned target!', id)
                             } else {
-                                for (let i = 0; i < mentionedJidList.length; i++) {
-                                    let pos = banned.indexOf(mentionedJidList[i])
+                                for (let m of mentionedJidList) {
+                                    let pos = banned.indexOf(m)
                                     if (pos != -1) client.reply(from, 'Target already banned!', id)
                                     else {
-                                        banned.push(mentionedJidList[i])
+                                        banned.push(m)
                                         fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
-                                        client.reply(from, `Success ban ${mentionedJidList[i].replace('@c.us', '')}!`, id)
+                                        client.reply(from, `Success ban ${m.replace('@c.us', '')}!`, id)
                                     }
                                 }
                             }
@@ -2165,7 +2185,7 @@ const HandleMsg = async (client, message, browser) => {
             if (find && find.id === groupId) {
                 const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                 const isIn = inArray(pengirim, cekuser)
-                if (cekuser && isIn !== false) {
+                if (cekuser && isIn !== -1) {
                     if (isKasar) {
                         const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + _denda).write()
                         if (denda) {

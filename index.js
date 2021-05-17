@@ -75,7 +75,7 @@ async function start(client = new Client()) {
             async function () {
                 if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
                     console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
-                    queue.isPaused ? queue.start() : null
+                    if (queue.isPaused) queue.start()
                 })
             }, 1000)
     })
@@ -135,10 +135,10 @@ async function start(client = new Client()) {
             })
         await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
             console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
-            queue.isPaused ? queue.start() : null
+            if (queue.isPaused) queue.start()
         })
 
-        queue.isPaused ? queue.start() : null
+        if (queue.isPaused) queue.start()
     }).catch(err => {
         console.log(err)
     })
