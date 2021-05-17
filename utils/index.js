@@ -51,11 +51,11 @@ const isFiltered = (from) => {
  *@param {Callback} callback
  */
 const download = (url, path, callback) => {
-  request.head(url, () => {
-    request(url)
-      .pipe(fs.createWriteStream(path))
-      .on('close', callback)
-  })
+    request.head(url, () => {
+        request(url)
+            .pipe(fs.createWriteStream(path))
+            .on('close', callback)
+    })
 }
 
 
@@ -63,7 +63,7 @@ const download = (url, path, callback) => {
  *@param {String} url
  */
 
-const redir = (url)=>{
+const redir = (url) => {
     follow.get(url, response => {
         return response.responseUrl
     })
@@ -127,12 +127,12 @@ const uncache = (module = '.') => {
 
 String.prototype.toDHms = function () {
     var sec_num = parseInt(this, 10) // don't forget the second param
-    var hours   = Math.floor(sec_num / 3600)
+    var hours = Math.floor(sec_num / 3600)
     var minutes = Math.floor((sec_num - (hours * 3600)) / 60)
     var seconds = sec_num - (hours * 3600) - (minutes * 60)
     var days = 0
-    if (hours >= 24) {days = Math.floor(hours / 24); hours = hours % 24}
-    var time    = days+' days '+hours+' hours '+minutes+' minutes '+seconds+' secs'
+    if (hours >= 24) { days = Math.floor(hours / 24); hours = hours % 24 }
+    var time = days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' secs'
     return time
 }
 
