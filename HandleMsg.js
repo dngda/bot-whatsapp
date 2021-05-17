@@ -33,7 +33,6 @@ let {
     scraper,
     menuId,
     images,
-    resep,
     meme,
     kbbi,
     list,
@@ -45,15 +44,14 @@ function requireUncached(module) {
     return require(module)
 }
 
-const sleep = (delay) => new Promise((resolve, reject) => {
-    setTimeout(() => {  resolve(true) }, delay)
+const sleep = (delay) => new Promise((resolve) => {
+    setTimeout(() => { resolve(true) }, delay)
 })
 
 const {
     createReadFileSync,
     processTime,
     msgFilter,
-    download,
     color,
     isUrl
 } = require('./utils')
@@ -125,7 +123,7 @@ const HandleMsg = async (client, message, browser) => {
     }
 
     try {
-        const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
+        const { type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
         var { name, formattedTitle } = chat
         let { pushname, verifiedName, formattedName } = sender
@@ -135,10 +133,9 @@ const HandleMsg = async (client, message, browser) => {
         const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
         const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
         const pengirim = sender.id
-        const stickermsg = message.type === 'sticker'
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
         const stickerMetadata = { pack: 'Created with', author: 'SeroBot', keepScale: true }
-        const stickerMetadataCircle = { pack: 'Created with', author: 'SeroBot', circle:true }
+        const stickerMetadataCircle = { pack: 'Created with', author: 'SeroBot', circle: true }
         const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
 
         // Bot Prefix
@@ -192,8 +189,8 @@ const HandleMsg = async (client, message, browser) => {
         if (!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
         // Log Commands
-        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`),`:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname)) }
-        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`),`:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), `:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname)) }
+        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), `:`, color(`${(args.length === 0) ? color(`with no args`, 'grey') : (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg}`, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
         //[BETA] Avoid Spam Message
         msgFilter.addFilter(from)
@@ -205,23 +202,18 @@ const HandleMsg = async (client, message, browser) => {
         switch (true) {
             case /^p$/.test(lowerCaseBody): {
                 return await client.reply(from, `Alangkah baiknya ucapkan salam atau menyapa!\nP P P mulu gada tata krama`, id)
-                break
             }
             case /^(menu|start|help)/.test(lowerCaseBody): {
                 return await client.sendText(from, `Untuk menampilkan menu, kirim pesan *${prefix}menu*`)
-                break
             }
             case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(lowerCaseBody): {
                 return await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
-                break
             }
             case /\b(hi|hy|halo|hai|hei|hello)\b/.test(lowerCaseBody): {
                 return await client.reply(from, `Halo ${pushname} 👋`, id)
-                break
             }
             case /\bping\b/.test(lowerCaseBody): {
                 return await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
-                break
             }
             case new RegExp(`\\b(${sfx.join("|")})\\b`).test(lowerCaseBody): {
                 const theSFX = lowerCaseBody.match(new RegExp(sfx.join("|")))
@@ -272,7 +264,7 @@ const HandleMsg = async (client, message, browser) => {
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
                                     await client.sendText(from, resMsg.success.join)
-                                    setTimeout(async() => {
+                                    setTimeout(async () => {
                                         await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
                                     }, 2000)
                                 })
@@ -334,15 +326,15 @@ const HandleMsg = async (client, message, browser) => {
                                         console.log(err.name, err.message)
                                         client.sendText(from, resMsg.error.norm)
                                     })
-                                if (mediaData){
-                                await client.sendImageAsSticker(from, mediaData, _metadata)
-                                    .then(() => {
-                                        client.sendText(from, 'Here\'s your sticker')
-                                        console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
-                                    }).catch(err => {
-                                        console.log(err.name, err.message)
-                                        client.sendText(from, resMsg.error.norm)
-                                    })
+                                if (mediaData) {
+                                    await client.sendImageAsSticker(from, mediaData, _metadata)
+                                        .then(() => {
+                                            client.sendText(from, 'Here\'s your sticker')
+                                            console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
+                                        }).catch(err => {
+                                            console.log(err.name, err.message)
+                                            client.sendText(from, resMsg.error.norm)
+                                        })
                                 }
                             } catch (err) {
                                 console.log(err.name, err.message)
@@ -394,12 +386,12 @@ const HandleMsg = async (client, message, browser) => {
                                 console.log(`Sticker url err: ${e}`)
                                 client.sendText(from, resMsg.error.norm)
                             }
-                        } else if ((isMedia && mimetype === 'video/mp4') || isQuotedVideo){
+                        } else if ((isMedia && mimetype === 'video/mp4') || isQuotedVideo) {
                             var encryptedMedia = isQuotedVideo ? quotedMsg : message
                             var mediaData = await decryptMedia(encryptedMedia)
                             client.reply(from, resMsg.wait, id)
                             await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
-                                .then(() => { 
+                                .then(() => {
                                     client.sendText(from, 'Here\'s your sticker')
                                     console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                 })
@@ -534,7 +526,7 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendText(from, resMsg.error.norm)
                             })
                         var { data } = responseh.data
-                        var idx = data.findIndex(function (post, index) {
+                        var idx = data.findIndex(function (post) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true
                         })
@@ -544,23 +536,23 @@ const HandleMsg = async (client, message, browser) => {
                         client.reply(from, pesan, message.id)
                         break
 
-                    case 'surah':{
+                    case 'surah': {
                         if (args.length == 0) return client.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama/nomor surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id\n${prefix}surah 1 1 id`, message.id)
                         nmr = 0
-                        if(isNaN(args[0])){
+                        if (isNaN(args[0])) {
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
                                     console.log(err)
                                     return client.sendText(from, resMsg.error.norm)
                                 })
                             var { data } = res.data
-                            var idx = data.findIndex(function (post, index) {
+                            var idx = data.findIndex(function (post) {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
                             if (data[idx] === undefined) return client.reply(from, `Maaf format salah atau nama surah tidak sesuai`, id)
                             nmr = data[idx].number
-                        }else{
+                        } else {
                             nmr = args[0]
                         }
                         var ayat = args[1] | 1
@@ -592,23 +584,23 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'tafsir':{
+                    case 'tafsir': {
                         if (args.length == 0) return client.reply(from, `*_${prefix}tafsir <nama/nomor surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
                         nmr = 0
-                        if(isNaN(args[0])){
+                        if (isNaN(args[0])) {
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
                                     console.log(err)
                                     return client.sendText(from, resMsg.error.norm)
                                 })
                             var { data } = res.data
-                            var idx = data.findIndex(function (post, index) {
+                            var idx = data.findIndex(function (post) {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
                             if (data[idx] === undefined) return client.reply(from, `Maaf format salah atau nama surah tidak sesuai`, id)
                             nmr = data[idx].number
-                        }else{
+                        } else {
                             nmr = args[0]
                         }
                         var ayat = args[1] | 1
@@ -625,23 +617,23 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'alaudio':{
+                    case 'alaudio': {
                         if (args.length == 0) return client.reply(from, `*_${prefix}ALaudio <nama/nomor surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`, message.id)
                         nmr = 0
-                        if(isNaN(args[0])){
+                        if (isNaN(args[0])) {
                             let res = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .catch(err => {
                                     console.log(err)
                                     return client.sendText(from, resMsg.error.norm)
                                 })
                             var { data } = res.data
-                            var idx = data.findIndex(function (post, index) {
+                            var idx = data.findIndex(function (post) {
                                 if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                     return true
                             })
                             if (data[idx] === undefined) return client.reply(from, `Maaf format salah atau nama surah tidak sesuai`, id)
                             nmr = data[idx].number
-                        }else{
+                        } else {
                             nmr = args[0]
                         }
                         var ayat = args[1]
@@ -695,7 +687,7 @@ const HandleMsg = async (client, message, browser) => {
                                 await client.sendFileFromUrl(from, data.audio.secondary[0])
                                 await client.reply(from, pesan, message.id)
                             }
-                        }                        
+                        }
                         break
                     }
 
@@ -756,7 +748,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isBotGroupAdmins) {
                             client.revokeGroupInviteLink(from)
-                                .then((res) => {
+                                .then(() => {
                                     client.reply(from, `Berhasil Revoke Grup Link gunakan *${prefix}grouplink* untuk mendapatkan group invite link yang terbaru`, id)
                                 })
                                 .catch((err) => {
@@ -772,25 +764,25 @@ const HandleMsg = async (client, message, browser) => {
                         client.sendText(from, resMsg.wait)
                         let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                         try {
-                            ytid = ytid.replace(/&.+/g,'')
+                            ytid = ytid.replace(/&.+/g, '')
                             var time = moment(t * 1000).format('mmss')
                             var path = `./media/temp_${time}.mp3`
 
                             stream = ytdl(ytid, { quality: 'highestaudio' })
 
-                            ffmpeg({source:stream})
+                            ffmpeg({ source: stream })
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
                                     console.log('An error occurred: ' + err.message)
                                     fs.unlinkSync(path)
                                     client.reply(from, resMsg.error.norm, id)
-                                  })
+                                })
                                 .on('end', () => {
-                                    client.sendFile(from, path,`${ytid}.mp3`,'', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                    client.sendFile(from, path, `${ytid}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                     fs.unlinkSync(path)
-                                  })
+                                })
                                 .saveToFile(path)
-                        }catch (err){
+                        } catch (err) {
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
                         }
@@ -810,33 +802,33 @@ const HandleMsg = async (client, message, browser) => {
                             let duration = (ytresult) => {
                                 const n = ytresult.duration.split(':')
                                 if (n.length === 3) return parseInt(n[0]) * 3600 + parseInt(n[1]) * 60 + parseInt(n[2])
-                                    else return parseInt(n[0] * 60) + parseInt(n[1])
+                                else return parseInt(n[0] * 60) + parseInt(n[1])
                             }
                             if (duration(ytresult) > 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
-                                var estimasi = duration(ytresult) / 100
-                                var est = estimasi.toFixed(0)
+                            var estimasi = duration(ytresult) / 100
+                            var est = estimasi.toFixed(0)
 
                             await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``, `Video ditemukan\n\nJudul: ${ytresult.judul}\nDurasi: ${ytresult.duration}\nUploaded: ${ytresult.published_at}\nView: ${ytresult.views}\n\nAudio sedang dikirim ± ${est} menit`, id)
- 
+
                             //Download video and save as MP3 file
                             var time = moment(t * 1000).format('mmss')
                             var path = `./media/temp_${time}.mp3`
 
                             stream = ytdl(ytresult.id, { quality: 'highestaudio' })
-                            ffmpeg({source:stream})
+                            ffmpeg({ source: stream })
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
                                     console.log('An error occurred: ' + err.message)
                                     fs.unlinkSync(path)
                                     return client.reply(from, resMsg.error.norm, id)
-                                  })
+                                })
                                 .on('end', () => {
-                                    client.sendFile(from, path,`${ytresult.judul.substring(0, 15).replace(/\s/g, '-')}.mp3`,'', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                    client.sendFile(from, path, `${ytresult.judul.substring(0, 15).replace(/\s/g, '-')}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                     fs.unlinkSync(path)
-                                  })
+                                })
                                 .saveToFile(path)
 
-                        }catch (err){
+                        } catch (err) {
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
                         }
@@ -844,7 +836,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'earrape': {
-                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
@@ -860,18 +852,18 @@ const HandleMsg = async (client, message, browser) => {
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                                 return client.reply(from, resMsg.error.norm, id)
-                              })
+                            })
                             .on('end', () => {
-                                client.sendFile(from, outpath,'earrape.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, outpath, 'earrape.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
-                              })
+                            })
                             .saveToFile(outpath)
                         break
                     }
 
                     case 'robot': {
-                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}robot`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}robot`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
@@ -887,18 +879,18 @@ const HandleMsg = async (client, message, browser) => {
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                                 return client.reply(from, resMsg.error.norm, id)
-                              })
+                            })
                             .on('end', () => {
-                                client.sendFile(from, outpath,'robot.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, outpath, 'robot.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
-                              })
+                            })
                             .saveToFile(outpath)
                         break
                     }
 
                     case 'reverse': {
-                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}reverse`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}reverse`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
@@ -914,18 +906,18 @@ const HandleMsg = async (client, message, browser) => {
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                                 return client.reply(from, resMsg.error.norm, id)
-                              })
+                            })
                             .on('end', () => {
-                                client.sendFile(from, outpath,'reverse.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, outpath, 'reverse.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
-                              })
+                            })
                             .saveToFile(outpath)
                         break
                     }
 
                     case 'samarkan': {
-                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}samarkan`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}samarkan`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
@@ -941,18 +933,18 @@ const HandleMsg = async (client, message, browser) => {
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                                 return client.reply(from, resMsg.error.norm, id)
-                              })
+                            })
                             .on('end', () => {
-                                client.sendFile(from, outpath,'samarkan.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, outpath, 'samarkan.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
-                              })
+                            })
                             .saveToFile(outpath)
                         break
                     }
 
                     case 'vibrato': {
-                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}vibrato`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}vibrato`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
@@ -968,18 +960,18 @@ const HandleMsg = async (client, message, browser) => {
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                                 return client.reply(from, resMsg.error.norm, id)
-                              })
+                            })
                             .on('end', () => {
-                                client.sendFile(from, outpath,'vibrato.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, outpath, 'vibrato.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
-                              })
+                            })
                             .saveToFile(outpath)
                         break
                     }
 
                     case 'nightcore': {
-                        if(!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}nightcore`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}nightcore`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         var time = moment(t * 1000).format('mmss')
@@ -995,12 +987,12 @@ const HandleMsg = async (client, message, browser) => {
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                                 return client.reply(from, resMsg.error.norm, id)
-                              })
+                            })
                             .on('end', () => {
-                                client.sendFile(from, outpath,'nightcore.mp3','', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, outpath, 'nightcore.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
-                              })
+                            })
                             .saveToFile(outpath)
                         break
                     }
@@ -1008,27 +1000,27 @@ const HandleMsg = async (client, message, browser) => {
                     case 'tiktok': {
                         return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
 
-                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>\nTanpa simbol <>`, id)
-                        let urls = isQuotedChat ? quotedMsg.body : arg
-                        if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
-                        await client.reply(from, resMsg.wait, id)
-                        let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        let _id = quotedMsg != null ? quotedMsg.id : id
-                        await client.sendFileFromUrl(from, result.videonowm2, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        break
+                        // if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>\nTanpa simbol <>`, id)
+                        // let urls = isQuotedChat ? quotedMsg.body : arg
+                        // if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+                        // await client.reply(from, resMsg.wait, id)
+                        // let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        // let _id = quotedMsg != null ? quotedMsg.id : id
+                        // await client.sendFileFromUrl(from, result.videonowm2, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        // break
                     }
 
                     case 'tiktokmp3': {
                         return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
-                        
-                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
-                        let urls = isQuotedChat ? quotedMsg.body : arg
-                        if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
-                        await client.reply(from, resMsg.wait, id)
-                        let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        let _id = quotedMsg != null ? quotedMsg.id : id
-                        await client.sendFileFromUrl(from, result.music, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        break
+
+                        // if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
+                        // let urls = isQuotedChat ? quotedMsg.body : arg
+                        // if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+                        // await client.reply(from, resMsg.wait, id)
+                        // let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        // let _id = quotedMsg != null ? quotedMsg.id : id
+                        // await client.sendFileFromUrl(from, result.music, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        // break
                     }
 
                     case 'artinama':
@@ -1138,7 +1130,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'pin':
                     case 'pinterest': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`, id)
-                        if (args[0] === '+'){
+                        if (args[0] === '+') {
                             await images.fdci(arg.trim().substring(arg.indexOf(' ') + 1))
                                 .then(res => {
                                     img = _.sample(res, 10)
@@ -1146,22 +1138,22 @@ const HandleMsg = async (client, message, browser) => {
                                         if (i != null) await client.sendFileFromUrl(from, i, '', '', id)
                                     })
                                 })
-                        }else {
-                        await images.fdci(arg)
-                            .then(res => {
-                                img = _.sample(res)
-                                if (img === null || img === undefined) return client.reply(from, resMsg.error.norm, id)
+                        } else {
+                            await images.fdci(arg)
+                                .then(res => {
+                                    img = _.sample(res)
+                                    if (img === null || img === undefined) return client.reply(from, resMsg.error.norm, id)
 
-                                client.sendFileFromUrl(from, img, '', '', id)
-                                    .catch(e => {
-                                        console.log(`fdci err : ${e}`)
-                                        client.reply(from, resMsg.error.norm+'\nCoba gunakan /pin2 atau /pinterest2', id)
-                                    })
-                            })
-                            .catch(e => {
-                                console.log(`fdci err : ${e}`)
-                                return client.reply(from, resMsg.error.norm+'\nCoba gunakan /pin2 atau /pinterest2', id)
-                            })
+                                    client.sendFileFromUrl(from, img, '', '', id)
+                                        .catch(e => {
+                                            console.log(`fdci err : ${e}`)
+                                            client.reply(from, resMsg.error.norm + '\nCoba gunakan /pin2 atau /pinterest2', id)
+                                        })
+                                })
+                                .catch(e => {
+                                    console.log(`fdci err : ${e}`)
+                                    return client.reply(from, resMsg.error.norm + '\nCoba gunakan /pin2 atau /pinterest2', id)
+                                })
                         }
                         break
                     }
@@ -1175,9 +1167,9 @@ const HandleMsg = async (client, message, browser) => {
                         })
                         if (img === null) return client.reply(from, resMsg.error.norm, id).then(() => console.log(`img return null`))
                         await client.sendFileFromUrl(from, img, '', '', id).catch(e => {
-                                console.log(`send pin2 err : ${e}`)
-                                return client.reply(from, resMsg.error.norm, id)
-                            })
+                            console.log(`send pin2 err : ${e}`)
+                            return client.reply(from, resMsg.error.norm, id)
+                        })
                         break
                     }
 
@@ -1192,9 +1184,9 @@ const HandleMsg = async (client, message, browser) => {
                         })
                         if (img === null) return client.reply(from, resMsg.error.norm, id).then(() => console.log(`img return null`))
                         await client.sendFileFromUrl(from, img, '', '', id).catch(e => {
-                                console.log(`send gimage err : ${e}`)
-                                return client.reply(from, resMsg.error.norm, id)
-                            })
+                            console.log(`send gimage err : ${e}`)
+                            return client.reply(from, resMsg.error.norm, id)
+                        })
                         break
                     }
 
@@ -1332,29 +1324,29 @@ const HandleMsg = async (client, message, browser) => {
 
                     //Tebak Gambar
                     case 'tgb':
-                    case 'tebakgambar':{
+                    case 'tebakgambar': {
                         const cek = await tebakgb.getAns(from)
                         if (cek != false) return client.reply(from, `Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`, id)
                         await tebakgb.getTebakGambar(from).then(async res => {
-                            let waktu = res.jawaban.split(' ').length-1
-                            let detik = waktu*60
+                            let waktu = res.jawaban.split(' ').length - 1
+                            let detik = waktu * 60
                             await client.sendFileFromUrl(from, res.soal_gbr, '', `Tebak Gambar diatas. \nJawab dengan perintah *${prefix}ans (jawaban)*\n\nWaktunya ${waktu} menit.`, null)
                                 .then(() => {
-                                    sleep(detik*1000/4).then(async() => {
+                                    sleep(detik * 1000 / 4).then(async () => {
                                         const ans = await tebakgb.getAns(from)
                                         if (ans === false) return true
-                                            else client.sendText(from, `⏳ ${((detik*1000)-(detik*1000/4*1))/1000} detik lagi`)
-                                        sleep(detik*1000/4).then(async() => {
+                                        else client.sendText(from, `⏳ ${((detik * 1000) - (detik * 1000 / 4 * 1)) / 1000} detik lagi`)
+                                        sleep(detik * 1000 / 4).then(async () => {
                                             const ans1 = await tebakgb.getAns(from)
                                             if (ans1 === false) return true
-                                                else client.sendText(from, `⏳ ${((detik*1000)-(detik*1000/4*2))/1000} detik lagi\nHint: ${res.jawaban.replace(/\s/g,'\t').replace(/[^aeiou\t]/g,'_ ')}`)
-                                            sleep(detik*1000/4).then(async() => {
-                                            const ans = await tebakgb.getAns(from)
-                                            if (ans === false) return true
-                                                else client.sendText(from, `⏳ ${((detik*1000)-(detik*1000/4*3))/1000} detik lagi`)
-                                            sleep(detik*1000/4).then(async() => {
+                                            else client.sendText(from, `⏳ ${((detik * 1000) - (detik * 1000 / 4 * 2)) / 1000} detik lagi\nHint: ${res.jawaban.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')}`)
+                                            sleep(detik * 1000 / 4).then(async () => {
                                                 const ans = await tebakgb.getAns(from)
                                                 if (ans === false) return true
+                                                else client.sendText(from, `⏳ ${((detik * 1000) - (detik * 1000 / 4 * 3)) / 1000} detik lagi`)
+                                                sleep(detik * 1000 / 4).then(async () => {
+                                                    const ans = await tebakgb.getAns(from)
+                                                    if (ans === false) return true
                                                     else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: *${res.jawaban}*`)
                                                     tebakgb.delData(from)
                                                 })
@@ -1366,8 +1358,8 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'ans':{
-                        if (args.length === 0 ) return client.reply(from, `Jawab dengan menyertakan jawaban yang benar`, id)
+                    case 'ans': {
+                        if (args.length === 0) return client.reply(from, `Jawab dengan menyertakan jawaban yang benar`, id)
                         await tebakgb.getAns(from).then(res => {
                             if (res != false) {
                                 if (res.ans.toLowerCase() === arg.toLowerCase()) {
@@ -1383,7 +1375,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'skip':{
+                    case 'skip': {
                         tebakgb.getAns(from).then(res => {
                             client.reply(from, `Sesi tebak gambar telah diskip!\nJawabannya: *${res.ans}*`, id)
                             tebakgb.delData(from)
@@ -1485,7 +1477,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'klasmen':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isNgegas) return client.reply(from, `Anti-Toxic tidak aktif, aktifkan menggunakan perintah ${prefix}kasar on`, id)
-                        try{
+                        try {
                             const klasemen = db.get('group').filter({ id: groupId }).map('members').value()[0]
                             let urut = Object.entries(klasemen).map(([key, val]) => ({ id: key, ...val })).sort((a, b) => b.denda - a.denda);
                             let textKlas = "*Klasemen Denda Sementara*\n"
@@ -1495,7 +1487,7 @@ const HandleMsg = async (client, message, browser) => {
                                 i++
                             })
                             await client.sendTextWithMentions(from, textKlas)
-                        }catch (err) {
+                        } catch (err) {
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
                         }
@@ -1543,7 +1535,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'kbbi':
                         if (args.length != 1) return client.reply(from, `Mencari arti kata dalam KBBI\nPenggunaan: ${prefix}kbbi <kata>\ncontoh: ${prefix}kbbi apel`, id)
-                        const cariKata = kbbi(args[0])
+                        kbbi(args[0])
                             .then(res => {
                                 if (res == '') return client.reply(from, `Maaf kata "${args[0]}" tidak tersedia di KBBI`, id)
                                 client.reply(from, res + `\n\nMore: https://kbbi.web.id/${args[0]}`, id)
@@ -1557,17 +1549,18 @@ const HandleMsg = async (client, message, browser) => {
                     case 'trans':
                     case 'translate':
                         if (args.length === 0 && !isQuotedChat) return client.reply(from, `Translate text ke kode bahasa, penggunaan: \n${prefix}trans <kode bahasa> <text>\nContoh : \n -> ${prefix}trans id some english or other language text here\n -> ${prefix}translate en beberapa kata bahasa indonesia atau bahasa lain. \n\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4`, id)
-                        const lang = ['en','pt','af','sq','am','ar','hy','az','eu','be','bn','bs','bg','ca','ceb','ny','zh-CN','co','hr','cs','da','nl','eo','et','tl','fi','fr','fy','gl','ka','de','el','gu','ht','ha','haw','iw','hi','hmn','hu','is','ig','id','ga','it','ja','jw','kn','kk','km','rw','ko','ku','ky','lo','la','lv','lt','lb','mk','mg','ms','ml','mt','mi','mr','mn','my','ne','no','or','ps','fa','pl','pa','ro','ru','sm','gd','sr','st','sn','sd','si','sk','sl','so','es','su','sw','sv','tg','ta','tt','te','th','tr','tk','uk','ur','ug','uz','vi','cy','xh','yi','yo','zu','zh-TW']
+                        const lang = ['en', 'pt', 'af', 'sq', 'am', 'ar', 'hy', 'az', 'eu', 'be', 'bn', 'bs', 'bg', 'ca', 'ceb', 'ny', 'zh-CN', 'co', 'hr', 'cs', 'da', 'nl', 'eo', 'et', 'tl', 'fi', 'fr', 'fy', 'gl', 'ka', 'de', 'el', 'gu', 'ht', 'ha', 'haw', 'iw', 'hi', 'hmn', 'hu', 'is', 'ig', 'id', 'ga', 'it', 'ja', 'jw', 'kn', 'kk', 'km', 'rw', 'ko', 'ku', 'ky', 'lo', 'la', 'lv', 'lt', 'lb', 'mk', 'mg', 'ms', 'ml', 'mt', 'mi', 'mr', 'mn', 'my', 'ne', 'no', 'or', 'ps', 'fa', 'pl', 'pa', 'ro', 'ru', 'sm', 'gd', 'sr', 'st', 'sn', 'sd', 'si', 'sk', 'sl', 'so', 'es', 'su', 'sw', 'sv', 'tg', 'ta', 'tt', 'te', 'th', 'tr', 'tk', 'uk', 'ur', 'ug', 'uz', 'vi', 'cy', 'xh', 'yi', 'yo', 'zu', 'zh-TW']
 
                         if (lang.includes(args[0])) {
                             translate(isQuotedChat ? quotedMsgObj.content.toString() : arg.trim().substring(arg.indexOf(' ') + 1), {
-                             from: 'auto', to: args[0] }).then(n => {
+                                from: 'auto', to: args[0]
+                            }).then(n => {
                                 client.reply(from, n, id)
                             }).catch(err => {
                                 console.log(err)
                                 client.reply(from, resMsg.error.norm, id)
                             })
-                        }else{
+                        } else {
                             client.reply(from, `Kode bahasa tidak valid`, id)
                         }
                         break
@@ -1579,21 +1572,21 @@ const HandleMsg = async (client, message, browser) => {
                         const hh = args[0].match(/\d+(h|H)/g)
                         const mm = args[0].match(/\d+(m|M)/g)
                         const hhmm = args[0].match(/\d{2}:\d{2}/g)
-                        let DDMM = args[0].match(/\d\d?\/\d\d?/g) || [moment(t*1000).format('DD/MM')]
+                        let DDMM = args[0].match(/\d\d?\/\d\d?/g) || [moment(t * 1000).format('DD/MM')]
 
                         let milis = 0
-                        if (dd === null && hh === null && mm === null && hhmm === null ) {
+                        if (dd === null && hh === null && mm === null && hhmm === null) {
                             return client.reply(from, `Format salah! masukkan waktu`, id)
                         } else if (hhmm === null) {
                             let d = dd != null ? dd[0].replace(/d|D/g, '') : 0
                             let h = hh != null ? hh[0].replace(/h|H/g, '') : 0
                             let m = mm != null ? mm[0].replace(/m|M/g, '') : 0
 
-                            milis = parseInt((d*24*60*60*1000)+(h*60*60*1000)+(m*60*1000))
+                            milis = parseInt((d * 24 * 60 * 60 * 1000) + (h * 60 * 60 * 1000) + (m * 60 * 1000))
                         } else {
                             let DD = DDMM[0].replace(/\/\d\d?/g, '')
                             let MM = DDMM[0].replace(/\d\d?\//g, '')
-                            milis = Date.parse(`${moment(t*1000).format('YYYY')}-${MM}-${DD} ${hhmm[0]}:00 GMT+7`) - moment(t*1000)
+                            milis = Date.parse(`${moment(t * 1000).format('YYYY')}-${MM}-${DD} ${hhmm[0]}:00 GMT+7`) - moment(t * 1000)
                         }
                         if (milis < 0) return client.reply(from, `Reminder untuk masa lalu? Hmm menarik...\n\nYa gabisa lah`, id)
                         if (milis >= 864000000) return client.reply(from, `Kelamaan cuy, maksimal 10 hari kedepan`, id)
@@ -1602,7 +1595,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (content === '') return client.reply(from, `Format salah! Isi pesannya apa?`, id)
                         if (milis === null) return client.reply(from, `Maaf ada yang error!`, id)
                         await schedule.futureMilis(client, message, content, milis, (quotedMsg != null)).catch(e => console.log(e))
-                        await client.reply(from, `Reminder for ${moment((t*1000) + milis).format('DD/MM/YY HH:mm:ss')} sets!`, id)
+                        await client.reply(from, `Reminder for ${moment((t * 1000) + milis).format('DD/MM/YY HH:mm:ss')} sets!`, id)
                         break
                     }
 
@@ -1616,7 +1609,7 @@ const HandleMsg = async (client, message, browser) => {
                             path = `./random/sfx/${arg}.mp3`
                             _id = (quotedMsg != null) ? quotedMsgObj.id : id
                             await client.sendAudio(from, path, _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        }else {
+                        } else {
                             await client.reply(from, `SFX tidak tersedia`, id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         }
                         break
@@ -1648,7 +1641,7 @@ const HandleMsg = async (client, message, browser) => {
                             let res = await list.getListData(from, args[0])
                             if (res === false) return client.reply(from, `List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`, id)
                             let desc = ''
-                            if (res.desc !== 'Tidak ada'){
+                            if (res.desc !== 'Tidak ada') {
                                 desc = `║ _${res.desc}_\n`
                             }
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
@@ -1698,7 +1691,7 @@ const HandleMsg = async (client, message, browser) => {
                             })
                             let res = await list.addListData(from, args[0], newlist)
                             let desc = ''
-                            if (res.desc !== 'Tidak ada'){
+                            if (res.desc !== 'Tidak ada') {
                                 desc = `║ _${res.desc}_\n`
                             }
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
@@ -1720,9 +1713,9 @@ const HandleMsg = async (client, message, browser) => {
                         } else {
                             let n = arg.substr(arg.indexOf(' ') + 1)
                             let newlist = n.substr(n.indexOf(' ') + 1)
-                            let res = await list.editListData(from, args[0], newlist, args[1]-1)
+                            let res = await list.editListData(from, args[0], newlist, args[1] - 1)
                             let desc = ''
-                            if (res.desc !== 'Tidak ada'){
+                            if (res.desc !== 'Tidak ada') {
                                 desc = `║ _${res.desc}_\n`
                             }
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
@@ -1741,16 +1734,16 @@ const HandleMsg = async (client, message, browser) => {
                         const thelist2 = await list.getListName(from)
                         if (!thelist2.includes(args[0])) {
                             return client.reply(from, `List ${args[0]} tidak ditemukan.`, id)
-                        }else {
+                        } else {
                             let number = arg.substr(arg.indexOf(' ') + 1).split(',').map((item) => {
-                                return item.trim()-1
+                                return item.trim() - 1
                             })
                             await number.reverse().forEach(async (num) => {
                                 await list.removeListData(from, args[0], num)
                             })
                             let res = await list.getListData(from, args[0])
                             let desc = ''
-                            if (res.desc !== 'Tidak ada'){
+                            if (res.desc !== 'Tidak ada') {
                                 desc = `║ _${res.desc}_\n`
                             }
                             let respon = `╔══✪〘 List ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n${desc}║\n`
@@ -1769,7 +1762,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (args.length != 1) return client.reply(from, `Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`, id)
                         try {
-                            await client.addParticipant(from, `${args[0].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'')}@c.us`)
+                            await client.addParticipant(from, `${args[0].replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '')}@c.us`)
                         } catch {
                             client.reply(from, 'Tidak dapat menambahkan target', id)
                         }
@@ -1815,10 +1808,10 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         await client.sendText(from, 'Good bye 👋')
-                        setTimeout(async() => {
+                        setTimeout(async () => {
                             await client.leaveGroup(groupId)
                         }, 2000)
-                        setTimeout(async() => {
+                        setTimeout(async () => {
                             await client.deleteChat(groupId)
                         }, 2000)
                         break
@@ -1840,7 +1833,7 @@ const HandleMsg = async (client, message, browser) => {
                                 res += `@${groupMem[i].id.replace(/@c\.us/g, '')} `
                             }
                             await client.sendTextWithMentions(from, res)
-                        }else {
+                        } else {
                             let res = '╔══✪〘 Mention All 〙✪\n'
                             for (let i = 0; i < groupMem.length; i++) {
                                 res += `╠➥ @${groupMem[i].id.replace(/@c\.us/g, '')}\n`
@@ -1851,7 +1844,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'tag':{
+                    case 'tag': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         client.reply(from, `Feature coming soon`, id)
                         break
@@ -1868,13 +1861,13 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length != 1) return client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
                         if (args[0] === 'on') {
                             let pos = ngegas.indexOf(chatId)
-                                if (pos != -1) return client.reply(from, 'Fitur anti kata kasar sudah aktif!', id)
+                            if (pos != -1) return client.reply(from, 'Fitur anti kata kasar sudah aktif!', id)
                             ngegas.push(chatId)
                             fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
                             client.reply(from, 'Fitur Anti Kasar sudah di Aktifkan', id)
                         } else if (args[0] === 'off') {
                             let pos = ngegas.indexOf(chatId)
-                                if (pos === -1) return client.reply(from, 'Fitur anti kata memang belum aktif!', id)
+                            if (pos === -1) return client.reply(from, 'Fitur anti kata memang belum aktif!', id)
                             ngegas.splice(pos, 1)
                             fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
                             client.reply(from, 'Fitur Anti Kasar sudah di non-Aktifkan', id)
@@ -1978,7 +1971,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'ban':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length == 0) return client.reply(from, `Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban add 628xx --untuk mengaktifkan\n${prefix}ban del 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`, id)
-                        const numId = args[1].replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'') + '@c.us'
+                        const numId = args[1].replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '') + '@c.us'
                         if (args[0] == 'add') {
                             let pos = banned.indexOf(numId)
                             if (pos != -1) return client.reply(from, 'Target already banned!', id)
@@ -1996,11 +1989,11 @@ const HandleMsg = async (client, message, browser) => {
                                 for (let i = 0; i < mentionedJidList.length; i++) {
                                     let pos = banned.indexOf(mentionedJidList[i])
                                     if (pos != -1) client.reply(from, 'Target already banned!', id)
-                                        else {
-                                            banned.push(mentionedJidList[i])
-                                            fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
-                                            client.reply(from, `Success ban ${mentionedJidList[i].replace('@c.us', '')}!`, id)
-                                        }
+                                    else {
+                                        banned.push(mentionedJidList[i])
+                                        fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
+                                        client.reply(from, `Success ban ${mentionedJidList[i].replace('@c.us', '')}!`, id)
+                                    }
                                 }
                             }
                         break
@@ -2016,7 +2009,7 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         client.reply(from, `Broadcast in progress! Total: ${chatz.length} chats`, id)
                         break
-                    
+
                     case 'bcgroup': //untuk broadcast atau promosi ke group
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua group ketik:\n${prefix}bcgroup [isi chat]`)
@@ -2092,15 +2085,15 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         await client.reply(from, `Refreshing web whatsapp page!`, id)
                         setTimeout(() => {
-                            try{
-                                client.refresh().then(async() => {
+                            try {
+                                client.refresh().then(async () => {
                                     console.log(`Bot refreshed!`)
                                     client.reply(from, `Bot refreshed!`, id)
                                 })
-                            }catch (err) {
+                            } catch (err) {
                                 console.log(color('[ERROR]', 'red'), err)
                             }
-                        }, 2000)                         
+                        }, 2000)
                         break
 
                     case 'restart': {
@@ -2114,9 +2107,9 @@ const HandleMsg = async (client, message, browser) => {
                     case 'unblock': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length === 0) return client.reply(from, `Untuk unblock kontak, ${prefix}unblock 628xxx`, id)
-                        await client.contactUnblock(`${arg.replace(/\+/g,'').replace(/\s/g,'').replace(/-/g,'')}@c.us`).then((n) => {
+                        await client.contactUnblock(`${arg.replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '')}@c.us`).then((n) => {
                             if (n) return client.reply(from, `Berhasil unblock ${arg}.`, id)
-                                else client.reply(from, `Nomor ${arg} tidak terdaftar.`, id)
+                            else client.reply(from, `Nomor ${arg} tidak terdaftar.`, id)
                         }).catch(e => {
                             console.log(e)
                             client.reply(from, resMsg.error.norm, id)
@@ -2126,11 +2119,11 @@ const HandleMsg = async (client, message, browser) => {
 
                     case '>':
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        try{
+                        try {
                             eval(`(async() => {
                                 ${arg}    
                             })()`)
-                        }catch (e) {
+                        } catch (e) {
                             console.log(e)
                             await client.sendText(from, `${e.name}: ${e.message}`)
                         }
@@ -2142,15 +2135,15 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         const { exec } = require('child_process')
                         exec(arg, (err, stdout, stderr) => {
-                          if (err) {
-                            //some err occurred
-                            console.error(err)
-                          } else {
-                           // the *entire* stdout and stderr (buffered)
-                           client.sendText(from, stdout+stderr)
-                           console.log(`stdout: ${stdout}`)
-                           console.log(`stderr: ${stderr}`)
-                          }
+                            if (err) {
+                                //some err occurred
+                                console.error(err)
+                            } else {
+                                // the *entire* stdout and stderr (buffered)
+                                client.sendText(from, stdout + stderr)
+                                console.log(`stdout: ${stdout}`)
+                                console.log(`stderr: ${stderr}`)
+                            }
                         })
                         client.simulateTyping(from, false)
                         break
@@ -2160,7 +2153,6 @@ const HandleMsg = async (client, message, browser) => {
                         await client.reply(from, `Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`, id)
                         break
 
-                await client.simulateTyping(from, false)
                 }
 
             })//typing
@@ -2182,7 +2174,7 @@ const HandleMsg = async (client, message, browser) => {
                                 banned.push(pengirim)
                                 fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                                 client.reply(from, `╔══✪〘 SELAMAT 〙✪\n║\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 2 Juta.\n║ Mampos~\n║\n║ Denda -2.000.000\n║\n╚═〘 SeroBot 〙`, id)
-                                db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n-2000000).write()
+                                db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n - 2000000).write()
                             }
                         }
                     }
