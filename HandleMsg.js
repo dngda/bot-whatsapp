@@ -323,7 +323,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'getimage':
                     case 'stikertoimg':
                     case 'stickertoimg':
-                    case 'stimg':
+                    case 'stimg': {
                         if (quotedMsg && quotedMsg.type == 'sticker') {
                             let mediaData = await decryptMedia(quotedMsg)
                             client.reply(from, resMsg.wait, id)
@@ -334,13 +334,14 @@ const HandleMsg = async (client, message, browser) => {
                                 })
                         } else if (!quotedMsg) return client.reply(from, `Silakan tag/reply sticker yang ingin dijadikan gambar dengan command!`, id)
                         break
+                    }
 
                     // Sticker Creator
                     case 'stickergif':
                     case 'stikergif':
                     case 'sticker':
                     case 'stiker':
-                    case 's':
+                    case 's': {
                         if ((isMedia && mimetype !== 'video/mp4') || (isQuotedImage) || (isQuotedDocs && quotedMsg.filename.includes('.png')) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle')) {
                             client.reply(from, resMsg.wait, id)
                             try {
@@ -384,9 +385,9 @@ const HandleMsg = async (client, message, browser) => {
                                     let outFile = './media/noBg.png'
                                     // kamu dapat mengambil api key dari website remove.bg dan ubahnya difolder settings/api.json
                                     let selectedApiNoBg = _.sample(apiNoBg)
-                                    let result = await removeBackgroundFromImageBase64({ base64img: imageBase64, apiKey: selectedApiNoBg, size: 'auto', type: 'auto', outFile })
-                                    await fs.writeFile(outFile, result.base64img)
-                                    await client.sendImageAsSticker(from, `data:${_mimetype};base64,${result.base64img}`, stickerMetadata)
+                                    let resultNoBg = await removeBackgroundFromImageBase64({ base64img: imageBase64, apiKey: selectedApiNoBg, size: 'auto', type: 'auto', outFile })
+                                    await fs.writeFile(outFile, resultNoBg.base64img)
+                                    await client.sendImageAsSticker(from, `data:${_mimetype};base64,${resultNoBg.base64img}`, stickerMetadata)
                                         .then(() => {
                                             client.sendText(from, 'Here\'s your sticker')
                                             console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
@@ -427,9 +428,10 @@ const HandleMsg = async (client, message, browser) => {
                             await client.reply(from, `Tidak ada gambar/video!\nUntuk menggunakan ${prefix}sticker, kirim gambar/reply gambar atau file png dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*\nTanpa simbol <>\nUntuk membuat sticker animasi. Kirim video atau reply/quote video dengan caption *${prefix}sticker* max 8 secs. Selebihnya akan dipotong otomatis`, id)
                         }
                         break
+                    }
 
                     case 'stikergiphy':
-                    case 'stickergiphy':
+                    case 'stickergiphy': {
                         if (args.length != 1) return client.reply(from, `Maaf, format pesan salah.\nKetik pesan dengan ${prefix}stickergiphy <link_giphy> (don't include <> symbol)`, id)
                         const isGiphy = url.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'))
                         const isMediaGiphy = url.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'))
@@ -458,16 +460,18 @@ const HandleMsg = async (client, message, browser) => {
                             await client.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
                         }
                         break
+                    }
 
                     case 'qr':
-                    case 'qrcode':
+                    case 'qrcode': {
                         if (args.length == 0) return client.reply(from, `Untuk membuat kode QR, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya SeroBot`, id)
                         client.reply(from, resMsg.wait, id);
                         await client.sendFileFromUrl(from, `http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(arg)}&size=500x500`, id)
                         break
+                    }
 
                     case 'meme':
-                    case 'memefy':
+                    case 'memefy': {
                         if ((isMedia || isQuotedImage) && args.length >= 2) {
                             try {
                                 let top = arg.split('|')[0]
@@ -492,8 +496,9 @@ const HandleMsg = async (client, message, browser) => {
                             await client.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`, id)
                         }
                         break
+                    }
 
-                    case 'nulis':
+                    case 'nulis': {
                         if (args.length == 0 && !isQuotedChat) return client.reply(from, `Membuat bot menulis teks yang dikirim menjadi gambar\nPemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`, id)
                         const content = isQuotedChat ? quotedMsgObj.content.toString() : arg
                         const ress = await api.tulis(content)
@@ -503,10 +508,11 @@ const HandleMsg = async (client, message, browser) => {
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
+                    }
 
                     //required to install libreoffice
                     case 'doctopdf':
-                    case 'pdf':
+                    case 'pdf': {
                         if (!isQuotedDocs) return client.reply(from, `Convert doc/docx/ppt/pptx to pdf.\n\nKirim dokumen kemudian reply dokumen/filenya dengan ${prefix}pdf`, id)
                         if (/\.docx|\.doc|\.pptx|\.ppt/g.test(quotedMsg.filename) && isQuotedDocs) {
                             client.sendText(from, resMsg.wait)
@@ -525,9 +531,10 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, 'Maaf format file tidak sesuai', id)
                         }
                         break
+                    }
 
                     //Islam Command
-                    case 'listsurah':
+                    case 'listsurah': {
                         try {
                             axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                                 .then((response) => {
@@ -543,6 +550,8 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, err, id)
                         }
                         break
+                    }
+
                     case 'infosurah': {
                         if (args.length == 0) return client.reply(from, `*_${prefix}infosurah <nama surah>_*\nMenampilkan informasi lengkap mengenai surah tertentu. Contoh penggunan: ${prefix}infosurah al-baqarah`, message.id)
                         var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
@@ -703,7 +712,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'jsholat':
-                    case 'jsolat':
+                    case 'jsolat': {
                         if (args.length === 0) return client.reply(from, `ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\nContoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`, id)
                         if (args[0] == 'daerah') {
                             var datad = await axios.get('https://api.banghasan.com/sholat/format/json/kota')
@@ -745,8 +754,9 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, jadwal, id)
                         }
                         break
+                    }
                     //Group All User
-                    case 'grouplink':
+                    case 'grouplink': {
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isGroupMsg) {
                             const inviteLink = await client.getGroupInviteLink(groupId)
@@ -755,7 +765,8 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, resMsg.error.group, id)
                         }
                         break
-                    case "revoke":
+                    }
+                    case "revoke": {
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
                         if (isBotGroupAdmins) {
                             client.revokeGroupInviteLink(from)
@@ -764,9 +775,10 @@ const HandleMsg = async (client, message, browser) => {
                                 })
                                 .catch((err) => {
                                     console.log(`[ERR] ${err}`)
-                                });
+                                })
                         }
                         break
+                    }
 
                     //Media
                     case 'ytmp3': {
@@ -1234,9 +1246,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, 'Untuk Fitur Nekopoi Silahkan Lakukan di Private Message', id)
                         } else {
                             let data = await axios.get('https://arugaz.herokuapp.com/api/anime/nekopoi/random')
-                            let x = Math.floor((Math.random() * 7) + 0);
-                            let poi = data.data[x]
-                            console.log(poi)
+                            let poi = _.sample(data.data)
                             let hasilpoi = 'Note[❗]: 18+ ONLY[❗]'
                             hasilpoi += '\nJudul: ' + poi.title
                             hasilpoi += '\nLink: ' + poi.link
@@ -1254,12 +1264,13 @@ const HandleMsg = async (client, message, browser) => {
                             })
                         break
 
-                    case 'whatanime':
+                    case 'whatanime': {
                         if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
+                            let mediaData
                             if (isMedia) {
-                                var mediaData = await decryptMedia(message)
+                                mediaData = await decryptMedia(message)
                             } else {
-                                var mediaData = await decryptMedia(quotedMsg)
+                                mediaData = await decryptMedia(quotedMsg)
                             }
                             const imgBS4 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                             client.reply(from, 'Searching....', id)
@@ -1295,6 +1306,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, `Maaf format salah\n\nSilahkan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`, id)
                         }
                         break
+                    }
 
                     case 'lirik':
                     case 'lyric': {
@@ -1932,7 +1944,7 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         break
 
-                    case 'setprofile':
+                    case 'setprofile': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
@@ -1951,6 +1963,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, `Commands ini digunakan untuk mengganti icon/profile group chat\n\n\nPenggunaan:\n1. Silahkan kirim/reply sebuah gambar dengan caption ${prefix}setprofile\n\n2. Silahkan ketik ${prefix}setprofile linkImage`)
                         }
                         break
+                    }
 
                     case 'welcome':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
