@@ -1,4 +1,4 @@
-const { create, Client} = require('@open-wa/wa-automate')
+const { create, Client } = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { loadJob } = require('./lib/schedule')
@@ -34,7 +34,7 @@ let {
     prefix
 } = setting
 
-const queue = new PQueue({concurrency: 4, timeout: 10000, throwOnTimeout: true})
+const queue = new PQueue({ concurrency: 4, timeout: 10000, throwOnTimeout: true })
 
 queue.on('next', () => {
     if (queue.size > 0 || queue.pending > 0) console.log(color('[==>>]', 'red'), `In-process: ${queue.pending} In-queue: ${queue.size}`)
@@ -72,10 +72,10 @@ async function start(client = new Client()) {
     const unreadMessages = await client.getAllUnreadMessages()
     unreadMessages.forEach(message => {
         setTimeout(
-            async function(){
+            async function () {
                 if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
                     console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
-                    queue.isPaused ? queue.start() : null
+                    if (queue.isPaused) queue.start()
                 })
             }, 1000)
     })
@@ -87,11 +87,11 @@ async function start(client = new Client()) {
             await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
         })
         console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
-    }catch (e){
+    } catch (e) {
         console.log(e)
     }
 
-        // ketika bot diinvite ke dalam group
+    // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {
         console.log(color('[==>>]', 'red'), `Someone is adding bot to group, lol~ groupId: ${chat.groupMetadata.id}`)
         client.getAllGroups().then((groups) => {
@@ -115,7 +115,7 @@ async function start(client = new Client()) {
     await client.onIncomingCall(async call => {
         console.log(color('[==>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}`)
         // ketika seseorang menelpon nomor bot akan mengirim 
-        if (!call.isGroup){
+        if (!call.isGroup) {
             client.sendText(call.peerJid, 'Maaf tidak bisa menerima panggilan.\nIni robot, bukan manusia. Awas kena block!~\nChat https://wa.me/6282310487958 for unblock request.')
             setTimeout(() => {
                 client.contactBlock(call.peerJid)
@@ -134,12 +134,12 @@ async function start(client = new Client()) {
                 }
             })
         await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
-                    console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
-                    queue.isPaused ? queue.start() : null
-                })
+            console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
+            if (queue.isPaused) queue.start()
+        })
 
-        queue.isPaused ? queue.start() : null
-    }).catch(err =>{
+        if (queue.isPaused) queue.start()
+    }).catch(err => {
         console.log(err)
     })
 
@@ -155,13 +155,13 @@ async function start(client = new Client()) {
     try {
         await client.onGlobalParticipantsChanged(async event => {
             const host = await client.getHostNumber() + '@c.us'
-    		const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
-    		const isWelcome = welcome.includes(event.chat)
-    		let profile = await client.getProfilePicFromServer(event.who)
-    		if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
+            const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
+            const isWelcome = welcome.includes(event.chat)
+            let profile = await client.getProfilePicFromServer(event.who)
+            if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome) {
-    			await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Hello, welcome to the group!\n\nHave fun with us 👋✨`)
+                await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Hello, welcome to the group!\n\nHave fun with us 👋✨`)
                 // await client.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')}\n\nHave fun with us 👋✨`)
             }
             // kondisi ketika seseorang dikick/keluar dari group
@@ -169,7 +169,7 @@ async function start(client = new Client()) {
                 await client.sendText(event.chat, `Good bye! We'll miss you 👋✨`)
             }
         })
-    }catch (err) {
+    } catch (err) {
         console.log(color('[ERR>]', 'red'), err)
     }
 }
