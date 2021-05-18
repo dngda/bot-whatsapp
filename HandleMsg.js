@@ -182,13 +182,14 @@ const HandleMsg = async (client, message, browser) => {
 
         // Filter Banned People
         if (isBanned && !isGroupMsg && isCmd) {
-            return client.sendText(from, `Maaf anda telah dibanned oleh bot karena melanggar TnC`).then(() => {
+            return client.sendText(from, `Maaf anda telah dibanned oleh bot karena melanggar TnC.\nSilakan chat owner untuk unban.`).then(() => {
                 console.log(color('[BANd]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
             })
         }
-        else if (isBanned) {
+        else if (isBanned && isCmd) {
             return console.log(color('[BANd]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle))
         }
+        else if (isBanned) return null
 
         if (isNgegas) isKasar = await cariKasar(chats)
 
