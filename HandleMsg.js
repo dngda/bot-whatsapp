@@ -944,7 +944,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'samarkan': {
-                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}samarkan`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Samarkan suara ala investigasi. Silakan reply audio atau voice notes dengan perintah ${prefix}samarkan`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         let time = moment(t * 1000).format('mmss')
@@ -1017,6 +1017,33 @@ const HandleMsg = async (client, message, browser) => {
                             })
                             .on('end', () => {
                                 client.sendFile(from, outpath, 'nightcore.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
+                            })
+                            .saveToFile(outpath)
+                        break
+                    }
+
+                    case 'deepslow': {
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}deepslow`, id)
+                        const _inp = await decryptMedia(quotedMsg)
+
+                        let time = moment(t * 1000).format('mmss')
+                        let inpath = `./media/indeepslow_${time}.mp3`
+                        let outpath = `./media/outdeepslow_${time}.mp3`
+                        fs.writeFileSync(inpath, _inp)
+
+                        ffmpeg(inpath)
+                            .setFfmpegPath('./bin/ffmpeg')
+                            .audioFilters('atempo=0.9,asetrate=44100*0.8,firequalizer=gain_entry=\'entry(0,23);entry(250,11.5);entry(1000,0);entry(4000,0);entry(16000,0)\'')
+                            .on('error', (err) => {
+                                console.log('An error occurred: ' + err.message)
+                                fs.unlinkSync(inpath)
+                                fs.unlinkSync(outpath)
+                                return client.reply(from, resMsg.error.norm, id)
+                            })
+                            .on('end', () => {
+                                client.sendFile(from, outpath, 'deepslow.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 fs.unlinkSync(inpath)
                                 fs.unlinkSync(outpath)
                             })
@@ -1844,13 +1871,13 @@ const HandleMsg = async (client, message, browser) => {
                     case 'bye':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
-                        await client.sendText(from, 'Good bye 👋')
+                        await client.sendText(from, 'Udah gak butuh aku lagi? yaudah. Good bye 👋')
                         setTimeout(async () => {
                             await client.leaveGroup(groupId)
                         }, 2000)
                         setTimeout(async () => {
                             await client.deleteChat(groupId)
-                        }, 2000)
+                        }, 4000)
                         break
 
                     case 'del':
@@ -2222,7 +2249,9 @@ const HandleMsg = async (client, message, browser) => {
                 if (!isBotGroupAdmins) return client.sendText(from, 'Gagal melakukan kick, bot bukan admin')
                 console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender...`)
                 client.reply(from, `Link group whatsapp terdeteksi! Auto kick...`, id)
-                await client.removeParticipant(groupId, pengirim)
+                setTimeout(async () => {
+                    await client.removeParticipant(groupId, pengirim)
+                }, 2000)
             }
         }
 
