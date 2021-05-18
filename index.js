@@ -126,6 +126,7 @@ async function start(client = new Client()) {
     // ketika seseorang mengirim pesan
     await client.onMessage(async message => {
         client.setPresence(true)
+        client.deleteStaleChats(500) // menghapus chat apabila lebih dari 500
         client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
             .then((msg) => {
                 if (msg >= 3000) {
@@ -161,12 +162,14 @@ async function start(client = new Client()) {
             if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome) {
-                await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Hello, welcome to the group!\n\nHave fun with us 👋✨`)
-                // await client.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')}\n\nHave fun with us 👋✨`)
+                await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', ``)
+                await client.sendTextWithMentions(event.chat, `Halo semua! Anggota kita nambah satu nih -> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨`)
             }
             // kondisi ketika seseorang dikick/keluar dari group
             if (event.action === 'remove' && event.who !== host) {
-                await client.sendText(event.chat, `Good bye! We'll miss you 👋✨`)
+                let who = await client.getContact(event.who)
+                let pushname = who.pushname || who.verifiedName || who.formattedName
+                await client.sendText(event.chat, `Eh ada yang keluar ya? Dadahhh ${pushname} 👋✨`)
             }
         })
     } catch (err) {
