@@ -65,6 +65,7 @@ const { apiNoBg } = JSON.parse(createReadFileSync('./settings/api.json'))
 const banned = JSON.parse(createReadFileSync('./data/banned.json'))
 const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
 const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
+const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
 
 let {
     ownerNumber,
@@ -117,7 +118,8 @@ const HandleMsg = async (client, message, browser) => {
             botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
         },
         success: {
-            join: 'Berhasil join grup via link!'
+            join: 'Berhasil join grup via link!',
+            sticker : 'Here\'s your sticker'
         },
         badw: _.sample([
             'Astaghfirullah...',
@@ -172,6 +174,7 @@ const HandleMsg = async (client, message, browser) => {
         const isQuotedDocs = quotedMsg && quotedMsg.type === 'document'
         const isQuotedAudio = quotedMsg && quotedMsg.type === 'audio'
         const isQuotedPtt = quotedMsg && quotedMsg.type === 'ptt'
+        const isAntiLinkGroup = antiLinkGroup.includes(chatId)
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
@@ -357,7 +360,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (mediaData) {
                                     await client.sendImageAsSticker(from, mediaData, _metadata)
                                         .then(() => {
-                                            client.sendText(from, 'Here\'s your sticker')
+                                            client.sendText(from, resMsg.success.sticker)
                                             console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                         }).catch(err => {
                                             console.log(err.name, err.message)
@@ -390,7 +393,7 @@ const HandleMsg = async (client, message, browser) => {
                                     await fs.writeFile(outFile, resultNoBg.base64img)
                                     await client.sendImageAsSticker(from, `data:${_mimetype};base64,${resultNoBg.base64img}`, stickerMetadata)
                                         .then(() => {
-                                            client.sendText(from, 'Here\'s your sticker')
+                                            client.sendText(from, resMsg.success.sticker)
                                             console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                         }).catch(err => {
                                             console.log(err)
@@ -408,7 +411,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (!isUrl(url)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                                 client.sendStickerfromUrl(from, url).then((r) => (!r && r != undefined)
                                     ? client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
-                                    : client.reply(from, 'Here\'s your sticker')).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+                                    : client.reply(from, resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
                             } catch (e) {
                                 console.log(`Sticker url err: ${e}`)
                                 client.sendText(from, resMsg.error.norm)
@@ -419,7 +422,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, resMsg.wait, id)
                             await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
                                 .then(() => {
-                                    client.sendText(from, 'Here\'s your sticker')
+                                    client.sendText(from, resMsg.success.sticker)
                                     console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                 })
                                 .catch(() => {
@@ -442,7 +445,7 @@ const HandleMsg = async (client, message, browser) => {
                             const giphyCode = getGiphyCode[0].replace(/[-\/]/gi, '')
                             const smallGifUrl = 'https://media.giphy.com/media/' + giphyCode + '/giphy-downsized.gif'
                             client.sendGiphyAsSticker(from, smallGifUrl).then(() => {
-                                client.reply(from, 'Here\'s your sticker')
+                                client.reply(from, resMsg.success.sticker)
                                 console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                             }).catch((err) => console.log(err))
                         } else if (isMediaGiphy) {
@@ -451,7 +454,7 @@ const HandleMsg = async (client, message, browser) => {
                             const smallGifUrl = url.replace(gifUrl[0], 'giphy-downsized.gif')
                             client.sendGiphyAsSticker(from, smallGifUrl)
                                 .then(() => {
-                                    client.reply(from, 'Here\'s your sticker')
+                                    client.reply(from, resMsg.success.sticker)
                                     console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                 })
                                 .catch(() => {
@@ -1116,7 +1119,7 @@ const HandleMsg = async (client, message, browser) => {
                                 .then(body => {
                                     let randomnime = body.split('\n')
                                     let randomnimex = _.sample(randomnime)
-                                    client.sendFileFromUrl(from, randomnimex, '', 'Nee..', id)
+                                    client.sendFileFromUrl(from, randomnimex, '', 'Nih...', id)
                                 })
                                 .catch(() => {
                                     client.reply(from, resMsg.error.norm, id)
@@ -1126,14 +1129,14 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         break
                     case 'kpop':
-                        if (args.length == 0) return client.reply(from, `Untuk menggunakan ${prefix}kpop\nSilahkan ketik: ${prefix}kpop [query]\nContoh: ${prefix}kpop bts\n\nquery yang tersedia:\nblackpink, exo, bts`, id)
+                        if (args.length == 0) return client.reply(from, `Untuk menggunakan ${prefix}kpop\nSilahkan ketik: ${prefix}kpop [query]\nContoh: ${prefix}kpop bts\n\nquery yang tersedia:\nblackpink, exo, bts\n\nUntuk query lain gunakan ${prefix}pinterest`, id)
                         if (args[0] == 'blackpink' || args[0] == 'exo' || args[0] == 'bts') {
                             fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/kpop/' + args[0] + '.txt')
                                 .then(res => res.text())
                                 .then(body => {
                                     let randomkpop = body.split('\n')
                                     let randomkpopx = _.sample(randomkpop)
-                                    client.sendFileFromUrl(from, randomkpopx, '', 'Nee..', id)
+                                    client.sendFileFromUrl(from, randomkpopx, '', 'Nih...', id)
                                 })
                                 .catch(() => {
                                     client.reply(from, resMsg.error.norm, id)
@@ -1500,7 +1503,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'klasemen':
                     case 'klasmen':
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                        if (!isNgegas) return client.reply(from, `Anti-Toxic tidak aktif, aktifkan menggunakan perintah ${prefix}kasar on`, id)
+                        if (!isNgegas) return client.reply(from, `Anti-Toxic tidak aktif, aktifkan menggunakan perintah ${prefix}antikasar on`, id)
                         try {
                             const klasemen = db.get('group').filter({ id: groupId }).map('members').value()[0]
                             let urut = Object.entries(klasemen).map(([key, val]) => ({ id: key, ...val })).sort((a, b) => b.denda - a.denda);
@@ -1884,15 +1887,9 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'katakasar':
-                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
-                        client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
-                        break
-
-                    case 'kasar':
+                    case 'antikasar': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
-                        if (args.length != 1) return client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
                         if (args[0] === 'on') {
                             let pos = ngegas.indexOf(chatId)
                             if (pos != -1) return client.reply(from, 'Fitur anti kata kasar sudah aktif!', id)
@@ -1906,11 +1903,13 @@ const HandleMsg = async (client, message, browser) => {
                             fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
                             client.reply(from, 'Fitur Anti Kasar sudah di non-Aktifkan', id)
                         } else {
-                            client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
+                            client.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}antikasar on --mengaktifkan\n${prefix}antikasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
                         }
                         break
+                    }
 
-                    case 'addkasar':
+
+                    case 'addkasar': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length != 1) { return client.reply(from, `Masukkan hanya satu kata untuk ditambahkan kedalam daftar kata kasar.\ncontoh ${prefix}addkasar jancuk`, id) }
                         else {
@@ -1921,8 +1920,9 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, `Kata ${args[0]} berhasil ditambahkan.`, id)
                         }
                         break
+                    }
 
-                    case 'reset':
+                    case 'reset': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         const reset = db.get('group').find({ id: groupId }).assign({ members: [] }).write()
@@ -1930,8 +1930,31 @@ const HandleMsg = async (client, message, browser) => {
                             await client.sendText(from, "Klasemen telah direset.")
                         }
                         break
+                    }
 
-                    case 'mutegrup':
+                    case 'antilinkgroup': {
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
+                        if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
+                        if (args[0] === 'on') {
+                            let pos = antiLinkGroup.indexOf(chatId)
+                            if (pos != -1) return client.reply(from, 'Fitur anti link group sudah aktif!', id)
+                            antiLinkGroup.push(chatId)
+                            fs.writeFileSync('./data/antilinkgroup.json', JSON.stringify(ngegas))
+                            client.reply(from, 'Fitur anti link group sudah di Aktifkan', id)
+                        } else if (args[0] === 'off') {
+                            let pos = antiLinkGroup.indexOf(chatId)
+                            if (pos === -1) return client.reply(from, 'Fitur anti link group memang belum aktif!', id)
+                            antiLinkGroup.splice(pos, 1)
+                            fs.writeFileSync('./data/antilinkgroup.json', JSON.stringify(ngegas))
+                            client.reply(from, 'Fitur anti link group sudah di non-Aktifkan', id)
+                        } else {
+                            client.reply(from, `Untuk mengaktifkan Fitur anti link group pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengirimkan link group lain maka akan terkick otomatis\n\nPenggunaan\n${prefix}antilinkgroup on --mengaktifkan\n${prefix}antilinkgroup off --nonaktifkan`, id)
+                        }
+                        break
+                    }
+
+                    case 'mutegrup': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
@@ -1944,6 +1967,7 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, `Untuk mengubah settingan group chat agar hanya admin saja yang bisa chat\n\nPenggunaan:\n${prefix}mutegrup on --aktifkan\n${prefix}mutegrup off --nonaktifkan`, id)
                         }
                         break
+                    }
 
                     case 'setprofile': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
@@ -2191,53 +2215,48 @@ const HandleMsg = async (client, message, browser) => {
 
             })//typing
         }
+        
+        // Anti link group function
+        if (isAntiLinkGroup && isGroupMsg){
+            if (!isBotGroupAdmins) return client.sendText(from, 'Gagal melakukan kick, bot bukan admin')
+            if (body.match(/chat\.whatsapp\.com/gi) !== null) {
+                client.reply(from, `Link group whatsapp terdeteksi! Auto kick...`, id)
+                await client.removeParticipant(groupId, pengirim)
+            }
+        }
 
         // Kata kasar function
-        if (!isCmd && isGroupMsg && isNgegas && chat.type !== "image") {
+        if (!isCmd && isGroupMsg && isNgegas && chat.type !== "image" && isKasar) {
             const _denda = _.sample([1000, 2000, 3000, 5000, 10000])
             const find = db.get('group').find({ id: groupId }).value()
             if (find && find.id === groupId) {
                 const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
                 const isIn = inArray(pengirim, cekuser)
                 if (cekuser && isIn !== -1) {
-                    if (isKasar) {
-                        const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + _denda).write()
-                        if (denda) {
-                            await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda), id)
-                            if (denda.denda >= 2000000) {
-                                banned.push(pengirim)
-                                fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
-                                client.reply(from, `╔══✪〘 SELAMAT 〙✪\n║\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 2 Juta.\n║ Mampos~\n║\n║ Denda -2.000.000\n║\n╚═〘 SeroBot 〙`, id)
-                                db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n - 2000000).write()
-                            }
+                    const denda = db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n + _denda).write()
+                    if (denda) {
+                        await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda), id)
+                        if (denda.denda >= 2000000) {
+                            banned.push(pengirim)
+                            fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
+                            client.reply(from, `╔══✪〘 SELAMAT 〙✪\n║\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 2 Juta.\n║ Mampos~\n║\n║ Denda -2.000.000\n║\n╚═〘 SeroBot 〙`, id)
+                            db.get('group').filter({ id: groupId }).map('members[' + isIn + ']').find({ id: pengirim }).update('denda', n => n - 2000000).write()
                         }
                     }
                 } else {
                     const cekMember = db.get('group').filter({ id: groupId }).map('members').value()[0]
                     if (cekMember.length === 0) {
-                        if (isKasar) {
-                            db.get('group').find({ id: groupId }).set('members', [{ id: pengirim, denda: _denda }]).write()
-                        } else {
-                            db.get('group').find({ id: groupId }).set('members', [{ id: pengirim, denda: 0 }]).write()
-                        }
+                        db.get('group').find({ id: groupId }).set('members', [{ id: pengirim, denda: _denda }]).write()
                     } else {
                         const cekuser = db.get('group').filter({ id: groupId }).map('members').value()[0]
-                        if (isKasar) {
-                            cekuser.push({ id: pengirim, denda: _denda })
-                            await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}`, id)
-                        } else {
-                            cekuser.push({ id: pengirim, denda: 0 })
-                        }
+                        cekuser.push({ id: pengirim, denda: _denda })
+                        await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}`, id)
                         db.get('group').find({ id: groupId }).set('members', cekuser).write()
                     }
                 }
             } else {
-                if (isKasar) {
-                    db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: _denda }] }).write()
-                    await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp${_denda}`, id)
-                } else {
-                    db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: 0 }] }).write()
-                }
+                db.get('group').push({ id: groupId, members: [{ id: pengirim, denda: _denda }] }).write()
+                await client.reply(from, `${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp${_denda}`, id)
             }
         }
     } catch (err) {
