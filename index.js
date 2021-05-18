@@ -126,7 +126,8 @@ async function start(client = new Client()) {
     // ketika seseorang mengirim pesan
     await client.onMessage(async message => {
         client.setPresence(true)
-        client.deleteStaleChats(500) // menghapus chat apabila lebih dari 500
+        let chatIds = await client.getAllChatIds()
+        if (chatIds.length > 600) client.deleteStaleChats(500) // menghapus 100 chat terakhir apabila lebih dari 600
         client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
             .then((msg) => {
                 if (msg >= 3000) {
