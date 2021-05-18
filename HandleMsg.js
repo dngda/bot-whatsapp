@@ -2218,8 +2218,10 @@ const HandleMsg = async (client, message, browser) => {
         
         // Anti link group function
         if (isAntiLinkGroup && isGroupMsg){
+            console.log(color('[LOGS]', 'grey'), `Group anti link`)
             if (body.match(/chat\.whatsapp\.com/gi) !== null) {
-            if (!isBotGroupAdmins) return client.sendText(from, 'Gagal melakukan kick, bot bukan admin')
+                console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender...`)
+                if (!isBotGroupAdmins) return client.sendText(from, 'Gagal melakukan kick, bot bukan admin')
                 client.reply(from, `Link group whatsapp terdeteksi! Auto kick...`, id)
                 await client.removeParticipant(groupId, pengirim)
             }
