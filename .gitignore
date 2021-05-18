@@ -1,26 +1,24 @@
 # Dempedency directory
 node_modules
-
 # Dot files
 .idea
 .node-persist
-
 # Log files
 debug.log
-
 # Session files
 *.data.json
-
 # Workspace files
 *.code-workspace
-
 # Lock files
 package-lock.json
-
 # Data files
 data/*
 media/*
 logs/*
-
 # Api files
 settings/api.json
+
+# managed
+**.data.json
+**.node-persist**
+# end managed
