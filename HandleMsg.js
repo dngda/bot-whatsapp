@@ -1035,7 +1035,7 @@ const HandleMsg = async (client, message, browser) => {
 
                         ffmpeg(inpath)
                             .setFfmpegPath('./bin/ffmpeg')
-                            .audioFilters('atempo=0.94,asetrate=44100*0.7,firequalizer=gain_entry=\'entry(0,7);entry(250,3);entry(1000,0);entry(4000,0);entry(16000,0)\'')
+                            .audioFilters('atempo=1.06,asetrate=44100*0.7,firequalizer=gain_entry=\'entry(0,5);entry(250,3);entry(1000,0);entry(4000,0);entry(16000,0)\'')
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 fs.unlinkSync(inpath)
