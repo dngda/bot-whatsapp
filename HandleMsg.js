@@ -981,7 +981,7 @@ const HandleMsg = async (client, message, browser) => {
 
                         ffmpeg(inpath)
                             .setFfmpegPath('./bin/ffmpeg')
-                            .complexFilter(`vibrato=f=6`)
+                            .complexFilter(`vibrato=f=8`)
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 fs.unlinkSync(inpath)
@@ -1035,7 +1035,7 @@ const HandleMsg = async (client, message, browser) => {
 
                         ffmpeg(inpath)
                             .setFfmpegPath('./bin/ffmpeg')
-                            .audioFilters('atempo=0.9,asetrate=44100*0.8,firequalizer=gain_entry=\'entry(0,23);entry(250,11.5);entry(1000,0);entry(4000,0);entry(16000,0)\'')
+                            .audioFilters('atempo=0.8,asetrate=44100*0.7,firequalizer=gain_entry=\'entry(0,23);entry(250,11.5);entry(1000,0);entry(4000,0);entry(16000,0)\'')
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 fs.unlinkSync(inpath)
