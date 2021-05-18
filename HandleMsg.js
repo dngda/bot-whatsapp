@@ -1940,13 +1940,13 @@ const HandleMsg = async (client, message, browser) => {
                             let pos = antiLinkGroup.indexOf(chatId)
                             if (pos != -1) return client.reply(from, 'Fitur anti link group sudah aktif!', id)
                             antiLinkGroup.push(chatId)
-                            fs.writeFileSync('./data/antilinkgroup.json', JSON.stringify(ngegas))
+                            fs.writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
                             client.reply(from, 'Fitur anti link group sudah di Aktifkan', id)
                         } else if (args[0] === 'off') {
                             let pos = antiLinkGroup.indexOf(chatId)
                             if (pos === -1) return client.reply(from, 'Fitur anti link group memang belum aktif!', id)
                             antiLinkGroup.splice(pos, 1)
-                            fs.writeFileSync('./data/antilinkgroup.json', JSON.stringify(ngegas))
+                            fs.writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
                             client.reply(from, 'Fitur anti link group sudah di non-Aktifkan', id)
                         } else {
                             client.reply(from, `Untuk mengaktifkan Fitur anti link group pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengirimkan link group lain maka akan terkick otomatis\n\nPenggunaan\n${prefix}antilinkgroup on --mengaktifkan\n${prefix}antilinkgroup off --nonaktifkan`, id)
