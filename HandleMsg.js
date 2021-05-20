@@ -232,7 +232,7 @@ const HandleMsg = async (client, message, browser) => {
             case /^p$/.test(lowerCaseBody): {
                 return await client.reply(from, `Alangkah baiknya ucapkan salam atau menyapa!\nP P P mulu gada tata krama`, id)
             }
-            case /^(menu|start|help)/.test(lowerCaseBody): {
+            case /^(menu|start|help)$/.test(lowerCaseBody): {
                 return await client.sendText(from, `Untuk menampilkan menu, kirim pesan *${prefix}menu*`)
             }
             case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(lowerCaseBody): {

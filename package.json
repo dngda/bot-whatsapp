@@ -38,6 +38,7 @@
     "office-to-pdf": "^4.0.0",
     "p-queue": "^6.6.2",
     "promise": "^8.1.0",
+    "qs": "^6.10.1",
     "remove.bg": "^1.3.0",
     "request": "^2.88.2",
     "sastrawijs": "^1.0.4",
