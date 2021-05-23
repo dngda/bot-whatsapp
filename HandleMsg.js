@@ -345,7 +345,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'sticker':
                     case 'stiker':
                     case 's': {
-                        if ((isMedia && mimetype !== 'video/mp4' && args[0] !== 'nobg') || (isQuotedImage) || (isQuotedDocs && quotedMsg.filename.includes('.png')) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle')) {
+                        if ((isMedia && mimetype !== 'video/mp4') || (isQuotedImage) || (isQuotedDocs && quotedMsg.filename.includes('.png')) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle' || args[0] !== 'nobg')) {
                             client.reply(from, resMsg.wait, id)
                             try {
                                 const encryptMedia = (isQuotedImage || isQuotedDocs) ? quotedMsg : message
