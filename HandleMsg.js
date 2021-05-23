@@ -173,6 +173,7 @@ const HandleMsg = async (client, message, browser) => {
         const isQuotedDocs = quotedMsg && quotedMsg.type === 'document'
         const isQuotedAudio = quotedMsg && quotedMsg.type === 'audio'
         const isQuotedPtt = quotedMsg && quotedMsg.type === 'ptt'
+        const isQuotedSticker = quotedMsg && quotedMsg.type === 'sticker'
         const isQuotedPng = isQuotedDocs && quotedMsg.filename.includes('.png')
         const isQuotedWebp = isQuotedDocs && quotedMsg.filename.includes('.webp')
         const isAntiLinkGroup = antiLinkGroup.includes(chatId)
@@ -329,7 +330,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'stikertoimg':
                     case 'stickertoimg':
                     case 'stimg': {
-                        if (quotedMsg && quotedMsg.type == 'sticker') {
+                        if (isQuotedSticker) {
                             let mediaData = await decryptMedia(quotedMsg)
                             client.reply(from, resMsg.wait, id)
                             let imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
