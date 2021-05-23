@@ -393,7 +393,7 @@ const HandleMsg = async (client, message, browser) => {
                                     await client.sendImageAsSticker(from, `data:${_mimetype};base64,${resultNoBg.base64img}`, stickerMetadata)
                                         .then(() => {
                                             client.sendText(from, resMsg.success.sticker)
-                                            console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
+                                            console.log(color('[LOGS]', 'grey'), `Sticker nobg Processed for ${processTime(t, moment())} Seconds`)
                                         }).catch(err => {
                                             console.log(err)
                                             client.sendText(from, resMsg.error.norm)
