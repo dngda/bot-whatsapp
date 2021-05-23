@@ -384,11 +384,11 @@ const HandleMsg = async (client, message, browser) => {
                                             client.sendText(from, resMsg.error.norm)
                                         })
                                     if (mediaData === undefined) return client.sendText(from, resMsg.error.norm)
-                                    let imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+                                    let base64img = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                                     let outFile = './media/noBg.png'
                                     // kamu dapat mengambil api key dari website remove.bg dan ubahnya difolder settings/api.json
                                     let selectedApiNoBg = _.sample(apiNoBg)
-                                    let resultNoBg = await removeBackgroundFromImageBase64({ base64img: imageBase64, apiKey: selectedApiNoBg, size: 'auto', type: 'auto', outFile })
+                                    let resultNoBg = await removeBackgroundFromImageBase64({ base64img, apiKey: selectedApiNoBg, size: 'auto', type: 'auto', outFile })
                                     await fs.writeFile(outFile, resultNoBg.base64img)
                                     await client.sendImageAsSticker(from, `data:${_mimetype};base64,${resultNoBg.base64img}`, stickerMetadata)
                                         .then(() => {
