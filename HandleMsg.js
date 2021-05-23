@@ -32,7 +32,6 @@ let {
     tebakgb,
     scraper,
     menuId,
-    images,
     meme,
     kbbi,
     list,
@@ -1185,7 +1184,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'pinterest': {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`, id)
                         if (args[0] === '+') {
-                            await images.fdci(arg.trim().substring(arg.indexOf(' ') + 1))
+                            await api.pinterest(arg.trim().substring(arg.indexOf(' ') + 1))
                                 .then(res => {
                                     let img = _.sample(res, 10)
                                     img.forEach(async i => {
@@ -1193,7 +1192,7 @@ const HandleMsg = async (client, message, browser) => {
                                     })
                                 })
                         } else {
-                            await images.fdci(arg)
+                            await api.pinterest(arg)
                                 .then(res => {
                                     let img = _.sample(res)
                                     if (img === null || img === undefined) return client.reply(from, resMsg.error.norm, id)
@@ -1265,7 +1264,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'sreddit':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
                         const carireddit = body.slice(9)
-                        const hasilreddit = await images.sreddit(carireddit)
+                        const hasilreddit = await api.sreddit(carireddit)
                         await client.sendFileFromUrl(from, hasilreddit, '', '', id)
                             .catch(() => {
                                 client.reply(from, resMsg.error.norm, id)
