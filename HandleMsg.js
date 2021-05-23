@@ -364,7 +364,7 @@ const HandleMsg = async (client, message, browser) => {
                                     })
                                 if (mediaData) {
                                     if (isQuotedWebp) {
-                                        await client.sendRawWebpAsSticker(from, mediaData, true)
+                                        await client.sendRawWebpAsSticker(from, mediaData.toString('base64'), true)
                                             .then(() => {
                                                 client.sendText(from, resMsg.success.sticker)
                                                 console.log(color('[LOGS]', 'grey'), `Sticker from webp Processed for ${processTime(t, moment())} Seconds`)
