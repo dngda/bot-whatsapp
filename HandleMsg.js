@@ -173,6 +173,8 @@ const HandleMsg = async (client, message, browser) => {
         const isQuotedDocs = quotedMsg && quotedMsg.type === 'document'
         const isQuotedAudio = quotedMsg && quotedMsg.type === 'audio'
         const isQuotedPtt = quotedMsg && quotedMsg.type === 'ptt'
+        const isQuotedPng = isQuotedDocs && quotedMsg.filename.includes('.png')
+        const isQuotedWebp = isQuotedDocs && quotedMsg.filename.includes('.webp')
         const isAntiLinkGroup = antiLinkGroup.includes(chatId)
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
@@ -345,26 +347,41 @@ const HandleMsg = async (client, message, browser) => {
                     case 'sticker':
                     case 'stiker':
                     case 's': {
-                        if ((isMedia && mimetype !== 'video/mp4' && args[0] !== 'nobg') || (isQuotedImage && args[0] !== 'nobg') || (isQuotedDocs && quotedMsg.filename.includes('.png')) && (args.length === 0 || args[0] === 'crop' || args[0] === 'circle')) {
+                        if (
+                            ((isMedia && mimetype !== 'video/mp4') || isQuotedImage || isQuotedPng || isQuotedWebp)
+                                &&
+                            (args.length === 0 || args[0] === 'crop' || args[0] === 'circle' || args[0] !== 'nobg')
+                            ) {
                             client.reply(from, resMsg.wait, id)
                             try {
                                 const encryptMedia = (isQuotedImage || isQuotedDocs) ? quotedMsg : message
                                 if (args[0] === 'crop') var _metadata = stickerMetadataCrop
-                                else var _metadata = (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
+                                    else var _metadata = (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
                                 let mediaData = await decryptMedia(encryptMedia)
                                     .catch(err => {
                                         console.log(err.name, err.message)
                                         client.sendText(from, resMsg.error.norm)
                                     })
                                 if (mediaData) {
-                                    await client.sendImageAsSticker(from, mediaData, _metadata)
-                                        .then(() => {
-                                            client.sendText(from, resMsg.success.sticker)
-                                            console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
-                                        }).catch(err => {
-                                            console.log(err.name, err.message)
-                                            client.sendText(from, resMsg.error.norm)
-                                        })
+                                    if (isQuotedWebp) {
+                                        await client.sendRawWebpAsSticker(from, mediaData, true)
+                                            .then(() => {
+                                                client.sendText(from, resMsg.success.sticker)
+                                                console.log(color('[LOGS]', 'grey'), `Sticker from webp Processed for ${processTime(t, moment())} Seconds`)
+                                            }).catch(err => {
+                                                console.log(err.name, err.message)
+                                                client.sendText(from, resMsg.error.norm)
+                                            })
+                                    } else {
+                                        await client.sendImageAsSticker(from, mediaData, _metadata)
+                                            .then(() => {
+                                                client.sendText(from, resMsg.success.sticker)
+                                                console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
+                                            }).catch(err => {
+                                                console.log(err.name, err.message)
+                                                client.sendText(from, resMsg.error.norm)
+                                            })
+                                    }
                                 }
                             } catch (err) {
                                 console.log(err.name, err.message)
