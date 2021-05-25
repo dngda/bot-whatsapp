@@ -244,7 +244,7 @@ const HandleMsg = async (client, message, browser) => {
                 return await client.reply(from, `Halo ${pushname} 👋`, id)
             }
             case /^=/.test(lowerCaseBody): {
-            	if (lowerCaseBody.match(/[\+\-\*\/]/g)) await client.reply(from, `${eval(lowerCaseBody.slice(1))}`, id)
+            	if (lowerCaseBody.match(/\d[\=\+\-\*\/\^e]/g)) await client.reply(from, `${eval(lowerCaseBody.slice(1).replace('^', '**'))}`, id)
             break
             }
             case /\bping\b/.test(lowerCaseBody): {
