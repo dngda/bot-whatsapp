@@ -2108,6 +2108,7 @@ const HandleMsg = async (client, message, browser) => {
                         fs.writeFileSync('./data/banned.json', JSON.stringify(banned))
                         client.reply(from, 'Success unbanned target!', id)
                     }
+                        break
 
                     case 'bc': //untuk broadcast atau promosi
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
