@@ -165,7 +165,7 @@ async function start(client = new Client()) {
                 await client.sendTextWithMentions(event.chat, `Halo semua! Anggota kita nambah satu nih -> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨`)
             }
             // kondisi ketika seseorang dikick/keluar dari group
-            if (event.action === 'remove' && event.who !== host) {
+            if (event.action === 'remove' && event.who !== host && isWelcome) {
                 let who = await client.getContact(event.who)
                 let pushname = who.pushname || who.verifiedName || who.formattedName
                 await client.sendText(event.chat, `Eh ada yang keluar ya? Dadahhh ${pushname} 👋✨`)
