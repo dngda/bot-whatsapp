@@ -1287,7 +1287,8 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
                         const hasilreddit = await api.sreddit(arg)
                         await client.sendFileFromUrl(from, hasilreddit.url, '', hasilreddit.title, id)
-                            .catch(() => {
+                            .catch((e) => {
+                                console.log(e)
                                 client.reply(from, resMsg.error.norm, id)
                             })
                         break
