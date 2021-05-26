@@ -131,8 +131,8 @@ const HandleMsg = async (client, message, browser) => {
     }
 
     try {
-        if (message?.body === '/r' && (message.quotedMsg && message.quotedMsg.type === 'chat')) message = message.quotedMsgObj
-            
+        if (message.body === '/r' && message.quotedMsg && message.quotedMsg.type === 'chat') message = message.quotedMsgObj
+
         let { type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
         var { name, formattedTitle } = chat
