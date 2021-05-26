@@ -1285,9 +1285,8 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'sreddit':
                         if (args.length == 0) return client.reply(from, `Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
-                        const carireddit = body.slice(9)
-                        const hasilreddit = await api.sreddit(carireddit)
-                        await client.sendFileFromUrl(from, hasilreddit, '', '', id)
+                        const hasilreddit = await api.sreddit(arg)
+                        await client.sendFileFromUrl(from, hasilreddit.url, '', hasilreddit.title, id)
                             .catch(() => {
                                 client.reply(from, resMsg.error.norm, id)
                             })
