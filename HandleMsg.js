@@ -867,8 +867,8 @@ const HandleMsg = async (client, message, browser) => {
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
                                     console.log('An error occurred: ' + err.message)
+                                    client.reply(from, resMsg.error.norm, id)
                                     fs.unlinkSync(path)
-                                    return client.reply(from, resMsg.error.norm, id)
                                 })
                                 .on('end', () => {
                                     client.sendFile(from, path, `${ytresult.judul.substring(0, 15).replace(/\s/g, '-')}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
@@ -1217,7 +1217,7 @@ const HandleMsg = async (client, message, browser) => {
                             await api.pinterest(arg)
                                 .then(res => {
                                     let img = _.sample(res)
-                                    if (img === null || img === undefined) return client.reply(from, resMsg.error.norm, id)
+                                    if (img === null || img === undefined) return client.reply(from, resMsg.error.norm + `\nAtau result tidak ditemukan.`, id)
 
                                     client.sendFileFromUrl(from, img, '', '', id)
                                         .catch(e => {
