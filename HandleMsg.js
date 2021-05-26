@@ -1889,17 +1889,24 @@ const HandleMsg = async (client, message, browser) => {
                         await client.sendTextWithMentions(from, `Request diterima, menghapus jabatan @${mentionedJidList[0].replace('@c.us', '')}.`)
                         break
 
-                    case 'bye':
+                    case 'yesbye': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
-                        await client.sendText(from, 'Udah gak butuh aku lagi? yaudah. Good bye 👋')
+                        await client.sendText(from, 'oh beneran ya. Gapapa aku paham...')
                         setTimeout(async () => {
                             await client.leaveGroup(groupId)
                         }, 2000)
                         setTimeout(async () => {
                             await client.deleteChat(groupId)
                         }, 4000)
+                    }
                         break
+                    case 'bye': {
+                        if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
+                        if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
+                        await client.sendText(from, 'Udah gak butuh aku lagi? yaudah. kirim /yesbye untuk konfirmasi')
+                        break
+                    }
 
                     case 'del':
                         if (!quotedMsg) return client.reply(from, `Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`, id)
