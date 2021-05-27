@@ -875,7 +875,12 @@ const HandleMsg = async (client, message, browser) => {
                                 .on('error', (err) => {
                                     console.log('An error occurred: ' + err.message)
                                     client.reply(from, resMsg.error.norm, id)
-                                    fs.unlinkSync(path)
+                                    fs.unlinkSync(path, (err) => {
+                                        if(err && err.code == 'ENOENT') {
+                                            // file doens't exist
+                                            console.info("File doesn't exist, won't remove it.");
+                                        }
+                                    })
                                 })
                                 .on('end', () => {
                                     client.sendFile(from, path, `${ytresult.judul.substring(0, 15).replace(/\s/g, '-')}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
