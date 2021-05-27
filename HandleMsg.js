@@ -877,8 +877,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.reply(from, resMsg.error.norm, id)
                                     fs.unlinkSync(path, (err) => {
                                         if(err && err.code == 'ENOENT') {
-                                            // file doens't exist
-                                            console.info("File doesn't exist, won't remove it.");
+                                            return null
                                         }
                                     })
                                 })
