@@ -1902,6 +1902,15 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         await client.sendText(from, 'oh beneran ya. Gapapa aku paham...')
+
+                        let pos = ngegas.indexOf(chatId)
+                        ngegas.splice(pos, 1)
+                        fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+
+                        let posi = welcome.indexOf(chatId)
+                        welcome.splice(posi, 1)
+                        fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
+                        
                         setTimeout(async () => {
                             await client.leaveGroup(groupId)
                         }, 2000)
@@ -2064,8 +2073,8 @@ const HandleMsg = async (client, message, browser) => {
                             fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
                             client.reply(from, 'Welcome Message sekarang diaktifkan!', id)
                         } else if (args[0] == 'off') {
-                            let xporn = welcome.indexOf(chatId)
-                            welcome.splice(xporn, 1)
+                            let posi = welcome.indexOf(chatId)
+                            welcome.splice(posi, 1)
                             fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
                             client.reply(from, 'Welcome Message sekarang dinonaktifkan', id)
                         } else {

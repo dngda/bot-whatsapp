@@ -2,7 +2,7 @@ const { create, Client } = require('@open-wa/wa-automate')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { loadJob } = require('./lib/schedule')
-const { color, recache, getModuleName } = require('./utils')
+const { color, recache, getModuleName, createReadFileSync } = require('./utils')
 const fs = require('fs-extra')
 const appRoot = require('app-root-path')
 const puppeteer = require('puppeteer')
@@ -24,9 +24,8 @@ recache(appRoot + '/lib/menu.js', module => {
 
 const { default: PQueue } = require("p-queue")
 
-
-const jobList = JSON.parse(fs.readFileSync('./data/schedule.json'))
-const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
+const jobList = JSON.parse(createReadFileSync('./data/schedule.json'))
+const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 let {
     ownerNumber,
     groupLimit,
@@ -116,7 +115,7 @@ async function start(client = new Client()) {
         console.log(color('[==>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}`)
         // ketika seseorang menelpon nomor bot akan mengirim 
         if (!call.isGroup) {
-            client.sendText(call.peerJid, `Maaf tidak bisa menerima panggilan.\nIni robot, bukan manusia. Awas kena block!\nChat https://wa.me/${ownerNumber.replace('@c.us','')} untuk buka block.`)
+            client.sendText(call.peerJid, `Maaf tidak bisa menerima panggilan.\nIni robot, bukan manusia. Awas kena block!\nChat https://wa.me/${ownerNumber.replace('@c.us', '')} untuk buka block.`)
             setTimeout(() => {
                 client.contactBlock(call.peerJid)
             }, 3000)
@@ -155,7 +154,8 @@ async function start(client = new Client()) {
     try {
         await client.onGlobalParticipantsChanged(async event => {
             const host = await client.getHostNumber() + '@c.us'
-            const welcome = JSON.parse(fs.readFileSync('./data/welcome.json'))
+            const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
+            const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
             const isWelcome = welcome.includes(event.chat)
             let profile = await client.getProfilePicFromServer(event.who)
             if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
@@ -169,6 +169,16 @@ async function start(client = new Client()) {
                 let who = await client.getContact(event.who)
                 let pushname = who.pushname || who.verifiedName || who.formattedName
                 await client.sendText(event.chat, `Eh ada yang keluar ya? Dadahhh ${pushname} 👋✨`)
+            }
+            // 
+            if (event.action === 'remove' && event.who === host) {
+                let posi = welcome.indexOf(event.chat)
+                welcome.splice(posi, 1)
+                fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
+
+                let pos = ngegas.indexOf(event.chat)
+                ngegas.splice(pos, 1)
+                fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
             }
         })
     } catch (err) {
