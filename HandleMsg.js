@@ -6,7 +6,6 @@ const FileSync = require('lowdb/adapters/FileSync')
 const db_group = new FileSync(appRoot + '/data/denda.json')
 const moment = require('moment-timezone')
 const ffmpeg = require('fluent-ffmpeg')
-const tiktok = require('tiktok-scraper-without-watermark')
 const ytdl = require('ytdl-core')
 const axios = require('axios')
 const fetch = require('node-fetch')
@@ -2302,7 +2301,7 @@ const HandleMsg = async (client, message, browser) => {
         }
         
         // Anti link group function
-        if (isAntiLinkGroup && isGroupMsg){
+        if (isAntiLinkGroup && isGroupMsg && type !== 'sticker'){
             if (message.body?.match(/chat\.whatsapp\.com/gi) !== null) {
                 if (!isBotGroupAdmins) return client.sendText(from, 'Gagal melakukan kick, bot bukan admin')
                 console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender...`)
