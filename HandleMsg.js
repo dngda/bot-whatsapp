@@ -1203,9 +1203,10 @@ const HandleMsg = async (client, message, browser) => {
                             client.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}kpop untuk melihat list query`)
                         }
                         break
+                        
                     case 'memes':
                         const randmeme = await meme.random()
-                        client.sendFileFromUrl(from, randmeme, '', '', id)
+                        client.sendFileFromUrl(from, randmeme.url, '', randmeme.title, id)
                             .catch(() => {
                                 client.reply(from, resMsg.error.norm, id)
                             })
