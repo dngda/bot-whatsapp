@@ -509,7 +509,7 @@ const HandleMsg = async (client, message, browser) => {
                                 let mediaData = await decryptMedia(encryptMedia)
                                 let getUrl = await uploadImages(mediaData, false)
                                 let ImageBase64 = await meme.custom(getUrl, top, bottom)
-                                client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', null, id)
+                                client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id)
                                     .catch(() => {
                                         client.reply(from, resMsg.error.norm)
                                     })
