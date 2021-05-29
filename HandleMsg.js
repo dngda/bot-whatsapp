@@ -499,7 +499,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     case 'meme':
                     case 'memefy': {
-                        if ((isMedia || isQuotedImage) && args.length >= 2) {
+                        if ((isMedia || isQuotedImage) && args.length >= 1 && body.match("|")) {
                             try {
                                 let top = arg.split('|')[0]
                                 let bottom = arg.split('|')[1]
@@ -520,7 +520,7 @@ const HandleMsg = async (client, message, browser) => {
                             }
 
                         } else {
-                            await client.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`, id)
+                            await client.reply(from, `Tidak ada gambar/format salah! Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`, id)
                         }
                         break
                     }
