@@ -2148,7 +2148,7 @@ const HandleMsg = async (client, message, browser) => {
                         client.reply(from, `Broadcast in progress! Total: ${chatz.length} chats`, id)
                         let count = 0
                         for (let idk of chatz) {
-                            await sleep(1000)
+                            await sleep(2000)
                             await client.sendText(idk.id, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)
                             count += 1
                         }
@@ -2163,7 +2163,7 @@ const HandleMsg = async (client, message, browser) => {
                         client.reply(from, `Broadcast in progress! Total: ${groupz.length} groups`, id)
                         let count = 0
                         for (let idk of groupz) {
-                            await sleep(1000)
+                            await sleep(2000)
                             await client.sendText(idk.id, `\t✪〘 *BOT Broadcast* 〙✪\n\n${arg}`)
                             count += 1
                         }
@@ -2178,7 +2178,7 @@ const HandleMsg = async (client, message, browser) => {
                         let count = 0
                         for (let gclist of allGroupz) {
                             client.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
-                            await sleep(1000)
+                            await sleep(2000)
                             client.leaveGroup(gclist.contact.id)
                             client.deleteChat(gclist.contact.id)
                         count += 1
