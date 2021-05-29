@@ -53,9 +53,10 @@ async function start(client = new Client()) {
     console.log(color('[>..]'), color('Owner Commands: /ban /bc /bcgroup /leaveall /clearall /clearexitedgroup /clearpm', 'green'))
     console.log(color('[>..]'), color('/addkasar /gitpull /restart /refresh /unblock />', 'green'))
 
-    const bWS = client.getConfig().browserWSEndpoint
-    const browser = await puppeteer.connect({browserWSEndpoint: bWS})
-    
+    const conf = client.getConfig()
+    console.log(conf)
+    const browser = await puppeteer.connect({browserWSEndpoint: conf.browserWSEndpoint})
+
     // const browser = await puppeteer.launch({
     //     executablePath: path,
     //     headless: true,
