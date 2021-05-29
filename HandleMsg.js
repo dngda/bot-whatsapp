@@ -509,16 +509,13 @@ const HandleMsg = async (client, message, browser) => {
                                 let mediaData = await decryptMedia(encryptMedia)
                                 let getUrl = await uploadImages(mediaData, false)
                                 let ImageBase64 = await meme.custom(getUrl, top, bottom)
-                                client.sendFile(from, ImageBase64, 'image.png', '', null, true)
-                                    .then(() => {
-                                        client.reply(from, 'Here you\'re!', id)
-                                    })
+                                client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', null, id)
                                     .catch(() => {
                                         client.reply(from, resMsg.error.norm)
                                     })
                             } catch (err) {
                                 console.log(err)
-                                await client.reply(from, `Argumen salah, Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`, id)
+                                await client.reply(from, resMsg.error.norm, id)
                             }
 
                         } else {
