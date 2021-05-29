@@ -240,10 +240,12 @@ const HandleMsg = async (client, message, browser) => {
                 return await client.sendText(from, `Untuk menampilkan menu, kirim pesan *${prefix}menu*`)
             }
             case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/.test(lowerCaseBody): {
-                return await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
+                await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
+                break
             }
             case /\b(hi|hy|halo|hai|hei|hello)\b/.test(lowerCaseBody): {
-                return await client.reply(from, `Halo ${pushname} 👋`, id)
+                await client.reply(from, `Halo ${pushname} 👋`, id)
+                break
             }
             case /^=/.test(lowerCaseBody): {
             	if (lowerCaseBody.match(/\d[\=\+\-\*\/\^e]/g)) await client.reply(from, `${eval(lowerCaseBody.slice(1).replace('^', '**'))}`, id)
@@ -2158,7 +2160,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length == 0) return client.reply(from, `Untuk broadcast ke semua group ketik:\n${prefix}bcgroup [isi chat]`)
                         const groupz = await client.getAllGroups()
-                        client.reply(from, `Broadcast in progress! Total: ${chatz.length} groups`, id)
+                        client.reply(from, `Broadcast in progress! Total: ${groupz.length} groups`, id)
                         let count = 0
                         for (let idk of groupz) {
                             await sleep(1000)
