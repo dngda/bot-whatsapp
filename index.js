@@ -53,19 +53,22 @@ async function start(client = new Client()) {
     console.log(color('[>..]'), color('Owner Commands: /ban /bc /bcgroup /leaveall /clearall /clearexitedgroup /clearpm', 'green'))
     console.log(color('[>..]'), color('/addkasar /gitpull /restart /refresh /unblock />', 'green'))
 
-    const browser = await puppeteer.launch({
-        executablePath: path,
-        headless: true,
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--aggressive-cache-discard',
-            '--disable-cache',
-            '--disable-application-cache',
-            '--disable-offline-load-stale-cache',
-            '--disk-cache-size=0'
-        ]
-    })
+    const bWS = client.getConfig().browserWSEndpoint
+    const browser = await puppeteer.connect({browserWSEndpoint: bWS})
+    
+    // const browser = await puppeteer.launch({
+    //     executablePath: path,
+    //     headless: true,
+    //     args: [
+    //         '--no-sandbox',
+    //         '--disable-setuid-sandbox',
+    //         '--aggressive-cache-discard',
+    //         '--disable-cache',
+    //         '--disable-application-cache',
+    //         '--disable-offline-load-stale-cache',
+    //         '--disk-cache-size=0'
+    //     ]
+    // })
 
     // process unread message
     const unreadMessages = await client.getAllUnreadMessages()
