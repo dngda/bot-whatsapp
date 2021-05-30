@@ -1093,23 +1093,23 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
 
-                        let result = await scraper.tiktok(browser, urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        let result = await scraper.ssstik(browser, urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         let _id = quotedMsg != null ? quotedMsg.id : id
-                        await client.sendFileFromUrl(from, result.video, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        await client.sendFileFromUrl(from, result.mp4, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
                     }
 
                     case 'tiktokmp3': {
-                        return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
+                        // return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
 
-                        // if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
-                        // let urls = isQuotedChat ? quotedMsg.body : arg
-                        // if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
-                        // await client.reply(from, resMsg.wait, id)
-                        // let result = await tiktok.ssstik(urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        // let _id = quotedMsg != null ? quotedMsg.id : id
-                        // await client.sendFileFromUrl(from, result.music, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                        // break
+                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
+                        let urls = isQuotedChat ? quotedMsg.body : arg
+                        if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+                        await client.reply(from, resMsg.wait, id)
+                        let result = await scraper.ssstik(browser, urls).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        let _id = quotedMsg != null ? quotedMsg.id : id
+                        await client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
+                        break
                     }
 
                     case 'artinama':
