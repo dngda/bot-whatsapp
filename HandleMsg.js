@@ -442,9 +442,13 @@ const HandleMsg = async (client, message, browser) => {
                                 client.sendText(from, resMsg.error.norm)
                             }
                         } else if ((isMedia && mimetype === 'video/mp4') || isQuotedVideo) {
+                            client.reply(from, resMsg.wait, id)
                             let encryptedMedia = isQuotedVideo ? quotedMsg : message
                             let mediaData = await decryptMedia(encryptedMedia)
-                            client.reply(from, resMsg.wait, id)
+                                    .catch(err => {
+                                        console.log(err)
+                                        client.sendText(from, resMsg.error.norm)
+                                    })
                             await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
                                 .then(() => {
                                     client.sendText(from, resMsg.success.sticker)
