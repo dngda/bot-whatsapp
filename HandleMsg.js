@@ -505,7 +505,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'flip' : {
-                        if (!isMedia || args.length === 0 || !isQuotedImage) return client.reply(from, `Flip image vertical or horizontal. Kirim gambar dengan caption \n${prefix}flip h -> untuk flip horizontal\n${prefix}flip v -> untuk flip vertical`, id)
+                        if (!isMedia || args.length === 0 || !isQuotedImage) return client.reply(from, `Flip image vertical or horizontal. Kirim gambar dengan caption:\n${prefix}flip h -> untuk flip horizontal\n${prefix}flip v -> untuk flip vertical`, id)
                         const _enc = isQuotedImage ? quotedMsg : message
                         const _img = await decryptMedia(_enc)
                                 .catch(e => {
