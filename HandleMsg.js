@@ -9,6 +9,7 @@ const ffmpeg = require('fluent-ffmpeg')
 const ytdl = require('ytdl-core')
 const axios = require('axios')
 const fetch = require('node-fetch')
+const Jimp = require('jimp')
 const gTTS = require('gtts')
 const toPdf = require("office-to-pdf")
 const low = require('lowdb')
@@ -500,6 +501,28 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0) return client.reply(from, `Untuk membuat kode QR, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya SeroBot`, id)
                         client.reply(from, resMsg.wait, id);
                         await client.sendFileFromUrl(from, `http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(arg)}&size=500x500`, id)
+                        break
+                    }
+
+                    case 'flip' : {
+                        if (!isMedia || args.length === 0 || !isQuotedImage) return client.reply(from, `Flip image vertical or horizontal. Kirim gambar dengan caption \n${prefix}flip h -> untuk flip horizontal\n${prefix}flip v -> untuk flip vertical`, id)
+                        const _enc = isQuotedImage ? quotedMsg : message
+                        const _img = await decryptMedia(_enc)
+                                .catch(e => {
+                                    console.log(e)
+                                    client.reply(from, resMsg.error.norm, id)
+                                })
+                        let image = await Jimp.read(_img)
+                        if (args[0] === 'v') image.flip(false, true)
+                        else if (args[0] === 'h') image.flip(true, false)
+                        else client.reply(from, resMsg.error.norm, id)
+                        const imgRes = await image.getBufferAsync(Jimp.MIME_PNG)
+
+                        client.sendImage(from, imgRes, '', '', id)
+                                .catch(e => {
+                                    console.log(e)
+                                    client.reply(from, resMsg.error.norm, id)
+                                })
                         break
                     }
 
