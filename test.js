@@ -17,7 +17,7 @@ const browser = await puppeteer.launch({
 
 url = 'https://vt.tiktok.com/ZSJmK8BBX/'
 // gsearch = 'https://www.google.com/search?q='
-scraper.tiktok(browser, url)
+scraper.ssstik(browser, url)
 .then((result) => {
     console.log(result)
 })
