@@ -513,12 +513,12 @@ const HandleMsg = async (client, message, browser) => {
                                     client.reply(from, resMsg.error.norm, id)
                                 })
                         let image = await Jimp.read(_img)
-                        if (args[0] === 'v') image.flip(false, true)
-                        else if (args[0] === 'h') image.flip(true, false)
+                        let path = './media/flipped.png'
+                        if (args[0] === 'v') image.flip(false, true).write(path)
+                        else if (args[0] === 'h') image.flip(true, false).write(path)
                         else client.reply(from, resMsg.error.norm, id)
-                        const imgRes = await image.getBufferAsync(Jimp.MIME_PNG)
 
-                        await client.sendImage(from, imgRes, '', '', id)
+                        await client.sendImage(from, path, '', '', id)
                                 .catch(e => {
                                     console.log(e)
                                     client.reply(from, resMsg.error.norm, id)
