@@ -22,3 +22,6 @@ settings/api.json
 **.data.json
 **.node-persist**
 # end managed
+
+# temp
+tmp
