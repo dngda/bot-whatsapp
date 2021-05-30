@@ -1713,9 +1713,11 @@ const HandleMsg = async (client, message, browser) => {
                     case 'urltoimg':
                     case 'ssweb': {
                         if (args.length === 0) return client.reply(from, `Screenshot website. ${prefix}ssweb <url>`, id)
-                        if (!isUrl(args[0])) return client.reply(from, `Url tidak valid`, id)
+                        let urlzz = ''
+                        if (!isUrl(args[0])) urlzz = `https://www.google.com/search?q=${args[0]}`
+                            else urlzz = args[0]
                         const path = './media/ssweb.png'
-                        scraper.ssweb(browser, path, args[0]).then(async res => {
+                        scraper.ssweb(browser, path, urlzz).then(async res => {
                             if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${args[0]}`).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         }).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
                         break
