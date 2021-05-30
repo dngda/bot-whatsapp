@@ -112,9 +112,9 @@ async function start(client = new Client()) {
     })
 
     await client.onIncomingCall(async call => {
-        console.log(color('[==>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}`)
-        // ketika seseorang menelpon nomor bot akan mengirim 
-        if (!call.isGroup) {
+        // ketika seseorang menelpon nomor bot
+        if (!call.isGroup || !call.participants.length > 1) {
+        	console.log(color('[==>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}`)
             client.sendText(call.peerJid, `Maaf tidak bisa menerima panggilan.\nIni robot, bukan manusia. Awas kena block!\nChat https://wa.me/${ownerNumber.replace('@c.us', '')} untuk buka block.`)
             setTimeout(() => {
                 client.contactBlock(call.peerJid)
