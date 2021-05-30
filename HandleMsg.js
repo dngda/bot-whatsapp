@@ -337,7 +337,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'getimage':
                     case 'stikertoimg':
                     case 'stickertoimg':
-                    case 'stimg': {
+                    case 'toimg': {
                         if (isQuotedSticker) {
                             let mediaData = await decryptMedia(quotedMsg)
                             client.reply(from, resMsg.wait, id)
