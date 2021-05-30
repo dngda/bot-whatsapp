@@ -518,7 +518,7 @@ const HandleMsg = async (client, message, browser) => {
                         else client.reply(from, resMsg.error.norm, id)
                         const imgRes = await image.getBufferAsync(Jimp.MIME_PNG)
 
-                        client.sendImage(from, imgRes, '', '', id)
+                        await client.sendImage(from, imgRes, '', '', id)
                                 .catch(e => {
                                     console.log(e)
                                     client.reply(from, resMsg.error.norm, id)
