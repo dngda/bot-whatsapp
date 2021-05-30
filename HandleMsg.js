@@ -2061,7 +2061,7 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'mutegrup': {
+                    case 'mutegroup': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
                         if (!isBotGroupAdmins) return client.reply(from, resMsg.error.botAdm, id)
