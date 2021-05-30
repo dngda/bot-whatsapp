@@ -5,8 +5,10 @@ const { loadJob } = require('./lib/schedule')
 const { color, recache, getModuleName, createReadFileSync } = require('./utils')
 const fs = require('fs-extra')
 const appRoot = require('app-root-path')
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer-extra')
 const path = require('chrome-launcher').Launcher.getInstallations()[0]
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin())
 
 let { reCacheModule, HandleMsg } = recache(appRoot + '/HandleMsg.js', module => {
     HandleMsg = require(module).HandleMsg
