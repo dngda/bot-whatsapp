@@ -295,7 +295,7 @@ const HandleMsg = async (client, message, browser) => {
                             .then(() => client.sendText(from, 'Jika ada pertanyaan tentang bot silahkan chat nomor di atas'))
                         break
                     case 'join':
-                        if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot ke group silahkan invite atau dengan\nketik ${prefix}join <link group>\nTanpa simbol <>`, id)
+                        if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot ke group silakan kontak owner atau gunakan perintah ${prefix}join (link_group)`, id)
                         const linkgrup = args[0]
                         let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
                         let chekgrup = await client.inviteInfo(linkgrup)
