@@ -15,15 +15,15 @@ const browser = await puppeteer.launch({
     ]
 })
 
-url = 'vim'
-gsearch = 'https://www.google.com/search?q='
-// scraper.tiktok(browser, url)
-// .then((result) => {
-//     console.log(result)
-// })
+url = 'https://vt.tiktok.com/ZSJmK8BBX/'
+// gsearch = 'https://www.google.com/search?q='
+scraper.tiktok(browser, url)
+.then((result) => {
+    console.log(result)
+})
 
-path = './media/ssweb.png'
-scraper.ssweb(browser, path, gsearch+url).catch(e => console.log(e))
+// path = './media/ssweb.png'
+// scraper.ssweb(browser, path, gsearch+url).catch(e => console.log(e))
 
 
 })()
