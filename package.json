@@ -29,6 +29,7 @@
     "free-translate": "^0.4.0",
     "fs-extra": "^9.0.1",
     "gtts": "^0.2.1",
+    "jimp": "^0.16.1",
     "lowdb": "^1.0.0",
     "moment-timezone": "^0.5.33",
     "node-fetch": "^2.6.1",
