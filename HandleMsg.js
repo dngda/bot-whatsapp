@@ -1616,11 +1616,13 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'apakah': {
-                        let isTrue = Boolean(Crypto.randomInt(0, 2))
-                        var result = ''
+                        let x = Crypto.randomInt(0, 10)
+                        let result = ''
                         if (args.length === 0) result = 'Apakah apa woy yang jelas dong! Misalnya, apakah aku ganteng?'
                         else {
-                            result = isTrue ? 'Iya' : 'Tidak'
+                            if (x >= 0 && x <= 3) result = 'Iya'
+                            else if (x >= 4 && x <= 7) result = 'Tidak'
+                            else result = 'Coba tanya lagi'
                         }
                         var gtts = new gTTS(result, 'id')
                         try {
