@@ -268,13 +268,6 @@ const HandleMsg = async (client, message, browser) => {
         if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
 
         // Hits count
-        let todayHits = JSON.parse(createReadFileSync('./data/todayhits.json'))
-        if (isCmd) { 
-            count = todayHits[0]
-            count += 1
-            todayHits.splice(0, 1, count)
-            fs.writeFile('./data/todayhits.json', todayHits)
-        }
 
         // Ini Command nya
         if (isCmd) {
