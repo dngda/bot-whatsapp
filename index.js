@@ -131,7 +131,6 @@ async function start(client = new Client()) {
             .then((msg) => {
                 if (msg >= 3000) {
                     console.log('[CLNT]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
-                    client.cutChatCache()
                     client.cutMsgCache()
                 }
             })
