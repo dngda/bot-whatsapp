@@ -1,5 +1,6 @@
-const sharp = require('sharp')
-const { fromBuffer } = require('file-type')
+import sharp from 'sharp'
+import fileType from 'file-type'
+const { fromBuffer } = fileType
 
 /**
  * Resize image to buffer or base64
@@ -8,7 +9,7 @@ const { fromBuffer } = require('file-type')
  * @param  {String} mimType
  */
 // eslint-disable-next-line no-async-promise-executor
-module.exports = resizeImage = (buff, encode) => new Promise(async (resolve, reject) => {
+const resizeImage = (buff, encode) => new Promise(async (resolve, reject) => {
     console.log('Resizeing image...')
     const { mime } = await fromBuffer(buff)
     sharp(buff, { failOnError: false })
@@ -23,3 +24,5 @@ module.exports = resizeImage = (buff, encode) => new Promise(async (resolve, rej
         })
         .catch(error => reject(error))
 })
+
+export default resizeImage

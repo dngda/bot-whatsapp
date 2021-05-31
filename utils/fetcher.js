@@ -1,8 +1,10 @@
-const fetch = require('node-fetch')
-const FormData = require('form-data')
-const fs = require('fs')
-const { fromBuffer } = require('file-type')
-const resizeImage = require('./imageProcessing')
+import fetch from 'node-fetch'
+import FormData from 'form-data'
+import { writeFile, readFileSync, unlinkSync } from 'fs'
+import fileType from 'file-type'
+import resizeImage from './imageProcessing.js'
+
+const { fromBuffer } = fileType
 
 /**
  *Fetch Json from Url
@@ -75,10 +77,10 @@ const uploadImages = (buffData, type) => {
         const { ext } = await fromBuffer(buffData)
         const filePath = 'utils/tmp.' + ext
         const _buffData = type ? await resizeImage(buffData, false) : buffData
-        fs.writeFile(filePath, _buffData, { encoding: 'base64' }, (err) => {
+        writeFile(filePath, _buffData, { encoding: 'base64' }, (err) => {
             if (err) return reject(err)
             // console.log('Uploading image to telegra.ph server...')
-            const fileData = fs.readFileSync(filePath)
+            const fileData = readFileSync(filePath)
             const form = new FormData()
             form.append('file', fileData, 'tmp.' + ext)
             fetch('https://telegra.ph/upload', {
@@ -90,13 +92,13 @@ const uploadImages = (buffData, type) => {
                     if (res.error) return reject(res.error)
                     resolve('https://telegra.ph' + res[0].src)
                 })
-                .then(() => fs.unlinkSync(filePath))
+                .then(() => unlinkSync(filePath))
                 .catch(err => reject(err))
         })
     })
 }
 
-module.exports = {
+export {
     fetchJson,
     fetchText,
     fetchBase64,

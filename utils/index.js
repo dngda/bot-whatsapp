@@ -1,10 +1,16 @@
-const request = require('request')
-const fs = require('fs-extra')
-const chalk = require('chalk')
-const moment = require('moment-timezone')
-moment.tz.setDefault('Asia/Jakarta').locale('id')
-const follow = require('follow-redirects')
-const updateJson = require('update-json-file')
+import request from 'request'
+import fs from 'fs-extra'
+import chalk from 'chalk'
+import moment from 'moment-timezone'
+import followPkg from 'follow-redirects'
+import updateJson from 'update-json-file'
+
+const { get } = followPkg
+const { tz, duration } = moment
+const { head } = request
+const { watchFile, existsSync, readFileSync, createWriteStream, writeFileSync } = fs
+
+tz.setDefault('Asia/Jakarta').locale('id')
 
 /**
  * Get text with color
@@ -28,7 +34,7 @@ const messageLog = (isReset) => updateJson('data/stat.json', (data) => {
  */
 const processTime = (timestamp, now) => {
     // timestamp => timestamp when message was received
-    return moment.duration(now - moment(timestamp * 1000)).asSeconds()
+    return duration(now - moment(timestamp * 1000)).asSeconds()
 }
 
 /**
@@ -57,9 +63,9 @@ const isFiltered = (from) => {
  *@param {Callback} callback
  */
 const download = (url, path, callback) => {
-    request.head(url, () => {
+    head(url, () => {
         request(url)
-            .pipe(fs.createWriteStream(path))
+            .pipe(createWriteStream(path))
             .on('close', callback)
     })
 }
@@ -68,9 +74,8 @@ const download = (url, path, callback) => {
 /**
  *@param {String} url
  */
-
 const redir = (url) => {
-    follow.get(url, response => {
+    get(url, response => {
         return response.responseUrl
     })
 }
@@ -88,12 +93,12 @@ const addFilter = (from) => {
 }
 
 const createReadFileSync = (path) => {
-    if (fs.existsSync(path)) {
-        return fs.readFileSync(path)
+    if (existsSync(path)) {
+        return readFileSync(path)
     }
     else {
-        fs.writeFileSync(path, '[]')
-        return fs.readFileSync(path)
+        writeFileSync(path, '[]')
+        return readFileSync(path)
     }
 }
 
@@ -108,7 +113,7 @@ const getModuleName = (module) => {
  */
 const recache = (module, call = () => { }) => {
     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'file is now being watched by node!')
-    fs.watchFile(require.resolve(module), async () => {
+    watchFile(require.resolve(module), async () => {
         await uncache(require.resolve(module))
         call(module)
         return require(module)
@@ -142,15 +147,13 @@ String.prototype.toDHms = function () {
     return time
 }
 
-module.exports = {
-    msgFilter: {
-        isFiltered,
-        addFilter
-    },
+export {
     createReadFileSync,
     getModuleName,
     processTime,
     messageLog,
+    isFiltered,
+    addFilter,
     download,
     recache,
     uncache,
