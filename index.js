@@ -1,5 +1,6 @@
-const { color, recache, getModuleName, createReadFileSync } = require('./utils')
+const { color, recache, getModuleName, createReadFileSync, messageLog } = require('./utils')
 const { create, Client } = require('@open-wa/wa-automate')
+const schedule = require('node-schedule')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { loadJob } = require('./lib/schedule')
@@ -9,8 +10,6 @@ const puppeteer = require('puppeteer-extra')
 const path = require('chrome-launcher').Launcher.getInstallations()[0]
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin())
-
-try {
 
 let { reCacheModule, HandleMsg } = recache(appRoot + '/HandleMsg.js', module => {
     HandleMsg = require(module).HandleMsg
@@ -69,7 +68,7 @@ async function start(client = new Client()) {
             '--disk-cache-size=0'
         ]
     })
-    console.log("WTFdude")
+
     // process unread message
     client.getAllUnreadMessages().then(unreadMessages => {
         unreadMessages.forEach(message => {
@@ -82,11 +81,9 @@ async function start(client = new Client()) {
             }, 1000)
         })
     })
-    console.log("WTF")
-
 
     // ketika seseorang mengirim pesan
-    await client.onMessage(async message => {
+    client.onMessage(async message => {
         client.setPresence(true)
         client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
             .then((msg) => {
@@ -108,17 +105,21 @@ async function start(client = new Client()) {
     //Load Scheduled Job
     //client, from, quotedId, content, date, isQuoted
 
-    // try {
-    //     jobList.job.forEach(async (job) => {
-    //         await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
-    //     })
-    //     console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
-    // } catch (e) {
-    //     console.log(e)
-    // }
-    console.log("WTFasdasd")
+    try {
+        jobList.job.forEach(async (job) => {
+            loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
+        })
+        console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
+
+        const resetHits = schedule.scheduleJob('0 * * *', function(){
+            messageLog(true)
+        })
+    } catch (e) {
+        console.log(e)
+    }
+
     // ketika bot diinvite ke dalam group
-    await client.onAddedToGroup(async chat => {
+    client.onAddedToGroup(async chat => {
         console.log(color('[==>>]', 'red'), `Someone is adding bot to group, lol~ groupId: ${chat.groupMetadata.id}`)
         client.getAllGroups().then((groups) => {
             // kondisi ketika batas group bot telah tercapai, ubah di file settings/setting.json
@@ -138,7 +139,7 @@ async function start(client = new Client()) {
         })
     })
 
-    await client.onIncomingCall(async call => {
+    client.onIncomingCall(async call => {
         // ketika seseorang menelpon nomor bot
         if (!call.isGroup || !call.participants.length > 1) {
         	console.log(color('[==>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}`)
@@ -150,7 +151,7 @@ async function start(client = new Client()) {
     })
 
     // Mempertahankan sesi agar tetap nyala
-    await client.onStateChanged((state) => {
+    client.onStateChanged((state) => {
         console.log(color('[~>>>]', 'red'), state)
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus().then(() => queue.start())
     }).catch((err) => {
@@ -159,7 +160,7 @@ async function start(client = new Client()) {
 
     // ketika seseorang masuk/keluar dari group
     try {
-        await client.onGlobalParticipantsChanged(async event => {
+        client.onGlobalParticipantsChanged(async event => {
             const host = await client.getHostNumber() + '@c.us'
             const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
             const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
@@ -191,7 +192,4 @@ async function start(client = new Client()) {
     } catch (err) {
         console.log(color('[ERR>]', 'red'), err)
     }
-}
-}catch (err) {
-    console.log(err)
 }
