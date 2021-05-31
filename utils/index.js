@@ -147,14 +147,14 @@ module.exports = {
         isFiltered,
         addFilter
     },
-    processTime,
-    isUrl,
-    color,
-    download,
-    redir,
     createReadFileSync,
+    getModuleName,
+    processTime,
+    messageLog,
+    download,
     recache,
     uncache,
-    getModuleName,
-    messageLog
+    redir,
+    color,
+    isUrl,
 }
