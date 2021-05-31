@@ -1430,9 +1430,9 @@ const HandleMsg = async (client, message, browser) => {
                         const cek = await tebakgb.getAns(from)
                         if (cek != false) return client.reply(from, `Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`, id)
                         await tebakgb.getTebakGambar(from).then(async res => {
-                            let waktu = res.jawaban.split(' ').length - 1
+                            let waktu = res.ans.split(' ').length - 1
                             let detik = waktu * 60
-                            await client.sendFileFromUrl(from, res.soal_gbr, '', `Tebak Gambar diatas. \nJawab dengan perintah *${prefix}ans (jawaban)*\n\nWaktunya ${waktu} menit.`, null)
+                            await client.sendFileFromUrl(from, res.url, '', `Tebak Gambar diatas. \nJawab dengan perintah *${prefix}ans (jawaban)*\n\nWaktunya ${waktu} menit.`, null)
                                 .then(() => {
                                     sleep(detik * 1000 / 4).then(async () => {
                                         const ans = await tebakgb.getAns(from)
