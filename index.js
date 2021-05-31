@@ -71,8 +71,8 @@ async function start(client = new Client()) {
     })
     console.log("WTFdude")
     // process unread message
-    const unreadMessages = await client.getAllUnreadMessages()
-    unreadMessages.forEach(message => {
+    client.getAllUnreadMessages().then(unreadMessages => {
+        unreadMessages.forEach(message => {
         setTimeout(
             async function () {
                 if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
@@ -80,6 +80,7 @@ async function start(client = new Client()) {
                     if (queue.isPaused) queue.start()
                 })
             }, 1000)
+        })
     })
     console.log("WTF")
 
