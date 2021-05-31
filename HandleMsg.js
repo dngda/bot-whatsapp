@@ -271,7 +271,7 @@ const HandleMsg = async (client, message, browser) => {
         let todayHits = JSON.parse(createReadFileSync('./data/todayhits.json'))
         if (isCmd) { 
             todayHits.count += 1
-            fs.writeFile(todayHits, './data/todayhits.json')
+            fs.writeFile('./data/todayhits.json', todayHits)
         }
 
         // Ini Command nya
