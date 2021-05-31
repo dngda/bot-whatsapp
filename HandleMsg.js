@@ -9,6 +9,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import toPdf from 'office-to-pdf'
 import fetch from 'node-fetch'
 import ytdl from 'ytdl-core'
+import Crypto from 'crypto'
 import jimp from 'jimp'
 import fs from 'fs-extra'
 import axios from 'axios'
@@ -879,7 +880,7 @@ const HandleMsg = async (client, message, browser) => {
                             let time = moment(t * 1000).format('mmss')
                             let path = `./media/temp_${time}.mp3`
 
-                            stream = ytdl(ytresult.videoId, { quality: 'highestaudio' })
+                            let stream = ytdl(ytresult.videoId, { quality: 'highestaudio' })
                             ffmpeg({ source: stream })
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
@@ -1291,8 +1292,8 @@ const HandleMsg = async (client, message, browser) => {
                     case 'crjogja': {
                         const url1 = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
                         const url2 = 'https://screenshotapi.net/api/v1/screenshot?token=FREB5SDBA2FRMO4JDMSHXAEGNYLKYCA4&url=https%3A%2F%2Fsipora.staklimyogyakarta.com%2Fradar%2F&width=600&height=600&fresh=true&output=image'
-                        const isTrue1 = Boolean(Math.round(Math.random()))
-                        const urL = isTrue1 ? url1 : url2
+                        let isTrue = Boolean(Crypto.randomInt(0, 1))
+                        const urL = isTrue ? url1 : url2
 
                         await client.sendText(from, 'Gotcha, please wait!')
                         await client.simulateTyping(from, true)
@@ -1618,7 +1619,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'apakah': {
-                        const isTrue = Boolean(Math.round(Math.random()))
+                        let isTrue = Boolean(Crypto.randomInt(0, 1))
                         var result = ''
                         if (args.length === 0) result = 'Apakah apa woy yang jelas dong! Misalnya, apakah aku ganteng?'
                         else {
