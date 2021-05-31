@@ -35,10 +35,6 @@ let {
     prefix
 } = setting
 
-const resetHits = schedule.scheduleJob('0 * * *', function(){
-    messageLog(true)
-})
-
 const { default: PQueue } = require("p-queue")
 const queue = new PQueue({ concurrency: 4, timeout: 10000, throwOnTimeout: true })
 queue.on('next', () => {
@@ -95,6 +91,10 @@ async function start(client = new Client()) {
     } catch (e) {
         console.log(e)
     }
+
+    const resetHits = schedule.scheduleJob('0 * * *', function(){
+        messageLog(true)
+    })
 
     // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {
