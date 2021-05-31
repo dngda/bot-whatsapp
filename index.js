@@ -37,7 +37,7 @@ let {
 } = setting
 
 const resetHits = schedule.scheduleJob('0 * * *', function(){
-  todayHits.count = 0
+  todayHits = 0
   fs.writeFile('./data/todayhits.json', todayHits)
 })
 
