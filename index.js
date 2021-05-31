@@ -69,7 +69,7 @@ async function start(client = new Client()) {
             '--disk-cache-size=0'
         ]
     })
-
+    console.log("WTFdude")
     // process unread message
     const unreadMessages = await client.getAllUnreadMessages()
     unreadMessages.forEach(message => {
@@ -80,6 +80,28 @@ async function start(client = new Client()) {
                     if (queue.isPaused) queue.start()
                 })
             }, 1000)
+    })
+    console.log("WTF")
+
+
+    // ketika seseorang mengirim pesan
+    await client.onMessage(async message => {
+        client.setPresence(true)
+        client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
+            .then((msg) => {
+                if (msg >= 3000) {
+                    console.log('[CLNT]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
+                    client.cutMsgCache()
+                }
+            })
+        await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
+            console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
+            if (queue.isPaused) queue.start()
+        })
+
+        if (queue.isPaused) queue.start()
+    }).catch(err => {
+        console.log(err)
     })
 
     //Load Scheduled Job
@@ -93,7 +115,7 @@ async function start(client = new Client()) {
     // } catch (e) {
     //     console.log(e)
     // }
-    console.log("WTF")
+    console.log("WTFasdasd")
     // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {
         console.log(color('[==>>]', 'red'), `Someone is adding bot to group, lol~ groupId: ${chat.groupMetadata.id}`)
@@ -124,26 +146,6 @@ async function start(client = new Client()) {
                 client.contactBlock(call.peerJid)
             }, 3000)
         }
-    })
-
-    // ketika seseorang mengirim pesan
-    await client.onMessage(async message => {
-        client.setPresence(true)
-        client.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
-            .then((msg) => {
-                if (msg >= 3000) {
-                    console.log('[CLNT]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
-                    client.cutMsgCache()
-                }
-            })
-        await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
-            console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
-            if (queue.isPaused) queue.start()
-        })
-
-        if (queue.isPaused) queue.start()
-    }).catch(err => {
-        console.log(err)
     })
 
     // Mempertahankan sesi agar tetap nyala
