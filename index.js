@@ -92,9 +92,9 @@ async function start(client = new Client()) {
         console.log(e)
     }
 
-    const resetHits = schedule.scheduleJob('0 * * *', function(){
-        messageLog(true)
-    })
+    // const resetHits = schedule.scheduleJob('0 * * *', function(){
+    //     messageLog(true)
+    // })
 
     // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {
