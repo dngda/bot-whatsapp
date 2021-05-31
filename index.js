@@ -10,6 +10,8 @@ const path = require('chrome-launcher').Launcher.getInstallations()[0]
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin())
 
+try {
+
 let { reCacheModule, HandleMsg } = recache(appRoot + '/HandleMsg.js', module => {
     HandleMsg = require(module).HandleMsg
     reCacheModule = require(module).reCacheModule
@@ -185,4 +187,7 @@ async function start(client = new Client()) {
     } catch (err) {
         console.log(color('[ERR>]', 'red'), err)
     }
+}
+}catch (err) {
+    console.log(err)
 }
