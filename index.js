@@ -29,7 +29,7 @@ recache(appRoot + '/lib/menu.js', module => {
 const jobList = JSON.parse(createReadFileSync('./data/schedule.json'))
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 if (!fs.existsSync('./data/stat.json')) {
-    fs.writeFileSync('./data/stat.json', {todayHits : 0})
+    fs.writeFileSync('./data/stat.json', `{ "todayhits" : 0 }`)
 }
 
 let {
