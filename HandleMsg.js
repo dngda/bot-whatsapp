@@ -60,7 +60,7 @@ const {
 const fs = require('fs-extra')
 const { uploadImages } = require('./utils/fetcher')
 if (!fs.existsSync('./data/stat.json')) {
-    fs.writeFileSync('./data/stat.json', `{ "todayhits" : 0 }`)
+    fs.writeFileSync('./data/stat.json', `{ "todayHits" : 0 }`)
 }
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 const kataKasar = JSON.parse(createReadFileSync('./settings/katakasar.json'))
