@@ -219,6 +219,18 @@ const HandleMsg = async (client, message, browser) => {
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
 
+        //Tebak gambar
+        tebakgb.getAns(from).then(res => {
+            if (res != false) {
+                if (res.ans.toLowerCase() === realBody.toLowerCase()) {
+                    client.reply(from, `✅ Jawaban benar! : *${res.ans}*`, id)
+                    tebakgb.delData(from)
+                } else {
+                    client.reply(from, `❌ Salah!`, id)
+                }
+            }
+        })
+
         // respon to msg contain this case
         switch (true) {
             case /^p$/i.test(realBody): {
@@ -1432,7 +1444,7 @@ const HandleMsg = async (client, message, browser) => {
                         await tebakgb.getTebakGambar(from).then(async res => {
                             let waktu = res.ans.split(' ').length - 1
                             let detik = waktu * 60
-                            await client.sendFileFromUrl(from, res.url, '', `Tebak Gambar diatas. \nJawab dengan perintah *${prefix}ans (jawaban)*\n\nWaktunya ${waktu} menit.`, null)
+                            await client.sendFileFromUrl(from, res.url, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.`, null)
                                 .then(() => {
                                     sleep(detik * 1000 / 4).then(async () => {
                                         const ans = await tebakgb.getAns(from)
@@ -1441,7 +1453,7 @@ const HandleMsg = async (client, message, browser) => {
                                         sleep(detik * 1000 / 4).then(async () => {
                                             const ans1 = await tebakgb.getAns(from)
                                             if (ans1 === false) return true
-                                            else client.sendText(from, `⏳ ${((detik * 1000) - (detik * 1000 / 4 * 2)) / 1000} detik lagi\nHint: ${res.jawaban.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')}`)
+                                            else client.sendText(from, `⏳ ${((detik * 1000) - (detik * 1000 / 4 * 2)) / 1000} detik lagi\nHint: ${res.ans.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')}`)
                                             sleep(detik * 1000 / 4).then(async () => {
                                                 const ans2 = await tebakgb.getAns(from)
                                                 if (ans2 === false) return true
@@ -1449,7 +1461,7 @@ const HandleMsg = async (client, message, browser) => {
                                                 sleep(detik * 1000 / 4).then(async () => {
                                                     const ans3 = await tebakgb.getAns(from)
                                                     if (ans3 === false) return true
-                                                    else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: *${res.jawaban}*`)
+                                                    else client.sendText(from, `⌛ Waktu habis!\nJawabannya adalah: *${res.ans}*`)
                                                     tebakgb.delData(from)
                                                 })
                                             })
@@ -1459,23 +1471,6 @@ const HandleMsg = async (client, message, browser) => {
                         }).catch((err) => {
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
-                        })
-                        break
-                    }
-
-                    case 'ans': {
-                        if (args.length === 0) return client.reply(from, `Jawab dengan menyertakan jawaban yang benar`, id)
-                        await tebakgb.getAns(from).then(res => {
-                            if (res != false) {
-                                if (res.ans.toLowerCase() === arg.toLowerCase()) {
-                                    client.reply(from, `✅ Jawaban benar! : *${res.ans}*`, id)
-                                    tebakgb.delData(from)
-                                } else {
-                                    client.reply(from, `❌ Salah!`, id)
-                                }
-                            } else {
-                                client.reply(from, `Tidak ada sesi tebak gambar yang berlangsung! Ketik ${prefix}tgb untuk mulai`, id)
-                            }
                         })
                         break
                     }
