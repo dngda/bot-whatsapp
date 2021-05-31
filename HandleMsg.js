@@ -267,6 +267,13 @@ const HandleMsg = async (client, message, browser) => {
         // Jika bot dimention maka akan merespon pesan
         if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
 
+        // Hits count
+        let todayHits = JSON.parse(createReadFileSync('./data/todayhits.json'))
+        if (isCmd) { 
+            todayHits.count += 1
+            fs.writeFile(todayHits, './data/todayhits.json')
+        }
+
         // Ini Command nya
         if (isCmd) {
             client.simulateTyping(chat.id, true).then(async () => {
@@ -330,7 +337,7 @@ const HandleMsg = async (client, message, browser) => {
                         let groups = await client.getAllGroups()
                         let time = process.uptime()
                         let uptime = (time + "").toDHms()
-                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
+                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n- *${todayHits.count}* Total Hits Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
                         break
                     }
 

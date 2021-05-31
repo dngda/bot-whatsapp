@@ -1,8 +1,9 @@
+const { color, recache, getModuleName, createReadFileSync } = require('./utils')
 const { create, Client } = require('@open-wa/wa-automate')
+const schedule = require('node-schedule')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { loadJob } = require('./lib/schedule')
-const { color, recache, getModuleName, createReadFileSync } = require('./utils')
 const fs = require('fs-extra')
 const appRoot = require('app-root-path')
 const puppeteer = require('puppeteer-extra')
@@ -24,10 +25,10 @@ recache(appRoot + '/lib/menu.js', module => {
     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
 })
 
-const { default: PQueue } = require("p-queue")
 
 const jobList = JSON.parse(createReadFileSync('./data/schedule.json'))
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
+let todayHits = JSON.parse(createReadFileSync('./data/todayhits.json'))
 let {
     ownerNumber,
     groupLimit,
@@ -35,8 +36,13 @@ let {
     prefix
 } = setting
 
-const queue = new PQueue({ concurrency: 4, timeout: 10000, throwOnTimeout: true })
+const resetHits = schedule.scheduleJob('0 * * *', function(){
+  todayHits.count = 0
+  fs.writeFile(todayHits, './data/todayhits.json')
+})
 
+const { default: PQueue } = require("p-queue")
+const queue = new PQueue({ concurrency: 4, timeout: 10000, throwOnTimeout: true })
 queue.on('next', () => {
     if (queue.size > 0 || queue.pending > 0) console.log(color('[==>>]', 'red'), `In-process: ${queue.pending} In-queue: ${queue.size}`)
 })
