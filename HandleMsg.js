@@ -268,13 +268,13 @@ const HandleMsg = async (client, message, browser) => {
         }
         // Jika bot dimention maka akan merespon pesan
         if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
-        
-        // Hits count
-        if (isCmd) messageLog(false)
-        let {todayHits} = JSON.parse(fs.readFileSync('./data/stat.json'))
 
         // Ini Command nya
         if (isCmd) {
+            // Hits count
+            messageLog(false)
+            let {todayHits} = JSON.parse(fs.readFileSync('./data/stat.json'))
+            // typing
             client.simulateTyping(chat.id, true).then(async () => {
                 switch (command) {
                     // Menu and TnC
