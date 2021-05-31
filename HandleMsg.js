@@ -893,7 +893,7 @@ const HandleMsg = async (client, message, browser) => {
                                     })
                                 })
                                 .on('end', () => {
-                                    client.sendFile(from, path, `${ytresult.judul.substring(0, 15).replace(/\s/g, '-')}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                    client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                     unlinkSync(path)
                                 })
                                 .saveToFile(path)
