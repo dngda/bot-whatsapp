@@ -84,15 +84,16 @@ async function start(client = new Client()) {
 
     //Load Scheduled Job
     //client, from, quotedId, content, date, isQuoted
-    try {
-        jobList.job.forEach(async (job) => {
-            await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
-        })
-        console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
-    } catch (e) {
-        console.log(e)
-    }
 
+    // try {
+    //     jobList.job.forEach(async (job) => {
+    //         await loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
+    //     })
+    //     console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
+    // } catch (e) {
+    //     console.log(e)
+    // }
+    console.log("WTF")
     // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {
         console.log(color('[==>>]', 'red'), `Someone is adding bot to group, lol~ groupId: ${chat.groupMetadata.id}`)
