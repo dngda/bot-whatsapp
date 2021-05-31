@@ -869,24 +869,17 @@ const HandleMsg = async (client, message, browser) => {
                         if (!ytresult.hasOwnProperty('duration')) return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
 
                         try {
-                            //get video duration
-                            let duration = (ytresult) => {
-                                const n = ytresult.duration?.split(':')
-                                if (n.length === 3) return parseInt(n[0]) * 3600 + parseInt(n[1]) * 60 + parseInt(n[2])
-                                else return parseInt(n[0] * 60) + parseInt(n[1])
-                            }
-
-                            if (duration(ytresult) > 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
-                            let estimasi = duration(ytresult) / 100
+                            if (ytresult.seconds > 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
+                            let estimasi = ytresult.seconds / 100
                             let est = estimasi.toFixed(0)
 
-                            await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``, `Video ditemukan\n\nJudul: ${ytresult.judul}\nDurasi: ${ytresult.duration}\nUploaded: ${ytresult.published_at}\nView: ${ytresult.views}\n\nAudio sedang dikirim ± ${est} menit`, id)
+                            await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``, `Video ditemukan\n\nJudul: ${ytresult.title}\nDurasi: ${ytresult.timestamp}\nUploaded: ${ytresult.ago}\nView: ${ytresult.views}\nUrl: ${ytresult.url}\n\nAudio sedang dikirim ± ${est} menit`, id)
 
                             //Download video and save as MP3 file
                             let time = moment(t * 1000).format('mmss')
                             let path = `./media/temp_${time}.mp3`
 
-                            stream = ytdl(ytresult.id, { quality: 'highestaudio' })
+                            stream = ytdl(ytresult.videoId, { quality: 'highestaudio' })
                             ffmpeg({ source: stream })
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
