@@ -1,6 +1,5 @@
-const { color, recache, getModuleName, createReadFileSync, messageLog } = require('./utils')
+const { color, recache, getModuleName, createReadFileSync } = require('./utils')
 const { create, Client } = require('@open-wa/wa-automate')
-const schedule = require('node-schedule')
 const figlet = require('figlet')
 const options = require('./utils/options')
 const { loadJob } = require('./lib/schedule')
@@ -91,10 +90,6 @@ async function start(client = new Client()) {
     } catch (e) {
         console.log(e)
     }
-
-    // const resetHits = schedule.scheduleJob('0 * * *', function(){
-    //     messageLog(true)
-    // })
 
     // ketika bot diinvite ke dalam group
     await client.onAddedToGroup(async chat => {

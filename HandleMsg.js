@@ -15,6 +15,14 @@ const low = require('lowdb')
 const db = low(db_group)
 const _ = require('underscore')
 
+const {
+    createReadFileSync,
+    processTime,
+    msgFilter,
+    color,
+    isUrl
+} = require('./utils')
+
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 db.defaults({ group: [] }).write()
 
@@ -46,22 +54,9 @@ const sleep = (delay) => new Promise((resolve) => {
     setTimeout(() => { resolve(true) }, delay)
 })
 
-const {
-    createReadFileSync,
-    getModuleName,
-    processTime,
-    messageLog,
-    msgFilter,
-    recache, 
-    color,
-    isUrl
-} = require('./utils')
-
 const fs = require('fs-extra')
 const { uploadImages } = require('./utils/fetcher')
-if (!fs.existsSync('./data/stat.json')) {
-    fs.writeFileSync('./data/stat.json', `{ "todayHits" : 0 }`)
-}
+
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 const kataKasar = JSON.parse(createReadFileSync('./settings/katakasar.json'))
 const { apiNoBg } = JSON.parse(createReadFileSync('./settings/api.json'))
@@ -271,10 +266,6 @@ const HandleMsg = async (client, message, browser) => {
         // Jika bot dimention maka akan merespon pesan
         if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
 
-        // Hits count
-        if (isCmd) messageLog(false)
-        let {todayHits} = JSON.parse(fs.readFileSync('./data/stat.json'))
-
         // Ini Command nya
         if (isCmd) {
             client.simulateTyping(chat.id, true).then(async () => {
@@ -338,7 +329,7 @@ const HandleMsg = async (client, message, browser) => {
                         let groups = await client.getAllGroups()
                         let time = process.uptime()
                         let uptime = (time + "").toDHms()
-                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n- *${todayHits}* Total Hits Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
+                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
                         break
                     }
 
