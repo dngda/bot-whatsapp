@@ -859,21 +859,23 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'play': {//silahkan kalian custom sendiri jika ada yang ingin diubah
+                    case 'play': { //silahkan kalian custom sendiri jika ada yang ingin diubah
                         if (args.length == 0) return client.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`, id)
                         let ytresult = await api.ytsearch(arg).catch(err => {
                             console.log(err)
                             return client.reply(from, resMsg.error.norm, id)
                         })
 
-                        if (ytresult === undefined) return client.reply(from, resMsg.error.norm, id)
+                        if (!ytresult.hasOwnProperty('duration')) return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
 
                         try {
+                            //get video duration
                             let duration = (ytresult) => {
-                                const n = ytresult.duration.split(':')
+                                const n = ytresult.duration?.split(':')
                                 if (n.length === 3) return parseInt(n[0]) * 3600 + parseInt(n[1]) * 60 + parseInt(n[2])
                                 else return parseInt(n[0] * 60) + parseInt(n[1])
                             }
+
                             if (duration(ytresult) > 600) return client.reply(from, `Error. Durasi video lebih dari 10 menit!`, id)
                             let estimasi = duration(ytresult) / 100
                             let est = estimasi.toFixed(0)
@@ -1588,6 +1590,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (!isNgegas) return client.reply(from, `Anti-Toxic tidak aktif, aktifkan menggunakan perintah ${prefix}antikasar on`, id)
                         try {
                             const klasemen = db.chain.get('group').filter({ id: groupId }).map('members').value()[0]
+                            if (klasemen == null) return client.reply(from, `Belum ada yang berkata kasar`, id)
                             let urut = Object.entries(klasemen).map(([key, val]) => ({ id: key, ...val })).sort((a, b) => b.denda - a.denda);
                             let textKlas = "*Klasemen Denda Sementara*\n"
                             let i = 1;
