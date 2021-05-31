@@ -37,8 +37,8 @@ let {
 } = setting
 
 const resetHits = schedule.scheduleJob('0 * * *', function(){
-  todayHits[0] = 0
-  fs.writeFile('./data/todayhits.json', todayHits)
+    todayHits.splice(0, 1, 0)
+    fs.writeFile('./data/todayhits.json', todayHits)
 })
 
 const { default: PQueue } = require("p-queue")

@@ -270,7 +270,9 @@ const HandleMsg = async (client, message, browser) => {
         // Hits count
         let todayHits = JSON.parse(createReadFileSync('./data/todayhits.json'))
         if (isCmd) { 
-            todayHits[0] += 1
+            count = todayHits[0]
+            count += 1
+            todayHits.splice(0, 1, count)
             fs.writeFile('./data/todayhits.json', todayHits)
         }
 
