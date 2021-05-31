@@ -44,6 +44,7 @@
     "sastrawijs": "^1.0.4",
     "sharp": "^0.27.2",
     "underscore": "^1.13.1",
+    "update-json-file": "^1.1.1",
     "ytdl-core": "^4.8.0"
   },
   "devDependencies": {},

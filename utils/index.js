@@ -4,6 +4,7 @@ const chalk = require('chalk')
 const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 const follow = require('follow-redirects')
+const updateJson = require('update-json-file')
 
 /**
  * Get text with color
@@ -14,6 +15,11 @@ const follow = require('follow-redirects')
 const color = (text, color) => {
     return !color ? chalk.blueBright(text) : chalk.keyword(color)(text)
 }
+
+const messageLog = (isReset) => updateJson('data/stat.json', (data) => {
+    (!isReset) ? data['todayHits'] += 1 : data['todayHits'] = 0
+    return data
+})
 
 /**
  * Get Time duration
@@ -149,5 +155,6 @@ module.exports = {
     createReadFileSync,
     recache,
     uncache,
-    getModuleName
+    getModuleName,
+    messageLog
 }

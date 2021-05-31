@@ -1,4 +1,4 @@
-const { color, recache, getModuleName, createReadFileSync } = require('./utils')
+const { color, recache, getModuleName, createReadFileSync, messageLog } = require('./utils')
 const { create, Client } = require('@open-wa/wa-automate')
 const schedule = require('node-schedule')
 const figlet = require('figlet')
@@ -28,7 +28,10 @@ recache(appRoot + '/lib/menu.js', module => {
 
 const jobList = JSON.parse(createReadFileSync('./data/schedule.json'))
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
-// let todayHits = JSON.parse(createReadFileSync('./data/todayhits.json'))
+if (!fs.existsSync('./media/stat.json')) {
+    fs.writeFileSync('./media/stat.json', {todayHits : 0})
+}
+
 let {
     ownerNumber,
     groupLimit,
@@ -36,10 +39,9 @@ let {
     prefix
 } = setting
 
-// const resetHits = schedule.scheduleJob('0 * * *', function(){
-//     todayHits.splice(0, 1, 0)
-//     fs.writeFile('./data/todayhits.json', todayHits)
-// })
+const resetHits = schedule.scheduleJob('0 * * *', function(){
+    messageLog(true)
+})
 
 const { default: PQueue } = require("p-queue")
 const queue = new PQueue({ concurrency: 4, timeout: 10000, throwOnTimeout: true })

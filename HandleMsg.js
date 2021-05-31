@@ -1,4 +1,3 @@
-const { recache, getModuleName } = require('./utils')
 const { decryptMedia } = require('@open-wa/wa-automate')
 const { translate } = require('free-translate')
 const appRoot = require('app-root-path')
@@ -49,8 +48,11 @@ const sleep = (delay) => new Promise((resolve) => {
 
 const {
     createReadFileSync,
+    getModuleName,
     processTime,
+    messageLog,
     msgFilter,
+    recache, 
     color,
     isUrl
 } = require('./utils')
@@ -268,6 +270,8 @@ const HandleMsg = async (client, message, browser) => {
         if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) client.reply(from, `Iya, ada apa?`, id)
 
         // Hits count
+        if (isCmd) messageLog(false)
+        const {todayHits} = JSON.parse(fs.readFileSync('./data/stat.json'))
 
         // Ini Command nya
         if (isCmd) {
@@ -332,7 +336,7 @@ const HandleMsg = async (client, message, browser) => {
                         let groups = await client.getAllGroups()
                         let time = process.uptime()
                         let uptime = (time + "").toDHms()
-                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n- *${todayHits[0]}* Total Hits Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
+                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n- *${todayHits}* Total Hits Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
                         break
                     }
 
