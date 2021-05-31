@@ -270,7 +270,7 @@ const HandleMsg = async (client, message, browser) => {
         // Hits count
         let todayHits = JSON.parse(createReadFileSync('./data/todayhits.json'))
         if (isCmd) { 
-            todayHits += 1
+            todayHits[0] += 1
             fs.writeFile('./data/todayhits.json', todayHits)
         }
 
@@ -337,7 +337,7 @@ const HandleMsg = async (client, message, browser) => {
                         let groups = await client.getAllGroups()
                         let time = process.uptime()
                         let uptime = (time + "").toDHms()
-                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n- *${todayHits}* Total Hits Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
+                        client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n- *${todayHits[0]}* Total Hits Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
                         break
                     }
 
