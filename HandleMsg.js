@@ -59,7 +59,9 @@ const {
 
 const fs = require('fs-extra')
 const { uploadImages } = require('./utils/fetcher')
-
+if (!fs.existsSync('./data/stat.json')) {
+    fs.writeFileSync('./data/stat.json', `{ "todayhits" : 0 }`)
+}
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 const kataKasar = JSON.parse(createReadFileSync('./settings/katakasar.json'))
 const { apiNoBg } = JSON.parse(createReadFileSync('./settings/api.json'))
@@ -271,7 +273,7 @@ const HandleMsg = async (client, message, browser) => {
 
         // Hits count
         if (isCmd) messageLog(false)
-        const {todayHits} = JSON.parse(fs.readFileSync('./data/stat.json'))
+        let {todayHits} = JSON.parse(fs.readFileSync('./data/stat.json'))
 
         // Ini Command nya
         if (isCmd) {

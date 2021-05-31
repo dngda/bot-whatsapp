@@ -25,12 +25,8 @@ recache(appRoot + '/lib/menu.js', module => {
     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
 })
 
-
 const jobList = JSON.parse(createReadFileSync('./data/schedule.json'))
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
-if (!fs.existsSync('./data/stat.json')) {
-    fs.writeFileSync('./data/stat.json', `{ "todayhits" : 0 }`)
-}
 
 let {
     ownerNumber,
