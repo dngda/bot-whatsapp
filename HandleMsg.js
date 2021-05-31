@@ -1306,7 +1306,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'crjogja': {
                         const url1 = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
                         const url2 = 'https://screenshotapi.net/api/v1/screenshot?token=FREB5SDBA2FRMO4JDMSHXAEGNYLKYCA4&url=https%3A%2F%2Fsipora.staklimyogyakarta.com%2Fradar%2F&width=600&height=600&fresh=true&output=image'
-                        let isTrue = Boolean(Crypto.randomInt(0, 1))
+                        let isTrue = Boolean(Crypto.randomInt(0, 2))
                         const urL = isTrue ? url1 : url2
 
                         await client.sendText(from, 'Gotcha, please wait!')
@@ -1616,7 +1616,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'apakah': {
-                        let isTrue = Boolean(Crypto.randomInt(0, 1))
+                        let isTrue = Boolean(Crypto.randomInt(0, 2))
                         var result = ''
                         if (args.length === 0) result = 'Apakah apa woy yang jelas dong! Misalnya, apakah aku ganteng?'
                         else {
