@@ -220,16 +220,18 @@ const HandleMsg = async (client, message, browser) => {
         client.sendSeen(chatId)
 
         //Tebak gambar
-        tebakgb.getAns(from).then(res => {
-            if (res != false) {
-                if (res.ans.toLowerCase() === realBody.toLowerCase()) {
-                    client.reply(from, `✅ Jawaban benar! : *${res.ans}*`, id)
-                    tebakgb.delData(from)
-                } else {
-                    client.reply(from, `❌ Salah!`, id)
+        if (!isCmd) {
+            tebakgb.getAns(from).then(res => {
+                if (res != false) {
+                    if (res.ans.toLowerCase() === realBody.toLowerCase()) {
+                        client.reply(from, `✅ Jawaban benar! : *${res.ans}*`, id)
+                        tebakgb.delData(from)
+                    } else {
+                        client.reply(from, `❌ Salah!`, id)
+                    }
                 }
-            }
-        })
+            })
+        }
 
         // respon to msg contain this case
         switch (true) {
@@ -1444,7 +1446,7 @@ const HandleMsg = async (client, message, browser) => {
                         await tebakgb.getTebakGambar(from).then(async res => {
                             let waktu = res.ans.split(' ').length - 1
                             let detik = waktu * 60
-                            await client.sendFileFromUrl(from, res.url, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.`, null)
+                            await client.sendFileFromUrl(from, res.url, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.\n\n*${prefix}skip* untuk skip`, null)
                                 .then(() => {
                                     sleep(detik * 1000 / 4).then(async () => {
                                         const ans = await tebakgb.getAns(from)
