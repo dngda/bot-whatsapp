@@ -323,7 +323,7 @@ const HandleMsg = async (client, message, browser) => {
                                     await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
                                 })
                                 .catch(async () => {
-                                    await client.reply(from, 'Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong', id)
+                                    return client.reply(from, 'Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong', id)
                                 })
                         }
                         break
@@ -375,7 +375,7 @@ const HandleMsg = async (client, message, browser) => {
                                 let mediaData = await decryptMedia(encryptMedia)
                                     .catch(err => {
                                         console.log(err.name, err.message)
-                                        client.sendText(from, resMsg.error.norm)
+                                        return client.sendText(from, resMsg.error.norm)
                                     })
                                 if (mediaData) {
                                     if (isQuotedWebp) {
@@ -385,7 +385,7 @@ const HandleMsg = async (client, message, browser) => {
                                                 console.log(color('[LOGS]', 'grey'), `Sticker from webp Processed for ${processTime(t, moment())} Seconds`)
                                             }).catch(err => {
                                                 console.log(err.name, err.message)
-                                                client.sendText(from, resMsg.error.norm)
+                                                return client.sendText(from, resMsg.error.norm)
                                             })
                                     } else {
                                         await client.sendImageAsSticker(from, mediaData, _metadata)
@@ -394,13 +394,13 @@ const HandleMsg = async (client, message, browser) => {
                                                 console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                             }).catch(err => {
                                                 console.log(err.name, err.message)
-                                                client.sendText(from, resMsg.error.norm)
+                                                return client.sendText(from, resMsg.error.norm)
                                             })
                                     }
                                 }
                             } catch (err) {
                                 console.log(err.name, err.message)
-                                client.sendText(from, resMsg.error.norm)
+                                return client.sendText(from, resMsg.error.norm)
                             }
 
                         } else if (args[0] === 'nobg') {
@@ -413,7 +413,7 @@ const HandleMsg = async (client, message, browser) => {
                                     let mediaData = await decryptMedia(encryptedMedia)
                                         .catch(err => {
                                             console.log(err)
-                                            client.sendText(from, resMsg.error.norm)
+                                            return client.sendText(from, resMsg.error.norm)
                                         })
                                     if (mediaData === undefined) return client.sendText(from, resMsg.error.norm)
                                     let base64img = `data:${_mimetype};base64,${mediaData.toString('base64')}`
@@ -428,7 +428,7 @@ const HandleMsg = async (client, message, browser) => {
                                             console.log(color('[LOGS]', 'grey'), `Sticker nobg Processed for ${processTime(t, moment())} Seconds`)
                                         }).catch(err => {
                                             console.log(err)
-                                            client.sendText(from, resMsg.error.norm)
+                                            return client.sendText(from, resMsg.error.norm)
                                         })
 
                                 } catch (err) {
@@ -445,7 +445,7 @@ const HandleMsg = async (client, message, browser) => {
                                     : client.reply(from, resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
                             } catch (e) {
                                 console.log(`Sticker url err: ${e}`)
-                                client.sendText(from, resMsg.error.norm)
+                                return client.sendText(from, resMsg.error.norm)
                             }
                         } else if ((isMedia && mimetype === 'video/mp4') || isQuotedVideo) {
                             client.reply(from, resMsg.wait, id)
@@ -453,7 +453,7 @@ const HandleMsg = async (client, message, browser) => {
                             let mediaData = await decryptMedia(encryptedMedia)
                                 .catch(err => {
                                     console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
+                                    return client.sendText(from, resMsg.error.norm)
                                 })
                             await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
                                 .then(() => {
@@ -461,7 +461,7 @@ const HandleMsg = async (client, message, browser) => {
                                     console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                 })
                                 .catch(() => {
-                                    client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
+                                    return client.reply(from, 'Maaf terjadi error atau filenya terlalu besar!', id)
                                 })
                         } else {
                             await client.reply(from, `Tidak ada gambar/video!\nUntuk menggunakan ${prefix}sticker, kirim gambar/reply gambar atau *file png/webp* dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*\n\nUntuk membuat *sticker animasi.* Kirim video/gif atau reply/quote video/gif dengan caption *${prefix}sticker* max 8 secs. Selebihnya akan dipotong otomatis`, id)
@@ -493,7 +493,7 @@ const HandleMsg = async (client, message, browser) => {
                                     console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                                 })
                                 .catch(() => {
-                                    client.reply(from, resMsg.error.norm, id)
+                                    return client.reply(from, resMsg.error.norm, id)
                                 })
                         } else {
                             await client.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
@@ -515,7 +515,7 @@ const HandleMsg = async (client, message, browser) => {
                         const _img = await decryptMedia(_enc)
                             .catch(e => {
                                 console.log(e)
-                                client.reply(from, resMsg.error.norm, id)
+                                return client.reply(from, resMsg.error.norm, id)
                             })
                         let image = await read(_img)
                         let path = './media/flipped.png'
@@ -526,7 +526,7 @@ const HandleMsg = async (client, message, browser) => {
                         await client.sendImage(from, path, '', '', id)
                             .catch(e => {
                                 console.log(e)
-                                client.reply(from, resMsg.error.norm, id)
+                                return client.reply(from, resMsg.error.norm, id)
                             })
                         break
                     }
@@ -562,12 +562,12 @@ const HandleMsg = async (client, message, browser) => {
                         const ress = await api.tulis(content)
                             .catch((e) => {
                                 console.log(e)
-                                client.reply(from, resMsg.error.norm, id)
+                                return client.reply(from, resMsg.error.norm, id)
                             })
                         await client.sendImage(from, ress, '', ``, id)
                             .catch((e) => {
                                 console.log(e)
-                                client.reply(from, resMsg.error.norm, id)
+                                return client.reply(from, resMsg.error.norm, id)
                             })
                         break
                     }
@@ -609,7 +609,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.reply(from, listsrh, id)
                                 })
                         } catch (err) {
-                            client.reply(from, err, id)
+                            return client.reply(from, err, id)
                         }
                         break
                     }
@@ -619,7 +619,7 @@ const HandleMsg = async (client, message, browser) => {
                         var responseh = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                             .catch(err => {
                                 console.log(err)
-                                client.sendText(from, resMsg.error.norm)
+                                return client.sendText(from, resMsg.error.norm)
                             })
                         var { data } = responseh.data
                         let idx = data.findIndex(function (post) {
@@ -699,6 +699,10 @@ const HandleMsg = async (client, message, browser) => {
                         console.log(nmr)
                         if (!isNaN(nmr)) {
                             var responsih = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
+                                .catch(err => {
+                                    console.log(err)
+                                    return client.sendText(from, resMsg.error.norm)
+                                })
                             var { data } = responsih.data
                             pesan = ""
                             pesan = pesan + "Tafsir Q.S. " + data.surah.name.transliteration.id + ":" + args[1] + "\n\n"
@@ -754,7 +758,7 @@ const HandleMsg = async (client, message, browser) => {
                                 let responsih2 = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                                     .catch(err => {
                                         console.log(err)
-                                        client.sendText(from, resMsg.error.norm)
+                                        return client.sendText(from, resMsg.error.norm)
                                     })
                                 var { data } = responsih2.data
                                 let bhs = last(args)
@@ -780,7 +784,7 @@ const HandleMsg = async (client, message, browser) => {
                             var datad = await get('https://api.banghasan.com/sholat/format/json/kota')
                                 .catch(err => {
                                     console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
+                                    return client.sendText(from, resMsg.error.norm)
                                 })
                             var datas = datad.data.kota
                             let hasil = '╔══✪〘 Daftar Kota 〙✪\n'
@@ -795,7 +799,7 @@ const HandleMsg = async (client, message, browser) => {
                             var datak = await get('https://api.banghasan.com/sholat/format/json/kota/nama/' + args[0])
                                 .catch(err => {
                                     console.log(err)
-                                    client.sendText(from, resMsg.error.norm)
+                                    return client.sendText(from, resMsg.error.norm)
                                 })
                             try {
                                 var kodek = datak.data.kota[0].id
@@ -836,7 +840,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.reply(from, `Berhasil Revoke Grup Link gunakan *${prefix}grouplink* untuk mendapatkan group invite link yang terbaru`, id)
                                 })
                                 .catch((err) => {
-                                    console.log(`[ERR] ${err}`)
+                                    return console.log(`[ERR] ${err}`)
                                 })
                         }
                         break
@@ -853,20 +857,19 @@ const HandleMsg = async (client, message, browser) => {
                             let time = moment(t * 1000).format('mmss')
                             let path = `./media/temp_${time}.mp3`
 
-                            stream = ytdl(ytid, { quality: 'highestaudio' })
+                            let stream = ytdl(ytid, { quality: 'highestaudio' })
 
                             ffmpeg({ source: stream })
                                 .setFfmpegPath('./bin/ffmpeg')
                                 .on('error', (err) => {
                                     console.log('An error occurred: ' + err.message)
-                                    unlinkSync(path)
                                     client.reply(from, resMsg.error.norm, id)
                                 })
                                 .on('end', () => {
                                     client.sendFile(from, path, `${ytid}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                                    unlinkSync(path)
                                 })
                                 .saveToFile(path)
+                                if(existsSync(path)) unlinkSync(path)
                         } catch (err) {
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
