@@ -246,10 +246,10 @@ const HandleMsg = async (client, message, browser) => {
                 await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
-            // case /\b(hi|hy|halo|hai|hei|hello)\b/i.test(realBody): {
-            //     await client.reply(from, `Halo ${pushname} 👋`, id)
-            //     break
-            // }
+            case /\b(hi|hy|halo|hai|hei|hello)\b/i.test(realBody): {
+                await client.reply(from, `Halo ${pushname} 👋`, id)
+                break
+            }
             case /^=/.test(realBody): {
                 if (realBody.match(/\d[\=\+\-\*\/\^e]/g)) await client.reply(from, `${eval(realBody.slice(1).replace('^', '**'))}`, id)
                 break
@@ -1730,8 +1730,8 @@ const HandleMsg = async (client, message, browser) => {
                     case 'ssweb': {
                         if (args.length === 0) return client.reply(from, `Screenshot website. ${prefix}ssweb <url>`, id)
                         let urlzz = ''
-                        if (!isUrl(args[0])) urlzz = `https://www.google.com/search?q=${encodeURIComponent(args[0])}`
-                        else urlzz = args[0]
+                        if (!isUrl(arg)) urlzz = `https://www.google.com/search?q=${encodeURIComponent(args[0])}`
+                        else urlzz = arg
                         const path = './media/ssweb.png'
                         scraper.ssweb(browser, path, urlzz).then(async res => {
                             if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${urlzz}`).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
