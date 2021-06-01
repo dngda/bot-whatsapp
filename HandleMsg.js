@@ -1,6 +1,7 @@
 'use strict'
 import { removeBackgroundFromImageBase64 } from 'remove.bg'
 import { decryptMedia } from '@open-wa/wa-automate'
+import { exec, spawn } from 'child_process'
 import { translate } from 'free-translate'
 import moment from 'moment-timezone'
 import appRoot from 'app-root-path'
@@ -2285,7 +2286,6 @@ const HandleMsg = async (client, message, browser) => {
                     case 'restart': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         client.reply(from, `Server bot akan direstart!`, id)
-                        const { spawn } = require('child_process')
                         spawn('restart.cmd')
                         break
                     }
@@ -2320,7 +2320,6 @@ const HandleMsg = async (client, message, browser) => {
                     case 'shell':
                     case '=': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        const { exec } = require('child_process')
                         exec(arg, (err, stdout, stderr) => {
                             if (err) {
                                 //some err occurred
