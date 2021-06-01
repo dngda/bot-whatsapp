@@ -1730,7 +1730,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'ssweb': {
                         if (args.length === 0) return client.reply(from, `Screenshot website. ${prefix}ssweb <url>`, id)
                         let urlzz = ''
-                        if (!isUrl(arg)) urlzz = `https://www.google.com/search?q=${encodeURIComponent(args[0])}`
+                        if (!isUrl(arg)) urlzz = `https://www.google.com/search?q=${encodeURIComponent(arg)}`
                         else urlzz = arg
                         const path = './media/ssweb.png'
                         scraper.ssweb(browser, path, urlzz).then(async res => {
