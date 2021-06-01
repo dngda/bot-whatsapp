@@ -1,6 +1,7 @@
 'use strict'
 import { removeBackgroundFromImageBase64 } from 'remove.bg'
 import { decryptMedia } from '@open-wa/wa-automate'
+import { exec, spawn } from 'child_process'
 import { translate } from 'free-translate'
 import moment from 'moment-timezone'
 import appRoot from 'app-root-path'
@@ -246,10 +247,10 @@ const HandleMsg = async (client, message, browser) => {
                 await client.reply(from, 'Wa\'alaikumussalam Wr. Wb.', id)
                 break
             }
-            // case /\b(hi|hy|halo|hai|hei|hello)\b/i.test(realBody): {
-            //     await client.reply(from, `Halo ${pushname} 👋`, id)
-            //     break
-            // }
+            case /\b(hi|hy|halo|hai|hei|hello)\b/i.test(realBody): {
+                await client.reply(from, `Halo ${pushname} 👋`, id)
+                break
+            }
             case /^=/.test(realBody): {
                 if (realBody.match(/\d[\=\+\-\*\/\^e]/g)) await client.reply(from, `${eval(realBody.slice(1).replace('^', '**'))}`, id)
                 break
@@ -257,8 +258,8 @@ const HandleMsg = async (client, message, browser) => {
             case /\bping\b/i.test(realBody): {
                 return await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
             }
-            case new RegExp(`\\b(${sfx.join("|")})\\b`).test(realBody): {
-                const theSFX = realBody.match(new RegExp(sfx.join("|")))
+            case new RegExp(`\\b(${sfx.join("|")})\\b`).test(realBody?.toLowerCase()): {
+                const theSFX = realBody?.toLowerCase().match(new RegExp(sfx.join("|")))
                 const path = `./random/sfx/${theSFX}.mp3`
                 const _id = (quotedMsg != null) ? quotedMsgObj.id : id
                 await client.sendPtt(from, path, _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
@@ -1730,8 +1731,8 @@ const HandleMsg = async (client, message, browser) => {
                     case 'ssweb': {
                         if (args.length === 0) return client.reply(from, `Screenshot website. ${prefix}ssweb <url>`, id)
                         let urlzz = ''
-                        if (!isUrl(args[0])) urlzz = `https://www.google.com/search?q=${encodeURIComponent(args[0])}`
-                        else urlzz = args[0]
+                        if (!isUrl(arg)) urlzz = `https://www.google.com/search?q=${encodeURIComponent(arg)}`
+                        else urlzz = arg
                         const path = './media/ssweb.png'
                         scraper.ssweb(browser, path, urlzz).then(async res => {
                             if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${urlzz}`).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
@@ -2289,7 +2290,6 @@ const HandleMsg = async (client, message, browser) => {
                     case 'restart': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         client.reply(from, `Server bot akan direstart!`, id)
-                        const { spawn } = require('child_process')
                         spawn('restart.cmd')
                         break
                     }
@@ -2352,7 +2352,6 @@ const HandleMsg = async (client, message, browser) => {
                     case 'shell':
                     case '=': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
-                        const { exec } = require('child_process')
                         exec(arg, (err, stdout, stderr) => {
                             if (err) {
                                 //some err occurred
