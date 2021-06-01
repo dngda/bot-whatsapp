@@ -2316,18 +2316,15 @@ const HandleMsg = async (client, message, browser) => {
                             return client.reply(from, resMsg.error.norm, id)
                         })
                         let infoMsg = 
-                            `groupId : ${inf.id}
-                            name : ${inf.subject}
-                            size : ${inf.size}
-                            owner : ${inf.owner}
-                            desc :
-                            ${inf.desc}`
+                            `groupId : ${inf.id}\nname : ${inf.subject}\nsize : ${inf.size}\nowner : ${inf.owner}\ndesc :\n${inf.desc}`
                         client.sendText(from, infoMsg)
+                        break
                     }
 
                     case 'addprem': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length === 0) return client.reply(from, `Kasih id groupnya bro`, id)
+                        if (!args[0].match('@g.us')) return client.reply(from, `id groupnya gak valid bro`, id)
                         let pos = groupPrem.indexOf(args[0])
                         if (pos != -1) return client.reply(from, 'Target already premium!', id)
                         groupPrem.push(args[0])
