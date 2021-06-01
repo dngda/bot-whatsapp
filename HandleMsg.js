@@ -257,8 +257,8 @@ const HandleMsg = async (client, message, browser) => {
             case /\bping\b/i.test(realBody): {
                 return await client.sendText(from, `Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
             }
-            case new RegExp(`\\b(${sfx.join("|")})\\b`).test(realBody?.toLowerCase): {
-                const theSFX = realBody?.toLowerCase.match(new RegExp(sfx.join("|")))
+            case new RegExp(`\\b(${sfx.join("|")})\\b`).test(realBody?.toLowerCase()): {
+                const theSFX = realBody?.toLowerCase().match(new RegExp(sfx.join("|")))
                 const path = `./random/sfx/${theSFX}.mp3`
                 const _id = (quotedMsg != null) ? quotedMsgObj.id : id
                 await client.sendPtt(from, path, _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
