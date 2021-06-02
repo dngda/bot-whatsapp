@@ -152,11 +152,10 @@ const start = async (client) => {
             const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
             const isWelcome = welcome.includes(event.chat)
             let profile = await client.getProfilePicFromServer(event.who)
-            if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome) {
-                await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', ``)
-                await client.sendTextWithMentions(event.chat, `Halo semua! Anggota kita nambah satu nih -> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨`)
+                if (profile !== '' || profile !== undefined) await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', ``)
+                await client.sendTextWithMentions(event.chat, `Halo semua! Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\n\nJangan lupa baca deskripsi group!`)
             }
             // kondisi ketika seseorang dikick/keluar dari group
             if (event.action === 'remove' && event.who !== host && isWelcome) {
