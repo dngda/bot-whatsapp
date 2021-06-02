@@ -15,20 +15,6 @@ import figlet from 'figlet'
 import fs from 'fs-extra'
 const path = chromeLauncher.Launcher.getInstallations()[0]
 
-// let { reCacheModule, HandleMsg } = recache(appRoot + '/HandleMsg.js', module => {
-//     HandleMsg = require(module).HandleMsg
-//     reCacheModule = require(module).reCacheModule
-//     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
-// })
-// recache(appRoot + '/lib/api.js', module => {
-//     reCacheModule('api = _data', require(module))
-//     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
-// })
-// recache(appRoot + '/lib/menu.js', module => {
-//     reCacheModule('menuId = _data', require(module))
-//     console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'Updated!')
-// })
-
 const jobList = JSON.parse(createReadFileSync('./data/schedule.json'))
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 
@@ -109,7 +95,8 @@ const start = async (client) => {
                 schedule.loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
             })
             console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
-
+            
+            // Reset today hits at 00:01:01
             scheduleJob('1 1 0 * * *', function () {
                 messageLog(true)
             })
