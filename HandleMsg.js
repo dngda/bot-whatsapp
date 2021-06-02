@@ -2390,7 +2390,7 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         // Anti link group function
-        if (isAntiLinkGroup && isGroupMsg && type === 'chat' && type === 'image' && type === 'video') {
+        if (isAntiLinkGroup && isGroupMsg && (type === 'chat' || type === 'image' || type === 'video')) {
             let msg = ''
             if (type === 'image' && caption || type === 'video' && caption) msg = caption
             else msg = message.body
