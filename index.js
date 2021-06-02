@@ -110,7 +110,7 @@ const start = async (client) => {
             })
             console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
 
-            scheduleJob('0 0 * *', function () {
+            scheduleJob('1 1 0 * * *', function () {
                 messageLog(true)
             })
         } catch (e) {
