@@ -871,7 +871,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.sendFile(from, path, `${ytid}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 })
                                 .saveToFile(path)
-                                if(existsSync(path)) unlinkSync(path)
+                            if (existsSync(path)) unlinkSync(path)
                         } catch (err) {
                             console.log(err)
                             client.reply(from, resMsg.error.norm, id)
@@ -2199,12 +2199,28 @@ const HandleMsg = async (client, message, browser) => {
                         client.reply(from, `Processed to leave all group! Total: ${allGroupz.length}`, id)
                         let count = 0
                         for (let group of allGroupz) {
-                            if (!group.contact.id.includes(groupPrem)) {
-                                client.sendText(group.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
+                            let _id = group.contact.id
+                            if (!_id.includes(groupPrem)) {
+                                client.sendText(_id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
                                 await sleep(2000)
-                                client.leaveGroup(group.contact.id)
+                                client.leaveGroup(_id)
                                 await sleep(1000)
-                                client.deleteChat(group.contact.id)
+                                client.deleteChat(_id)
+                                let pos = ngegas.indexOf(_id)
+                                if (pos !== -1) {
+                                    ngegas.splice(pos, 1)
+                                    writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                                }
+                                let posi = welcome.indexOf(_id)
+                                if (posi !== -1) {
+                                    welcome.splice(posi, 1)
+                                    writeFileSync('./data/welcome.json', JSON.stringify(welcome))
+                                }
+                                let posa = antiLinkGroup.indexOf(chatId)
+                                if (posa !== -1) {
+                                    antiLinkGroup.splice(pos, 1)
+                                    writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
+                                } 
                                 count += 1
                             }
                         }
@@ -2308,14 +2324,14 @@ const HandleMsg = async (client, message, browser) => {
                         break
                     }
 
-                    case 'getinfo' : {
+                    case 'getinfo': {
                         if (!isOwnerBot) return client.reply(from, resMsg.error.owner, id)
                         if (args.length === 0) return client.reply(from, `Kasih link groupnya bro`, id)
                         let inf = await client.inviteInfo(arg).catch(e => {
                             console.log(e)
                             return client.reply(from, resMsg.error.norm, id)
                         })
-                        let infoMsg = 
+                        let infoMsg =
                             `groupId : ${inf.id}\nname : ${inf.subject}\nsize : ${inf.size}\nowner : ${inf.owner}\ndesc :\n${inf.desc}`
                         client.sendText(from, infoMsg)
                         break
