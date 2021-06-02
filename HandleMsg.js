@@ -2203,9 +2203,9 @@ const HandleMsg = async (client, message, browser) => {
                             if (!_id.includes(groupPrem)) {
                                 await client.sendText(_id, `Maaf bot sedang pembersihan, total group aktif : ${allGroupz.length}.\nPembersihan group dilakukan tiap awal bulan!\nTerima kasih.`)
                                 await sleep(2000)
-                                client.leaveGroup(_id)
+                                await client.leaveGroup(_id)
                                 await sleep(1000)
-                                client.deleteChat(_id)
+                                await client.deleteChat(_id)
                                 let pos = ngegas.indexOf(_id)
                                 if (pos !== -1) {
                                     ngegas.splice(pos, 1)
