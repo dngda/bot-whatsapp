@@ -312,7 +312,7 @@ const HandleMsg = async (client, message, browser) => {
                                 .then(async () => {
                                     await client.sendText(from, resMsg.success.join)
                                     setTimeout(async () => {
-                                        await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu. Tapi sebelumnya pahami dulu ${prefix}tnc`)
+                                        await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`)
                                     }, 2000)
                                 })
                         } else {
@@ -322,7 +322,7 @@ const HandleMsg = async (client, message, browser) => {
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
                                     await client.reply(from, resMsg.success.join, id)
-                                    await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu. Tapi sebelumnya pahami dulu ${prefix}tnc`)
+                                    await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`)
                                 })
                                 .catch(async () => {
                                     return client.reply(from, 'Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong', id)

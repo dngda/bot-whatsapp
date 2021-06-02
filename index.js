@@ -119,7 +119,7 @@ const start = async (client) => {
                     }, 3000)
                 } else {
                     client.simulateTyping(chat.groupMetadata.id, true).then(async () => {
-                        client.sendText(chat.groupMetadata.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
+                        client.sendText(chat.groupMetadata.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`)
                     })
                 }
             })
