@@ -2200,7 +2200,7 @@ const HandleMsg = async (client, message, browser) => {
                         let count = 0
                         for (let group of allGroupz) {
                             let _id = group.contact.id
-                            if (!_id.includes(groupPrem)) {
+                            if (!groupPrem.includes(_id)) {
                                 await client.sendText(_id, `Maaf bot sedang pembersihan, total group aktif : ${allGroupz.length}.\nPembersihan group dilakukan tiap awal bulan!\nTerima kasih.`)
                                 await sleep(2000)
                                 await client.leaveGroup(_id)
@@ -2218,7 +2218,7 @@ const HandleMsg = async (client, message, browser) => {
                                 }
                                 let posa = antiLinkGroup.indexOf(chatId)
                                 if (posa !== -1) {
-                                    antiLinkGroup.splice(pos, 1)
+                                    antiLinkGroup.splice(posa, 1)
                                     writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
                                 } 
                                 count += 1
