@@ -2380,7 +2380,7 @@ const HandleMsg = async (client, message, browser) => {
             else msg = message.body
             if (msg?.match(/chat\.whatsapp\.com/gi) !== null) {
                 if (!isBotGroupAdmins) return client.sendText(from, 'Gagal melakukan kick, bot bukan admin')
-                console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender...`)
+                console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender from ${name || formattedTitle}`)
                 client.reply(from, `Link group whatsapp terdeteksi! Auto kick...`, id)
                 setTimeout(async () => {
                     await client.removeParticipant(groupId, pengirim)
