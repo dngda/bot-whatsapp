@@ -123,7 +123,7 @@ const HandleMsg = async (client, message, browser) => {
     }
 
     try {
-        if (message.body === '/r' && message.quotedMsg && message.quotedMsg.type === 'chat') message = message.quotedMsgObj // inject quotedMsg as Msg
+        if (['/r', '..'].includes(message.body) && message.quotedMsg && ['chat', 'image', 'video'].includes(message.quotedMsg.type)) message = message.quotedMsg // inject quotedMsg as Msg
         let { body, type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         var { name, formattedTitle } = chat
         let { pushname, verifiedName, formattedName } = sender
@@ -2331,9 +2331,7 @@ const HandleMsg = async (client, message, browser) => {
                             console.log(e)
                             return client.reply(from, resMsg.error.norm, id)
                         })
-                        let infoMsg =
-                            `groupId : ${inf.id}\nname : ${inf.subject}\nsize : ${inf.size}\nowner : ${inf.owner}\ndesc :\n${inf.desc}`
-                        client.sendText(from, infoMsg)
+                        client.sendText(from, JSON.stringify(infoMsg, null, 2))
                         break
                     }
 
