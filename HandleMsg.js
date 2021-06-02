@@ -2390,7 +2390,7 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         // Anti link group function
-        if (isAntiLinkGroup && isGroupMsg && type !== 'sticker') {
+        if (isAntiLinkGroup && isGroupMsg && type !== 'sticker' && type !== 'ptt' && type !== 'audio') {
             let msg = ''
             if (type === 'image' && caption || type === 'video' && caption) msg = caption
             else msg = message.body
