@@ -2378,7 +2378,7 @@ const HandleMsg = async (client, message, browser) => {
             let msg = ''
             if (type === 'image' && caption || type === 'video' && caption) msg = caption
             else msg = message.body
-            if (msg.match(/chat\.whatsapp\.com/gi) !== null) {
+            if (msg?.match(/chat\.whatsapp\.com/gi) !== null) {
                 if (!isBotGroupAdmins) return client.sendText(from, 'Gagal melakukan kick, bot bukan admin')
                 console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender...`)
                 client.reply(from, `Link group whatsapp terdeteksi! Auto kick...`, id)
