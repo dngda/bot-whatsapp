@@ -523,7 +523,7 @@ const HandleMsg = async (client, message, browser) => {
                         let path = './media/flipped.png'
                         if (args[0] === 'v') image.flip(false, true).write(path)
                         else if (args[0] === 'h') image.flip(true, false).write(path)
-                        else client.reply(from, resMsg.error.norm, id)
+                        else return client.reply(from, `Argumen salah`, id)
 
                         await client.sendImage(from, path, '', '', id)
                             .catch(e => {
