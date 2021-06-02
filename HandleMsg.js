@@ -1144,7 +1144,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 0) return client.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama nama kamu`, id)
                         api.artinama(arg)
                             .then(res => {
-                                client.reply(from, `Arti : ${res}`, id)
+                                client.reply(from, res, id)
                             })
                             .catch(() => {
                                 client.reply(from, resMsg.error.norm, id)
