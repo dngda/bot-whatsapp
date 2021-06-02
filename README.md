@@ -52,10 +52,9 @@ After running it you need to scan the QR
 - Add kata kasar on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/katakasar.json)
 - Change all apiKey on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/api.json.example) then *rename to api.json*
 - Get Api NoBackground on [this website](https://www.remove.bg/)
-- Get Api Tobz on [this website](https://tobz-api.herokuapp.com/api)
-- Get Api VH on [this website](https://vhtear.com)
 - Get Api Fariaz on [this website](https://rest.farzain.com)
 - Get Api Itech on [this website](https://api.i-tech.id)
+- Get Api Zeks on [this website](https://api.zeks.xyz)
 ---
 
 ## Features
