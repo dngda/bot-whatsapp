@@ -95,9 +95,9 @@ const HandleMsg = async (client, message, browser) => {
     const resMsg = {
         wait: sample([
             'Sedang diproses! Silahkan tunggu sebentar...',
-            'Copy that, processing!',
-            'Gotcha, please wait!',
-            'Copy that bro, please wait!',
+            'Okey siap, sedang diproses!',
+            'Shap, silakan tunggu!',
+            'Okey oke bentar!',
             'Okey, tunggu sebentar...',
             'Baiklah, sabar ya!'
         ]),
@@ -109,7 +109,7 @@ const HandleMsg = async (client, message, browser) => {
             botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
         },
         success: {
-            join: 'Berhasil join grup via link!',
+            join: 'Berhasil join group via link!',
             sticker: 'Here\'s your sticker'
         },
         badw: sample([
@@ -318,7 +318,7 @@ const HandleMsg = async (client, message, browser) => {
                         } else {
                             let cgrup = await client.getAllGroups()
                             if (cgrup.length > groupLimit) return client.reply(from, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${cgrup.length}/${groupLimit}\nChat /owner for appeal`, id)
-                            if (cgrup.size < memberLimit) return client.reply(from, `Sorry, Bot wil not join if the group members do not exceed ${memberLimit} people`, id)
+                            if (cgrup.size < memberLimit) return client.reply(from, `Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`, id)
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
                                     await client.reply(from, resMsg.success.join, id)
@@ -498,7 +498,7 @@ const HandleMsg = async (client, message, browser) => {
                                     return client.reply(from, resMsg.error.norm, id)
                                 })
                         } else {
-                            await client.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
+                            await client.reply(from, 'Maaf, perintah sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
                         }
                         break
                     }
@@ -512,7 +512,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'flip': {
-                        if (!isMedia && args.length === 0 && !isQuotedImage) return client.reply(from, `Flip image vertical or horizontal. Kirim gambar dengan caption:\n${prefix}flip h -> untuk flip horizontal\n${prefix}flip v -> untuk flip vertical`, id)
+                        if (!isMedia && args.length === 0 && !isQuotedImage) return client.reply(from, `Flip gambar secara vertical atau horizontal. Kirim gambar dengan caption:\n${prefix}flip h -> untuk flip horizontal\n${prefix}flip v -> untuk flip vertical`, id)
                         const _enc = isQuotedImage ? quotedMsg : message
                         const _img = await decryptMedia(_enc)
                             .catch(e => {
@@ -577,7 +577,7 @@ const HandleMsg = async (client, message, browser) => {
                     //required to install libreoffice
                     case 'doctopdf':
                     case 'pdf': {
-                        if (!isQuotedDocs) return client.reply(from, `Convert doc/docx/ppt/pptx to pdf.\n\nKirim dokumen kemudian reply dokumen/filenya dengan ${prefix}pdf`, id)
+                        if (!isQuotedDocs) return client.reply(from, `Convert doc/docx/ppt/pptx menjadi pdf.\n\nKirim dokumen kemudian reply dokumen/filenya dengan ${prefix}pdf`, id)
                         if (/\.docx|\.doc|\.pptx|\.ppt/g.test(quotedMsg.filename) && isQuotedDocs) {
                             client.sendText(from, resMsg.wait)
                             const encDocs = await decryptMedia(quotedMsg)
@@ -925,7 +925,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'earrape': {
-                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}earrape`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Menambah volume suara tinggi. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}earrape`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         let time = moment(t * 1000).format('mmss')
@@ -952,7 +952,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'robot': {
-                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}robot`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Mengubah suara seperti robot. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}robot`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         let time = moment(t * 1000).format('mmss')
@@ -979,7 +979,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'reverse': {
-                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}reverse`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Memutar balik suara. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}reverse`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         let time = moment(t * 1000).format('mmss')
@@ -1033,7 +1033,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'vibrato': {
-                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}vibrato`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Mengubah suara menjadi bergetar. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}vibrato`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         let time = moment(t * 1000).format('mmss')
@@ -1060,7 +1060,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'nightcore': {
-                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}nightcore`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Mengubah suara ala nightcore. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}nightcore`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         let time = moment(t * 1000).format('mmss')
@@ -1087,7 +1087,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     case 'deepslow': {
-                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Silakan reply audio atau voice notes dengan perintah ${prefix}deepslow`, id)
+                        if (!isQuotedPtt && !isQuotedAudio) return client.reply(from, `Mengubah suara menjadi deep dan pelan. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}deepslow`, id)
                         const _inp = await decryptMedia(quotedMsg)
 
                         let time = moment(t * 1000).format('mmss')
@@ -1116,7 +1116,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'tiktok': {
                         // return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
 
-                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok no watermark. How?\n${prefix}tiktok <url>\nTanpa simbol <>`, id)
+                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok tanpa watermark. Bagaimana caranya?\nTinggal ketik ${prefix}tiktok (alamat video tiktok)\nTanpa tanda kurung`, id)
                         let urls = isQuotedChat ? quotedMsg.body : arg
                         if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
@@ -1130,7 +1130,7 @@ const HandleMsg = async (client, message, browser) => {
                     case 'tiktokmp3': {
                         // return client.reply(from, `Maaf fitur sedang dalam perbaikan`, id)
 
-                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 <url>\nTanpa simbol <>`, id)
+                        if (args.length === 0 && !isQuotedChat) return client.reply(from, `Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 (alamat video tiktok)\nTanpa tanda kurung`, id)
                         let urls = isQuotedChat ? quotedMsg.body : arg
                         if (!isUrl(urls)) { return client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
                         await client.reply(from, resMsg.wait, id)
@@ -1343,12 +1343,7 @@ const HandleMsg = async (client, message, browser) => {
                         if (isGroupMsg) {
                             client.reply(from, 'Untuk Fitur Nekopoi Silahkan Lakukan di Private Message', id)
                         } else {
-                            let data = await get('https://arugaz.herokuapp.com/api/anime/nekopoi/random')
-                            let poi = sample(data.data)
-                            let hasilpoi = 'Note[❗]: 18+ ONLY[❗]'
-                            hasilpoi += '\nJudul: ' + poi.title
-                            hasilpoi += '\nLink: ' + poi.link
-                            client.reply(from, hasilpoi, id)
+                            client.reply(from, 'Insyaf bro', id)
                         }
                         break
                     }
@@ -1939,6 +1934,10 @@ const HandleMsg = async (client, message, browser) => {
                         welcome.splice(posi, 1)
                         writeFileSync('./data/welcome.json', JSON.stringify(welcome))
 
+                        let posa = antiLinkGroup.indexOf(chatId)
+                        antiLinkGroup.splice(posa, 1)
+                        writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
+
                         setTimeout(async () => {
                             await client.leaveGroup(groupId)
                         }, 2000)
@@ -1947,10 +1946,11 @@ const HandleMsg = async (client, message, browser) => {
                         }, 4000)
                     }
                         break
+                        
                     case 'bye': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
-                        await client.sendText(from, 'Udah gak butuh aku lagi? yaudah. kirim /yesbye untuk konfirmasi')
+                        await client.sendText(from, 'Udah gak butuh aku lagi? yaudah. kirim /yesbye untuk mengeluarkan bot')
                         break
                     }
 
