@@ -2201,7 +2201,7 @@ const HandleMsg = async (client, message, browser) => {
                         for (let group of allGroupz) {
                             let _id = group.contact.id
                             if (!_id.includes(groupPrem)) {
-                                client.sendText(_id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}. Invite dalam *beberapa menit* kemudian!`)
+                                client.sendText(_id, `Maaf bot sedang pembersihan, total group aktif : ${allGroupz.length}.\nPembersihan group dilakukan tiap awal bulan! Terima kasih.`)
                                 await sleep(2000)
                                 client.leaveGroup(_id)
                                 await sleep(1000)
