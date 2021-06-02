@@ -302,7 +302,7 @@ const HandleMsg = async (client, message, browser) => {
                             .then(() => client.sendText(from, 'Jika ada pertanyaan tentang bot silahkan chat nomor di atas'))
                         break
                     case 'join':
-                        if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot ke group silakan kontak owner atau gunakan perintah ${prefix}join (link_group)`, id)
+                        if (args.length == 0) return client.reply(from, `Jika kalian ingin mengundang bot ke group silakan kontak owner atau gunakan perintah ${prefix}join (link_group) jika slot masih tersedia`, id)
                         const linkgrup = args[0]
                         let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
                         let chekgrup = await client.inviteInfo(linkgrup)
@@ -312,17 +312,17 @@ const HandleMsg = async (client, message, browser) => {
                                 .then(async () => {
                                     await client.sendText(from, resMsg.success.join)
                                     setTimeout(async () => {
-                                        await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
+                                        await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu. Tapi sebelumnya pahami dulu ${prefix}tnc`)
                                     }, 2000)
                                 })
                         } else {
                             let cgrup = await client.getAllGroups()
-                            if (cgrup.length > groupLimit) return client.reply(from, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${cgrup.length}/${groupLimit}\nChat /owner for appeal`, id)
+                            if (cgrup.length > groupLimit) return client.reply(from, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${cgrup.length}/${groupLimit}\nChat /owner untuk negosiasi`, id)
                             if (cgrup.size < memberLimit) return client.reply(from, `Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`, id)
                             await client.joinGroupViaLink(linkgrup)
                                 .then(async () => {
                                     await client.reply(from, resMsg.success.join, id)
-                                    await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu`)
+                                    await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah/menu yang tersedia pada bot, kirim ${prefix}menu. Tapi sebelumnya pahami dulu ${prefix}tnc`)
                                 })
                                 .catch(async () => {
                                     return client.reply(from, 'Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong', id)
@@ -1946,7 +1946,7 @@ const HandleMsg = async (client, message, browser) => {
                         }, 4000)
                     }
                         break
-                        
+
                     case 'bye': {
                         if (!isGroupMsg) return client.reply(from, resMsg.error.group, id)
                         if (!isGroupAdmins) return client.reply(from, resMsg.error.admin, id)
