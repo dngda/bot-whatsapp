@@ -907,7 +907,7 @@ const HandleMsg = async (client, message, browser) => {
                                     client.reply(from, resMsg.error.norm, id)
                                     unlinkSync(path, (err) => {
                                         if (err && err.code == 'ENOENT') {
-                                            return null
+                                            return
                                         }
                                     })
                                 })
