@@ -193,12 +193,17 @@ const HandleMsg = async (client, message, browser) => {
         // [BETA] Avoid Spam Message
         if (isCmd && isFiltered(from) && !isGroupMsg && !isOwnerBot) {
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
-            return client.reply(from, 'Mohon untuk perintah diberi jeda sedetik!', id)
+            return client.reply(from, 'Mohon untuk perintah diberi jeda!', id)
         }
 
         if (isCmd && isFiltered(from) && isGroupMsg && !isOwnerBot) {
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle))
-            return client.reply(from, 'Mohon untuk perintah diberi jeda sedetik!', id)
+            return client.reply(from, 'Mohon untuk perintah diberi jeda!', id)
+        }
+
+        if (isFiltered(sender) && !isCmd) {
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
+            return client.reply(from, 'Jangan spam!', id)
         }
 
         // Avoid kasar spam and Log
@@ -217,6 +222,7 @@ const HandleMsg = async (client, message, browser) => {
 
         //[BETA] Avoid Spam Message
         addFilter(from)
+        addFilter(sender)
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)

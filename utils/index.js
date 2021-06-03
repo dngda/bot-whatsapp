@@ -57,6 +57,17 @@ const isFiltered = (from) => {
 }
 
 /**
+ * Add number to filter
+ * @param  {String} from
+ */
+ const addFilter = (from) => {
+    usedCommandRecently.add(from)
+    setTimeout(() => {
+        return usedCommandRecently.delete(from)
+    }, 1000) // 1sec is delay before processing next command
+}
+
+/**
  *Download any media from URL
  *@param {String} url
  *@param {Path} locate
@@ -78,18 +89,6 @@ const redir = (url) => {
     get(url, response => {
         return response.responseUrl
     })
-}
-
-
-/**
- * Add number to filter
- * @param  {String} from
- */
-const addFilter = (from) => {
-    usedCommandRecently.add(from)
-    setTimeout(() => {
-        return usedCommandRecently.delete(from)
-    }, 1000) // 5sec is delay before processing next command
 }
 
 const createReadFileSync = (path) => {
