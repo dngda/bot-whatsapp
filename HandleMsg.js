@@ -203,7 +203,7 @@ const HandleMsg = async (client, message, browser) => {
 
         if (isFiltered(sender) && !isCmd) {
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
-            return client.reply(from, 'Jangan spam!', id)
+            return client.sendText(ownerNumber, `Ada yang spam cuy -> ${sender}`)
         }
 
         // Avoid kasar spam and Log
@@ -221,8 +221,8 @@ const HandleMsg = async (client, message, browser) => {
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
         //[BETA] Avoid Spam Message
-        addFilter(from)
-        addFilter(sender)
+        addFilter(from, 1000)
+        addFilter(sender, 500)
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)

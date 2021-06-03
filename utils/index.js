@@ -60,11 +60,11 @@ const isFiltered = (from) => {
  * Add number to filter
  * @param  {String} from
  */
- const addFilter = (from) => {
+ const addFilter = (from, delay) => {
     usedCommandRecently.add(from)
     setTimeout(() => {
         return usedCommandRecently.delete(from)
-    }, 1000) // 1sec is delay before processing next command
+    }, delay) // 1sec is delay before processing next command
 }
 
 /**
