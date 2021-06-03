@@ -179,19 +179,18 @@ const HandleMsg = async (client, message, browser) => {
 
         // Command that banned people can access
         if (isCmd) {
+            // Typing
+            client.simulateTyping(chat.id, true)
             switch (command) {
                 case 'owner':
-                    await client.sendContact(from, ownerNumber)
+                    return await client.sendContact(from, ownerNumber)
                         .then(() => client.sendText(from, 'Jika ada pertanyaan tentang bot silahkan chat nomor di atas'))
-                    break
                 case 'rules':
                 case 'tnc':
-                    await client.sendText(from, menuId.textTnC())
-                    break
+                    return await client.sendText(from, menuId.textTnC())
                 case 'donate':
                 case 'donasi':
-                    await client.sendText(from, menuId.textDonasi())
-                    break
+                    return await client.sendText(from, menuId.textDonasi())
             }
         }
 
