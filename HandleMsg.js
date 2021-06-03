@@ -306,6 +306,10 @@ const HandleMsg = async (client, message, browser) => {
                         const linkgrup = args[0]
                         let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
                         let chekgrup = await client.inviteInfo(linkgrup)
+                            .catch(err => {
+                                console.log(err.name, err.message)
+                                return client.sendText(from, resMsg.error.norm)
+                            })
                         if (!islink) return client.reply(from, 'Maaf link group-nya salah! silahkan kirim link yang benar', id)
                         if (isOwnerBot) {
                             await client.joinGroupViaLink(linkgrup)
@@ -314,6 +318,8 @@ const HandleMsg = async (client, message, browser) => {
                                     setTimeout(async () => {
                                         await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`)
                                     }, 2000)
+                                }).catch(async () => {
+                                    return client.reply(from, 'Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong', id)
                                 })
                         } else {
                             let cgrup = await client.getAllGroups()
@@ -2220,7 +2226,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (posa !== -1) {
                                     antiLinkGroup.splice(posa, 1)
                                     writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
-                                } 
+                                }
                                 count += 1
                             }
                         }
