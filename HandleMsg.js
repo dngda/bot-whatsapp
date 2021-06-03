@@ -222,7 +222,7 @@ const HandleMsg = async (client, message, browser) => {
 
         //[BETA] Avoid Spam Message
         addFilter(from, 1000)
-        addFilter(pengirim, 500)
+        addFilter(pengirim, 300)
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
