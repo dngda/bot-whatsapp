@@ -249,7 +249,7 @@ const HandleMsg = async (client, message, browser) => {
         if (!isCmd) {
             tebakgb.getAns(from).then(res => {
                 if (res != false) {
-                    if (res.ans.toLowerCase() === realBody.toLowerCase()) {
+                    if (res.ans?.toLowerCase() === realBody?.toLowerCase()) {
                         client.reply(from, `✅ Jawaban benar! : *${res.ans}*`, id)
                         tebakgb.delData(from)
                     } else {
