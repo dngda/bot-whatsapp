@@ -239,8 +239,8 @@ const HandleMsg = async (client, message, browser) => {
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
         //[BETA] Avoid Spam Message
-        addFilter(from, 1000)
-        addFilter(pengirim, 300)
+        addFilter(from, 1000) // 1 sec delay before proessing commands
+        addFilter(pengirim, 400) // 0.4 sec delay before receiving message
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
