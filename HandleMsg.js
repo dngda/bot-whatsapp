@@ -203,7 +203,7 @@ const HandleMsg = async (client, message, browser) => {
 
         if (isFiltered(pengirim) && !isCmd) {
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'from', color(pushname))
-            return client.sendText(ownerNumber, `Ada yang spam cuy -> ${pengirim}`)
+            return client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}`)
         }
 
         // Avoid kasar spam and Log
