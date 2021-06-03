@@ -201,9 +201,9 @@ const HandleMsg = async (client, message, browser) => {
             return client.reply(from, 'Mohon untuk perintah diberi jeda!', id)
         }
 
-        if (isFiltered(sender) && !isCmd) {
+        if (isFiltered(pengirim) && !isCmd) {
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
-            return client.sendText(ownerNumber, `Ada yang spam cuy -> ${sender}`)
+            return client.sendText(ownerNumber, `Ada yang spam cuy -> ${pengirim}`)
         }
 
         // Avoid kasar spam and Log
@@ -222,7 +222,7 @@ const HandleMsg = async (client, message, browser) => {
 
         //[BETA] Avoid Spam Message
         addFilter(from, 1000)
-        addFilter(sender, 500)
+        addFilter(pengirim, 500)
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
