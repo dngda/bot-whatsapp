@@ -924,18 +924,12 @@ const HandleMsg = async (client, message, browser) => {
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 client.reply(from, resMsg.error.norm, id)
-                                unlinkSync(path, (err) => {
-                                    if (err && err.code == 'ENOENT') {
-                                        return
-                                    }
-                                })
                             })
                             .on('end', () => {
                                 client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                                unlinkSync(path)
                             })
                             .saveToFile(path)
-
+                        if (existsSync(path)) unlinkSync(path)
                     } catch (err) {
                         console.log(err)
                         client.reply(from, resMsg.error.norm, id)
