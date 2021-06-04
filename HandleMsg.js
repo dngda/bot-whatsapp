@@ -219,7 +219,7 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         // Avoid repetitive sender spam
-        if (isFiltered(pengirim) && !isCmd) {
+        if (isFiltered(pengirim) && !isCmd && realBody != undefined) {
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'from', color(pushname))
             return client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n-> Isi Pesan : ${(realBody?.length > 20) ? `${realBody?.substring(0, 20)}...` : realBody}`)
         }
@@ -240,7 +240,7 @@ const HandleMsg = async (client, message, browser) => {
 
         //[BETA] Avoid Spam Message
         addFilter(from, 1000) // 1 sec delay before proessing commands
-        addFilter(pengirim, 400) // 0.4 sec delay before receiving message
+        if (realBody != undefined) addFilter(pengirim, 400) // 0.4 sec delay before receiving message
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
