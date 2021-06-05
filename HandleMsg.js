@@ -85,10 +85,6 @@ const last = (array, n) => {
     return array.slice(Math.max(array.length - n, 0))
 }
 
-const reCacheModule = (funcs, _data) => {
-    eval(funcs)
-}
-
 //Main functions
 const HandleMsg = async (client, message, browser) => {
     //default msg response
@@ -2390,6 +2386,7 @@ const HandleMsg = async (client, message, browser) => {
                     break
 
             }//End of switch case
+            client.simulateTyping(chat.id, false)
         }
 
         // Anti link group function
@@ -2453,4 +2450,4 @@ const HandleMsg = async (client, message, browser) => {
     }
 }
 
-export { HandleMsg, reCacheModule }
+export { HandleMsg }
