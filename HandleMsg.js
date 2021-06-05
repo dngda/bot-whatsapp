@@ -1726,13 +1726,6 @@ const HandleMsg = async (client, message, browser) => {
                         listMsg = listMsg + '\n -> ' + n
                     })
                     if (args.length === 0) return client.reply(from, `Mengirim SFX yg tersedia: caranya langung ketik nama sfx ${listMsg}`, id)
-                    if (sfx.includes(arg)) {
-                        path = `./random/sfx/${arg}.mp3`
-                        _id = (quotedMsg != null) ? quotedMsgObj.id : id
-                        await client.sendAudio(from, path, _id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                    } else {
-                        await client.reply(from, `SFX tidak tersedia`, id).catch(err => client.reply(from, resMsg.error.norm, id).then(() => console.log(err)))
-                    }
                     break
                 }
 
