@@ -2360,7 +2360,7 @@ const HandleMsg = async (client, message, browser) => {
                         console.log(e)
                         return reply(resMsg.error.norm)
                     })
-                    sendText(JSON.stringify(infoMsg, null, 2))
+                    sendText(JSON.stringify(inf, null, 2))
                     break
                 }
 
