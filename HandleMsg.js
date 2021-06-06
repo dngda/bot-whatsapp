@@ -269,7 +269,7 @@ const HandleMsg = async (client, message, browser) => {
         //[BETA] Avoid Spam Message
         if (isCmd) addFilter(from, 2000) // 2 sec delay before proessing commands
         if (realBody != undefined) addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
-        if (realBody != undefined) addFilter(from + croppedRealBody, 500) // 0.5 sec delay repetitive msg
+        if (realBody != undefined) addFilter(from + croppedRealBody, 1000) // 1 sec delay repetitive msg
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
