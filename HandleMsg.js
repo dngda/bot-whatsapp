@@ -1163,7 +1163,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok tanpa watermark. Bagaimana caranya?\nTinggal ketik ${prefix}tiktok (alamat video tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
-                    await reply(resMsg.wait)
+                    await sendText(resMsg.wait)
 
                     let result = await scraper.snaptikLight(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
@@ -1176,7 +1176,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 (alamat video tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
-                    await reply(resMsg.wait)
+                    await sendText(resMsg.wait)
                     let result = await scraper.ssstik(browser, urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     await client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
