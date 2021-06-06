@@ -152,7 +152,7 @@ const HandleMsg = async (client, message, browser) => {
         const url = args.length !== 0 ? args[0] : ''
 
         // Avoid large body
-        if (realBody.length > 2000) return null
+        if (realBody?.length > 2000) return null
 
         // [IDENTIFY]
         var isKasar = false
