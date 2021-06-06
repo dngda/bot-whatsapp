@@ -219,7 +219,7 @@ const HandleMsg = async (client, message, browser) => {
 
         if (isNgegas) isKasar = await cariKasar(chats)
 
-        // [BETA] Avoid Spam Message
+        // [BETA] Avoid command spam
         if (isCmd && isFiltered(from)) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
@@ -237,6 +237,9 @@ const HandleMsg = async (client, message, browser) => {
 
         // Notify repetitive msg
         if (realBody != undefined && isFiltered(from + croppedRealBody)) {
+            let _whenGroup = ''
+            if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
             client.sendText(ownerNumber, `Ada yang spam repetitive msg cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> Isi Pesan : _${croppedRealBody}_`)
             return reply(`SPAM detected!`)
         }
@@ -257,7 +260,7 @@ const HandleMsg = async (client, message, browser) => {
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
         //[BETA] Avoid Spam Message
-        if (isCmd) addFilter(from, 3000) // 3 sec delay before proessing commands
+        if (isCmd) addFilter(from, 2000) // 2 sec delay before proessing commands
         if (realBody != undefined) addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
         if (realBody != undefined) addFilter(from + croppedRealBody, 500) // 0.5 sec delay repetitive msg
 
