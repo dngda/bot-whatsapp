@@ -234,14 +234,6 @@ const HandleMsg = async (client, message, browser) => {
             return reply('Mohon untuk perintah diberi jeda!')
         }
 
-        // Notify repetitive sender spam
-        if (isFiltered(pengirim) && !isCmd && realBody != undefined) {
-            let _whenGroup = ''
-            if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
-            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
-            return client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
-        }
-
         // Notify repetitive msg
         if (realBody != undefined && isFiltered(from + croppedRealBody)) {
             let _whenGroup = ''
@@ -249,6 +241,14 @@ const HandleMsg = async (client, message, browser) => {
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
             client.sendText(ownerNumber, `Ada yang spam repetitive msg cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
             return reply(`SPAM detected!`)
+        }
+
+        // Notify repetitive sender spam
+        if (isFiltered(pengirim) && !isCmd && realBody != undefined) {
+            let _whenGroup = ''
+            if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
+            return client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
         }
 
         // Avoid kata kasar spam
