@@ -143,7 +143,7 @@ const HandleMsg = async (client, message, browser) => {
         if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
         else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
 
-        const realBody = message.caption || message.body
+        const realBody = (type === 'image' || type === 'video') ? (message.caption == null) ? '' : (type == 'chat') ? message.body : ''
         const croppedRealBody = (realBody?.length > 20) ? realBody?.substring(0, 20) + '...' : realBody
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
@@ -234,21 +234,27 @@ const HandleMsg = async (client, message, browser) => {
             return reply('Mohon untuk perintah diberi jeda!')
         }
 
+        // Spam cooldown
+        if (isFiltered(pengirim + 'isCooldown')) {
+            if (isCmd) return reply(`Belum 15 detik`)
+                else return null
+        }
         // Notify repetitive msg
         if (realBody != undefined && isFiltered(from + croppedRealBody)) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
-            client.sendText(ownerNumber, `Ada yang spam repetitive msg cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
-            return reply(`SPAM detected!`)
+            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
+            addFilter(pengirim + 'isCooldown', 15000)
+            return reply(`SPAM detected! Pesan selanjutnya akan diproses setelah 15 detik`)
         }
 
-        // Notify repetitive sender spam
+        // Avoid repetitive sender spam
         if (isFiltered(pengirim) && !isCmd && realBody != undefined) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
-            return client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
+            return null
         }
 
         // Avoid kata kasar spam
