@@ -2423,10 +2423,14 @@ const HandleMsg = async (client, message, browser) => {
             if (msg?.match(/chat\.whatsapp\.com/gi) !== null) {
                 if (!isBotGroupAdmins) return sendText('Gagal melakukan kick, bot bukan admin')
                 console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender from ${name || formattedTitle}`)
-                reply(`Link group whatsapp terdeteksi! Auto kick...`)
-                setTimeout(async () => {
-                    await client.removeParticipant(groupId, pengirim)
-                }, 2000)
+                if (isGroupAdmins) {
+                    reply(`Duh admin yang share link group. Gabisa dikick deh.`)
+                } else {
+                    reply(`/t/t〘 ANTI LINK GROUP 〙\nMohon maaf. Link group whatsapp terdeteksi! Auto kick...`)
+                    setTimeout(async () => {
+                        await client.removeParticipant(groupId, pengirim)
+                    }, 2000)
+                }
             }
         }
 
