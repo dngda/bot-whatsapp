@@ -144,7 +144,7 @@ const HandleMsg = async (client, message, browser) => {
         else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
 
         const realBody = message.caption || message.body
-        const croppedRealBody = (realBody?.length > 20) ? realBody?.substring(0, 20) : realBody
+        const croppedRealBody = (realBody?.length > 20) ? realBody?.substring(0, 20) + '...' : realBody
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
@@ -239,7 +239,7 @@ const HandleMsg = async (client, message, browser) => {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
-            return client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> Isi Pesan : _${croppedRealBody}_`)
+            return client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
         }
 
         // Notify repetitive msg
@@ -247,7 +247,7 @@ const HandleMsg = async (client, message, browser) => {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
-            client.sendText(ownerNumber, `Ada yang spam repetitive msg cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> Isi Pesan : _${croppedRealBody}_`)
+            client.sendText(ownerNumber, `Ada yang spam repetitive msg cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
             return reply(`SPAM detected!`)
         }
 
