@@ -151,6 +151,9 @@ const HandleMsg = async (client, message, browser) => {
         const args = body.trim().split(/\s/).slice(1)
         const url = args.length !== 0 ? args[0] : ''
 
+        // Avoid large body
+        if (realBody.length > 2000) return null
+
         // [IDENTIFY]
         var isKasar = false
         const isCmd = body.startsWith(prefix)
