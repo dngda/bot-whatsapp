@@ -1145,7 +1145,10 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
-                case 'tiktok': {
+                case 'tiktok':
+                case 'tiktok1':
+                case 'tiktok2':
+                case 'tiktok3': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok tanpa watermark. Bagaimana caranya?\nTinggal ketik ${prefix}tiktok (alamat video tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
@@ -1153,8 +1156,15 @@ const HandleMsg = async (client, message, browser) => {
 
                     let result = await scraper.snaptikLight(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    let _mp4Url = result.source || result.server1 || result.server2 || result.server3
-                    await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let _mp4Url = ''
+                    switch(command) {
+                        case 'tiktok': return _mp4Url = result.source
+                        case 'tiktok1': return _mp4Url = result.server1
+                        case 'tiktok2': return _mp4Url = result.server2
+                        case 'tiktok3': return _mp4Url = result.server3
+                        default :
+                    }
+                    await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`).then(() => console.log(err)))
                     break
                 }
 
