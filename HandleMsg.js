@@ -389,7 +389,7 @@ const HandleMsg = async (client, message, browser) => {
                     let groups = await client.getAllGroups()
                     let time = process.uptime()
                     let uptime = (time + "").toDHms()
-                    sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\n- *${todayHits}* Total Commands Today\n- *${received}* Total Received Msg Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
+                    sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\n- *${todayHits}* Total Commands Today\n- *${received}* Total Received Msgs Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
                     break
                 }
 
