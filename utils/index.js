@@ -22,8 +22,13 @@ const color = (text, color) => {
     return !color ? chalk.blueBright(text) : chalk.keyword(color)(text)
 }
 
-const messageLog = (isReset) => updateJson('data/stat.json', (data) => {
+const commandLog = (isReset) => updateJson('data/stat.json', (data) => {
     (!isReset) ? data['todayHits'] += 1 : data['todayHits'] = 0
+    return data
+})
+
+const receivedLog = (isReset) => updateJson('data/stat.json', (data) => {
+    (!isReset) ? data['received'] += 1 : data['received'] = 0
     return data
 })
 
@@ -150,7 +155,8 @@ export {
     createReadFileSync,
     getModuleName,
     processTime,
-    messageLog,
+    commandLog,
+    receivedLog,
     isFiltered,
     addFilter,
     download,

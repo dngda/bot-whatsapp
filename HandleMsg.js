@@ -33,7 +33,7 @@ db.write()
 db.chain = lodash.chain(db.data)
 
 //file modules
-import { createReadFileSync, processTime, messageLog, isFiltered, addFilter, color, isUrl } from './utils/index.js'
+import { createReadFileSync, processTime, commandLog, receivedLog, isFiltered, addFilter, color, isUrl } from './utils/index.js'
 import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, meme, kbbi, list, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 
@@ -45,7 +45,7 @@ const sleep = (delay) => new Promise((resolve) => {
 
 //Load user data
 if (!existsSync('./data/stat.json')) {
-    writeFileSync('./data/stat.json', `{ "todayHits" : 0 }`)
+    writeFileSync('./data/stat.json', `{ "todayHits" : 0, "received" : 0 }`)
 }
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
 const kataKasar = JSON.parse(createReadFileSync('./settings/katakasar.json'))
@@ -87,6 +87,8 @@ const last = (array, n) => {
 
 //Main functions
 const HandleMsg = async (client, message, browser) => {
+    //Count received
+    receivedLog(false)
     //default msg response
     const resMsg = {
         wait: sample([
@@ -328,8 +330,8 @@ const HandleMsg = async (client, message, browser) => {
         // Ini Command nya
         if (isCmd) {
             // Hits count
-            messageLog(false)
-            let { todayHits } = JSON.parse(readFileSync('./data/stat.json'))
+            commandLog(false)
+            let { todayHits, received } = JSON.parse(readFileSync('./data/stat.json'))
             // Typing
             client.simulateTyping(chat.id, true)
             // Begin of Switch case
@@ -387,7 +389,7 @@ const HandleMsg = async (client, message, browser) => {
                     let groups = await client.getAllGroups()
                     let time = process.uptime()
                     let uptime = (time + "").toDHms()
-                    sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n- *${todayHits}* Total Hits Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
+                    sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats\n\n- *${todayHits}* Total Commands Today\n- *${received}* Total Received Msg Today\n\nSpeed: _${processTime(t, moment())} Seconds_\nUptime: _${uptime}_`)
                     break
                 }
 

@@ -1,5 +1,5 @@
 'use strict'
-import { color, createReadFileSync, messageLog } from './utils/index.js'
+import { color, createReadFileSync, commandLog, receivedLog } from './utils/index.js'
 import schedule from './lib/schedule.js'
 import options from './utils/options.js'
 import { HandleMsg } from './HandleMsg.js'
@@ -98,6 +98,7 @@ const start = async (client) => {
             // Reset today hits at 00:01:01
             scheduleJob('1 1 0 * * *', function () {
                 messageLog(true)
+                receivedLog(true)
             })
         } catch (e) {
             console.log(e)
