@@ -1158,10 +1158,10 @@ const HandleMsg = async (client, message, browser) => {
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let _mp4Url = ''
                     switch(command) {
-                        case 'tiktok': return _mp4Url = result.source
-                        case 'tiktok1': return _mp4Url = result.server1
-                        case 'tiktok2': return _mp4Url = result.server2
-                        case 'tiktok3': return _mp4Url = result.server3
+                        case 'tiktok': _mp4Url = result.source; break
+                        case 'tiktok1': _mp4Url = result.server1; break
+                        case 'tiktok2': _mp4Url = result.server2; break
+                        case 'tiktok3': _mp4Url = result.server3; break
                         default :
                     }
                     await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`).then(() => console.log(err)))
