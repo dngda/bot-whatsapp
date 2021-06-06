@@ -97,7 +97,7 @@ const start = async (client) => {
             
             // Reset today hits at 00:01:01
             scheduleJob('1 1 0 * * *', function () {
-                messageLog(true)
+                commandLog(true)
                 receivedLog(true)
             })
         } catch (e) {
