@@ -400,7 +400,7 @@ const HandleMsg = async (client, message, browser) => {
                         let mediaData = await decryptMedia(quotedMsg)
                         reply(resMsg.wait)
                         let imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-                        await client.sendFile(from, imageBase64, 'imgsticker.jpg', 'Berhasil convert Sticker to Image!')
+                        await client.sendFile(from, imageBase64, 'imgsticker.jpg', 'Berhasil convert Sticker to Image!', id)
                             .then(() => {
                                 console.log(color('[LOGS]', 'grey'), `Sticker to Image Processed for ${processTime(t, moment())} Seconds`)
                             })
@@ -557,7 +557,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'qrcode': {
                     if (args.length == 0) return reply(`Untuk membuat kode QR, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya SeroBot`)
                     reply(resMsg.wait);
-                    await client.sendFileFromUrl(from, `http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(arg)}&size=500x500`)
+                    await client.sendFileFromUrl(from, `http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(arg)}&size=500x500`, '', '', id)
                     break
                 }
 
@@ -575,7 +575,7 @@ const HandleMsg = async (client, message, browser) => {
                     else if (args[0] === 'h') image.flip(true, false).write(path)
                     else return reply(`Argumen salah`)
 
-                    await client.sendImage(from, path, '', '')
+                    await client.sendImage(from, path, '', '', id)
                         .catch(e => {
                             console.log(e)
                             return reply(resMsg.error.norm)
@@ -593,7 +593,7 @@ const HandleMsg = async (client, message, browser) => {
                             let mediaData = await decryptMedia(encryptMedia)
                             let getUrl = await uploadImages(mediaData, false)
                             let ImageBase64 = await meme.custom(getUrl, top, bottom)
-                            client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re')
+                            client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id)
                                 .catch(() => {
                                     reply(resMsg.error.norm)
                                 })
@@ -616,7 +616,7 @@ const HandleMsg = async (client, message, browser) => {
                             console.log(e)
                             return reply(resMsg.error.norm)
                         })
-                    await client.sendImage(from, ress, '', ``)
+                    await client.sendImage(from, ress, '', ``, id)
                         .catch((e) => {
                             console.log(e)
                             return reply(resMsg.error.norm)
@@ -635,7 +635,7 @@ const HandleMsg = async (client, message, browser) => {
                             (pdfBuffer) => {
                                 writeFileSync("./media/result.pdf", pdfBuffer)
 
-                                client.sendFile(from, "./media/result.pdf", quotedMsg.filename.replace(/\.docx|\.doc|\.pptx|\.ppt/g, '.pdf'))
+                                client.sendFile(from, "./media/result.pdf", quotedMsg.filename.replace(/\.docx|\.doc|\.pptx|\.ppt/g, '.pdf'), id)
                             }, (err) => {
                                 console.log(err)
                                 sendText(resMsg.error.norm)
@@ -822,7 +822,7 @@ const HandleMsg = async (client, message, browser) => {
                                 pesan = pesan + data.translation.id
                             }
                             pesan = pesan + "\n\n(Q.S. " + data.surah.name.transliteration.id + ":" + args[1] + ")"
-                            await client.sendFileFromUrl(from, data.audio.secondary[0])
+                            await client.sendFileFromUrl(from, data.audio.secondary[0], '', '', id)
                             await reply(pesan)
                         }
                     }
@@ -943,7 +943,7 @@ const HandleMsg = async (client, message, browser) => {
                         let estimasi = ytresult.seconds / 100
                         let est = estimasi.toFixed(0)
 
-                        await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``, `Video ditemukan\n\nJudul: ${ytresult.title}\nDurasi: ${ytresult.timestamp}\nUploaded: ${ytresult.ago}\nView: ${ytresult.views}\nUrl: ${ytresult.url}\n\nAudio sedang dikirim ± ${est} menit`)
+                        await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``, `Video ditemukan\n\nJudul: ${ytresult.title}\nDurasi: ${ytresult.timestamp}\nUploaded: ${ytresult.ago}\nView: ${ytresult.views}\nUrl: ${ytresult.url}\n\nAudio sedang dikirim ± ${est} menit`, id)
 
                         //Download video and save as MP3 file
                         let time = moment(t * 1000).format('mmss')
@@ -957,7 +957,7 @@ const HandleMsg = async (client, message, browser) => {
                                 reply(resMsg.error.norm)
                             })
                             .on('end', () => {
-                                client.sendFile(from, path, `audio.mp3`, '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                             })
                             .saveToFile(path)
                         if (existsSync(path)) unlinkSync(path)
@@ -987,7 +987,7 @@ const HandleMsg = async (client, message, browser) => {
                             return reply(resMsg.error.norm)
                         })
                         .on('end', () => {
-                            client.sendFile(from, outpath, 'earrape.mp3', '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                            client.sendFile(from, outpath, 'earrape.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                             unlinkSync(inpath)
                             unlinkSync(outpath)
                         })
@@ -1014,7 +1014,7 @@ const HandleMsg = async (client, message, browser) => {
                             return reply(resMsg.error.norm)
                         })
                         .on('end', () => {
-                            client.sendFile(from, outpath, 'robot.mp3', '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                            client.sendFile(from, outpath, 'robot.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                             unlinkSync(inpath)
                             unlinkSync(outpath)
                         })
@@ -1041,7 +1041,7 @@ const HandleMsg = async (client, message, browser) => {
                             return reply(resMsg.error.norm)
                         })
                         .on('end', () => {
-                            client.sendFile(from, outpath, 'reverse.mp3', '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                            client.sendFile(from, outpath, 'reverse.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                             unlinkSync(inpath)
                             unlinkSync(outpath)
                         })
@@ -1068,7 +1068,7 @@ const HandleMsg = async (client, message, browser) => {
                             return reply(resMsg.error.norm)
                         })
                         .on('end', () => {
-                            client.sendFile(from, outpath, 'samarkan.mp3', '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                            client.sendFile(from, outpath, 'samarkan.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                             unlinkSync(inpath)
                             unlinkSync(outpath)
                         })
@@ -1095,7 +1095,7 @@ const HandleMsg = async (client, message, browser) => {
                             return reply(resMsg.error.norm)
                         })
                         .on('end', () => {
-                            client.sendFile(from, outpath, 'vibrato.mp3', '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                            client.sendFile(from, outpath, 'vibrato.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                             unlinkSync(inpath)
                             unlinkSync(outpath)
                         })
@@ -1122,7 +1122,7 @@ const HandleMsg = async (client, message, browser) => {
                             return reply(resMsg.error.norm)
                         })
                         .on('end', () => {
-                            client.sendFile(from, outpath, 'nightcore.mp3', '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                            client.sendFile(from, outpath, 'nightcore.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                             unlinkSync(inpath)
                             unlinkSync(outpath)
                         })
@@ -1149,7 +1149,7 @@ const HandleMsg = async (client, message, browser) => {
                             return reply(resMsg.error.norm)
                         })
                         .on('end', () => {
-                            client.sendFile(from, outpath, 'deepslow.mp3', '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                            client.sendFile(from, outpath, 'deepslow.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                             unlinkSync(inpath)
                             unlinkSync(outpath)
                         })
@@ -1253,7 +1253,7 @@ const HandleMsg = async (client, message, browser) => {
                             .then(body => {
                                 let randomnime = body.split('\n')
                                 let randomnimex = sample(randomnime)
-                                client.sendFileFromUrl(from, randomnimex, '', 'Nih...')
+                                client.sendFileFromUrl(from, randomnimex, '', 'Nih...', id)
                             })
                             .catch(() => {
                                 reply(resMsg.error.norm)
@@ -1270,7 +1270,7 @@ const HandleMsg = async (client, message, browser) => {
                             .then(body => {
                                 let randomkpop = body.split('\n')
                                 let randomkpopx = sample(randomkpop)
-                                client.sendFileFromUrl(from, randomkpopx, '', 'Nih...')
+                                client.sendFileFromUrl(from, randomkpopx, '', 'Nih...', id)
                             })
                             .catch(() => {
                                 reply(resMsg.error.norm)
@@ -1282,7 +1282,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'memes':
                     const randmeme = await meme.random()
-                    client.sendFileFromUrl(from, randmeme.url, '', randmeme.title)
+                    client.sendFileFromUrl(from, randmeme.url, '', randmeme.title, id)
                         .catch(() => {
                             reply(resMsg.error.norm)
                         })
@@ -1306,7 +1306,7 @@ const HandleMsg = async (client, message, browser) => {
                                 let img = sample(res)
                                 if (img === null || img === undefined) return reply(resMsg.error.norm + `\nAtau result tidak ditemukan.`)
 
-                                client.sendFileFromUrl(from, img, '', '')
+                                client.sendFileFromUrl(from, img, '', '', id)
                                     .catch(e => {
                                         console.log(`fdci err : ${e}`)
                                         reply(resMsg.error.norm + '\nCoba gunakan /pin2 atau /pinterest2')
@@ -1328,7 +1328,7 @@ const HandleMsg = async (client, message, browser) => {
                         return reply(resMsg.error.norm)
                     })
                     if (img === null) return reply(resMsg.error.norm).then(() => console.log(`img return null`))
-                    await client.sendFileFromUrl(from, img, '', '').catch(e => {
+                    await client.sendFileFromUrl(from, img, '', '', id).catch(e => {
                         console.log(`send pin2 err : ${e}`)
                         return reply(resMsg.error.norm)
                     })
@@ -1345,7 +1345,7 @@ const HandleMsg = async (client, message, browser) => {
                         return reply(resMsg.error.norm)
                     })
                     if (img === null) return reply(resMsg.error.norm).then(() => console.log(`img return null`))
-                    await client.sendFileFromUrl(from, img, '', '').catch(e => {
+                    await client.sendFileFromUrl(from, img, '', '', id).catch(e => {
                         console.log(`send gimage err : ${e}`)
                         return reply(resMsg.error.norm)
                     })
@@ -1360,7 +1360,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     await sendText('Gotcha, please wait!')
                     await client.simulateTyping(from, true)
-                    await client.sendFileFromUrl(from, urL, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/')
+                    await client.sendFileFromUrl(from, urL, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/', id)
                         .then(() => {
                             client.simulateTyping(from, false)
                         })
@@ -1375,7 +1375,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'sreddit': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`)
                     const hasilreddit = await api.sreddit(arg)
-                    await client.sendFileFromUrl(from, hasilreddit.url, '', hasilreddit.title)
+                    await client.sendFileFromUrl(from, hasilreddit.url, '', hasilreddit.title, id)
                         .catch((e) => {
                             console.log(e)
                             reply(resMsg.error.norm)
@@ -1431,7 +1431,7 @@ const HandleMsg = async (client, message, browser) => {
                                 teks += `➸ *Eps* : ${episode.toString()}\n`
                                 teks += `➸ *Kesamaan* : ${(similarity * 100).toFixed(1)}%\n`
                                 var video = `https://media.trace.moe/video/${anilist_id}/${encodeURIComponent(filename)}?t=${at}&token=${tokenthumb}`;
-                                client.sendFileFromUrl(from, video, 'anime.mp4', teks).catch(() => {
+                                client.sendFileFromUrl(from, video, 'anime.mp4', teks, id).catch(() => {
                                     reply(teks)
                                 })
                             })
@@ -1491,7 +1491,7 @@ const HandleMsg = async (client, message, browser) => {
                     await tebakgb.getTebakGambar(from).then(async res => {
                         let waktu = res.ans.split(' ').length - 1
                         let detik = waktu * 60
-                        await client.sendFileFromUrl(from, res.url, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.\n\n*${prefix}skip* untuk skip`, null)
+                        await client.sendFileFromUrl(from, res.url, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.\n\n*${prefix}skip* untuk skip`, id)
                             .then(() => {
                                 sleep(detik * 1000 / 4).then(async () => {
                                     const ans = await tebakgb.getAns(from)
@@ -1768,7 +1768,7 @@ const HandleMsg = async (client, message, browser) => {
                     else urlzz = arg
                     const path = './media/ssweb.png'
                     scraper.ssweb(browser, path, urlzz).then(async res => {
-                        if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${urlzz}`).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                        if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${urlzz}`, id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     }).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
                 }
