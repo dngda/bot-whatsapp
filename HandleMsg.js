@@ -984,16 +984,14 @@ const HandleMsg = async (client, message, browser) => {
                         .complexFilter('acrusher=level_in=2:level_out=6:bits=8:mode=log:aa=1,lowpass=f=3500')
                         .on('error', (err) => {
                             console.log('An error occurred: ' + err.message)
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
-                            return reply(resMsg.error.norm)
+                            reply(resMsg.error.norm)
                         })
                         .on('end', () => {
                             client.sendFile(from, outpath, 'earrape.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
                         })
                         .saveToFile(outpath)
+                    if (existsSync(inpath)) unlinkSync(inpath)
+                    if (existsSync(outpath)) unlinkSync(outpath)
                     break
                 }
 
@@ -1011,16 +1009,14 @@ const HandleMsg = async (client, message, browser) => {
                         .complexFilter(`afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75`)
                         .on('error', (err) => {
                             console.log('An error occurred: ' + err.message)
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
-                            return reply(resMsg.error.norm)
+                            reply(resMsg.error.norm)
                         })
                         .on('end', () => {
                             client.sendFile(from, outpath, 'robot.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
                         })
                         .saveToFile(outpath)
+                    if (existsSync(inpath)) unlinkSync(inpath)
+                    if (existsSync(outpath)) unlinkSync(outpath)
                     break
                 }
 
@@ -1038,16 +1034,14 @@ const HandleMsg = async (client, message, browser) => {
                         .complexFilter(`areverse`)
                         .on('error', (err) => {
                             console.log('An error occurred: ' + err.message)
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
-                            return reply(resMsg.error.norm)
+                            reply(resMsg.error.norm)
                         })
                         .on('end', () => {
                             client.sendFile(from, outpath, 'reverse.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
                         })
                         .saveToFile(outpath)
+                    if (existsSync(inpath)) unlinkSync(inpath)
+                    if (existsSync(outpath)) unlinkSync(outpath)
                     break
                 }
 
@@ -1065,16 +1059,14 @@ const HandleMsg = async (client, message, browser) => {
                         .complexFilter(`rubberband=pitch=1.5`)
                         .on('error', (err) => {
                             console.log('An error occurred: ' + err.message)
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
-                            return reply(resMsg.error.norm)
+                            reply(resMsg.error.norm)
                         })
                         .on('end', () => {
                             client.sendFile(from, outpath, 'samarkan.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
                         })
                         .saveToFile(outpath)
+                    if (existsSync(inpath)) unlinkSync(inpath)
+                    if (existsSync(outpath)) unlinkSync(outpath)
                     break
                 }
 
@@ -1092,16 +1084,14 @@ const HandleMsg = async (client, message, browser) => {
                         .complexFilter(`vibrato=f=8`)
                         .on('error', (err) => {
                             console.log('An error occurred: ' + err.message)
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
-                            return reply(resMsg.error.norm)
+                            reply(resMsg.error.norm)
                         })
                         .on('end', () => {
                             client.sendFile(from, outpath, 'vibrato.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
                         })
                         .saveToFile(outpath)
+                    if (existsSync(inpath)) unlinkSync(inpath)
+                    if (existsSync(outpath)) unlinkSync(outpath)
                     break
                 }
 
@@ -1119,16 +1109,14 @@ const HandleMsg = async (client, message, browser) => {
                         .audioFilters('asetrate=44100*1.25,firequalizer=gain_entry=\'entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)\'')
                         .on('error', (err) => {
                             console.log('An error occurred: ' + err.message)
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
-                            return reply(resMsg.error.norm)
+                            reply(resMsg.error.norm)
                         })
                         .on('end', () => {
                             client.sendFile(from, outpath, 'nightcore.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
                         })
                         .saveToFile(outpath)
+                    if (existsSync(inpath)) unlinkSync(inpath)
+                    if (existsSync(outpath)) unlinkSync(outpath)
                     break
                 }
 
@@ -1146,16 +1134,14 @@ const HandleMsg = async (client, message, browser) => {
                         .audioFilters('atempo=1.1,asetrate=44100*0.7,firequalizer=gain_entry=\'entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)\'')
                         .on('error', (err) => {
                             console.log('An error occurred: ' + err.message)
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
-                            return reply(resMsg.error.norm)
+                            reply(resMsg.error.norm)
                         })
                         .on('end', () => {
                             client.sendFile(from, outpath, 'deepslow.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                            unlinkSync(inpath)
-                            unlinkSync(outpath)
                         })
                         .saveToFile(outpath)
+                    if (existsSync(inpath)) unlinkSync(inpath)
+                    if (existsSync(outpath)) unlinkSync(outpath)
                     break
                 }
 
