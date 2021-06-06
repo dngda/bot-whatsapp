@@ -143,7 +143,10 @@ const HandleMsg = async (client, message, browser) => {
         if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
         else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
 
-        const realBody = (type === 'image' || type === 'video') ? (message.caption == null) ? '' : (type == 'chat') ? message.body : ''
+        let realBody = ''
+        if (type === 'chat') realBody = message.body
+        else realBody = (type === 'image' && caption || type === 'video' && caption) ? caption : ''
+
         const croppedRealBody = (realBody?.length > 20) ? realBody?.substring(0, 20) + '...' : realBody
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
