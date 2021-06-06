@@ -152,7 +152,11 @@ const HandleMsg = async (client, message, browser) => {
         const url = args.length !== 0 ? args[0] : ''
 
         // Avoid large body
-        if (realBody?.length > 2000) return null
+        if (realBody?.length > 2000) {
+            let _whenGroup = ''
+            if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
+            return console.log(color('[LARG]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
+        }
 
         // [IDENTIFY]
         var isKasar = false
