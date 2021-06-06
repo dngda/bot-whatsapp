@@ -2422,10 +2422,10 @@ const HandleMsg = async (client, message, browser) => {
             else msg = message.body
             if (msg?.match(/chat\.whatsapp\.com/gi) !== null) {
                 if (!isBotGroupAdmins) return sendText('Gagal melakukan kick, bot bukan admin')
-                console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender from ${name || formattedTitle}`)
                 if (isGroupAdmins) {
                     reply(`Duh admin yang share link group. Gabisa dikick deh.`)
                 } else {
+                    console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender from ${name || formattedTitle}`)
                     reply(`/t/t〘 ANTI LINK GROUP 〙\nMohon maaf. Link group whatsapp terdeteksi! Auto kick...`)
                     setTimeout(async () => {
                         await client.removeParticipant(groupId, pengirim)
