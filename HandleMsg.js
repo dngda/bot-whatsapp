@@ -1160,22 +1160,19 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'tiktok': {
-                    // return reply(`Maaf fitur sedang dalam perbaikan`)
-
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok tanpa watermark. Bagaimana caranya?\nTinggal ketik ${prefix}tiktok (alamat video tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     await reply(resMsg.wait)
 
-                    let result = await scraper.snaptik(browser, urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let result = await scraper.snaptikLight(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    await client.sendFileFromUrl(from, result.video, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let _mp4Url = result.source || result.server1 || result.server2 || result.server3
+                    await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
                 }
 
                 case 'tiktokmp3': {
-                    // return reply(`Maaf fitur sedang dalam perbaikan`)
-
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 (alamat video tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
