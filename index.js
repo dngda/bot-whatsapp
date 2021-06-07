@@ -3,7 +3,6 @@ import { color, createReadFileSync, commandLog, receivedLog } from './utils/inde
 import schedule from './lib/schedule.js'
 import options from './utils/options.js'
 import { HandleMsg } from './HandleMsg.js'
-
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import { create } from '@open-wa/wa-automate'
 import { scheduleJob } from 'node-schedule'
@@ -94,7 +93,7 @@ const start = async (client) => {
                 schedule.loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
             })
             console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
-            
+
             // Reset today hits at 00:01:01
             scheduleJob('1 1 0 * * *', function () {
                 commandLog(0)

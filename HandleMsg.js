@@ -249,7 +249,7 @@ const HandleMsg = async (client, message, browser) => {
         // Spam cooldown
         if (isFiltered(from + 'isCooldown')) {
             if (isCmd) return reply(`Belum 60 detik`)
-                else return null
+            else return null
         }
         // Notify repetitive msg
         if (realBody != undefined && isFiltered(from + croppedRealBody)) {
@@ -591,7 +591,6 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
-                case 'meme':
                 case 'memefy': {
                     if ((isMedia || isQuotedImage) && args.length >= 1 && body.match("|")) {
                         try {
@@ -1163,12 +1162,12 @@ const HandleMsg = async (client, message, browser) => {
                     let result = await scraper.snaptikLight(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let _mp4Url = ''
-                    switch(command) {
+                    switch (command) {
                         case 'tiktok': _mp4Url = result.source; break
                         case 'tiktok1': _mp4Url = result.server1; break
                         case 'tiktok2': _mp4Url = result.server2; break
                         case 'tiktok3': _mp4Url = result.server3; break
-                        default :
+                        default:
                     }
                     await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`).then(() => console.log(err)))
                     break
@@ -1282,6 +1281,7 @@ const HandleMsg = async (client, message, browser) => {
                     break
 
                 case 'memes':
+                case 'meme':
                     const randmeme = await meme.random()
                     client.sendFileFromUrl(from, randmeme.url, '', randmeme.title, id)
                         .catch(() => {
