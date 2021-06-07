@@ -24,7 +24,8 @@ const { read } = jimp
 
 //lowdb
 import { LowSync, JSONFileSync } from 'lowdb'
-import lodash, { sample } from 'lodash'
+import lodash from 'lodash'
+const { sample } = lodash
 const adapter = new JSONFileSync(appRoot + '/data/denda.json')
 const db = new LowSync(adapter)
 db.read()
