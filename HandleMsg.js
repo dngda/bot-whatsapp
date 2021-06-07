@@ -2,6 +2,7 @@
 import { removeBackgroundFromImageBase64 } from 'remove.bg'
 import { decryptMedia } from '@open-wa/wa-automate'
 import { exec, spawn } from 'child_process'
+import { scheduleJob } from 'node-schedule'
 import { translate } from 'free-translate'
 import moment from 'moment-timezone'
 import appRoot from 'app-root-path'
@@ -85,10 +86,16 @@ const last = (array, n) => {
     return array.slice(Math.max(array.length - n, 0))
 }
 
+let { todayHits, received } = JSON.parse(readFileSync('./data/stat.json'))
+scheduleJob('*/5 * * * *', function () {
+    receivedLog(received)
+    commandLog(todayHits)
+})
+
 //Main functions
 const HandleMsg = async (client, message, browser) => {
     //Count received
-    receivedLog(false)
+    received++
     //default msg response
     const resMsg = {
         wait: sample([
@@ -330,8 +337,7 @@ const HandleMsg = async (client, message, browser) => {
         // Ini Command nya
         if (isCmd) {
             // Hits count
-            commandLog(false)
-            let { todayHits, received } = JSON.parse(readFileSync('./data/stat.json'))
+            todayHits++
             // Typing
             client.simulateTyping(chat.id, true)
             // Begin of Switch case

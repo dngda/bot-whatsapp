@@ -22,13 +22,13 @@ const color = (text, color) => {
     return !color ? chalk.blueBright(text) : chalk.keyword(color)(text)
 }
 
-const commandLog = (isReset) => updateJson('data/stat.json', (data) => {
-    (!isReset) ? data['todayHits'] += 1 : data['todayHits'] = 0
+const commandLog = (count) => updateJson('data/stat.json', (data) => {
+    data['todayHits'] = count
     return data
 })
 
-const receivedLog = (isReset) => updateJson('data/stat.json', (data) => {
-    (!isReset) ? data['received'] += 1 : data['received'] = 0
+const receivedLog = (count) => updateJson('data/stat.json', (data) => {
+    data['received'] = count
     return data
 })
 
