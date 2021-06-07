@@ -6,7 +6,6 @@ import { scheduleJob } from 'node-schedule'
 import { translate } from 'free-translate'
 import moment from 'moment-timezone'
 import appRoot from 'app-root-path'
-import { sample } from 'underscore'
 import ffmpeg from 'fluent-ffmpeg'
 import toPdf from 'office-to-pdf'
 import fetch from 'node-fetch'
@@ -25,7 +24,7 @@ const { read } = jimp
 
 //lowdb
 import { LowSync, JSONFileSync } from 'lowdb'
-import lodash from 'lodash'
+import lodash, { sample } from 'lodash'
 const adapter = new JSONFileSync(appRoot + '/data/denda.json')
 const db = new LowSync(adapter)
 db.read()
