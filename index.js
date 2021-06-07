@@ -23,7 +23,7 @@ let {
     prefix
 } = setting
 
-const queue = new PQueue({ concurrency: 8, timeout: 10000, throwOnTimeout: true })
+const queue = new PQueue({ concurrency: 10, timeout: 5000, throwOnTimeout: true })
 queue.on('next', () => {
     if (queue.size > 0 || queue.pending > 0) console.log(color('[==>>]', 'red'), `In-process: ${queue.pending} In-queue: ${queue.size}`)
 })

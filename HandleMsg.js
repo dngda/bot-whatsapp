@@ -241,7 +241,7 @@ const HandleMsg = async (client, message, browser) => {
 
         // Spam cooldown
         if (isFiltered(from + 'isCooldown')) {
-            if (isCmd) return reply(`Belum 15 detik`)
+            if (isCmd) return reply(`Belum 60 detik`)
                 else return null
         }
         // Notify repetitive msg
@@ -250,8 +250,8 @@ const HandleMsg = async (client, message, browser) => {
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
             client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
-            addFilter(from + 'isCooldown', 15000)
-            return reply(`SPAM detected! Pesan selanjutnya akan diproses setelah 15 detik`)
+            addFilter(from + 'isCooldown', 60000)
+            return reply(`SPAM detected! Pesan selanjutnya akan diproses setelah 60 detik`)
         }
 
         // Avoid repetitive sender spam
