@@ -257,7 +257,7 @@ const HandleMsg = async (client, message, browser) => {
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
             client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
             addFilter(from + 'isCooldown', 60000)
-            return reply(`SPAM detected! Pesan selanjutnya akan diproses setelah 60 detik`)
+            return reply(`SPAM detected!\nPesan selanjutnya akan diproses setelah 60 detik`)
         }
 
         // Avoid repetitive sender spam
