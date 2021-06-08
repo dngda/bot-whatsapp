@@ -313,7 +313,9 @@ const HandleMsg = async (client, message, browser) => {
                 break
             }
             case /^=/.test(chats): {
-                if (chats.match(/\d[\=\+\-\*\/\^e]/g)) await reply(`${eval(chats.slice(1).replace('^', '**'))}`)
+                if (chats.match(/\d[x÷×\=\+\-\*\/\^e]/g)) {
+                    await reply(`${eval(chats.slice(1).replace('^', '**').replace('x', '*').replace('×', '*').replace('÷', '/').replace('%', '/100'))}`)
+                }
                 break
             }
             case /\bping\b/i.test(chats): {
@@ -1257,23 +1259,6 @@ const HandleMsg = async (client, message, browser) => {
                             })
                     } else {
                         reply(`Maaf query tidak tersedia. Silahkan ketik ${prefix}anime untuk melihat list query`)
-                    }
-                    break
-                case 'kpop':
-                    if (args.length == 0) return reply(`Untuk menggunakan ${prefix}kpop\nSilahkan ketik: ${prefix}kpop [query]\nContoh: ${prefix}kpop bts\n\nquery yang tersedia:\nblackpink, exo, bts\n\nUntuk query lain gunakan ${prefix}pinterest`)
-                    if (args[0] == 'blackpink' || args[0] == 'exo' || args[0] == 'bts') {
-                        fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/kpop/' + args[0] + '.txt')
-                            .then(res => res.text())
-                            .then(body => {
-                                let randomkpop = body.split('\n')
-                                let randomkpopx = sample(randomkpop)
-                                client.sendFileFromUrl(from, randomkpopx, '', 'Nih...', id)
-                            })
-                            .catch(() => {
-                                reply(resMsg.error.norm)
-                            })
-                    } else {
-                        reply(`Maaf query tidak tersedia. Silahkan ketik ${prefix}kpop untuk melihat list query`)
                     }
                     break
 
