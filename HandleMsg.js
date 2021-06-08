@@ -283,8 +283,8 @@ const HandleMsg = async (client, message, browser) => {
 
         //[BETA] Avoid Spam Message
         if (isCmd) addFilter(from, 2000) // 2 sec delay before proessing commands
-        if (chats != undefined) addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
-        if (chats != undefined) addFilter(from + croppedChats, 700) // 0.7 sec delay repetitive msg
+        if (chats != "") addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
+        if (chats != "") addFilter(from + croppedChats, 700) // 0.7 sec delay repetitive msg
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
@@ -1290,7 +1290,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'pin':
                 case 'pinterest': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`)
-                    if (await cariNsfw(chats)) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
+                    if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
                     if (args[0] === '+') {
                         await api.pinterest(arg.trim().substring(arg.indexOf(' ') + 1))
                             .then(res => {
@@ -1339,7 +1339,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'gimg':
                 case 'gimage': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari google image\nketik: ${prefix}gimage [search]\ncontoh: ${prefix}gimage naruto`)
-                    if (await cariNsfw(chats)) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
+                    if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
                     const img = await scraper.gimage(browser, arg).catch(e => {
                         console.log(`gimage err : ${e}`)
                         return reply(resMsg.error.norm)
