@@ -1915,9 +1915,9 @@ const HandleMsg = async (client, message, browser) => {
                 case 'add':
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
-                    if (args.length != 1) return reply(`Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`)
+                    if (args.length === 0) return reply(`Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`)
                     try {
-                        await client.addParticipant(from, `${args[0].replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '')}@c.us`)
+                        await client.addParticipant(from, `${arg.replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '')}@c.us`)
                     } catch {
                         reply('Tidak dapat menambahkan target')
                     }
@@ -2168,8 +2168,8 @@ const HandleMsg = async (client, message, browser) => {
                 case 'ban': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length == 0) return reply(`Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban 628xx --untuk mengaktifkan\n${prefix}unban 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`)
-                    if (args.length == 1) {
-                        const numId = args[0].replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '') + '@c.us'
+                    if (args.length != 0) {
+                        const numId = arg.replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '') + '@c.us'
                         let pos = banned.indexOf(numId)
                         if (pos != -1) return reply('Target already banned!')
                         banned.push(numId)
@@ -2192,7 +2192,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'unban': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length == 0) return reply(`Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban 628xx --untuk mengaktifkan\n${prefix}unban 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`)
-                    const numId = args[0].replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '') + '@c.us'
+                    const numId = arg.replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '') + '@c.us'
                     let pos = banned.indexOf(numId)
                     if (pos === -1) return reply('Not found!')
                     banned.splice(pos, 1)
