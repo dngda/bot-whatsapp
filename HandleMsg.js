@@ -37,6 +37,7 @@ db.chain = lodash.chain(db.data)
 import { createReadFileSync, processTime, commandLog, receivedLog, isFiltered, addFilter, color, isUrl } from './utils/index.js'
 import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, meme, kbbi, list, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
+import { cariNsfw } from './lib/kataKotor.js'
 
 tz.setDefault('Asia/Jakarta').locale('id')
 
@@ -152,11 +153,7 @@ const HandleMsg = async (client, message, browser) => {
         if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
         else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
 
-        let realBody = null
-        if (type === 'chat') realBody = message.body
-        else realBody = (type === 'image' && caption || type === 'video' && caption) ? caption : null
-
-        const croppedRealBody = (realBody?.length > 20) ? realBody?.substring(0, 20) + '...' : realBody
+        const croppedChats = (chats?.length > 20) ? chats?.substring(0, 20) + '...' : chats
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
@@ -164,10 +161,10 @@ const HandleMsg = async (client, message, browser) => {
         const url = args.length !== 0 ? args[0] : ''
 
         // Avoid large body
-        if (realBody?.length > 2000) {
+        if (chats?.length > 2000) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
-            return console.log(color('[LARG]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
+            return console.log(color('[LARG]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
         }
 
         // [IDENTIFY]
@@ -236,7 +233,7 @@ const HandleMsg = async (client, message, browser) => {
         }
         else if (isBanned) return null
 
-        if (isNgegas) isKasar = await cariKasar(chats)
+        if (isNgegas && !isCmd) isKasar = await cariKasar(chats)
 
         // [BETA] Avoid command spam
         if (isCmd && isFiltered(from)) {
@@ -252,20 +249,20 @@ const HandleMsg = async (client, message, browser) => {
             else return null
         }
         // Notify repetitive msg
-        if (realBody != undefined && isFiltered(from + croppedRealBody)) {
+        if (chats != undefined && isFiltered(from + croppedChats)) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
-            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
-            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedRealBody}_`)
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
+            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedChats}_`)
             addFilter(from + 'isCooldown', 60000)
             return reply(`SPAM detected!\nPesan selanjutnya akan diproses setelah 60 detik`)
         }
 
         // Avoid repetitive sender spam
-        if (isFiltered(pengirim) && !isCmd && realBody != undefined) {
+        if (isFiltered(pengirim) && !isCmd && chats != undefined) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
-            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedRealBody, 'grey'), 'from', color(pushname), _whenGroup)
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
             return null
         }
 
@@ -286,8 +283,8 @@ const HandleMsg = async (client, message, browser) => {
 
         //[BETA] Avoid Spam Message
         if (isCmd) addFilter(from, 2000) // 2 sec delay before proessing commands
-        if (realBody != undefined) addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
-        if (realBody != undefined) addFilter(from + croppedRealBody, 700) // 0.7 sec delay repetitive msg
+        if (chats != undefined) addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
+        if (chats != undefined) addFilter(from + croppedChats, 700) // 0.7 sec delay repetitive msg
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
@@ -296,7 +293,7 @@ const HandleMsg = async (client, message, browser) => {
         if (!isCmd) {
             tebakgb.getAns(from).then(res => {
                 if (res != false) {
-                    if (res.ans?.toLowerCase() === realBody?.toLowerCase()) {
+                    if (res.ans?.toLowerCase() === chats?.toLowerCase()) {
                         reply(`✅ Jawaban benar! : *${res.ans}*`)
                         tebakgb.delData(from)
                     } else {
@@ -308,22 +305,22 @@ const HandleMsg = async (client, message, browser) => {
 
         // Respon to real body of msg contain this case
         switch (true) {
-            case /^(menu|start|help)$/i.test(realBody): {
+            case /^(menu|start|help)$/i.test(chats): {
                 return await sendText(`Untuk menampilkan menu, kirim pesan *${prefix}menu*`)
             }
-            case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/i.test(realBody): {
+            case /assalamualaikum|assalamu\'alaikum|asalamualaikum|assalamu\'alaykum/i.test(chats): {
                 await reply('Wa\'alaikumussalam Wr. Wb.')
                 break
             }
-            case /^=/.test(realBody): {
-                if (realBody.match(/\d[\=\+\-\*\/\^e]/g)) await reply(`${eval(realBody.slice(1).replace('^', '**'))}`)
+            case /^=/.test(chats): {
+                if (chats.match(/\d[\=\+\-\*\/\^e]/g)) await reply(`${eval(chats.slice(1).replace('^', '**'))}`)
                 break
             }
-            case /\bping\b/i.test(realBody): {
+            case /\bping\b/i.test(chats): {
                 return await sendText(`Pong!!!\nSpeed: _${processTime(t, moment())} Seconds_`)
             }
-            case new RegExp(`\\b(${sfx.join("|")})\\b`).test(realBody?.toLowerCase()): {
-                const theSFX = realBody?.toLowerCase().match(new RegExp(sfx.join("|")))
+            case new RegExp(`\\b(${sfx.join("|")})\\b`).test(chats?.toLowerCase()): {
+                const theSFX = chats?.toLowerCase().match(new RegExp(sfx.join("|")))
                 const path = `./random/sfx/${theSFX}.mp3`
                 const _id = (quotedMsg != null) ? quotedMsgObj.id : id
                 await client.sendPtt(from, path, _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
@@ -1293,6 +1290,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'pin':
                 case 'pinterest': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`)
+                    if (await cariNsfw(chats)) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
                     if (args[0] === '+') {
                         await api.pinterest(arg.trim().substring(arg.indexOf(' ') + 1))
                             .then(res => {
@@ -1341,6 +1339,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'gimg':
                 case 'gimage': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari google image\nketik: ${prefix}gimage [search]\ncontoh: ${prefix}gimage naruto`)
+                    if (await cariNsfw(chats)) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
                     const img = await scraper.gimage(browser, arg).catch(e => {
                         console.log(`gimage err : ${e}`)
                         return reply(resMsg.error.norm)
