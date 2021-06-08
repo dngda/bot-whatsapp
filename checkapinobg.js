@@ -9,7 +9,7 @@ apiNoBg.forEach(api => {
 			'X-Api-Key': api
 		},
 		encoding: null
-	}, function (error, response, body) {
+	}, function (_error, _response, body) {
 		console.log(api, JSON.stringify(JSON.parse(body).data.attributes.api, null, 2))
 	})
 })
