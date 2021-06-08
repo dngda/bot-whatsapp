@@ -249,7 +249,7 @@ const HandleMsg = async (client, message, browser) => {
             else return null
         }
         // Notify repetitive msg
-        if (chats != undefined && isFiltered(from + croppedChats)) {
+        if (chats != "" && isFiltered(from + croppedChats)) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
@@ -259,7 +259,7 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         // Avoid repetitive sender spam
-        if (isFiltered(pengirim) && !isCmd && chats != undefined) {
+        if (isFiltered(pengirim) && !isCmd && chats != "") {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
