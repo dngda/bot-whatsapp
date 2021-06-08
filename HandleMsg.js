@@ -2435,7 +2435,7 @@ const HandleMsg = async (client, message, browser) => {
                     reply(`Duh admin yang share link group. Gabisa dikick deh.`)
                 } else {
                     console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender from ${name || formattedTitle}`)
-                    reply(`\t\t〘 ANTI LINK GROUP 〙\nMohon maaf. Link group whatsapp terdeteksi! Auto kick...`)
+                    reply(`〘 ANTI LINK GROUP 〙\nMohon maaf. Link group whatsapp terdeteksi! Auto kick...`)
                     setTimeout(async () => {
                         await client.removeParticipant(groupId, pengirim)
                     }, 2000)
