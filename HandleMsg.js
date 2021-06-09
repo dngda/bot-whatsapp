@@ -64,6 +64,7 @@ let {
     groupLimit,
     prefix
 } = setting
+const Surah = JSON.parse(readFileSync('./src/surah.json'))
 
 //Helper Functions
 function formatin(duit) {
@@ -87,10 +88,22 @@ const last = (array, n) => {
     return array.slice(Math.max(array.length - n, 0))
 }
 
+const unlinkIfExists = (path, path2) => {
+    if (existsSync(path)) unlinkSync(path)
+    if (existsSync(path2)) unlinkSync(path2)
+}
+
 let { todayHits, received } = JSON.parse(readFileSync('./data/stat.json'))
+// Save stats in json every 5 minutes
 scheduleJob('*/5 * * * *', function () {
     receivedLog(received)
     commandLog(todayHits)
+})
+
+// Reset today hits at 00:01:01
+scheduleJob('1 1 0 * * *', function () {
+    received = 0
+    todayHits = 0
 })
 
 //Main functions
@@ -186,23 +199,46 @@ const HandleMsg = async (client, message, browser) => {
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
 
-        const sfx = readdirSync('./random/sfx/').map(item => {
+        const sfx = readdirSync('./src/sfx/').map(item => {
             return item.replace('.mp3', '')
         })
 
         // Helper Functions
-        const sendText = async (_text) => {
-            return await client.sendText(from, _text)
+        const sendText = async (txt) => {
+            return await client.sendText(from, txt)
                 .catch(e => {
                     console.log(e)
                 })
         }
 
-        const reply = async (_text) => {
-            return await client.reply(from, _text, id)
+        const reply = async (txt) => {
+            return await client.reply(from, txt, id)
                 .catch(e => {
                     console.log(e)
                 })
+        }
+
+        const audioConverter = async (complexFilter, name) => {
+            const _inp = await decryptMedia(quotedMsg)
+            let time = moment(t * 1000).format('mmss')
+            let inpath = `./media/in_${name}_${time}.mp3`
+            let outpath = `./media/out_${name}_${time}.mp3`
+            writeFileSync(inpath, _inp)
+
+            ffmpeg(inpath)
+                .setFfmpegPath('./bin/ffmpeg')
+                .complexFilter(complexFilter)
+                .on('error', (err) => {
+                    console.log('An error occurred: ' + err.message)
+                    reply(resMsg.error.norm)
+                    unlinkIfExists(inpath, outpath)
+                })
+                .on('end', () => {
+                    client.sendFile(from, outpath, `${name}.mp3`, '', id)
+                        .then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                    unlinkIfExists(inpath, outpath)
+                })
+                .saveToFile(outpath)
         }
 
         // Command that banned people can access
@@ -323,7 +359,7 @@ const HandleMsg = async (client, message, browser) => {
             }
             case new RegExp(`\\b(${sfx.join("|")})\\b`).test(chats?.toLowerCase()): {
                 const theSFX = chats?.toLowerCase().match(new RegExp(sfx.join("|")))
-                const path = `./random/sfx/${theSFX}.mp3`
+                const path = `./src/sfx/${theSFX}.mp3`
                 const _id = (quotedMsg != null) ? quotedMsgObj.id : id
                 await client.sendPtt(from, path, _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                 break
@@ -656,16 +692,13 @@ const HandleMsg = async (client, message, browser) => {
                 //Islam Command
                 case 'listsurah': {
                     try {
-                        get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                            .then((response) => {
-                                let listsrh = '╔══✪〘 List Surah 〙✪\n'
-                                response.data.data.forEach((data, i) => {
-                                    listsrh += `╠ ${data[i].number}. `
-                                    listsrh += data[i].name.transliteration.id.toLowerCase() + '\n'
-                                })
-                                listsrh += '╚═〘 *SeroBot* 〙'
-                                reply(listsrh)
-                            })
+                        let listsrh = '╔══✪〘 List Surah 〙✪\n'
+                        Surah.data.forEach((data, i) => {
+                            listsrh += `╠ ${data[i].number}. `
+                            listsrh += data[i].name.transliteration.id.toLowerCase() + '\n'
+                        })
+                        listsrh += '╚═〘 *SeroBot* 〙'
+                        reply(listsrh)
                     } catch (err) {
                         return reply(err)
                     }
@@ -674,18 +707,13 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'infosurah': {
                     if (args.length == 0) return reply(`*_${prefix}infosurah <nama surah>_*\nMenampilkan informasi lengkap mengenai surah tertentu. Contoh penggunan: ${prefix}infosurah al-baqarah`)
-                    var responseh = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                        .catch(err => {
-                            console.log(err)
-                            return sendText(resMsg.error.norm)
-                        })
-                    var { data } = responseh.data
+                    var { data } = Surah
                     let idx = data.findIndex(function (post) {
                         if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                             return true
                     })
                     if (data[idx] === undefined) return reply(`Maaf format salah atau nama surah tidak sesuai`)
-                    var pesan = ""
+                    let pesan = ""
                     pesan = pesan + "Nama : " + data[idx].name.transliteration.id + "\n" + "Asma : " + data[idx].name.short + "\n" + "Arti : " + data[idx].name.translation.id + "\n" + "Jumlah ayat : " + data[idx].numberOfVerses + "\n" + "Nomor surah : " + data[idx].number + "\n" + "Jenis : " + data[idx].revelation.id + "\n" + "Keterangan : " + data[idx].tafsir.id
                     reply(pesan)
                     break
@@ -695,12 +723,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length == 0) return reply(`*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama/nomor surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id\n${prefix}surah 1 1 id`)
                     let nmr = 0
                     if (isNaN(args[0])) {
-                        let res = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                            .catch(err => {
-                                console.log(err)
-                                return sendText(resMsg.error.norm)
-                            })
-                        var { data } = res.data
+                        var { data } = Surah
                         let idx = data.findIndex(function (post) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true
@@ -713,13 +736,13 @@ const HandleMsg = async (client, message, browser) => {
                     var ayat = args[1] | 1
 
                     if (!isNaN(nmr)) {
-                        var responseh2 = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
+                        let resSurah = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
                             })
-                        if (responseh2 === undefined) return reply(`Maaf error/format salah`)
-                        var { data } = responseh2.data
+                        if (resSurah === undefined) return reply(`Maaf error/format salah`)
+                        var { data } = resSurah.data
                         let bhs = last(args)
                         let pesan = ""
                         pesan = pesan + data.text.arab + "\n\n"
@@ -738,12 +761,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length == 0) return reply(`*_${prefix}tafsir <nama/nomor surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`)
                     let nmr = 0
                     if (isNaN(args[0])) {
-                        let res = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                            .catch(err => {
-                                console.log(err)
-                                return sendText(resMsg.error.norm)
-                            })
-                        var { data } = res.data
+                        let { data } = Surah
                         let idx = data.findIndex(function (post) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true
@@ -753,16 +771,16 @@ const HandleMsg = async (client, message, browser) => {
                     } else {
                         nmr = args[0]
                     }
-                    var ayat = args[1] | 1
+                    let ayat = args[1] | 1
                     console.log(nmr)
                     if (!isNaN(nmr)) {
-                        var responsih = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
+                        let resSurah = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
                             })
-                        var { data } = responsih.data
-                        pesan = ""
+                        let { data } = resSurah.data
+                        let pesan = ""
                         pesan = pesan + "Tafsir Q.S. " + data.surah.name.transliteration.id + ":" + args[1] + "\n\n"
                         pesan = pesan + data.text.arab + "\n\n"
                         pesan = pesan + "_" + data.translation.id + "_" + "\n\n" + data.tafsir.id.long
@@ -775,12 +793,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length == 0) return reply(`*_${prefix}ALaudio <nama/nomor surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`)
                     let nmr = 0
                     if (isNaN(args[0])) {
-                        let res = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
-                            .catch(err => {
-                                console.log(err)
-                                return sendText(resMsg.error.norm)
-                            })
-                        var { data } = res.data
+                        var { data } = Surah
                         let idx = data.findIndex(function (post) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true
@@ -799,26 +812,26 @@ const HandleMsg = async (client, message, browser) => {
                         if (args.length == 2) {
                             ayat = last(args)
                         }
-                        pesan = ""
                         if (isNaN(ayat)) {
-                            let responsih2 = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
+                            let pesan = ""
+                            let resSurah = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
                                 .catch(err => {
                                     console.log(err)
                                     sendText(resMsg.error.norm)
                                 })
-                            var { name, name_translations, number_of_ayah, number_of_surah, recitations } = responsih2.data
+                            let { name, name_translations, number_of_ayah, number_of_surah, recitations } = resSurah.data
                             pesan = pesan + "Audio Quran Surah ke-" + number_of_surah + " " + name + " (" + name_translations.ar + ") " + "dengan jumlah " + number_of_ayah + " ayat\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[0].name + " :\n" + recitations[0].audio_url + "\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[1].name + " :\n" + recitations[1].audio_url + "\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[2].name + " :\n" + recitations[2].audio_url + "\n"
                             reply(pesan)
                         } else {
-                            let responsih2 = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
+                            let resSurah = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
                                 .catch(err => {
                                     console.log(err)
                                     return sendText(resMsg.error.norm)
                                 })
-                            var { data } = responsih2.data
+                            let { data } = resSurah.data
                             let bhs = last(args)
                             let pesan = ""
                             pesan = pesan + data.text.arab + "\n\n"
@@ -839,12 +852,12 @@ const HandleMsg = async (client, message, browser) => {
                 case 'jsolat': {
                     if (args.length === 0) return reply(`ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\nContoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`)
                     if (args[0] == 'daerah') {
-                        var datad = await get('https://api.banghasan.com/sholat/format/json/kota')
+                        let resData = await get('https://api.banghasan.com/sholat/format/json/kota')
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
                             })
-                        var datas = datad.data.kota
+                        var datas = resData.data.kota
                         let hasil = '╔══✪〘 Daftar Kota 〙✪\n'
                         for (let d of datas) {
                             var kota = d.nama
@@ -854,19 +867,19 @@ const HandleMsg = async (client, message, browser) => {
                         hasil += '╚═〘 *SeroBot* 〙'
                         await reply(hasil)
                     } else {
-                        var datak = await get('https://api.banghasan.com/sholat/format/json/kota/nama/' + args[0])
+                        let resData = await get('https://api.banghasan.com/sholat/format/json/kota/nama/' + args[0])
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
                             })
                         try {
-                            var kodek = datak.data.kota[0].id
+                            var kodek = resData.data.kota[0].id
                         } catch (err) {
                             return reply('Kota tidak ditemukan')
                         }
                         var tgl = moment(t * 1000).format('YYYY-MM-DD')
-                        var datas = await get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
-                        var jadwals = datas.data.jadwal.data
+                        let resdatas = await get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
+                        var jadwals = resdatas.data.jadwal.data
                         let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n`
                         jadwal += `╠> \`\`\`Imsak    : ` + jadwals.imsak + '\`\`\`\n'
                         jadwal += `╠> \`\`\`Subuh    : ` + jadwals.subuh + '\`\`\`\n'
@@ -890,8 +903,10 @@ const HandleMsg = async (client, message, browser) => {
                     }
                     break
                 }
+
                 case "revoke": {
                     if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                    if (!isGroupAdmins) return reply(resMsg.error.admin)
                     if (isBotGroupAdmins) {
                         client.revokeGroupInviteLink(from)
                             .then(() => {
@@ -974,178 +989,53 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
+                // Audio Converter
                 case 'earrape': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Menambah volume suara tinggi. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}earrape`)
-                    const _inp = await decryptMedia(quotedMsg)
-
-                    let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/inearrape_${time}.mp3`
-                    let outpath = `./media/outearrape_${time}.mp3`
-                    writeFileSync(inpath, _inp)
-
-                    ffmpeg(inpath)
-                        .setFfmpegPath('./bin/ffmpeg')
-                        .complexFilter('acrusher=level_in=2:level_out=6:bits=8:mode=log:aa=1,lowpass=f=3500')
-                        .on('error', (err) => {
-                            console.log('An error occurred: ' + err.message)
-                            reply(resMsg.error.norm)
-                        })
-                        .on('end', () => {
-                            client.sendFile(from, outpath, 'earrape.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                        })
-                        .saveToFile(outpath)
-                    if (existsSync(inpath)) unlinkSync(inpath)
-                    if (existsSync(outpath)) unlinkSync(outpath)
+                    let complexFilter = `acrusher=level_in=2:level_out=6:bits=8:mode=log:aa=1,lowpass=f=3500`
+                    audioConverter(complexFilter, 'earrape')
                     break
                 }
 
                 case 'robot': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara seperti robot. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}robot`)
-                    const _inp = await decryptMedia(quotedMsg)
-
-                    let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/inrobot_${time}.mp3`
-                    let outpath = `./media/outrobot_${time}.mp3`
-                    writeFileSync(inpath, _inp)
-
-                    ffmpeg(inpath)
-                        .setFfmpegPath('./bin/ffmpeg')
-                        .complexFilter(`afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75`)
-                        .on('error', (err) => {
-                            console.log('An error occurred: ' + err.message)
-                            reply(resMsg.error.norm)
-                        })
-                        .on('end', () => {
-                            client.sendFile(from, outpath, 'robot.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                        })
-                        .saveToFile(outpath)
-                    if (existsSync(inpath)) unlinkSync(inpath)
-                    if (existsSync(outpath)) unlinkSync(outpath)
+                    let complexFilter = `afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75`
+                    audioConverter(complexFilter, 'robot')
                     break
                 }
 
                 case 'reverse': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Memutar balik suara. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}reverse`)
-                    const _inp = await decryptMedia(quotedMsg)
-
-                    let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/inreverse_${time}.mp3`
-                    let outpath = `./media/outreverse_${time}.mp3`
-                    writeFileSync(inpath, _inp)
-
-                    ffmpeg(inpath)
-                        .setFfmpegPath('./bin/ffmpeg')
-                        .complexFilter(`areverse`)
-                        .on('error', (err) => {
-                            console.log('An error occurred: ' + err.message)
-                            reply(resMsg.error.norm)
-                        })
-                        .on('end', () => {
-                            client.sendFile(from, outpath, 'reverse.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                        })
-                        .saveToFile(outpath)
-                    if (existsSync(inpath)) unlinkSync(inpath)
-                    if (existsSync(outpath)) unlinkSync(outpath)
+                    let complexFilter = `areverse`
+                    audioConverter(complexFilter, 'reverse')
                     break
                 }
 
                 case 'samarkan': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Samarkan suara ala investigasi. Silakan reply audio atau voice notes dengan perintah ${prefix}samarkan`)
-                    const _inp = await decryptMedia(quotedMsg)
-
-                    let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/insamarkan_${time}.mp3`
-                    let outpath = `./media/outsamarkan_${time}.mp3`
-                    writeFileSync(inpath, _inp)
-
-                    ffmpeg(inpath)
-                        .setFfmpegPath('./bin/ffmpeg')
-                        .complexFilter(`rubberband=pitch=1.5`)
-                        .on('error', (err) => {
-                            console.log('An error occurred: ' + err.message)
-                            reply(resMsg.error.norm)
-                        })
-                        .on('end', () => {
-                            client.sendFile(from, outpath, 'samarkan.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                        })
-                        .saveToFile(outpath)
-                    if (existsSync(inpath)) unlinkSync(inpath)
-                    if (existsSync(outpath)) unlinkSync(outpath)
+                    let complexFilter = `rubberband=pitch=1.5`
+                    audioConverter(complexFilter, 'samarkan')
                     break
                 }
 
                 case 'vibrato': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara menjadi bergetar. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}vibrato`)
-                    const _inp = await decryptMedia(quotedMsg)
-
-                    let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/invibrato_${time}.mp3`
-                    let outpath = `./media/outvibrato_${time}.mp3`
-                    writeFileSync(inpath, _inp)
-
-                    ffmpeg(inpath)
-                        .setFfmpegPath('./bin/ffmpeg')
-                        .complexFilter(`vibrato=f=8`)
-                        .on('error', (err) => {
-                            console.log('An error occurred: ' + err.message)
-                            reply(resMsg.error.norm)
-                        })
-                        .on('end', () => {
-                            client.sendFile(from, outpath, 'vibrato.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                        })
-                        .saveToFile(outpath)
-                    if (existsSync(inpath)) unlinkSync(inpath)
-                    if (existsSync(outpath)) unlinkSync(outpath)
+                    let complexFilter = `vibrato=f=16`
+                    audioConverter(complexFilter, 'vibrato')
                     break
                 }
 
                 case 'nightcore': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara ala nightcore. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}nightcore`)
-                    const _inp = await decryptMedia(quotedMsg)
-
-                    let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/innightcore_${time}.mp3`
-                    let outpath = `./media/outnightcore_${time}.mp3`
-                    writeFileSync(inpath, _inp)
-
-                    ffmpeg(inpath)
-                        .setFfmpegPath('./bin/ffmpeg')
-                        .audioFilters('asetrate=44100*1.25,firequalizer=gain_entry=\'entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)\'')
-                        .on('error', (err) => {
-                            console.log('An error occurred: ' + err.message)
-                            reply(resMsg.error.norm)
-                        })
-                        .on('end', () => {
-                            client.sendFile(from, outpath, 'nightcore.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                        })
-                        .saveToFile(outpath)
-                    if (existsSync(inpath)) unlinkSync(inpath)
-                    if (existsSync(outpath)) unlinkSync(outpath)
+                    let complexFilter = `asetrate=44100*1.25,firequalizer=gain_entry='entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)'`
+                    audioConverter(complexFilter, 'nightcore')
                     break
                 }
 
                 case 'deepslow': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara menjadi deep dan pelan. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}deepslow`)
-                    const _inp = await decryptMedia(quotedMsg)
-
-                    let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/indeepslow_${time}.mp3`
-                    let outpath = `./media/outdeepslow_${time}.mp3`
-                    writeFileSync(inpath, _inp)
-
-                    ffmpeg(inpath)
-                        .setFfmpegPath('./bin/ffmpeg')
-                        .audioFilters('atempo=1.1,asetrate=44100*0.7,firequalizer=gain_entry=\'entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)\'')
-                        .on('error', (err) => {
-                            console.log('An error occurred: ' + err.message)
-                            reply(resMsg.error.norm)
-                        })
-                        .on('end', () => {
-                            client.sendFile(from, outpath, 'deepslow.mp3', '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                        })
-                        .saveToFile(outpath)
-                    if (existsSync(inpath)) unlinkSync(inpath)
-                    if (existsSync(outpath)) unlinkSync(outpath)
+                    let complexFilter = `atempo=1.1,asetrate=44100*0.7,firequalizer=gain_entry='entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)'`
+                    audioConverter(complexFilter, 'deepslow')
                     break
                 }
 
@@ -1448,7 +1338,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'truth':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    let truths = readFileSync('./random/truth.txt', 'utf8')
+                    let truths = readFileSync('./src/truth.txt', 'utf8')
                     let _truth = sample(truths.split('\n'))
                     await reply(_truth)
                         .catch((err) => {
@@ -1459,7 +1349,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'dare':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    let dares = readFileSync('./random/dare.txt', 'utf8')
+                    let dares = readFileSync('./src/dare.txt', 'utf8')
                     let _dare = sample(dares.split('\n'))
                     await reply(_dare)
                         .catch((err) => {
@@ -1627,7 +1517,7 @@ const HandleMsg = async (client, message, browser) => {
                     break
 
                 case 'skripsi': {
-                    let skripsis = readFileSync('./random/skripsi.txt', 'utf8')
+                    let skripsis = readFileSync('./src/skripsi.txt', 'utf8')
                     let _skrps = sample(skripsis.split('\n'))
                     let gtts = new gTTS(_skrps, 'id')
                     try {
