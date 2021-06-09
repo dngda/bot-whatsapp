@@ -694,9 +694,9 @@ const HandleMsg = async (client, message, browser) => {
                 case 'listsurah': {
                     try {
                         let listsrh = '╔══✪〘 List Surah 〙✪\n'
-                        Surah.data.forEach((data, i) => {
-                            listsrh += `╠ ${data[i].number}. `
-                            listsrh += data[i].name.transliteration.id.toLowerCase() + '\n'
+                        Surah.data.forEach((dataSurah) => {
+                            listsrh += `╠ ${dataSurah.number}. `
+                            listsrh += dataSurah.name.transliteration.id.toLowerCase() + '\n'
                         })
                         listsrh += '╚═〘 *SeroBot* 〙'
                         sendText(listsrh)
@@ -2265,6 +2265,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case '>':
                     if (!isOwnerBot) return reply(resMsg.error.owner)
+                    client.simulateTyping(from, false)
                     try {
                         eval(`(async() => {
                                 ${arg}    
@@ -2273,7 +2274,6 @@ const HandleMsg = async (client, message, browser) => {
                         console.log(e)
                         await sendText(`${e.name}: ${e.message}`)
                     }
-                    client.simulateTyping(from, false)
                     break
 
                 case 'shell':
