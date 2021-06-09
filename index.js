@@ -103,7 +103,7 @@ const start = async (client) => {
                 console.log(color('[==>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
                 if (groups.length > groupLimit) {
                     console.log(color('[==>>]', 'red'), `So this is exceeding the group limit.`)
-                    client.sendText(chat.groupMetadata.id, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner for appeal`)
+                    client.sendText(chat.groupMetadata.id, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner untuk negosiasi`)
                     setTimeout(() => {
                         client.leaveGroup(chat.groupMetadata.id)
                         client.deleteChat(chat.groupMetadata.id)

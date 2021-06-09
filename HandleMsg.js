@@ -1305,7 +1305,7 @@ const HandleMsg = async (client, message, browser) => {
                                     reply('Maaf, saya tidak tau ini anime apa, pastikan gambar yang akan di Search tidak Buram/Kepotong')
                                 }
                                 const { is_adult, title, title_chinese, title_romaji, title_english, episode, similarity, filename, at, tokenthumb, anilist_id } = resolt.docs[0]
-                                teks = ''
+                                let teks = ''
                                 if (similarity < 0.92) {
                                     teks = '*Saya memiliki keyakinan rendah dalam hal ini* :\n\n'
                                 }
