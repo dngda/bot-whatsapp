@@ -285,11 +285,11 @@ const HandleMsg = async (client, message, browser) => {
             else return null
         }
         // Notify repetitive msg
-        if (chats != "" && isFiltered(from + croppedChats)) {
+        if (chats != "" && isFiltered(from + croppedChats) && croppedChats != undefined) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
-            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Link : wa.me/${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> _${croppedChats}_`)
+            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Link : wa.me/${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> ${croppedChats}`)
             addFilter(from + 'isCooldown', 60000)
             return reply(`SPAM detected!\nPesan selanjutnya akan diproses setelah 60 detik`)
         }
@@ -320,7 +320,7 @@ const HandleMsg = async (client, message, browser) => {
         //[BETA] Avoid Spam Message
         if (isCmd) addFilter(from, 2000) // 2 sec delay before proessing commands
         if (chats != "") addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
-        if (chats != "") addFilter(from + croppedChats, 700) // 0.7 sec delay repetitive msg
+        if (chats != "" && croppedChats != undefined) addFilter(from + croppedChats, 700) // 0.7 sec delay repetitive msg
 
         //[AUTO READ] Auto read message 
         client.sendSeen(chatId)
