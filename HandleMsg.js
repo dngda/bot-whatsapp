@@ -166,7 +166,7 @@ const HandleMsg = async (client, message, browser) => {
         if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
         else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
 
-        const croppedChats = (chats?.length > 20) ? chats?.substring(0, 20) + '...' : chats
+        const croppedChats = (chats?.length > 30) ? chats?.substring(0, 30) + '...' : chats
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
@@ -289,7 +289,7 @@ const HandleMsg = async (client, message, browser) => {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
-            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Link : wa.me/${pengirim.replace('@c.us', '')}\n-> Username : ${pushname}\n-> Group : ${name || formattedName}\n\n-> ${croppedChats}`)
+            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Link : wa.me/${pengirim.replace('@c.us', '')}\n-> Pushname : ${pushname}\n-> Group : ${isGroupMsg ? name || formattedName : 'none'}\n-> GroupId ${groupId}\n\n-> ${croppedChats}`)
             addFilter(from + 'isCooldown', 60000)
             return reply(`SPAM detected!\nPesan selanjutnya akan diproses setelah 60 detik`)
         }
