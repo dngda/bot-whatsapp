@@ -2271,6 +2271,22 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
+                case 'grouplist': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    let msg = `List All Groups\n\n`
+                    let groups = await client.getAllGroups()
+                    let count = 1
+                    groups.forEach(chat => {
+                        msg += `${count}. Nama: ${chat.name}\n`
+                        msg += `    GroupId: ${chat.groupMetadata.id}\n`
+                        msg += `    Total Member: ${chat.groupMetadata.participants.length}\n`
+                        msg += `    isPremium: ${groupPrem.includes(chat.groupMetadata.id)}\n\n`
+                        count++
+                    })
+                    sendText(msg)
+                    break
+                }
+
                 case 'addprem': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length === 0) return reply(`Kasih id groupnya bro`)
