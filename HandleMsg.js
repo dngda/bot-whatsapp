@@ -2315,7 +2315,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 default:
-                    await reply(`Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`)
+                    if (chats.startsWith(prefix)) reply(`Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`)
                     break
 
             }//End of switch case
