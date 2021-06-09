@@ -423,6 +423,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
                     break
                 case 'stat':
+                case 'stats':
                 case 'status':
                 case 'botstat': {
                     let loadedMsg = await client.getAmountOfLoadedMessages()
@@ -698,9 +699,10 @@ const HandleMsg = async (client, message, browser) => {
                             listsrh += data[i].name.transliteration.id.toLowerCase() + '\n'
                         })
                         listsrh += '╚═〘 *SeroBot* 〙'
-                        reply(listsrh)
+                        sendText(listsrh)
                     } catch (err) {
-                        return reply(err)
+                        console.log(err)
+                        return reply(resMsg.error.norm)
                     }
                     break
                 }
@@ -733,7 +735,7 @@ const HandleMsg = async (client, message, browser) => {
                     } else {
                         nmr = args[0]
                     }
-                    var ayat = args[1] | 1
+                    let ayat = args[1] | 1
 
                     if (!isNaN(nmr)) {
                         let resSurah = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
@@ -803,7 +805,7 @@ const HandleMsg = async (client, message, browser) => {
                     } else {
                         nmr = args[0]
                     }
-                    var ayat = args[1]
+                    let ayat = args[1]
                     console.log(nmr)
                     if (!isNaN(nmr)) {
                         if (args.length > 2) {
@@ -867,7 +869,7 @@ const HandleMsg = async (client, message, browser) => {
                         hasil += '╚═〘 *SeroBot* 〙'
                         await reply(hasil)
                     } else {
-                        let resData = await get('https://api.banghasan.com/sholat/format/json/kota/nama/' + args[0])
+                        let resData = await get('https://api.banghasan.com/sholat/format/json/kota/nama/' + arg)
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
@@ -880,7 +882,8 @@ const HandleMsg = async (client, message, browser) => {
                         var tgl = moment(t * 1000).format('YYYY-MM-DD')
                         let resdatas = await get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
                         var jadwals = resdatas.data.jadwal.data
-                        let jadwal = `╔══✪〘 Jadwal Sholat di ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n`
+                        let jadwal = `╔══✪〘 Jadwal Sholat di ${arg.replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n`
+                        jadwal += `╠> ${jadwals.tanggal}\n`
                         jadwal += `╠> \`\`\`Imsak    : ` + jadwals.imsak + '\`\`\`\n'
                         jadwal += `╠> \`\`\`Subuh    : ` + jadwals.subuh + '\`\`\`\n'
                         jadwal += `╠> \`\`\`Dzuhur   : ` + jadwals.dzuhur + '\`\`\`\n'
