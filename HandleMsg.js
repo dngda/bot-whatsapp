@@ -281,7 +281,7 @@ const HandleMsg = async (client, message, browser) => {
 
         // Spam cooldown
         if (isFiltered(from + 'isCooldown')) {
-            if (isCmd) return reply(`Belum 60 detik`)
+            if (isCmd) return reply(`Belum 1 menit`)
             else return null
         }
         // Notify repetitive msg
@@ -289,9 +289,9 @@ const HandleMsg = async (client, message, browser) => {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
-            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> Nomor : ${pengirim.replace('@c.us', '')}\n-> Link : wa.me/${pengirim.replace('@c.us', '')}\n-> Pushname : ${pushname}\n-> Group : ${isGroupMsg ? name || formattedName : 'none'}\n-> GroupId ${groupId}\n\n-> ${croppedChats}`)
+            client.sendText(ownerNumber, `Ada yang spam cuy:\n-> GroupId ${groupId}\n-> Group Name : ${isGroupMsg ? name || formattedName : 'none'}\n-> Nomor User : ${pengirim.replace('@c.us', '')}\n-> Link : wa.me/${pengirim.replace('@c.us', '')}\n-> Pushname : ${pushname}\n\n-> ${croppedChats}`)
             addFilter(from + 'isCooldown', 60000)
-            return reply(`SPAM detected!\nPesan selanjutnya akan diproses setelah 60 detik`)
+            return reply(`SPAM detected!\nPesan selanjutnya akan diproses setelah 1 menit`)
         }
 
         // Avoid repetitive sender spam
