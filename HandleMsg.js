@@ -382,11 +382,16 @@ const HandleMsg = async (client, message, browser) => {
                 case 'help':
                 case 'start':
                     await sendText(menuId.textMenu(pushname, t))
-                        .then(() => ((isGroupMsg) && (isGroupAdmins)) ? sendText(`Menu Admin Grup: *${prefix}menuadmin*`) : null)
+                    if ((isGroupMsg) && (isGroupAdmins)) sendText(`Menu Admin Grup: *${prefix}menuadmin*`)
+                    if (isOwnerBot) sendText(`Menu Owner: *${prefix}menuowner*`)
                     break
                 case 'menuadmin':
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     await sendText(menuId.textAdmin())
+                    break
+                case 'menuowner':
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    await sendText(menuId.textOwner())
                     break
                 case 'join':
                     if (args.length == 0) return reply(`Jika kalian ingin mengundang bot ke group silakan kontak owner atau gunakan perintah ${prefix}join (link_group) jika slot masih tersedia`)
@@ -1933,7 +1938,6 @@ const HandleMsg = async (client, message, browser) => {
                         if (kataKasar.indexOf(args[0]) != -1) return reply(`Kata ${args[0]} sudah ada.`)
                         kataKasar.push(args[0])
                         writeFileSync('./settings/katakasar.json', JSON.stringify(kataKasar))
-                        cariKasar = requireUncached('./lib/kataKotor.js')
                         reply(`Kata ${args[0]} berhasil ditambahkan.`)
                     }
                     break
@@ -2188,7 +2192,23 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
-                case 'clearpm': {//menghapus seluruh pesan diakun bot selain group
+                case 'deletepm': {//menghapus seluruh pesan diakun bot selain group
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    const allChat1 = await client.getAllChats()
+                    reply(`Processed to delete ${allChat1.length} chat!`)
+                    let count = 0
+                    for (let dchat of allChat1) {
+                        await sleep(1000)
+                        if (!dchat.isGroup) {
+                            client.deleteChat(dchat.id)
+                            count += 1
+                        }
+                    }
+                    reply(`Delete all Private chats success! Total: ${count} chats`)
+                    break
+                }
+
+                case 'clearpm': {//menghapus seluruh pesan diakun bot tanpa menghapus chat selain group
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     const allChat1 = await client.getAllChats()
                     reply(`Processed to clear ${allChat1.length} chat!`)
@@ -2196,7 +2216,7 @@ const HandleMsg = async (client, message, browser) => {
                     for (let dchat of allChat1) {
                         await sleep(1000)
                         if (!dchat.isGroup) {
-                            client.deleteChat(dchat.id)
+                            client.clearChat(dchat.id)
                             count += 1
                         }
                     }
