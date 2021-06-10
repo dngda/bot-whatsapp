@@ -1056,14 +1056,18 @@ const HandleMsg = async (client, message, browser) => {
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     await sendText(resMsg.wait)
 
-                    let result = await scraper.snaptikLight(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let result = await scraper.snaptik(browser, urls).catch(err => reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let _mp4Url = ''
                     switch (command) {
                         case 'tiktok': _mp4Url = result.source; break
                         case 'tiktok1': _mp4Url = result.server1; break
                         case 'tiktok2': _mp4Url = result.server2; break
-                        case 'tiktok3': _mp4Url = result.server3; break
+                        case 'tiktok3': {
+                            let ress = await scraper.ssstik(browser, urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                            _mp4Url = ress.mp4
+                        break
+                        }
                         default:
                     }
                     await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`).then(() => console.log(err)))
