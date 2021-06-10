@@ -1079,7 +1079,7 @@ const HandleMsg = async (client, message, browser) => {
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     await sendText(resMsg.wait)
-                    let result = await scraper.ssstik(browser, urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let result = await scraper.qload(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     await client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
