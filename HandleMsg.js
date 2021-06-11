@@ -398,12 +398,12 @@ const HandleMsg = async (client, message, browser) => {
                 case 'join':
                 case 'sewa': {
                     if (args.length == 0) return reply(
-                        `Jika kalian ingin menyewa bot ke group\n` +
+                        `Jika kalian ingin menculik bot ke group\n` +
                         `Silakan kontak owner atau gunakan perintah:\n -> ${prefix}join (link group) jika slot gratis masih tersedia.\n` +
-                        `Slot gratis habis? Sewa aja murah kok.\nCuma 10k masa aktif 1 bulan.\n` +
-                        `Mau sewa otomatis? Gunakan link berikut:\n` +
+                        `\nSlot gratis habis? Sewa aja murah kok.\nCuma 10k masa aktif 1 bulan.\n` +
+                        `\nMau sewa otomatis? Gunakan link berikut:\n` +
                         `Saweria: https://saweria.co/dngda \n` +
-                        `*Masukkan link group kalian dalam kolom pesan di saweria*`
+                        `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
                     )
                     const linkgrup = args[0]
                     let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
