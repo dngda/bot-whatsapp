@@ -90,7 +90,7 @@ const start = async (client) => {
             jobList.jobs.forEach(async (job) => {
                 schedule.loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
             })
-            console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
+            console.log(color('[LOGS]', 'grey'), `${jobList.jobs.length} ScheduledJobs Loaded`)
             
             // check sewa at 00:01:01
             scheduleJob('1 1 0 * * *', function () {
