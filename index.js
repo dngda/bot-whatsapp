@@ -87,7 +87,7 @@ const start = async (client) => {
         // client, from, quotedId, content, date, isQuoted
 
         try {
-            jobList.job.forEach(async (job) => {
+            jobList.jobs.forEach(async (job) => {
                 schedule.loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
             })
             console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)

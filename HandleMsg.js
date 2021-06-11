@@ -18,7 +18,6 @@ import gTTS from 'gtts'
 //Common-Js
 const { existsSync, writeFileSync, readdirSync, readFileSync, writeFile, unlinkSync } = fs
 const { get } = axios
-const { tz } = moment
 const { read } = jimp
 
 //lowdb
@@ -38,7 +37,7 @@ import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, s
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
 
-tz.setDefault('Asia/Jakarta').locale('id')
+moment.tz.setDefault('Asia/Jakarta').locale('id')
 
 const sleep = (delay) => new Promise((resolve) => {
     setTimeout(() => { resolve(true) }, delay)
