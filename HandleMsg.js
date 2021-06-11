@@ -230,7 +230,8 @@ const HandleMsg = async (client, message, browser) => {
                 .complexFilter(complexFilter)
                 .on('error', (err) => {
                     console.log('An error occurred: ' + err.message)
-                    reply(resMsg.error.norm)
+                    if (name === 'custom') reply(err.message)
+                        else reply(resMsg.error.norm)
                     unlinkIfExists(inpath, outpath)
                 })
                 .on('end', () => {
@@ -1028,7 +1029,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'vibrato': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara menjadi bergetar. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}vibrato`)
-                    let complexFilter = `vibrato=f=16`
+                    let complexFilter = `vibrato=f=8`
                     audioConverter(complexFilter, 'vibrato')
                     break
                 }
@@ -1044,6 +1045,13 @@ const HandleMsg = async (client, message, browser) => {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara menjadi deep dan pelan. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}deepslow`)
                     let complexFilter = `atempo=1.1,asetrate=44100*0.7,firequalizer=gain_entry='entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)'`
                     audioConverter(complexFilter, 'deepslow')
+                    break
+                }
+
+                case 'complexfilter' : {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    if (!isQuotedPtt && !isQuotedAudio && args.length === 0) return reply(`Mengubah suara custom complexfilter. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}complexfilter`)
+                    audioConverter(arg, 'custom')
                     break
                 }
 
