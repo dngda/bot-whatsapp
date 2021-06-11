@@ -1,11 +1,12 @@
-'use strict'
+import { listenSaweria, checkExpireSewa } from './lib/sewa.js'
 import { color, createReadFileSync } from './utils/index.js'
-import schedule from './lib/schedule.js'
-import options from './utils/options.js'
-import { HandleMsg } from './HandleMsg.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import { create } from '@open-wa/wa-automate'
 import chromeLauncher from 'chrome-launcher'
+import { scheduleJob } from 'node-schedule'
+import { HandleMsg } from './HandleMsg.js'
+import schedule from './lib/schedule.js'
+import options from './utils/options.js'
 import puppeteer from 'puppeteer-extra'
 import PQueue from 'p-queue'
 import figlet from 'figlet'
@@ -83,17 +84,25 @@ const start = async (client) => {
             console.log(err)
         })
 
-        //Load Scheduled Job
-        //client, from, quotedId, content, date, isQuoted
+        // Load Scheduled Job
+        // client, from, quotedId, content, date, isQuoted
 
         try {
             jobList.job.forEach(async (job) => {
                 schedule.loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
             })
             console.log(color('[LOGS]', 'grey'), `${jobList.job.length} ScheduledJobs Loaded`)
+            
+            // check sewa at 00:01:01
+            scheduleJob('1 1 0 * * *', function () {
+                checkExpireSewa(client)
+            })
         } catch (e) {
             console.log(e)
         }
+
+        // Listen saweria
+        listenSaweria(client, browser).catch(e => console.log(e))
 
         // ketika bot diinvite ke dalam group
         client.onAddedToGroup(async chat => {
@@ -103,7 +112,13 @@ const start = async (client) => {
                 console.log(color('[==>>]', 'red'), `Group total: ${groups.length}. groupLimit: ${groupLimit}`)
                 if (groups.length > groupLimit) {
                     console.log(color('[==>>]', 'red'), `So this is exceeding the group limit.`)
-                    client.sendText(chat.groupMetadata.id, `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner untuk negosiasi`)
+                    client.sendText(chat.groupMetadata.id,
+                        `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner untuk sewa` +
+                        `Sewa aja murah kok. 10k masa aktif 1 bulan.\n` +
+                        `Mau sewa otomatis? Buka link berikut:\n` +
+                        `Saweria: https://saweria.co/dngda \n` +
+                        `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
+                    )
                     setTimeout(() => {
                         client.leaveGroup(chat.groupMetadata.id)
                         client.deleteChat(chat.groupMetadata.id)

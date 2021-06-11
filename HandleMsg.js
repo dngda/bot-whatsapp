@@ -1,4 +1,3 @@
-'use strict'
 import { removeBackgroundFromImageBase64 } from 'remove.bg'
 import { decryptMedia } from '@open-wa/wa-automate'
 import { exec, spawn } from 'child_process'
@@ -25,17 +24,17 @@ const { read } = jimp
 //lowdb
 import { LowSync, JSONFileSync } from 'lowdb'
 import lodash from 'lodash'
-const { sample } = lodash
+const { sample, sampleSize } = lodash
 const adapter = new JSONFileSync(appRoot + '/data/denda.json')
 const db = new LowSync(adapter)
 db.read()
-db.data || (db.data = { group: [] })
+db.data || (db.data = { groups: [] })
 db.write()
 db.chain = lodash.chain(db.data)
 
 //file modules
 import { createReadFileSync, processTime, commandLog, receivedLog, isFiltered, addFilter, color, isUrl } from './utils/index.js'
-import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, meme, kbbi, list, api } from './lib/index.js'
+import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, sewa, meme, kbbi, list, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
 
@@ -113,11 +112,11 @@ const HandleMsg = async (client, message, browser) => {
     //default msg response
     const resMsg = {
         wait: sample([
-            'Sedang diproses! Silahkan tunggu sebentar...',
+            'Sedang diproses! Silakan tunggu sebentar...',
             'Okey siap, sedang diproses!',
-            'Shap, silakan tunggu!',
-            'Okey oke bentar!',
+            'Okey tenang tunggu bentar!',
             'Okey, tunggu sebentar...',
+            'Shap, silakan tunggu!',
             'Baiklah, sabar ya!'
         ]),
         error: {
@@ -125,19 +124,22 @@ const HandleMsg = async (client, message, browser) => {
             admin: 'Perintah ini hanya untuk admin group!',
             owner: 'Perintah ini hanya untuk owner bot!',
             group: 'Maaf, perintah ini hanya dapat dipakai didalam group!',
-            botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin'
+            botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin',
+            join: 'Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong'
         },
         success: {
             join: 'Berhasil join group via link!',
-            sticker: 'Here\'s your sticker'
+            sticker: 'Here\'s your sticker',
+            greeting: `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`
         },
         badw: sample([
-            'Astaghfirullah...',
-            'Jaga ketikanmu sahabat!',
+            'Capek saya mengcatat dosa anda',
             'Yo rasah nggo misuh cuk!',
+            'Jaga ketikanmu sahabat!',
             'Istighfar dulu sodaraku',
-            'Hadehh...',
-            'Ada masalah apasih?'
+            'Ada masalah apasih?',
+            'Astaghfirullah...',
+            'Hadehh...'
         ])
     }
 
@@ -230,8 +232,8 @@ const HandleMsg = async (client, message, browser) => {
                 .complexFilter(complexFilter)
                 .on('error', (err) => {
                     console.log('An error occurred: ' + err.message)
-                    if (name === 'custom') reply(err.message)
-                        else reply(resMsg.error.norm)
+                    if (name === 'custom') reply(err.message + '\nContohnya bisa dilihat disini https://www.vacing.com/ffmpeg_audio_filters/index.html')
+                    else reply(resMsg.error.norm)
                     unlinkIfExists(inpath, outpath)
                 })
                 .on('end', () => {
@@ -249,7 +251,7 @@ const HandleMsg = async (client, message, browser) => {
             switch (command) {
                 case 'owner':
                     return await client.sendContact(from, ownerNumber)
-                        .then(() => sendText('Jika ada pertanyaan tentang bot silahkan chat nomor di atas'))
+                        .then(() => sendText('Jika ada pertanyaan tentang bot Silakan chat nomor di atas'))
                 case 'rules':
                 case 'tnc':
                     return await sendText(menuId.textTnC())
@@ -395,7 +397,15 @@ const HandleMsg = async (client, message, browser) => {
                     await sendText(menuId.textOwner())
                     break
                 case 'join':
-                    if (args.length == 0) return reply(`Jika kalian ingin mengundang bot ke group silakan kontak owner atau gunakan perintah ${prefix}join (link group) jika slot gratis masih tersedia.\n Selain itu bayar 10k untuk 1 bulan.`)
+                case 'sewa': {
+                    if (args.length == 0) return reply(
+                        `Jika kalian ingin menyewa bot ke group\n` +
+                        `Silakan kontak owner atau gunakan perintah ${prefix}join (link group) jika slot gratis masih tersedia.\n` +
+                        `Slot gratis habis? Sewa aja murah kok. 10k masa aktif 1 bulan.\n` +
+                        `Mau sewa otomatis? Gunakan link berikut:\n` +
+                        `Saweria: https://saweria.co/dngda \n` +
+                        `*Masukkan link group kalian dalam kolom pesan di saweria*`
+                    )
                     const linkgrup = args[0]
                     let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
                     let chekgrup = await client.inviteInfo(linkgrup)
@@ -403,31 +413,38 @@ const HandleMsg = async (client, message, browser) => {
                             console.log(err.name, err.message)
                             return sendText(resMsg.error.norm)
                         })
-                    if (!islink) return reply('Maaf link group-nya salah! silahkan kirim link yang benar')
+                    if (!islink) return reply('Maaf link group-nya salah! Silakan kirim link yang benar')
                     if (isOwnerBot) {
                         await client.joinGroupViaLink(linkgrup)
                             .then(async () => {
                                 await sendText(resMsg.success.join)
                                 setTimeout(async () => {
-                                    await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`)
+                                    await client.sendText(chekgrup.id, resMsg.success.greeting)
                                 }, 2000)
                             }).catch(async () => {
-                                return reply('Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong')
+                                return reply(resMsg.error.join)
                             })
                     } else {
                         let cgrup = await client.getAllGroups()
-                        if (cgrup.length > groupLimit) return reply(`Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${cgrup.length}/${groupLimit}\nChat /owner untuk negosiasi`)
+                        if (cgrup.length > groupLimit) return reply(
+                            `Mohon maaf, untuk mencegah overload, slot group pada bot dibatasi.\nTotal group: ${cgrup.length}/${groupLimit}\nChat /owner untuk sewa` +
+                            `Sewa aja murah kok. 10k masa aktif 1 bulan.\n` +
+                            `Mau sewa otomatis? Gunakan link berikut:\n` +
+                            `Saweria: https://saweria.co/dngda \n` +
+                            `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
+                        )
                         if (cgrup.size < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
                         await client.joinGroupViaLink(linkgrup)
                             .then(async () => {
                                 await reply(resMsg.success.join)
-                                await client.sendText(chekgrup.id, `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`)
+                                await client.sendText(chekgrup.id, resMsg.success.greeting)
                             })
                             .catch(async () => {
-                                return reply('Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong')
+                                return reply(resMsg.error.join)
                             })
                     }
                     break
+                }
                 case 'stat':
                 case 'stats':
                 case 'status':
@@ -652,7 +669,7 @@ const HandleMsg = async (client, message, browser) => {
                         }
 
                     } else {
-                        await reply(`Tidak ada gambar/format salah! Silahkan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`)
+                        await reply(`Tidak ada gambar/format salah! Silakan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`)
                     }
                     break
                 }
@@ -959,7 +976,7 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
-                case 'play': { //silahkan kalian custom sendiri jika ada yang ingin diubah
+                case 'play': { //Silakan kalian custom sendiri jika ada yang ingin diubah
                     if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
                     let ytresult = await api.ytsearch(arg).catch(err => {
                         console.log(err)
@@ -1048,9 +1065,8 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
-                case 'complexfilter' : {
-                    if (!isOwnerBot) return reply(resMsg.error.owner)
-                    if (!isQuotedPtt && !isQuotedAudio && args.length === 0) return reply(`Mengubah suara custom complexfilter. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}complexfilter`)
+                case 'cf': {
+                    if (!isQuotedPtt && !isQuotedAudio && args.length === 0) return reply(`Mengubah efect suara dengan custom complex filter (Hanya untuk user berpengalaman). Silakan quote/balas audio atau voice notes dengan perintah ${prefix}cf <args>\nContoh bisa diliat disini https://www.vacing.com/ffmpeg_audio_filters/index.html`)
                     audioConverter(arg, 'custom')
                     break
                 }
@@ -1074,7 +1090,7 @@ const HandleMsg = async (client, message, browser) => {
                         case 'tiktok3': {
                             let ress = await scraper.ssstik(browser, urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                             _mp4Url = ress.mp4
-                        break
+                            break
                         }
                         default:
                     }
@@ -1155,7 +1171,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 //Random Images
                 case 'anime':
-                    if (args.length == 0) return reply(`Untuk menggunakan ${prefix}anime\nSilahkan ketik: ${prefix}anime [query]\nContoh: ${prefix}anime random\n\nquery yang tersedia:\nrandom, waifu, husbu, neko`)
+                    if (args.length == 0) return reply(`Untuk menggunakan ${prefix}anime\nSilakan ketik: ${prefix}anime [query]\nContoh: ${prefix}anime random\n\nquery yang tersedia:\nrandom, waifu, husbu, neko`)
                     if (args[0] == 'random' || args[0] == 'waifu' || args[0] == 'husbu' || args[0] == 'neko') {
                         fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/anime/' + args[0] + '.txt')
                             .then(res => res.text())
@@ -1168,7 +1184,7 @@ const HandleMsg = async (client, message, browser) => {
                                 reply(resMsg.error.norm)
                             })
                     } else {
-                        reply(`Maaf query tidak tersedia. Silahkan ketik ${prefix}anime untuk melihat list query`)
+                        reply(`Maaf query tidak tersedia. Silakan ketik ${prefix}anime untuk melihat list query`)
                     }
                     break
 
@@ -1189,7 +1205,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (args[0] === '+') {
                         await api.pinterest(arg.trim().substring(arg.indexOf(' ') + 1))
                             .then(res => {
-                                let img = sample(res, 10)
+                                let img = sampleSize(res, 10)
                                 img.forEach(async i => {
                                     if (i != null) await client.sendFileFromUrl(from, i, '', '')
                                 })
@@ -1280,7 +1296,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'nekopoi': {
                     if (isGroupMsg) {
-                        reply('Untuk Fitur Nekopoi Silahkan Lakukan di Private Message')
+                        reply('Untuk Fitur Nekopoi Silakan Lakukan di Private Message')
                     } else {
                         reply('Insyaf bro')
                     }
@@ -1335,7 +1351,7 @@ const HandleMsg = async (client, message, browser) => {
                                 reply(resMsg.error.norm)
                             })
                     } else {
-                        reply(`Maaf format salah\n\nSilahkan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`)
+                        reply(`Maaf format salah\n\nSilakan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`)
                     }
                     break
                 }
@@ -1353,7 +1369,7 @@ const HandleMsg = async (client, message, browser) => {
                 //Hiburan
                 case 'tod':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    reply(`Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilahkan Pilih:\n-> ${prefix}truth\n-> ${prefix}dare`)
+                    reply(`Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilakan Pilih:\n-> ${prefix}truth\n-> ${prefix}dare`)
                     break
 
                 case 'truth':
@@ -1429,7 +1445,7 @@ const HandleMsg = async (client, message, browser) => {
                 // Other Command
                 case 'resi':
                 case 'cekresi':
-                    if (args.length != 2) return reply(`Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`)
+                    if (args.length != 2) return reply(`Maaf, format pesan salah.\nSilakan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`)
                     const kurirs = ['jne', 'pos', 'tiki', 'wahana', 'jnt', 'rpx', 'sap', 'sicepat', 'pcp', 'jet', 'dse', 'first', 'ninja', 'lion', 'idl', 'rex']
                     if (!kurirs.includes(args[0])) return sendText(`Maaf, jenis ekspedisi pengiriman tidak didukung layanan ini hanya mendukung ekspedisi pengiriman ${kurirs.join(', ')} Tolong periksa kembali.`)
                     console.log(color('[LOGS]', 'grey'), 'Memeriksa No Resi', args[1], 'dengan ekspedisi', args[0])
@@ -1520,7 +1536,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isNgegas) return reply(`Anti-Toxic tidak aktif, aktifkan menggunakan perintah ${prefix}antikasar on`)
                     try {
-                        const klasemen = db.chain.get('group').filter({ id: groupId }).map('members').value()[0]
+                        const klasemen = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
                         if (klasemen == null) return reply(`Belum ada yang berkata kasar`)
                         let urut = Object.entries(klasemen).map(([key, val]) => ({ id: key, ...val })).sort((a, b) => b.denda - a.denda);
                         let textKlas = "*Klasemen Denda Sementara*\n"
@@ -1688,7 +1704,7 @@ const HandleMsg = async (client, message, browser) => {
                                 `)
                     } else if (args.length > 0) {
                         let res = await list.getListData(from, args[0])
-                        if (res === false) return reply(`List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`)
+                        if (res == false || res == null) return reply(`List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`)
                         let desc = ''
                         if (res.desc !== 'Tidak ada') {
                             desc = `║ _${res.desc}_\n`
@@ -1822,7 +1838,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isGroupAdmins) return reply(resMsg.error.admin)
                     if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
-                    if (mentionedJidList.length === 0) return reply('Maaf, format pesan salah.\nSilahkan tag satu atau lebih orang yang akan dikeluarkan')
+                    if (mentionedJidList.length === 0) return reply('Maaf, format pesan salah.\nSilakan tag satu atau lebih orang yang akan dikeluarkan')
                     if (mentionedJidList[0] === botNumber) return await reply('Maaf, format pesan salah.\nTidak dapat mengeluarkan akun bot sendiri')
                     await client.sendTextWithMentions(from, `Request diterima, mengeluarkan:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
                     for (let ment of mentionedJidList) {
@@ -1888,8 +1904,8 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'del':
-                    if (!quotedMsg) return reply(`Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`)
-                    if (!quotedMsgObj.fromMe) return reply(`Maaf, format pesan salah silahkan.\nReply pesan bot dengan caption ${prefix}del`)
+                    if (!quotedMsg) return reply(`Maaf, format pesan salah Silakan.\nReply pesan bot dengan caption ${prefix}del`)
+                    if (!quotedMsgObj.fromMe) return reply(`Maaf, format pesan salah Silakan.\nReply pesan bot dengan caption ${prefix}del`)
                     client.simulateTyping(from, false)
                     await client.deleteMessage(from, quotedMsg.id, false).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
@@ -1958,7 +1974,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'reset': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isGroupAdmins) return reply(resMsg.error.admin)
-                    const reset = db.chain.get('group').find({ id: groupId }).assign({ members: [] }).value()
+                    const reset = db.chain.get('groups').find({ id: groupId }).assign({ members: [] }).value()
                     db.write()
                     if (reset) {
                         await sendText("Klasemen telah direset.")
@@ -2019,7 +2035,7 @@ const HandleMsg = async (client, message, browser) => {
                             ? reply('Maaf, link yang kamu kirim tidak memuat gambar.')
                             : reply('Berhasil mengubah profile group'))
                     } else {
-                        reply(`Commands ini digunakan untuk mengganti icon/profile group chat\n\n\nPenggunaan:\n1. Silahkan kirim/reply sebuah gambar dengan caption ${prefix}setprofile\n\n2. Silahkan ketik ${prefix}setprofile linkImage`)
+                        reply(`Commands ini digunakan untuk mengganti icon/profile group chat\n\n\nPenggunaan:\n1. Silakan kirim/reply sebuah gambar dengan caption ${prefix}setprofile\n\n2. Silakan ketik ${prefix}setprofile linkImage`)
                     }
                     break
                 }
@@ -2059,6 +2075,27 @@ const HandleMsg = async (client, message, browser) => {
                     break
 
                 //Owner Bot
+                case 'addsewa': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    if (args.length !== 2) return reply(`Untuk menyewakan bot\n\nCaranya ketik: \n${prefix}addsewa <brphari> <linkgroup>`)
+                    sewa.sewaBot(client, args[1], args[0]).then(res => {
+                        if (res) reply(`Berhasil menyewakan bot selama ${args[0]} hari.`)
+                    }).catch(e => {
+                        console.log(e)
+                        reply(resMsg.error.norm)
+                    })
+                    break
+                }
+
+                case 'listsewa': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    sewa.getListSewa(client).then(res => {
+                        if (res != null) {
+                            sendText(JSON.stringify(res, null, 2))
+                        }
+                    })
+                    break
+                }
                 case 'ban': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length == 0) return reply(`Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban 628xx --untuk mengaktifkan\n${prefix}unban 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`)
@@ -2372,12 +2409,12 @@ const HandleMsg = async (client, message, browser) => {
         // Kata kasar function
         if (!isCmd && isGroupMsg && isNgegas && chat.type !== "image" && isKasar) {
             const _denda = sample([1000, 2000, 3000, 5000, 10000])
-            const find = db.chain.get('group').find({ id: groupId }).value()
+            const find = db.chain.get('groups').find({ id: groupId }).value()
             if (find && find.id === groupId) {
-                const cekuser = db.chain.get('group').filter({ id: groupId }).map('members').value()[0]
+                const cekuser = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
                 const isIn = inArray(pengirim, cekuser)
                 if (cekuser && isIn !== -1) {
-                    const denda = db.chain.get('group').filter({ id: groupId }).map('members[' + isIn + ']')
+                    const denda = db.chain.get('groups').filter({ id: groupId }).map('members[' + isIn + ']')
                         .find({ id: pengirim }).update('denda', n => n + _denda).value()
                     db.write()
                     if (denda) {
@@ -2386,26 +2423,26 @@ const HandleMsg = async (client, message, browser) => {
                             banned.push(pengirim)
                             writeFileSync('./data/banned.json', JSON.stringify(banned))
                             reply(`╔══✪〘 SELAMAT 〙✪\n║\n║ Anda telah dibanned oleh bot.\n║ Karena denda anda melebihi 2 Juta.\n║ Mampos~\n║\n║ Denda -2.000.000\n║\n╚═〘 SeroBot 〙`)
-                            db.chain.get('group').filter({ id: groupId }).map('members[' + isIn + ']')
+                            db.chain.get('groups').filter({ id: groupId }).map('members[' + isIn + ']')
                                 .find({ id: pengirim }).update('denda', n => n - 2000000).value()
                             db.write()
                         }
                     }
                 } else {
-                    const cekMember = db.chain.get('group').filter({ id: groupId }).map('members').value()[0]
+                    const cekMember = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
                     if (cekMember.length === 0) {
-                        db.chain.get('group').find({ id: groupId }).set('members', [{ id: pengirim, denda: _denda }]).value()
+                        db.chain.get('groups').find({ id: groupId }).set('members', [{ id: pengirim, denda: _denda }]).value()
                         db.write()
                     } else {
-                        const cekuser = db.chain.get('group').filter({ id: groupId }).map('members').value()[0]
+                        const cekuser = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
                         cekuser.push({ id: pengirim, denda: _denda })
                         await reply(`${resMsg.badw}\n\nDenda +${_denda}`)
-                        db.chain.get('group').find({ id: groupId }).set('members', cekuser).value()
+                        db.chain.get('groups').find({ id: groupId }).set('members', cekuser).value()
                         db.write()
                     }
                 }
             } else {
-                db.chain.get('group').push({ id: groupId, members: [{ id: pengirim, denda: _denda }] }).value()
+                db.chain.get('groups').push({ id: groupId, members: [{ id: pengirim, denda: _denda }] }).value()
                 db.write()
                 await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp${_denda}`)
             }
