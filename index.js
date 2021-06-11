@@ -112,7 +112,7 @@ const start = async (client) => {
                 if (groups.length > groupLimit) {
                     console.log(color('[==>>]', 'red'), `So this is exceeding the group limit.`)
                     client.sendText(chat.groupMetadata.id,
-                        `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner untuk sewa` +
+                        `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner untuk sewa\n` +
                         `Sewa aja murah kok. 10k masa aktif 1 bulan.\n` +
                         `Mau sewa otomatis? Buka link berikut:\n` +
                         `Saweria: https://saweria.co/dngda \n` +
