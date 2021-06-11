@@ -1,11 +1,10 @@
-import { listenSaweria, checkExpireSewa } from './lib/sewa.js'
 import { color, createReadFileSync } from './utils/index.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+import { schedule, sewa } from './lib/index.js'
 import { create } from '@open-wa/wa-automate'
 import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
 import { HandleMsg } from './HandleMsg.js'
-import schedule from './lib/schedule.js'
 import options from './utils/options.js'
 import puppeteer from 'puppeteer-extra'
 import PQueue from 'p-queue'
@@ -95,14 +94,14 @@ const start = async (client) => {
             
             // check sewa at 00:01:01
             scheduleJob('1 1 0 * * *', function () {
-                checkExpireSewa(client)
+                sewa.checkExpireSewa(client)
             })
         } catch (e) {
             console.log(e)
         }
 
         // Listen saweria
-        listenSaweria(client, browser).catch(e => console.log(e))
+        sewa.listenSaweria(client, browser).catch(e => console.log(e))
 
         // ketika bot diinvite ke dalam group
         client.onAddedToGroup(async chat => {
