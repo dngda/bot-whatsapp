@@ -395,7 +395,7 @@ const HandleMsg = async (client, message, browser) => {
                     await sendText(menuId.textOwner())
                     break
                 case 'join':
-                    if (args.length == 0) return reply(`Jika kalian ingin mengundang bot ke group silakan kontak owner atau gunakan perintah ${prefix}join (link_group) jika slot masih tersedia`)
+                    if (args.length == 0) return reply(`Jika kalian ingin mengundang bot ke group silakan kontak owner atau gunakan perintah ${prefix}join (link group) jika slot gratis masih tersedia.\n Selain itu bayar 10k untuk 1 bulan.`)
                     const linkgrup = args[0]
                     let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
                     let chekgrup = await client.inviteInfo(linkgrup)
