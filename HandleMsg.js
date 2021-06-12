@@ -36,6 +36,7 @@ import { createReadFileSync, processTime, commandLog, receivedLog, isFiltered, a
 import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, sewa, meme, kbbi, list, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
+import { truncate } from 'fs'
 
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 
@@ -175,10 +176,11 @@ const HandleMsg = async (client, message, browser) => {
         const url = args.length !== 0 ? args[0] : ''
 
         // Avoid large body
-        if (chats?.length > 2000) {
+        if (chats?.length > 2500) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
-            return console.log(color('[LARG]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
+            console.log(color('[LARG]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
+            return client.deleteMessage(from, id, true)
         }
 
         // [IDENTIFY]
