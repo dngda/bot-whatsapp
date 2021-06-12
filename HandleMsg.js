@@ -2338,12 +2338,14 @@ const HandleMsg = async (client, message, browser) => {
                     let groups = await client.getAllGroups()
                     let count = 1
                     groups.forEach(chat => {
+                        let isSewa = await sewa.isSewa(chat.groupMetadata.id)
+                        let sewa = isSewa ? await sewa.getExp(chat.groupMetadata.id) : 'none'
                         let td = '```'
                         msg += `${count}. ${td}Nama       :${td} ${chat.name}\n`
                         msg += `    ${td}GroupId    :${td} ${chat.groupMetadata.id}\n`
                         msg += `    ${td}Member     :${td} ${chat.groupMetadata.participants.length}\n`
                         msg += `    ${td}Types      :${td} ${groupPrem.includes(chat.groupMetadata.id) ? 'Premium' : 'Free/Sewa'}\n\n`
-                        msg += `    ${td}Expire on  :${td} ${await sewa.isSewa(chat.groupMetadata.id) ? await sewa.getExp(chat.groupMetadata.id): 'none'}`
+                        msg += `    ${td}Expire on  :${td} ${sewa}`
                         count++
                     })
                     sendText(msg)
