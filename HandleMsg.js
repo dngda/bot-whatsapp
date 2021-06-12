@@ -426,13 +426,13 @@ const HandleMsg = async (client, message, browser) => {
                     } else {
                         let cgrup = await client.getAllGroups()
                         if (cgrup.length > groupLimit) return reply(
-                            `Mohon maaf, untuk mencegah overload, slot group pada bot dibatasi.\nTotal group: ${cgrup.length}/${groupLimit}\nChat /owner untuk sewa` +
-                            `Sewa aja murah kok. 10k masa aktif 1 bulan.\n` +
+                            `Mohon maaf, untuk mencegah overload\nSlot group gratis pada bot dibatasi.\nTotal group: ${cgrup.length}/${groupLimit}\nChat /owner untuk sewa\n` +
+                            `\nSewa aja murah kok. 10k masa aktif 1 bulan.\n` +
                             `Mau sewa otomatis? Gunakan link berikut:\n` +
                             `Saweria: https://saweria.co/dngda \n` +
                             `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
                         )
-                        if (cgrup.size < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
+                        if (cgrup.groupMetadata.participants.length < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
                         await client.joinGroupViaLink(linkgrup)
                             .then(async () => {
                                 await reply(resMsg.success.join)
