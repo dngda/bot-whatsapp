@@ -456,7 +456,7 @@ const HandleMsg = async (client, message, browser) => {
                     let statSewa = ''
                     if (isGroupMsg) {
                         let exp = await sewa.getExp(from)
-                        statSewa += exp !== '' ? `\nGroup expire on: ${exp}` : ''
+                        statSewa += exp !== '' ? `\nGroup expire on: _${exp.trim()}_` : ''
                     }
                     sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n`+
                             `- *${groups.length}* Group Chats\n`+
