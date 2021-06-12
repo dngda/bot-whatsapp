@@ -455,7 +455,7 @@ const HandleMsg = async (client, message, browser) => {
                     let uptime = (time + "").toDHms()
                     let statSewa = ''
                     if (isGroupMsg) {
-                        let exp = await sewa.getExp()
+                        let exp = await sewa.getExp(from)
                         statSewa += exp !== '' ? `\nGroup expire on: ${exp}` : ''
                     }
                     sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n`+
