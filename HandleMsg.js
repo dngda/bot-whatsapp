@@ -1878,9 +1878,9 @@ const HandleMsg = async (client, message, browser) => {
                                 \nUntuk menghapus note gunakan perintah:\n-> *${prefix}deletenote <nama note>* contoh: ${prefix}deletenote rules
                                 `)
                     } else if (args.length > 0) {
-                        let res = await note.getListData(from, args[0])
+                        let res = await note.getNoteData(from, args[0])
                         if (res == false || res == null) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* \n(mohon hanya gunakan 1 kata untuk nama note)`)
-                        
+
                         let respon = `✪〘 ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
                         respon += `\n\n${res.content}`
                         respon += '\n\n〘 *Note by SeroBot* 〙'
@@ -1892,7 +1892,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'createnote': {
                     if (args.length === 0) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note> <isinya>* contoh: ${prefix}createnote rules isi notesnya disini\n(mohon hanya gunakan 1 kata untuk nama note)`)
                     const respon = await note.createNote(from, args[0], arg1)
-                    await reply((respon === false) ? `Note ${args[0]} sudah ada, gunakan nama lain.` : `note ${args[0]} berhasil dibuat.`)
+                    await reply((respon === false) ? `Note ${args[0]} sudah ada, gunakan nama lain.` : `Note ${args[0]} berhasil dibuat.`)
                     break
                 }
 
