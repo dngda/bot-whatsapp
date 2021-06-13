@@ -1873,7 +1873,7 @@ const HandleMsg = async (client, message, browser) => {
                         } else {
                             _msg = `Notes yang ada di ${_what}: ${theNote.join(', ')}`
                         }
-                        reply(`${_msg}\n\nMenampilkan notes/catatan yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}note <nama note> <content>*
+                        reply(`${_msg}\n\nMenampilkan notes/catatan yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}note <nama note>*
                                 \nUntuk membuat note gunakan perintah:\n-> *${prefix}createnote <nama note> <isi note>* contoh: ${prefix}createnote rules Isi notesnya disini
                                 \nUntuk menghapus note gunakan perintah:\n-> *${prefix}deletenote <nama note>* contoh: ${prefix}deletenote rules
                                 `)
