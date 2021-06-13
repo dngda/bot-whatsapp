@@ -92,8 +92,9 @@ const start = async (client) => {
             })
             console.log(color('[LOGS]', 'grey'), `${jobList.jobs.length} ScheduledJobs Loaded`)
             
-            // check sewa at every 4 hour
+            // check sewa every 4 hour
             scheduleJob('0 */4 * * *', function () {
+                console.log(color('[LOGS]', 'grey'), `Checking sewa expiring...`)
                 sewa.checkExpireSewa(client)
             })
         } catch (e) {
