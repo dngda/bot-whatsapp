@@ -1722,7 +1722,8 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 // List creator commands
-                case 'list': {
+                case 'list': 
+                case 'lists': {
                     if (args.length === 0) {
                         let thelist = await list.getListName(from)
                         let _what = isGroupMsg ? `Group` : `Chat`
@@ -1861,7 +1862,8 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 // Note commands
-                case 'note': {
+                case 'note':
+                case 'notes': {
                     if (args.length === 0) {
                         let theNote = await note.getNoteName(from)
                         let _what = isGroupMsg ? `Group` : `Chat`
@@ -1871,14 +1873,14 @@ const HandleMsg = async (client, message, browser) => {
                         } else {
                             _msg = `Notes yang ada di ${_what}: ${theNote.join(', ')}`
                         }
-                        reply(`${_msg}\n\nMenampilkan notes/catatan yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}note <nama note>*
-                                \nUntuk membuat note gunakan perintah:\n-> *${prefix}createnote <nama note>* contoh: ${prefix}createnote rules
+                        reply(`${_msg}\n\nMenampilkan notes/catatan yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}note <nama note> <content>*
+                                \nUntuk membuat note gunakan perintah:\n-> *${prefix}createnote <nama note> <isi note>* contoh: ${prefix}createnote rules Isi notesnya disini
                                 \nUntuk menghapus note gunakan perintah:\n-> *${prefix}deletenote <nama note>* contoh: ${prefix}deletenote rules
                                 `)
                     } else if (args.length > 0) {
                         let res = await note.getListData(from, args[0])
                         if (res == false || res == null) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* \n(mohon hanya gunakan 1 kata untuk nama note)`)
-
+                        
                         let respon = `✪〘 ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
                         respon += `\n\n${res.content}`
                         respon += '\n\n〘 *Note by SeroBot* 〙'
@@ -1888,8 +1890,8 @@ const HandleMsg = async (client, message, browser) => {
                 }
                 
                 case 'createnote': {
-                    if (args.length === 0) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note>* contoh: ${prefix}createnote rules\n(mohon hanya gunakan 1 kata untuk nama note)`)
-                    const respon = await note.createNote(from, args[0])
+                    if (args.length === 0) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note> <isinya>* contoh: ${prefix}createnote rules isi notesnya disini\n(mohon hanya gunakan 1 kata untuk nama note)`)
+                    const respon = await note.createNote(from, args[0], arg1)
                     await reply((respon === false) ? `Note ${args[0]} sudah ada, gunakan nama lain.` : `note ${args[0]} berhasil dibuat.`)
                     break
                 }
