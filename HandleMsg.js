@@ -1879,7 +1879,7 @@ const HandleMsg = async (client, message, browser) => {
                                 `)
                     } else if (args.length > 0) {
                         let res = await note.getNoteData(from, args[0])
-                        if (res == false || res == null) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* \n(mohon hanya gunakan 1 kata untuk nama note)`)
+                        if (res == false || res == null) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createnote ${args[0]} (isinya)* \n(mohon hanya gunakan 1 kata untuk nama note)`)
 
                         let respon = `✪〘 ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
                         respon += `\n\n${res.content}`
