@@ -33,10 +33,9 @@ db.chain = lodash.chain(db.data)
 
 //file modules
 import { createReadFileSync, processTime, commandLog, receivedLog, isFiltered, addFilter, color, isUrl } from './utils/index.js'
-import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, sewa, meme, kbbi, list, api } from './lib/index.js'
+import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
-import { truncate } from 'fs'
 
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 
@@ -460,14 +459,14 @@ const HandleMsg = async (client, message, browser) => {
                         let exp = await sewa.getExp(from)
                         statSewa += exp !== '' ? `\nGroup expire on: _${exp.trim()}_` : ''
                     }
-                    sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n`+
-                            `- *${groups.length}* Group Chats\n`+
-                            `- *${chatIds.length - groups.length}* Personal Chats\n`+
-                            `- *${chatIds.length}* Total Chats\n\n`+
-                            `- *${todayHits}* Total Commands Today\n`+
-                            `- *${received}* Total Received Msgs Today\n\n`+
-                            `Speed: _${processTime(t, moment())} Seconds_\n`+
-                            `Uptime: _${uptime}_ ${statSewa}`)
+                    sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n` +
+                        `- *${groups.length}* Group Chats\n` +
+                        `- *${chatIds.length - groups.length}* Personal Chats\n` +
+                        `- *${chatIds.length}* Total Chats\n\n` +
+                        `- *${todayHits}* Total Commands Today\n` +
+                        `- *${received}* Total Received Msgs Today\n\n` +
+                        `Speed: _${processTime(t, moment())} Seconds_\n` +
+                        `Uptime: _${uptime}_ ${statSewa}`)
                     break
                 }
 
@@ -976,12 +975,13 @@ const HandleMsg = async (client, message, browser) => {
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 reply(resMsg.error.norm)
+                                if (existsSync(path)) unlinkSync(path)
                             })
                             .on('end', () => {
                                 client.sendFile(from, path, `${ytid}.mp3`, '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                if (existsSync(path)) unlinkSync(path)
                             })
                             .saveToFile(path)
-                        if (existsSync(path)) unlinkSync(path)
                     } catch (err) {
                         console.log(err)
                         reply(resMsg.error.norm)
@@ -1015,16 +1015,40 @@ const HandleMsg = async (client, message, browser) => {
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
                                 reply(resMsg.error.norm)
+                                if (existsSync(path)) unlinkSync(path)
                             })
                             .on('end', () => {
                                 client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                if (existsSync(path)) unlinkSync(path)
                             })
                             .saveToFile(path)
-                        if (existsSync(path)) unlinkSync(path)
                     } catch (err) {
                         console.log(err)
                         reply(resMsg.error.norm)
                     }
+                    break
+                }
+                case 'tomp3': {
+                    if (!isQuotedVideo) return reply(`Convert mp4/video ke mp3/audio. ${prefix}tomp3`)
+                    const _inp = await decryptMedia(quotedMsg)
+                    let time = moment(t * 1000).format('mmss')
+                    let inpath = `./media/in_${time}.mp4`
+                    let outpath = `./media/in_${time}.mp3`
+                    writeFileSync(inpath, _inp)
+
+                    ffmpeg(inpath)
+                        .setFfmpegPath('./bin/ffmpeg')
+                        .on('error', (err) => {
+                            console.log('An error occurred: ' + err.message)
+                            reply(resMsg.error.norm)
+                            unlinkIfExists(inpath, outpath)
+                        })
+                        .on('end', () => {
+                            client.sendFile(from, outpath, `to.mp3`, '', id)
+                                .then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                            unlinkIfExists(inpath, outpath)
+                        })
+                        .saveToFile(outpath)
                     break
                 }
 
@@ -1744,13 +1768,14 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length === 0) return reply(`Untuk menghapus list beserta isinya gunakan perintah: *${prefix}deletelist <nama list>* contoh: ${prefix}deletelist tugas`)
                     const thelist = await list.getListName(from)
                     if (thelist.includes(args[0])) {
-                        reply(`[❗] List ${args[0]} akan dihapus.\nKirim *${prefix}confirmdeletelist ${args[0]}* untuk mengonfirmasi, abaikan jika tidak jadi.`)
+                        reply(`[❗] List ${args[0]} akan dihapus.\nKirim *${prefix}yesdeletelist ${args[0]}* untuk mengonfirmasi, abaikan jika tidak jadi.`)
                     } else {
                         reply(`List ${args[0]} tidak ada.`)
                     }
                     break
                 }
 
+                case 'yesdeletelist':
                 case 'confirmdeletelist': {
                     if (args.length === 0) return null
                     const respon1 = await list.deleteList(from, args[0])
@@ -1834,6 +1859,60 @@ const HandleMsg = async (client, message, browser) => {
                     }
                     break
                 }
+
+                // Note commands
+                case 'note': {
+                    if (args.length === 0) {
+                        let theNote = await note.getNoteName(from)
+                        let _what = isGroupMsg ? `Group` : `Chat`
+                        let _msg
+                        if (theNote === false || theNote === '') {
+                            _msg = `${_what} ini belum memiliki note.`
+                        } else {
+                            _msg = `Notes yang ada di ${_what}: ${theNote.join(', ')}`
+                        }
+                        reply(`${_msg}\n\nMenampilkan notes/catatan yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}note <nama note>*
+                                \nUntuk membuat note gunakan perintah:\n-> *${prefix}createnote <nama note>* contoh: ${prefix}createnote rules
+                                \nUntuk menghapus note gunakan perintah:\n-> *${prefix}deletenote <nama note>* contoh: ${prefix}deletenote rules
+                                `)
+                    } else if (args.length > 0) {
+                        let res = await note.getListData(from, args[0])
+                        if (res == false || res == null) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* \n(mohon hanya gunakan 1 kata untuk nama note)`)
+
+                        let respon = `✪〘 ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
+                        respon += `\n\n${res.content}`
+                        respon += '\n\n〘 *Note by SeroBot* 〙'
+                        await reply(respon)
+                    }
+                    break
+                }
+                
+                case 'createnote': {
+                    if (args.length === 0) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note>* contoh: ${prefix}createnote rules\n(mohon hanya gunakan 1 kata untuk nama note)`)
+                    const respon = await note.createNote(from, args[0])
+                    await reply((respon === false) ? `Note ${args[0]} sudah ada, gunakan nama lain.` : `note ${args[0]} berhasil dibuat.`)
+                    break
+                }
+
+                case 'deletenote': {
+                    if (args.length === 0) return reply(`Untuk menghapus note beserta isinya gunakan perintah: *${prefix}deletenote <nama note>* contoh: ${prefix}deletenote rules`)
+                    const theNote = await note.getNoteName(from)
+                    if (theNote.includes(args[0])) {
+                        reply(`[❗] Note ${args[0]} akan dihapus.\nKirim *${prefix}yesdeletenote ${args[0]}* untuk mengonfirmasi, abaikan jika tidak jadi.`)
+                    } else {
+                        reply(`Note ${args[0]} tidak ada.`)
+                    }
+                    break
+                }
+
+                case 'yesdeletenote':
+                case 'confirmdeletenote': {
+                    if (args.length === 0) return null
+                    const respon1 = await note.deleteNote(from, args[0])
+                    await reply((respon1 === false) ? `Note ${args[0]} tidak ada.` : `Note ${args[0]} berhasil dihapus.`)
+                    break
+                }
+
 
                 // Group Commands (group admin only)
                 case 'add':
