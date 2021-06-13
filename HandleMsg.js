@@ -2371,7 +2371,7 @@ const HandleMsg = async (client, message, browser) => {
                     client.simulateTyping(from, false)
                     try {
                         eval(`(async() => {
-                                ${arg}    
+                                ${arg}
                             })()`)
                     } catch (e) {
                         console.log(e)
@@ -2399,6 +2399,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 default:
                     if (chats.startsWith(prefix)) reply(`Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`)
+                    client.simulateTyping(from, false)
                     break
 
             }//End of switch case
