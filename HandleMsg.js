@@ -2527,7 +2527,7 @@ const HandleMsg = async (client, message, browser) => {
                     let count = 1
                     groups.forEach((chat) => {
                         let td = '```'
-                        msg += `\n${count < 10 ? count + '. ' : count + '.'} ${td}Nama   :${td} ${chat.name}\n`
+                        msg += `\n${td}${count < 10 ? count + '. ' : count + '.'} Nama    :${td} ${chat.name}\n`
                         msg += `     ${td}GroupId :${td} ${chat.groupMetadata.id}\n`
                         msg += `     ${td}Types   :${td} ${groupPrem.includes(chat.groupMetadata.id) ? '*Premium*' : 'Free/Sewa'}\n`
                         msg += `     ${td}Members :${td} ${chat.groupMetadata.participants.length}\n`
