@@ -1052,10 +1052,11 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'play': { //Silakan kalian custom sendiri jika ada yang ingin diubah
                     if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
-                    let ytresult = await api.ytsearch(arg)[0].catch(err => {
+                    let _ytresult = await api.ytsearch(arg).catch(err => {
                         console.log(err)
                         return reply(resMsg.error.norm)
                     })
+                    let ytresult = _ytresult[0]
 
                     if (!ytresult.hasOwnProperty('duration')) return reply(`Maaf fitur sedang dalam perbaikan`)
 
