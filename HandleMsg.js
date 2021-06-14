@@ -1107,7 +1107,6 @@ const HandleMsg = async (client, message, browser) => {
                         console.log(err)
                         return reply(resMsg.error.norm)
                     })
-                    if (!ytresult[0].hasOwnProperty('duration')) return reply(`Maaf fitur sedang dalam perbaikan`)
                     try {
                         const aC = '```'
                         let psn =
