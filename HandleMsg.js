@@ -1134,25 +1134,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'tomp3': {
                     if (!isQuotedVideo) return reply(`Convert mp4/video ke mp3/audio. ${prefix}tomp3`)
-                    const _inp = await decryptMedia(quotedMsg)
-                    let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/in_${time}.mp3`
-                    let outpath = `./media/in_${time}.mp3`
-                    writeFileSync(inpath, _inp)
-
-                    ffmpeg(inpath)
-                        .setFfmpegPath('./bin/ffmpeg')
-                        .on('error', (err) => {
-                            console.log('An error occurred: ' + err.message)
-                            reply(resMsg.error.norm)
-                            unlinkIfExists(inpath, outpath)
-                        })
-                        .on('end', () => {
-                            client.sendFile(from, outpath, `to.mp3`, '', id)
-                                .then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                            unlinkIfExists(inpath, outpath)
-                        })
-                        .saveToFile(outpath)
+                    audioConverter('atempo=1', 'tomp3')
                     break
                 }
 
