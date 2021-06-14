@@ -976,11 +976,11 @@ const HandleMsg = async (client, message, browser) => {
 
                         let { videoDetails: inf } = await ytdl.getInfo(ytid)
                         if (inf.lengthSeconds > 600) return reply(`Error. Durasi video lebih dari 10 menit!`)
-                        let estimasi = inf.lengthSeconds / 100
+                        let estimasi = inf.lengthSeconds / 200
                         let est = estimasi.toFixed(0)
                         const aC = '```'
                         client.sendFileFromUrl(from, `${inf.thumbnails[3].url}`, ``,
-                            `Video ditemukan\n\n` +
+                            `Link video valid!\n\n` +
                             `${aC}Judul   :${aC} ${inf.title}\n` +
                             `${aC}Channel :${aC} ${inf.ownerChannelName}\n` +
                             `${aC}Durasi  :${aC} ${inf.lengthSeconds}\n` +
@@ -998,7 +998,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('end', () => {
-                                client.sendFile(from, path, `${ytid}.mp3`, '').then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, path, `${ytid}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .saveToFile(path)
@@ -1025,13 +1025,13 @@ const HandleMsg = async (client, message, browser) => {
                         let est = estimasi.toFixed(0)
                         const aC = '```'
                         client.sendFileFromUrl(from, `${inf.thumbnails[3].url}`, ``,
-                            `Video ditemukan\n\n` +
+                            `Link video valid!\n\n` +
                             `${aC}Judul   :${aC} ${inf.title}\n` +
                             `${aC}Channel :${aC} ${inf.ownerChannelName}\n` +
                             `${aC}Durasi  :${aC} ${inf.lengthSeconds}\n` +
                             `${aC}Uploaded:${aC} ${inf.uploadDate}\n` +
                             `${aC}View    :${aC} ${inf.viewCount}\n\n` +
-                            `Audio sedang dikirim ± ${est} menit`, id)
+                            `Video sedang dikirim ± ${est} menit`, id)
 
                         ytdl(ytid, { quality: 'highest' }).pipe(createWriteStream(path))
                             .on('error', (err) => {
@@ -1040,7 +1040,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('finish', () => {
-                                client.sendFile(from, path, `${ytid}.mp4`, '').then(console.log(color('[LOGS]', 'grey'), `Video Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, path, `${ytid}.mp4`, inf.title, id).then(console.log(color('[LOGS]', 'grey'), `Video Processed for ${processTime(t, moment())} Second`))
                                 if (existsSync(path)) unlinkSync(path)
                             })
                     } catch (err) {
@@ -1062,12 +1062,12 @@ const HandleMsg = async (client, message, browser) => {
 
                     try {
                         if (ytresult.seconds > 600) return reply(`Error. Durasi video lebih dari 10 menit!`)
-                        let estimasi = ytresult.seconds / 100
+                        let estimasi = ytresult.seconds / 200
                         let est = estimasi.toFixed(0)
                         const aC = '```'
 
                         await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``,
-                            `Video ditemukan\n\n` +
+                            `Video ditemukan!\n\n` +
                             `${aC}Judul   :${aC} ${ytresult.title}\n` +
                             `${aC}Channel :${aC} ${ytresult.author.name}\n` +
                             `${aC}Durasi  :${aC} ${ytresult.timestamp}\n` +
@@ -1119,13 +1119,13 @@ const HandleMsg = async (client, message, browser) => {
                             psn +=
                                 `\n--------------------------------------\n` +
                                 `${aC}Judul   :${aC} ${item.title}\n` +
-                                `${aC}Channel :${aC} ${item.author.name}\n` +
+                                `${aC}Channel :${aC} ${item.author?.name}\n` +
                                 `${aC}Durasi  :${aC} ${item.timestamp}\n` +
                                 `${aC}Uploaded:${aC} ${item.ago}\n` +
                                 `${aC}View    :${aC} ${item.views}\n` +
                                 `${aC}Url     :${aC} ${item.url}`
                         })
-                        sendText(psn)
+                        reply(psn)
                     } catch (err) {
                         console.log(err)
                         reply(resMsg.error.norm)
