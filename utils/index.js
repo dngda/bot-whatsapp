@@ -153,7 +153,7 @@ String.prototype.toDHms = function () {
 
 //Gobal declaration
 const initGlobalVariable = () => {
-    global.localDateOptions = {
+    global.LOCAL_DATE_OPTIONS = {
         weekday: 'long',
         year: 'numeric',
         month: 'long',

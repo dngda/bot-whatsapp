@@ -916,6 +916,7 @@ const HandleMsg = async (client, message, browser) => {
                         }
                         var tgl = moment(t * 1000).format('YYYY-MM-DD')
                         let resdatas = await get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
+                        if (resdatas.data.jadwal.status === 'error') return reply('Internal server error')
                         var jadwals = resdatas.data.jadwal.data
                         let jadwal = `╔══✪〘 Jadwal Sholat di ${arg.replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n`
                         jadwal += `╠> ${jadwals.tanggal}\n`
