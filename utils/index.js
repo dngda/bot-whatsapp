@@ -8,7 +8,7 @@ import updateJson from 'update-json-file'
 const { get } = followPkg
 const { tz, duration } = moment
 const { head } = request
-const { watchFile, existsSync, readFileSync, createWriteStream, writeFileSync } = fs
+const { existsSync, readFileSync, createWriteStream, writeFileSync } = fs
 
 tz.setDefault('Asia/Jakarta').locale('id')
 
@@ -86,7 +86,6 @@ const download = (url, path, callback) => {
     })
 }
 
-
 /**
  *@param {String} url
  */
@@ -106,38 +105,30 @@ const createReadFileSync = (path) => {
     }
 }
 
-const getModuleName = (module) => {
-    return module.split('/')[module.split('/').length - 1]
+function formatin(duit) {
+    let reverse = duit.toString().split('').reverse().join('')
+    let ribuan = reverse.match(/\d{1,3}/g)
+    ribuan = ribuan.join('.').split('').reverse().join('')
+    return ribuan
 }
 
-/**
- * recache if there is file change
- * @param {string} module Module name or path
- * @param {function} cb <optional> 
- */
-const recache = (module, call = () => { }) => {
-    console.log(color('[WATCH]', 'orange'), color(`=> '${getModuleName(module)}'`, 'yellow'), 'file is now being watched by node!')
-    watchFile(require.resolve(module), async () => {
-        await uncache(require.resolve(module))
-        call(module)
-        return require(module)
-    })
-    return require(module)
+const inArray = (needle, haystack) => {
+    let length = haystack.length
+    for (let i = 0; i < length; i++) {
+        if (haystack[i].id == needle) return i
+    }
+    return -1
 }
 
-/**
- * Uncache a module
- * @param {string} module Module name or path
- */
-const uncache = (module = '.') => {
-    return new Promise((resolve, reject) => {
-        try {
-            delete require.cache[require.resolve(module)]
-            resolve()
-        } catch (err) {
-            reject(err)
-        }
-    })
+const last = (array, n) => {
+    if (array == null) return void 0
+    if (n == null) return array[array.length - 1]
+    return array.slice(Math.max(array.length - n, 0))
+}
+
+const unlinkIfExists = (path, path2) => {
+    if (existsSync(path)) unlinkSync(path)
+    if (existsSync(path2)) unlinkSync(path2)
 }
 
 String.prototype.toDHms = function () {
@@ -167,16 +158,17 @@ const initGlobalVariable = () => {
 export {
     initGlobalVariable,
     createReadFileSync,
-    getModuleName,
+    unlinkIfExists,
+    receivedLog,
     processTime,
     commandLog,
-    receivedLog,
     isFiltered,
     addFilter,
     download,
-    recache,
-    uncache,
+    formatin,
+    inArray,
     redir,
     color,
     isUrl,
+    last,
 }

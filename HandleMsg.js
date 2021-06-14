@@ -32,7 +32,7 @@ db.write()
 db.chain = lodash.chain(db.data)
 
 //file modules
-import { createReadFileSync, processTime, commandLog, receivedLog, isFiltered, addFilter, color, isUrl } from './utils/index.js'
+import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, addFilter, color, isUrl } from './utils/index.js'
 import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
@@ -64,33 +64,6 @@ let {
 } = setting
 const Surah = JSON.parse(readFileSync('./src/surah.json'))
 
-//Helper Functions
-function formatin(duit) {
-    let reverse = duit.toString().split('').reverse().join('')
-    let ribuan = reverse.match(/\d{1,3}/g)
-    ribuan = ribuan.join('.').split('').reverse().join('')
-    return ribuan
-}
-
-const inArray = (needle, haystack) => {
-    let length = haystack.length
-    for (let i = 0; i < length; i++) {
-        if (haystack[i].id == needle) return i
-    }
-    return -1
-}
-
-const last = (array, n) => {
-    if (array == null) return void 0
-    if (n == null) return array[array.length - 1]
-    return array.slice(Math.max(array.length - n, 0))
-}
-
-const unlinkIfExists = (path, path2) => {
-    if (existsSync(path)) unlinkSync(path)
-    if (existsSync(path2)) unlinkSync(path2)
-}
-
 let { todayHits, received } = JSON.parse(readFileSync('./data/stat.json'))
 // Save stats in json every 5 minutes
 scheduleJob('*/5 * * * *', function () {
@@ -98,8 +71,8 @@ scheduleJob('*/5 * * * *', function () {
     commandLog(todayHits)
 })
 
-// Reset today hits at 00:01:01
-scheduleJob('1 1 0 * * *', function () {
+// Reset today hits at 00:01
+scheduleJob('1 0 * * *', function () {
     received = 0
     todayHits = 0
 })
@@ -166,7 +139,7 @@ const HandleMsg = async (client, message, browser) => {
         const stickerMetadataCircle = { pack: 'Created with', author: 'SeroBot', circle: true }
         const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
 
-        // Bot Prefix
+        // Bot Prefix Aliases
         const regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-)(?=\w+)/g
 
         if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
@@ -357,6 +330,13 @@ const HandleMsg = async (client, message, browser) => {
 
         // Respon to real body of msg contain this case
         switch (true) {
+            case /\b(hi|hy|halo|hai|hei|hello)\b/i.test(chats): {
+                await reply(`Halo ${pushname} 👋`)
+                break
+            }
+            case /^p$/i.test(chats): {
+                return !isGroupMsg ? sendText(`Untuk menampilkan menu, kirim pesan *${prefix}menu*`) : null
+            }
             case /^(menu|start|help)$/i.test(chats): {
                 return await sendText(`Untuk menampilkan menu, kirim pesan *${prefix}menu*`)
             }
@@ -2290,7 +2270,7 @@ const HandleMsg = async (client, message, browser) => {
                     sewa.deleteSewa(arg).then(res => {
                         if (res) {
                             sendText('Berhasil')
-                        }else sendText('Gagal')
+                        } else sendText('Gagal')
                     })
                 }
 
@@ -2599,7 +2579,7 @@ const HandleMsg = async (client, message, browser) => {
                     reply(`Duh admin yang share link group. Gabisa dikick deh.`)
                 } else {
                     console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender from ${name || formattedTitle}`)
-                    reply(`〘 ANTI LINK GROUP 〙\nMohon maaf. Link group whatsapp terdeteksi! Auto kick...`)
+                    reply(`‼️〘 ANTI LINK GROUP 〙‼️\nMohon maaf. Link group whatsapp terdeteksi! Auto kick...`)
                     setTimeout(async () => {
                         await client.removeParticipant(groupId, pengirim)
                     }, 2000)
