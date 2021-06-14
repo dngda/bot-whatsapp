@@ -2294,6 +2294,16 @@ const HandleMsg = async (client, message, browser) => {
                     })
                     break
                 }
+
+                case 'deletesewa': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    sewa.deleteSewa(arg).then(res => {
+                        if (res) {
+                            sendText('Berhasil')
+                        }else sendText('Gagal')
+                    })
+                }
+
                 case 'ban': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length == 0) return reply(`Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban 628xx --untuk mengaktifkan\n${prefix}unban 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`)
