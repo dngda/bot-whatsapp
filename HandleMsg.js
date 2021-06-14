@@ -1111,8 +1111,10 @@ const HandleMsg = async (client, message, browser) => {
                     try {
                         const aC = '```'
                         let psn = 
-                            `✪〘 Youtube Search 〙✪` +
-                            `Query: ${arg}\n`
+                            `✪〘 Youtube Search 〙✪\n` +
+                            `Query: ${arg}\n` +
+                            `Tekan lama url untuk copy.\n` +
+                            `Download menggunakan *${prefix}ytmp4* atau *${prefix}ytmp3*\n`
                         ytresult.forEach(item => {
                             psn += 
                             `\n--------------------------------------\n` +
