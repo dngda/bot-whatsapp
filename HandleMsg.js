@@ -143,7 +143,12 @@ const HandleMsg = async (client, message, browser) => {
     }
 
     try {
-        if (message.body === '..' && message.quotedMsg && ['chat', 'image', 'video'].includes(message.quotedMsg.type)) message = message.quotedMsg // inject quotedMsg as Msg
+        if (message.body === '..' && message.quotedMsg && ['chat', 'image', 'video'].includes(message.quotedMsg.type)) {
+            // inject quotedMsg as Msg
+            let _t = message.t
+            message = message.quotedMsg
+            message.t = _t
+        }
         let { body, type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         var { name, formattedTitle } = chat
         let { pushname, verifiedName, formattedName } = sender
