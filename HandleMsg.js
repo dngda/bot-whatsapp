@@ -1110,20 +1110,20 @@ const HandleMsg = async (client, message, browser) => {
                     if (!ytresult[0].hasOwnProperty('duration')) return reply(`Maaf fitur sedang dalam perbaikan`)
                     try {
                         const aC = '```'
-                        let psn = 
+                        let psn =
                             `✪〘 Youtube Search 〙✪\n` +
                             `Query: ${arg}\n` +
                             `Tekan lama url untuk copy.\n` +
                             `Download menggunakan *${prefix}ytmp4* atau *${prefix}ytmp3*\n`
                         ytresult.forEach(item => {
-                            psn += 
-                            `\n--------------------------------------\n` +
-                            `${aC}Judul   :${aC} ${item.title}\n` +
-                            `${aC}Channel :${aC} ${item.author.name}\n` +
-                            `${aC}Durasi  :${aC} ${item.timestamp}\n` +
-                            `${aC}Uploaded:${aC} ${item.ago}\n` +
-                            `${aC}View    :${aC} ${item.views}\n` +
-                            `${aC}Url     :${aC} ${item.url}`
+                            psn +=
+                                `\n--------------------------------------\n` +
+                                `${aC}Judul   :${aC} ${item.title}\n` +
+                                `${aC}Channel :${aC} ${item.author.name}\n` +
+                                `${aC}Durasi  :${aC} ${item.timestamp}\n` +
+                                `${aC}Uploaded:${aC} ${item.ago}\n` +
+                                `${aC}View    :${aC} ${item.views}\n` +
+                                `${aC}Url     :${aC} ${item.url}`
                         })
                         sendText(psn)
                     } catch (err) {
@@ -2525,15 +2525,12 @@ const HandleMsg = async (client, message, browser) => {
                     let msg = `List All Groups\n\n`
                     let groups = await client.getAllGroups()
                     let count = 1
-                    await groups.forEach(async (chat) => {
-                        let isSewa = await sewa.isSewa(chat.groupMetadata.id)
-                        let sewaMsg = isSewa ? await sewa.getExp(chat.groupMetadata.id) : 'none'
+                    groups.forEach((chat) => {
                         let td = '```'
-                        msg += `\n${count}. ${td}Nama       :${td} ${chat.name}\n`
-                        msg += `    ${td}GroupId    :${td} ${chat.groupMetadata.id}\n`
-                        msg += `    ${td}Member     :${td} ${chat.groupMetadata.participants.length}\n`
-                        msg += `    ${td}Types      :${td} ${groupPrem.includes(chat.groupMetadata.id) ? 'Premium' : 'Free/Sewa'}\n`
-                        msg += `    ${td}Expire on  :${td} ${sewaMsg}\n`
+                        msg += `\n${count < 10 ? count + '. ' : count + '.'} ${td}Nama   :${td} ${chat.name}\n`
+                        msg += `     ${td}GroupId :${td} ${chat.groupMetadata.id}\n`
+                        msg += `     ${td}Types   :${td} ${groupPrem.includes(chat.groupMetadata.id) ? '*Premium*' : 'Free/Sewa'}\n`
+                        msg += `     ${td}Members :${td} ${chat.groupMetadata.participants.length}\n`
                         count++
                     })
                     sendText(msg)
