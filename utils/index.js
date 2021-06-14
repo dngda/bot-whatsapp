@@ -65,7 +65,7 @@ const isFiltered = (from) => {
  * Add number to filter
  * @param  {String} from
  */
- const addFilter = (from, delay) => {
+const addFilter = (from, delay) => {
     usedCommandRecently.add(from)
     setTimeout(() => {
         return usedCommandRecently.delete(from)
@@ -151,7 +151,21 @@ String.prototype.toDHms = function () {
     return time
 }
 
+//Gobal declaration
+const initGlobalVariable = () => {
+    global.localDateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZoneName: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+    }
+}
+
 export {
+    initGlobalVariable,
     createReadFileSync,
     getModuleName,
     processTime,

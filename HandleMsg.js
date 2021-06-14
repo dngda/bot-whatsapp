@@ -1728,7 +1728,7 @@ const HandleMsg = async (client, message, browser) => {
                         let thelist = await list.getListName(from)
                         let _what = isGroupMsg ? `Group` : `Chat`
                         let _msg
-                        if (thelist === false || thelist === '') {
+                        if (thelist === false || thelist.length === 0) {
                             _msg = `${_what} ini belum memiliki list.`
                         } else {
                             _msg = `List yang ada di ${_what}: ${thelist.join(', ')}`

@@ -1,4 +1,4 @@
-import { color, createReadFileSync } from './utils/index.js'
+import { color, createReadFileSync, initGlobalVariable } from './utils/index.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import { schedule, sewa } from './lib/index.js'
 import { create } from '@open-wa/wa-automate'
@@ -11,9 +11,9 @@ import PQueue from 'p-queue'
 import figlet from 'figlet'
 import fs from 'fs-extra'
 const path = chromeLauncher.Launcher.getInstallations()[0]
-
 const jobList = JSON.parse(createReadFileSync('./data/schedule.json'))
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
+initGlobalVariable()
 
 let {
     ownerNumber,
