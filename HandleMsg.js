@@ -2532,8 +2532,8 @@ const HandleMsg = async (client, message, browser) => {
                         msg += `\n${count}. ${td}Nama       :${td} ${chat.name}\n`
                         msg += `    ${td}GroupId    :${td} ${chat.groupMetadata.id}\n`
                         msg += `    ${td}Member     :${td} ${chat.groupMetadata.participants.length}\n`
-                        msg += `    ${td}Types      :${td} ${groupPrem.includes(chat.groupMetadata.id) ? 'Premium' : 'Free/Sewa'}\n\n`
-                        msg += `    ${td}Expire on  :${td} ${sewaMsg}`
+                        msg += `    ${td}Types      :${td} ${groupPrem.includes(chat.groupMetadata.id) ? 'Premium' : 'Free/Sewa'}\n`
+                        msg += `    ${td}Expire on  :${td} ${sewaMsg}\n`
                         count++
                     })
                     sendText(msg)
