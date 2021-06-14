@@ -1136,7 +1136,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (!isQuotedVideo) return reply(`Convert mp4/video ke mp3/audio. ${prefix}tomp3`)
                     const _inp = await decryptMedia(quotedMsg)
                     let time = moment(t * 1000).format('mmss')
-                    let inpath = `./media/in_${time}.mp4`
+                    let inpath = `./media/in_${time}.mp3`
                     let outpath = `./media/in_${time}.mp3`
                     writeFileSync(inpath, _inp)
 
