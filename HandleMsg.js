@@ -2525,7 +2525,7 @@ const HandleMsg = async (client, message, browser) => {
                     let msg = `List All Groups\n\n`
                     let groups = await client.getAllGroups()
                     let count = 1
-                    groups.forEach(async (chat) => {
+                    await groups.forEach(async (chat) => {
                         let isSewa = await sewa.isSewa(chat.groupMetadata.id)
                         let sewaMsg = isSewa ? await sewa.getExp(chat.groupMetadata.id) : 'none'
                         let td = '```'
