@@ -179,6 +179,14 @@ const HandleMsg = async (client, message, browser) => {
         const args = body.trim().split(/\s/).slice(1)
         const url = args.length !== 0 ? args[0] : ''
 
+        // Avoid order/vcard type msg (bug troli/slayer) gatau work apa kgk 
+        if (type === 'order' || quotedMsg.type === 'order' || type === 'vcard' || quotedMsg.type === 'vcard') {
+            let _whenGroup = ''
+            if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
+            console.log(color('[ORDR]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
+            return client.deleteMessage(from, id, true)
+        }
+
         // Avoid large body
         if (chats?.length > 2500) {
             let _whenGroup = ''
