@@ -2529,7 +2529,7 @@ const HandleMsg = async (client, message, browser) => {
                         let isSewa = await sewa.isSewa(chat.groupMetadata.id)
                         let sewaMsg = isSewa ? await sewa.getExp(chat.groupMetadata.id) : 'none'
                         let td = '```'
-                        msg += `${count}. ${td}Nama       :${td} ${chat.name}\n`
+                        msg += `\n${count}. ${td}Nama       :${td} ${chat.name}\n`
                         msg += `    ${td}GroupId    :${td} ${chat.groupMetadata.id}\n`
                         msg += `    ${td}Member     :${td} ${chat.groupMetadata.participants.length}\n`
                         msg += `    ${td}Types      :${td} ${groupPrem.includes(chat.groupMetadata.id) ? 'Premium' : 'Free/Sewa'}\n\n`
