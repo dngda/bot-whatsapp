@@ -16,7 +16,7 @@ import axios from 'axios'
 import gTTS from 'gtts'
 
 //Common-Js
-const { existsSync, writeFileSync, readdirSync, readFileSync, writeFile, unlinkSync } = fs
+const { existsSync, writeFileSync, readdirSync, readFileSync, writeFile, unlinkSync, createWriteStream } = fs
 const { get } = axios
 const { read } = jimp
 
@@ -969,6 +969,20 @@ const HandleMsg = async (client, message, browser) => {
                         let time = moment(t * 1000).format('mmss')
                         let path = `./media/temp_${time}.mp3`
 
+                        let { videoDetails: inf } = await ytdl.getInfo(ytid)
+                        if (inf.lengthSeconds > 600) return reply(`Error. Durasi video lebih dari 10 menit!`)
+                        let estimasi = inf.lengthSeconds / 100
+                        let est = estimasi.toFixed(0)
+                        const aC = '```'
+                        client.sendFileFromUrl(from, `${inf.thumbnails[3].url}`, ``,
+                            `Video ditemukan\n\n` +
+                            `${aC}Judul   :${aC} ${inf.title}\n` +
+                            `${aC}Channel :${aC} ${inf.ownerChannelName}\n` +
+                            `${aC}Durasi  :${aC} ${inf.lengthSeconds}\n` +
+                            `${aC}Uploaded:${aC} ${inf.uploadDate}\n` +
+                            `${aC}View    :${aC} ${inf.viewCount}\n\n` +
+                            `Audio sedang dikirim ± ${est} menit`, id)
+
                         let stream = ytdl(ytid, { quality: 'highestaudio' })
 
                         ffmpeg({ source: stream })
@@ -990,9 +1004,50 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
+                case 'ytmp4': {
+                    if (args.length == 0) return reply(`Untuk mendownload video dari youtube\nketik: ${prefix}ytmp4 <link yt> (don't include <> symbol)`)
+                    if (arg.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/) === null) return reply(`Link youtube tidak valid.`)
+                    sendText(resMsg.wait)
+                    let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
+                    try {
+                        ytid = ytid.replace(/&.+/g, '')
+                        let time = moment(t * 1000).format('mmss')
+                        let path = `./media/temp_${time}.mp4`
+
+                        let { videoDetails: inf } = await ytdl.getInfo(ytid)
+                        if (inf.lengthSeconds > 600) return reply(`Error. Durasi video lebih dari 10 menit!`)
+                        let estimasi = inf.lengthSeconds / 100
+                        let est = estimasi.toFixed(0)
+                        const aC = '```'
+                        client.sendFileFromUrl(from, `${inf.thumbnails[3].url}`, ``,
+                            `Video ditemukan\n\n` +
+                            `${aC}Judul   :${aC} ${inf.title}\n` +
+                            `${aC}Channel :${aC} ${inf.ownerChannelName}\n` +
+                            `${aC}Durasi  :${aC} ${inf.lengthSeconds}\n` +
+                            `${aC}Uploaded:${aC} ${inf.uploadDate}\n` +
+                            `${aC}View    :${aC} ${inf.viewCount}\n\n` +
+                            `Audio sedang dikirim ± ${est} menit`, id)
+
+                        ytdl(ytid, { quality: 'highest' }).pipe(createWriteStream(path))
+                            .on('error', (err) => {
+                                console.log('An error occurred: ' + err.message)
+                                reply(resMsg.error.norm)
+                                if (existsSync(path)) unlinkSync(path)
+                            })
+                            .on('finish', () => {
+                                client.sendFile(from, path, `${ytid}.mp4`, '').then(console.log(color('[LOGS]', 'grey'), `Video Processed for ${processTime(t, moment())} Second`))
+                                if (existsSync(path)) unlinkSync(path)
+                            })
+                    } catch (err) {
+                        console.log(err)
+                        reply(resMsg.error.norm)
+                    }
+                    break
+                }
+
                 case 'play': { //Silakan kalian custom sendiri jika ada yang ingin diubah
                     if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
-                    let ytresult = await api.ytsearch(arg).catch(err => {
+                    let ytresult = await api.ytsearch(arg)[0].catch(err => {
                         console.log(err)
                         return reply(resMsg.error.norm)
                     })
@@ -1003,8 +1058,17 @@ const HandleMsg = async (client, message, browser) => {
                         if (ytresult.seconds > 600) return reply(`Error. Durasi video lebih dari 10 menit!`)
                         let estimasi = ytresult.seconds / 100
                         let est = estimasi.toFixed(0)
+                        const aC = '```'
 
-                        await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``, `Video ditemukan\n\nJudul: ${ytresult.title}\nDurasi: ${ytresult.timestamp}\nUploaded: ${ytresult.ago}\nView: ${ytresult.views}\nUrl: ${ytresult.url}\n\nAudio sedang dikirim ± ${est} menit`, id)
+                        await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``,
+                            `Video ditemukan\n\n` +
+                            `${aC}Judul   :${aC} ${ytresult.title}\n` +
+                            `${aC}Channel :${aC} ${ytresult.author.name}\n` +
+                            `${aC}Durasi  :${aC} ${ytresult.timestamp}\n` +
+                            `${aC}Uploaded:${aC} ${ytresult.ago}\n` +
+                            `${aC}View    :${aC} ${ytresult.views}\n` +
+                            `${aC}Url     :${aC} ${ytresult.url}\n\n` +
+                            `Audio sedang dikirim ± ${est} menit`, id)
 
                         //Download video and save as MP3 file
                         let time = moment(t * 1000).format('mmss')
@@ -1029,6 +1093,38 @@ const HandleMsg = async (client, message, browser) => {
                     }
                     break
                 }
+
+                case 'ytsearch':
+                case 'yt': {
+                    if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
+                    let ytresult = await api.ytsearch(arg).catch(err => {
+                        console.log(err)
+                        return reply(resMsg.error.norm)
+                    })
+                    if (!ytresult[0].hasOwnProperty('duration')) return reply(`Maaf fitur sedang dalam perbaikan`)
+                    try {
+                        const aC = '```'
+                        let psn = 
+                            `✪〘 Youtube Search 〙✪` +
+                            `Query: ${arg}\n`
+                        ytresult.forEach(item => {
+                            psn += 
+                            `\n--------------------------------------\n` +
+                            `${aC}Judul   :${aC} ${item.title}\n` +
+                            `${aC}Channel :${aC} ${item.author.name}\n` +
+                            `${aC}Durasi  :${aC} ${item.timestamp}\n` +
+                            `${aC}Uploaded:${aC} ${item.ago}\n` +
+                            `${aC}View    :${aC} ${item.views}\n` +
+                            `${aC}Url     :${aC} ${item.url}`
+                        })
+                        sendText(psn)
+                    } catch (err) {
+                        console.log(err)
+                        reply(resMsg.error.norm)
+                    }
+                    break
+                }
+
                 case 'tomp3': {
                     if (!isQuotedVideo) return reply(`Convert mp4/video ke mp3/audio. ${prefix}tomp3`)
                     const _inp = await decryptMedia(quotedMsg)
@@ -1723,7 +1819,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 // List creator commands
-                case 'list': 
+                case 'list':
                 case 'lists': {
                     if (args.length === 0) {
                         let thelist = await list.getListName(from)
@@ -1889,7 +1985,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
                     break
                 }
-                
+
                 case 'createnote': {
                     if (args.length === 0) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note> <isinya>* contoh: ${prefix}createnote rules isi notesnya disini\n(mohon hanya gunakan 1 kata untuk nama note)`)
                     const respon = await note.createNote(from, args[0], arg1)
