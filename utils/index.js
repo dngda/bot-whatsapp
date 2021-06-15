@@ -8,7 +8,7 @@ import updateJson from 'update-json-file'
 const { get } = followPkg
 const { tz, duration } = moment
 const { head } = request
-const { existsSync, readFileSync, createWriteStream, writeFileSync } = fs
+const { existsSync, unlinkSync, readFileSync, createWriteStream, writeFileSync } = fs
 
 tz.setDefault('Asia/Jakarta').locale('id')
 
