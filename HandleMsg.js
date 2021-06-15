@@ -1570,7 +1570,7 @@ const HandleMsg = async (client, message, browser) => {
                             if (arg1 === '') return reply('Apa teksnya syg..')
                             let gtts = new gTTS(arg1, args[0])
                             gtts.save('./media/tts.mp3', function () {
-                                client.sendPtt(from, './media/tts.mp3')
+                                client.sendPtt(from, './media/tts.mp3', id)
                                     .catch(err => {
                                         console.log(err)
                                         sendText(resMsg.error.norm)
@@ -1694,7 +1694,7 @@ const HandleMsg = async (client, message, browser) => {
                     var gtts = new gTTS(result, 'id')
                     try {
                         gtts.save('./media/tts.mp3', function () {
-                            client.sendPtt(from, './media/tts.mp3')
+                            client.sendPtt(from, './media/tts.mp3', id)
                                 .catch(err => {
                                     console.log(err)
                                     sendText(resMsg.error.norm)
