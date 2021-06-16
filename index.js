@@ -91,11 +91,29 @@ const start = async (client) => {
                 schedule.loadJob(client, job.from, job.quotedId, job.content, job.date, job.isQuoted).catch(e => console.log(e))
             })
             console.log(color('[LOGS]', 'grey'), `${jobList.jobs.length} ScheduledJobs Loaded`)
-            
+
             // check sewa every 4 hour
-            scheduleJob('0 */4 * * *', function () {
+            scheduleJob('0 */4 * * *', () => {
                 console.log(color('[LOGS]', 'grey'), `Checking sewa expiring...`)
                 sewa.checkExpireSewa(client).catch(e => console.log(e))
+            })
+
+            // Clear chat every day
+            scheduleJob('1 0 * * *', async () => {
+                const chats = await client.getAllChats()
+                client.sendText(ownerNumber, `Processed to delete ${chats.length} chat!`)
+                let deleted = 0, cleared = 0
+                for (let chat of chats) {
+                    if (!chat.isGroup && chat.id !== ownerNumber) {
+                        client.deleteChat(chat.id)
+                        deleted += 1
+                    }
+                    if (chat.id === ownerNumber || chat.isGroup) {
+                        client.clearChat(chat.id)
+                        cleared += 1
+                    }
+                }
+                client.sendText(ownerNumber, `Chat deleted : ${deleted}\nChat cleared : ${cleared}`)
             })
         } catch (e) {
             console.log(e)

@@ -66,13 +66,13 @@ const Surah = JSON.parse(readFileSync('./src/surah.json'))
 
 let { todayHits, received } = JSON.parse(readFileSync('./data/stat.json'))
 // Save stats in json every 5 minutes
-scheduleJob('*/5 * * * *', function () {
+scheduleJob('*/5 * * * *', () => {
     receivedLog(received)
     commandLog(todayHits)
 })
 
 // Reset today hits at 00:01
-scheduleJob('1 0 * * *', function () {
+scheduleJob('1 0 * * *', () => {
     received = 0
     todayHits = 0
 })
