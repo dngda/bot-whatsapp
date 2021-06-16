@@ -101,7 +101,7 @@ const start = async (client) => {
             // Clear chat every day
             scheduleJob('1 0 * * *', async () => {
                 const chats = await client.getAllChats()
-                client.sendText(ownerNumber, `Processed to delete ${chats.length} chat!`)
+                client.sendText(ownerNumber, `Processed auto clear with ${chats.length} chat!`)
                 let deleted = 0, cleared = 0
                 for (let chat of chats) {
                     if (!chat.isGroup && chat.id !== ownerNumber) {
