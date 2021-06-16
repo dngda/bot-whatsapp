@@ -178,7 +178,7 @@ const start = async (client) => {
             let profile = await client.getProfilePicFromServer(event.who)
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome) {
-                if (profile !== '' || profile !== undefined) await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', ``)
+                if (profile !== '' || profile !== undefined) await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Anjay keren fotonya member baru`)
                 await client.sendTextWithMentions(event.chat, `Halo semua! Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\n\nJangan lupa baca deskripsi group!`)
             }
             // kondisi ketika seseorang dikick/keluar dari group
