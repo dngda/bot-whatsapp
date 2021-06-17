@@ -104,14 +104,16 @@ const start = async (client) => {
                 client.sendText(ownerNumber, `Processed auto clear with ${chats.length} chat!`)
                 let deleted = 0, cleared = 0
                 for (let chat of chats) {
-                    if (!chat.isGroup && chat.id !== ownerNumber) {
-                        client.deleteChat(chat.id)
-                        deleted += 1
-                    }
-                    if (chat.id === ownerNumber || chat.isGroup) {
-                        client.clearChat(chat.id)
-                        cleared += 1
-                    }
+                    setTimeout(async () => {
+                        if (!chat.isGroup && chat.id !== ownerNumber) {
+                            await client.deleteChat(chat.id)
+                            deleted += 1
+                        }
+                        if (chat.id === ownerNumber || chat.isGroup) {
+                            await client.clearChat(chat.id)
+                            cleared += 1
+                        }
+                    }, 1000)
                 }
                 client.sendText(ownerNumber, `Chat deleted : ${deleted}\nChat cleared : ${cleared}`)
             })
