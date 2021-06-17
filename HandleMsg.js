@@ -2336,11 +2336,11 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'deletesewa': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
-                    sewa.deleteSewa(arg).then(res => {
-                        if (res) {
-                            sendText('Berhasil')
-                        } else sendText('Gagal')
-                    })
+                    let res = sewa.deleteSewa(arg)
+                    if (res) {
+                        sendText('Berhasil')
+                    } else sendText('Gagal')
+                    break
                 }
 
                 case 'ban': {
@@ -2437,6 +2437,11 @@ const HandleMsg = async (client, message, browser) => {
                             if (posa !== -1) {
                                 antiLinkGroup.splice(posa, 1)
                                 writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
+                            }
+                            let posd = antiLink.indexOf(chatId)
+                            if (posd !== -1) {
+                                antiLink.splice(posd, 1)
+                                writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
                             }
                             count += 1
                         }
