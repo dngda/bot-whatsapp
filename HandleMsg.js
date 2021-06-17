@@ -2236,7 +2236,11 @@ const HandleMsg = async (client, message, browser) => {
                     if (args[0] === 'on') {
                         if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
                         let posi = antiLinkGroup.indexOf(chatId)
-                        if (posi != -1) antiLinkGroup.splice(posi, 1) // disable anti link group first
+                        if (posi != -1) {
+                            // disable anti link group first
+                            antiLinkGroup.splice(posi, 1)
+                            writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
+                        }
                         let pos = antiLink.indexOf(chatId)
                         if (pos != -1) return reply('Fitur anti semua link sudah aktif!')
 
