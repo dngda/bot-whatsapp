@@ -1188,7 +1188,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'tiktokmp3': {
-                    if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 (alamat video tiktok)\nTanpa tanda kurung`)
+                    if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 (alamat video Tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     await sendText(resMsg.wait)
@@ -1199,7 +1199,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'fbdl': {
-                    if (args.length === 0 && !isQuotedChat) return reply(`Download Facebook post. How?\n${prefix}fbdl (alamat video fb)\nTanpa tanda kurung`)
+                    if (args.length === 0 && !isQuotedChat) return reply(`Download Facebook video post. How?\n${prefix}fbdl (alamat video Facebook)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     await sendText(resMsg.wait)
@@ -1208,7 +1208,26 @@ const HandleMsg = async (client, message, browser) => {
                     await client.sendFileFromUrl(from, result.hd, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
                 }
-                
+                case 'twdl': {
+                    if (args.length === 0 && !isQuotedChat) return reply(`Download Twitter video post. How?\n${prefix}twdl (alamat video Twitter)\nTanpa tanda kurung`)
+                    let urls = isQuotedChat ? quotedMsg.body : arg
+                    if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
+                    await sendText(resMsg.wait)
+                    let result = await api.twdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let _id = quotedMsg != null ? quotedMsg.id : id
+                    await client.sendFileFromUrl(from, result.hd, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    break
+                }
+                case 'igdl': {
+                    if (args.length === 0 && !isQuotedChat) return reply(`Download Instagram video post. How?\n${prefix}igdl (alamat video Instagram)\nTanpa tanda kurung`)
+                    let urls = isQuotedChat ? quotedMsg.body : arg
+                    if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
+                    await sendText(resMsg.wait)
+                    let result = await api.igdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let _id = quotedMsg != null ? quotedMsg.id : id
+                    await client.sendFileFromUrl(from, result.url, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    break
+                }
 
                 /* #endregion End of Media Downloader */
 
