@@ -2655,7 +2655,10 @@ const HandleMsg = async (client, message, browser) => {
         }
         // Anti link group function
         if (isAntiLinkGroup && isGroupMsg && (type === 'chat' || type === 'image' || type === 'video')) {
-            if (chats?.match(/chat\.whatsapp\.com/gi) !== null) {
+            let msg = ''
+            if (type === 'image' && caption || type === 'video' && caption) msg = caption
+            else msg = message.body
+            if (msg?.match(/chat\.whatsapp\.com/gi) !== null) {
                 if (!isBotGroupAdmins) return sendText('Gagal melakukan kick, bot bukan admin')
                 if (isGroupAdmins) {
                     reply(`Duh admin yang share link group. Gabisa dikick deh.`)
@@ -2671,7 +2674,10 @@ const HandleMsg = async (client, message, browser) => {
 
         // Anti semua link function
         if (isAntiLink && isGroupMsg && (type === 'chat' || type === 'image' || type === 'video')) {
-            if (chats?.match(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) !== null) {
+            let msg = ''
+            if (type === 'image' && caption || type === 'video' && caption) msg = caption
+            else msg = message.body
+            if (msg?.match(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) !== null) {
                 if (!isBotGroupAdmins) return sendText('Gagal melakukan kick, bot bukan admin')
                 if (isGroupAdmins) {
                     reply(`Duh admin yang share link. Gabisa dikick deh.`)
