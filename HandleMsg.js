@@ -370,7 +370,7 @@ const HandleMsg = async (client, message, browser) => {
             }
             case /\b(bot|sero)\b/ig.test(chats): {
                 let txt = chats.replace(/@\d+/g, '')
-                let respon = await api.simi(txt)
+                let respon = await api.simi(txt.replace(/\bsero\b/i, 'simi'))
                 if (txt !== '') reply(respon.replace(/\bsimi\b/i, 'Sero'))
                 break
             }
@@ -379,8 +379,8 @@ const HandleMsg = async (client, message, browser) => {
         // Jika bot dimention maka akan merespon pesan
         if (message?.mentionedJidList.length == 1 && message.mentionedJidList.includes(botNumber)) {
             let txt = chats.replace(/@\d+/g, '')
-            let respon = await api.simi(txt)
-            if (txt === '') reply(`Iya, ada apa?`)
+            let respon = await api.simi(txt.replace(/\bsero\b/i, 'simi'))
+            if (txt.length === 0) reply(`Iya, ada apa?`)
             else reply(respon.replace(/\bsimi\b/i, 'Sero'))
         }
 
