@@ -368,7 +368,7 @@ const HandleMsg = async (client, message, browser) => {
                 await client.sendPtt(from, path, _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                 break
             }
-            case /\bbot\b/ig.test(chats): {
+            case /\b(bot|sero)\b/ig.test(chats): {
                 let txt = chats.replace(/@\d+/g, '')
                 let respon = await api.simi(txt)
                 if (txt !== '') reply(respon.replace(/\bsimi\b/i, 'Sero'))
