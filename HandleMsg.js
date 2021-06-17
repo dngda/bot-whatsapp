@@ -381,7 +381,7 @@ const HandleMsg = async (client, message, browser) => {
             let txt = chats.replace(/@\d+/g, '')
             let respon = await api.simi(txt.replace(/\bsero\b/ig, 'simi'))
             if (txt.length === 0) reply(`Iya, ada apa?`)
-            else reply(respon.replace(/\b(simi|simsim)\b/ig, 'Sero'))
+            else reply(respon.replace(/\b(simi|simsim)\b/ig, 'sero'))
         }
 
         // Ini Command nya
