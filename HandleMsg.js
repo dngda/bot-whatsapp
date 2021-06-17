@@ -371,7 +371,7 @@ const HandleMsg = async (client, message, browser) => {
             case /\bbot\b/ig.test(chats): {
                 let txt = chats.replace(/@\d+/g, '')
                 let respon = await api.simi(txt)
-                if (txt !== '') reply(respon)
+                if (txt !== '') reply(respon.replace(/\bsimi\b/i, 'Sero'))
                 break
             }
             default:
@@ -381,7 +381,7 @@ const HandleMsg = async (client, message, browser) => {
             let txt = chats.replace(/@\d+/g, '')
             let respon = await api.simi(txt)
             if (txt === '') reply(`Iya, ada apa?`)
-            else reply(respon)
+            else reply(respon.replace(/\bsimi\b/i, 'Sero'))
         }
 
         // Ini Command nya
