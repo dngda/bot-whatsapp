@@ -51,10 +51,13 @@ After running it you need to scan the QR
 - Change menu on [this section](https://github.com/dngda/bot-whatsapp/blob/main/lib/menu.js#L34)
 - Add kata kasar on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/katakasar.json)
 - Change all apiKey on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/api.json.example) then *rename to api.json*
+
+- Create Saweria account and get SaweriaOverlay on [this website](https://saweria.co)
 - Get Api NoBackground on [this website](https://www.remove.bg/)
 - Get Api Fariaz on [this website](https://rest.farzain.com)
 - Get Api Itech on [this website](https://api.i-tech.id)
 - Get Api Zeks on [this website](https://api.zeks.xyz)
+- Get Api Zenz on [this website](https://zenzapi.xyz)
 ---
 
 ## Features

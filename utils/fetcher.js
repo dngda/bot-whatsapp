@@ -32,14 +32,15 @@ const fetchJson = (url, options) =>
  */
 
 const fetchText = (url, options) => {
-    return new Promise((resolve, reject) => {
-        return fetch(url, options)
-            .then(response => response.text())
-            .then(text => resolve(text))
-            .catch(err => {
-                console.error(err)
-                reject(err)
-            })
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(url, options)
+            const text = await response.text()
+            return resolve(text)
+        } catch (err) {
+            console.error(err)
+            reject(err)
+        }
     })
 }
 
@@ -49,18 +50,16 @@ const fetchText = (url, options) => {
  */
 
 const fetchBase64 = (url, mimetype) => {
-    return new Promise((resolve, reject) => {
-        // console.log('Get base64 from:', url)
-        return fetch(url)
-            .then((res) => {
-                const _mimetype = mimetype || res.headers.get('content-type')
-                res.buffer()
-                    .then((result) => resolve(`data:${_mimetype};base64,` + result.toString('base64')))
-            })
-            .catch((err) => {
-                console.error(err)
-                reject(err)
-            })
+    return new Promise(async (resolve, reject) => {
+        try {
+            const res = await fetch(url)
+            const _mimetype = mimetype || res.headers.get('content-type')
+            res.buffer()
+                .then((result_1) => resolve(`data:${_mimetype};base64,` + result_1.toString('base64')))
+        } catch (err) {
+            console.error(err)
+            reject(err)
+        }
     })
 }
 
