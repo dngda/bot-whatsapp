@@ -98,8 +98,8 @@ const start = async (client) => {
                 sewa.checkExpireSewa(client).catch(e => console.log(e))
             })
 
-            // Clear chat every day
-            scheduleJob('1 0 * * *', async () => {
+            // Clear chat every day at 01:01
+            scheduleJob('1 1 * * *', async () => {
                 const chats = await client.getAllChats()
                 client.sendText(ownerNumber, `Processed auto clear with ${chats.length} chat!`)
                 let deleted = 0, cleared = 0
