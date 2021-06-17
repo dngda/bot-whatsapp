@@ -368,10 +368,21 @@ const HandleMsg = async (client, message, browser) => {
                 await client.sendPtt(from, path, _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                 break
             }
+            case /\bbot\b/ig.test(chats): {
+                let txt = chats.replace(/@\d+/g, '')
+                let respon = await api.simi(txt)
+                if (txt !== '') reply(respon)
+                break
+            }
             default:
         }
         // Jika bot dimention maka akan merespon pesan
-        if (message.mentionedJidList && message.mentionedJidList.includes(botNumber)) reply(`Iya, ada apa?`)
+        if (message?.mentionedJidList.length == 1 && message.mentionedJidList.includes(botNumber)) {
+            let txt = chats.replace(/@\d+/g, '')
+            let respon = await api.simi(txt)
+            if (txt === '') reply(`Iya, ada apa?`)
+            else reply(respon)
+        }
 
         // Ini Command nya
         if (isCmd) {
