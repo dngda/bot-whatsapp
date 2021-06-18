@@ -370,8 +370,8 @@ const HandleMsg = async (client, message, browser) => {
             }
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 let txt = chats.replace(/@\d+/g, '')
-                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
-                if (txt !== '') reply(respon.replace(/\b(simi|simsim)\b/ig, 'sero'))
+                let respon = api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
+                if (txt !== '') reply(respon.replace(/\b(simi|simsim)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
                 break
             }
             default:
@@ -382,8 +382,8 @@ const HandleMsg = async (client, message, browser) => {
             if (txt.length === 0) {
                 reply(`Iya, ada apa?`)
             } else {
-                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
-                reply(respon.replace(/\b(simi|simsim)\b/ig, 'sero'))
+                let respon = api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
+                reply(respon.replace(/\b(simi|simsim)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
             }
         }
 
