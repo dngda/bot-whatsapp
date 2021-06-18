@@ -1641,7 +1641,7 @@ const HandleMsg = async (client, message, browser) => {
                                     sleep(detik * 1000 / 4).then(async () => {
                                         const ans1 = await tebakgb.getAns(from)
                                         if (ans1 === false) return true
-                                        else sendText(`⏳ ${((detik * 1000) - (detik * 1000 / 4 * 2)) / 1000} detik lagi\nHint: ${res.ans.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')}`)
+                                        else sendText(`⏳ ${((detik * 1000) - (detik * 1000 / 4 * 2)) / 1000} detik lagi\nHint: ${res.answer.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')}`)
                                         sleep(detik * 1000 / 4).then(async () => {
                                             const ans2 = await tebakgb.getAns(from)
                                             if (ans2 === false) return true
@@ -1649,7 +1649,7 @@ const HandleMsg = async (client, message, browser) => {
                                             sleep(detik * 1000 / 4).then(async () => {
                                                 const ans3 = await tebakgb.getAns(from)
                                                 if (ans3 === false) return true
-                                                else sendText(`⌛ Waktu habis!\nJawabannya adalah: *${res.ans}*`)
+                                                else sendText(`⌛ Waktu habis!\nJawabannya adalah: *${res.answer}*`)
                                                 tebakgb.delData(from)
                                             })
                                         })
