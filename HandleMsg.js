@@ -936,7 +936,7 @@ const HandleMsg = async (client, message, browser) => {
                             })
                         let { data } = resSurah.data
                         let pesan = ""
-                        pesan = pesan + "Tafsir Q.S. " + data.surah.name.transliteration.id + ":" + args[1] + "\n\n"
+                        pesan = pesan + "Tafsir Q.S. " + data.surah.name.transliteration.id + ":" + ayat + "\n\n"
                         pesan = pesan + data.text.arab + "\n\n"
                         pesan = pesan + "_" + data.translation.id + "_" + "\n\n" + data.tafsir.id.long
                         reply(pesan)
