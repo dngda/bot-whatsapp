@@ -224,6 +224,12 @@ const HandleMsg = async (client, message, browser) => {
                 })
         }
 
+        const sendSFU = async (url) => {
+            return await client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
+            ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
+            : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+        }
+
         const audioConverter = async (complexFilter, name) => {
             const _inp = await decryptMedia(quotedMsg)
             let time = moment(t * 1000).format('mmss')
@@ -596,7 +602,7 @@ const HandleMsg = async (client, message, browser) => {
                     } else if (args.length === 1) {
                         try {
                             if (!isUrl(url)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
-                            client.sendStickerfromUrl(from, url).then((r) => (!r && r != undefined)
+                            client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
                                 : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
                         } catch (e) {
