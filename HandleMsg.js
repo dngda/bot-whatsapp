@@ -1508,6 +1508,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'pinterest2':
                 case 'pin2': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari pinterest v2.\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto\n\nGunakan apabila /pinterest atau /pin error`)
+                    if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
                     let img = await scraper.pinterest(browser, arg).catch(e => {
                         console.log(`pin2 err : ${e}`)
                         return reply(resMsg.error.norm)
@@ -1543,6 +1544,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'sreddit': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`)
                     const hasilreddit = await api.sreddit(arg)
+                    if (hasilreddit.nsfw === true) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
                     await client.sendFileFromUrl(from, hasilreddit.url, '', hasilreddit.title, id)
                         .catch((e) => {
                             console.log(e)
