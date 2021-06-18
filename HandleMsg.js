@@ -1226,9 +1226,9 @@ const HandleMsg = async (client, message, browser) => {
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     await sendText(resMsg.wait)
-                    let result = await api.fbdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let res = await api.fbdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    await client.sendFileFromUrl(from, result.hd, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    await client.sendFileFromUrl(from, res.result, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
                 }
                 case 'twdl': {
@@ -1238,7 +1238,8 @@ const HandleMsg = async (client, message, browser) => {
                     await sendText(resMsg.wait)
                     let result = await api.twdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    await client.sendFileFromUrl(from, result.hd, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    let uls = lodash.find(result, {resolution: "720p"})?.link || lodash.find(result, {resolution: "360p"})?.link || lodash.find(result, {resolution: "270p"})?.link
+                    await client.sendFileFromUrl(from, uls, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
                 }
                 case 'igdl': {
@@ -1248,7 +1249,7 @@ const HandleMsg = async (client, message, browser) => {
                     await sendText(resMsg.wait)
                     let result = await api.igdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    await client.sendFileFromUrl(from, result.url, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
+                    await client.sendFileFromUrl(from, result, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
                 }
 
@@ -1629,9 +1630,9 @@ const HandleMsg = async (client, message, browser) => {
                     const cek = await tebakgb.getAns(from)
                     if (cek != false) return reply(`Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebakgb.getTebakGambar(from).then(async res => {
-                        let waktu = res.ans.split(' ').length - 1
+                        let waktu = res.answer.split(' ').length - 1
                         let detik = waktu * 60
-                        await client.sendFileFromUrl(from, res.url, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.\n\n*${prefix}skip* untuk skip`, id)
+                        await client.sendFileFromUrl(from, res.image, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.\n\n*${prefix}skip* untuk skip`, id)
                             .then(() => {
                                 sleep(detik * 1000 / 4).then(async () => {
                                     const ans = await tebakgb.getAns(from)

@@ -54,10 +54,10 @@ After running it you need to scan the QR
 
 - Create Saweria account and get SaweriaOverlay on [this website](https://saweria.co)
 - Get Api NoBackground on [this website](https://www.remove.bg/)
+- Get Api LolHuman on [this website](https://lolhuman.herokuapp.com)
 - Get Api Fariaz on [this website](https://rest.farzain.com)
 - Get Api Itech on [this website](https://api.i-tech.id)
 - Get Api Zeks on [this website](https://api.zeks.xyz)
-- Get Api Zenz on [this website](https://zenzapi.xyz)
 ---
 
 ## Features
