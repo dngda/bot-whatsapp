@@ -151,7 +151,7 @@ const HandleMsg = async (client, message, browser) => {
         // Serialized body
         if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
         else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
-        const croppedChats = (chats?.length > 30) ? chats?.substring(0, 30) + '...' : chats
+        const croppedChats = (chats?.length > 40) ? chats?.substring(0, 40) + '...' : chats
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
@@ -322,7 +322,7 @@ const HandleMsg = async (client, message, browser) => {
 
         // Log Commands
         if (args.length === 0) var argsLog = color('with no args', 'grey')
-        else var argsLog = (arg.length > 15) ? `${arg.substring(0, 15)}...` : arg
+        else var argsLog = (arg.length > 30) ? `${arg.substring(0, 30)}...` : arg
 
         if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname)) }
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
@@ -837,7 +837,7 @@ const HandleMsg = async (client, message, browser) => {
                     break
 
                 case 'textpro': {
-                    
+
                     break
                 }
 
@@ -1229,7 +1229,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'fbdl': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Facebook video post. How?\n${prefix}fbdl (alamat video Facebook)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
-                    if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
+                    if (!isUrl(urls) && urls.match(/facebook/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Facebook') }
                     await sendText(resMsg.wait)
                     let res = await api.fbdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
@@ -1239,7 +1239,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'twdl': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Twitter video post. How?\n${prefix}twdl (alamat video Twitter)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
-                    if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
+                    if (!isUrl(urls) && urls.match(/twitter/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Twitter') }
                     await sendText(resMsg.wait)
                     let result = await api.twdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
@@ -1250,7 +1250,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'igdl': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Instagram video post. How?\n${prefix}igdl (alamat video Instagram)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
-                    if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
+                    if (!isUrl(urls) && urls.match(/instagram/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Instagram') }
                     await sendText(resMsg.wait)
                     let result = await api.igdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
