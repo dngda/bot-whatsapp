@@ -2510,7 +2510,7 @@ const HandleMsg = async (client, message, browser) => {
                         let _id = group.contact.id
                         let isSewa = await sewa.isSewa(_id)
                         if (!groupPrem.includes(_id) || !isSewa) {
-                            await client.sendText(_id, `Maaf bot sedang pembersihan, total group aktif : ${allGroupz.length}.\nPembersihan group dilakukan tiap awal bulan!\nTerima kasih.`)
+                            await client.sendText(_id, `Maaf bot sedang pembersihan, total group aktif : ${allGroupz.length}.\nTerima kasih.`)
                             await sleep(2000)
                             await client.leaveGroup(_id)
                             await sleep(1000)
