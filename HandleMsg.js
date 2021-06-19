@@ -2372,7 +2372,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length == 0) return reply(`Untuk mengeluarkan bot dari groupId\n\nCaranya ketik: \n${prefix}leavegroup <groupId> <alasan>`)
                     let _groupId = args[0]
-                    await client.sendText(_groupId, arg1)
+                    await client.sendText(_groupId, arg1).catch(() => reply('Error'))
 
                     let pos = ngegas.indexOf(_groupId)
                     if (pos !== -1) {
@@ -2399,7 +2399,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
 
                     setTimeout(async () => {
-                        await client.leaveGroup(_groupId)
+                        await client.leaveGroup(_groupId).then(() => client.sendText(ownerNumber, 'Berhasil'))
                     }, 2000)
                     setTimeout(async () => {
                         await client.deleteChat(_groupId)
