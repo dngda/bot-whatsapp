@@ -2527,12 +2527,12 @@ const HandleMsg = async (client, message, browser) => {
                                 welcome.splice(posi, 1)
                                 writeFileSync('./data/welcome.json', JSON.stringify(welcome))
                             }
-                            let posa = antiLinkGroup.indexOf(chatId)
+                            let posa = antiLinkGroup.indexOf(_id)
                             if (posa !== -1) {
                                 antiLinkGroup.splice(posa, 1)
                                 writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
                             }
-                            let posd = antiLink.indexOf(chatId)
+                            let posd = antiLink.indexOf(_id)
                             if (posd !== -1) {
                                 antiLink.splice(posd, 1)
                                 writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
