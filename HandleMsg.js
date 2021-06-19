@@ -383,9 +383,11 @@ const HandleMsg = async (client, message, browser) => {
                 break
             }
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
-                let txt = chats.replace(/@\d+/g, '')
-                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).catch(err => console.log(err))
-                if (txt !== '') reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
+                if (!isCmd) {
+                    let txt = chats.replace(/@\d+/g, '')
+                    let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).catch(err => console.log(err))
+                    if (txt !== '') reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
+                }
                 break
             }
             default:
