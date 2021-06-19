@@ -2110,16 +2110,28 @@ const HandleMsg = async (client, message, browser) => {
                     await sendText('Oh beneran ya. Gapapa aku paham. Selamat tinggal 👋🏻🥲')
 
                     let pos = ngegas.indexOf(chatId)
-                    ngegas.splice(pos, 1)
-                    writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                    if (pos !== -1) {
+                        ngegas.splice(pos, 1)
+                        writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                    }
 
                     let posi = welcome.indexOf(chatId)
-                    welcome.splice(posi, 1)
-                    writeFileSync('./data/welcome.json', JSON.stringify(welcome))
+                    if (posi !== -1) {
+                        welcome.splice(posi, 1)
+                        writeFileSync('./data/welcome.json', JSON.stringify(welcome))
+                    }
 
                     let posa = antiLinkGroup.indexOf(chatId)
-                    antiLinkGroup.splice(posa, 1)
-                    writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
+                    if (posa !== -1) {
+                        antiLinkGroup.splice(posa, 1)
+                        writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
+                    }
+
+                    let posd = antiLink.indexOf(chatId)
+                    if (posd !== -1) {
+                        antiLink.splice(posd, 1)
+                        writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
+                    }
 
                     setTimeout(async () => {
                         await client.leaveGroup(groupId)
@@ -2354,6 +2366,44 @@ const HandleMsg = async (client, message, browser) => {
                 /* #endregion other */
 
                 /* #region Owner Commands */
+                case 'leavegroup': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    if (args.length == 0) return reply(`Untuk mengeluarkan bot dari groupId\n\nCaranya ketik: \n${prefix}leavegroup <groupId>`)
+                    let groupId = ``
+
+                    let pos = ngegas.indexOf(groupId)
+                    if (pos !== -1) {
+                        ngegas.splice(pos, 1)
+                        writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                    }
+
+                    let posi = welcome.indexOf(groupId)
+                    if (posi !== -1) {
+                        welcome.splice(posi, 1)
+                        writeFileSync('./data/welcome.json', JSON.stringify(welcome))
+                    }
+
+                    let posa = antiLinkGroup.indexOf(groupId)
+                    if (posa !== -1) {
+                        antiLinkGroup.splice(posa, 1)
+                        writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
+                    }
+
+                    let posd = antiLink.indexOf(groupId)
+                    if (posd !== -1) {
+                        antiLink.splice(posd, 1)
+                        writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
+                    }
+
+                    setTimeout(async () => {
+                        await client.leaveGroup(groupId)
+                    }, 2000)
+                    setTimeout(async () => {
+                        await client.deleteChat(groupId)
+                    }, 4000)
+                    break
+                }
+
                 case 'addsewa': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length !== 2) return reply(`Untuk menyewakan bot\n\nCaranya ketik: \n${prefix}addsewa <brphari> <linkgroup>`)
