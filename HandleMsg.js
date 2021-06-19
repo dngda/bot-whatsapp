@@ -2371,37 +2371,37 @@ const HandleMsg = async (client, message, browser) => {
                 case 'leavegroup': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length == 0) return reply(`Untuk mengeluarkan bot dari groupId\n\nCaranya ketik: \n${prefix}leavegroup <groupId>`)
-                    let groupId = ``
+                    let _groupId = args[0]
 
-                    let pos = ngegas.indexOf(groupId)
+                    let pos = ngegas.indexOf(_groupId)
                     if (pos !== -1) {
                         ngegas.splice(pos, 1)
                         writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
                     }
 
-                    let posi = welcome.indexOf(groupId)
+                    let posi = welcome.indexOf(_groupId)
                     if (posi !== -1) {
                         welcome.splice(posi, 1)
                         writeFileSync('./data/welcome.json', JSON.stringify(welcome))
                     }
 
-                    let posa = antiLinkGroup.indexOf(groupId)
+                    let posa = antiLinkGroup.indexOf(_groupId)
                     if (posa !== -1) {
                         antiLinkGroup.splice(posa, 1)
                         writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
                     }
 
-                    let posd = antiLink.indexOf(groupId)
+                    let posd = antiLink.indexOf(_groupId)
                     if (posd !== -1) {
                         antiLink.splice(posd, 1)
                         writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
                     }
 
                     setTimeout(async () => {
-                        await client.leaveGroup(groupId)
+                        await client.leaveGroup(_groupId)
                     }, 2000)
                     setTimeout(async () => {
-                        await client.deleteChat(groupId)
+                        await client.deleteChat(_groupId)
                     }, 4000)
                     break
                 }
