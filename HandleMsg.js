@@ -216,7 +216,7 @@ const HandleMsg = async (client, message, browser) => {
                     console.log(e)
                 })
         }
-        
+
         const sendFFU = async (url, capt) => {
             return await client.sendFileFromUrl(from, url, '', capt, id)
                 .catch(e => {
@@ -226,8 +226,8 @@ const HandleMsg = async (client, message, browser) => {
 
         const sendSFU = async (url) => {
             return await client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
-            ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
-            : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+                ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
+                : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
         }
 
         const audioConverter = async (complexFilter, name) => {
@@ -385,7 +385,7 @@ const HandleMsg = async (client, message, browser) => {
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 let txt = chats.replace(/@\d+/g, '')
                 let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).catch(err => console.log(err))
-                if (txt !== '') reply(respon.replace(/\b(simi|simsim)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
+                if (txt !== '') reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
                 break
             }
             default:
@@ -397,7 +397,7 @@ const HandleMsg = async (client, message, browser) => {
                 reply(`Iya, ada apa?`)
             } else {
                 let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).catch(err => console.log(err))
-                reply(respon.replace(/\b(simi|simsim)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
+                reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
             }
         }
 
@@ -464,14 +464,13 @@ const HandleMsg = async (client, message, browser) => {
                             `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
                         )
                         if (cgrup.groupMetadata.participants.length < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
-                        await client.joinGroupViaLink(linkgrup)
-                            .then(async () => {
-                                await reply(resMsg.success.join)
-                                await client.sendText(chekgrup.id, resMsg.success.greeting)
-                            })
-                            .catch(async () => {
-                                return reply(resMsg.error.join)
-                            })
+                        await sewa.trialSewa(client, args[0]).then(res => {
+                            if (res) reply(`Berhasil claim trial sewa bot selama 7 hari.`)
+                            else reply(`Group sudah pernah claim trial. Tunggu habis dulu bro`)
+                        }).catch(e => {
+                            console.log(e)
+                            reply(resMsg.error.join)
+                        })
                     }
                     break
                 }
@@ -1257,7 +1256,7 @@ const HandleMsg = async (client, message, browser) => {
                     await sendText(resMsg.wait)
                     let result = await api.twdl(urls).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    let uls = lodash.find(result, {resolution: "720p"})?.link || lodash.find(result, {resolution: "360p"})?.link || lodash.find(result, {resolution: "270p"})?.link
+                    let uls = lodash.find(result, { resolution: "720p" })?.link || lodash.find(result, { resolution: "360p" })?.link || lodash.find(result, { resolution: "270p" })?.link
                     await client.sendFileFromUrl(from, uls, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
                 }
