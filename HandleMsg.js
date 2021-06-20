@@ -219,6 +219,7 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         const sendFFU = async (url, capt) => {
+            sendText(resMsg.wait)
             if (!capt) capt = ''
             return await client.sendFileFromUrl(from, url, '', capt, id)
                 .catch(e => {
@@ -228,6 +229,7 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         const sendSFU = async (url) => {
+            sendText(resMsg.wait)
             return await client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
                 : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
@@ -238,7 +240,7 @@ const HandleMsg = async (client, message, browser) => {
                 console.log(e)
                 sendText(resMsg.error.norm)
             })
-            sendText(JSON.stringify(data, null, 2))
+            return sendText(JSON.stringify(data, null, 2))
         }
 
         const audioConverter = async (complexFilter, name) => {
@@ -785,10 +787,24 @@ const HandleMsg = async (client, message, browser) => {
                             console.log(err)
                             await reply(resMsg.error.norm)
                         }
-
                     } else {
                         await reply(`Tidak ada gambar/format salah! Silakan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\n` +
                             `Contoh: ${prefix}memefy ini teks atas | ini teks bawah`)
+                    }
+                    break
+                }
+
+                case 'ocr': {
+                    if (!isMedia && !isQuotedImage) return reply(`Scan tulisan dari gambar. Reply gambar atau kirim gambar dengan caption ${prefix}ocr`)
+                    try {
+                        let enc = isQuotedImage ? quotedMsg : message
+                        let mediaData = await decryptMedia(enc)
+                        let _url = await uploadImages(mediaData, false)
+                        let resu = await api.ocr(_url)
+                        reply(resu)
+                    } catch (err) {
+                        console.log(err)
+                        await reply(resMsg.error.norm)
                     }
                     break
                 }
@@ -1131,6 +1147,20 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
                 /* #endregion Islam Commands */
+
+                /* #region Maker */
+                case 'attp': {
+                    if (args.length == 0) reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
+                    sendSFU(lolApi(`attp`) + `&text=${arg}`)
+                    break
+                }
+
+                case 'ttp': {
+                    if (args.length == 0) reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
+                    sendSFU(lolApi(`ttp`) + `&text=${arg}`)
+                    break
+                }
+                /* #endregion */
 
                 /* #region Media Downloader */
                 case 'ytmp3': {
@@ -1653,7 +1683,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'cekcovid':
                     let { data } = await axios.get('https://api.terhambar.com/negara/Indonesia')
                     let aC = '```'
-                    if (!isQuotedLocation) return reply(`Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}cekcovid\n` +
+                    if (!isQuotedLocation) return reply(`Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}cekcovid\n\n` +
                         `Status covid di Indonesia\n` +
                         `${aC}Tanggal      :${aC} ${data.terakhir}\n` +
                         `${aC}Kasus Baru   :${aC} ${data.kasus_baru}\n` +

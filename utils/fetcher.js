@@ -70,12 +70,12 @@ const fetchBase64 = (url, mimetype) => {
  * @param  {Boolean} resize
  */
 
-const uploadImages = (buffData, type) => {
+const uploadImages = (buffData, resize) => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
         const { ext } = await fromBuffer(buffData)
         const filePath = 'utils/tmp.' + ext
-        const _buffData = type ? await resizeImage(buffData, false) : buffData
+        const _buffData = resize ? await resizeImage(buffData, false) : buffData
         writeFile(filePath, _buffData, { encoding: 'base64' }, (err) => {
             if (err) return reject(err)
             // console.log('Uploading image to telegra.ph server...')
