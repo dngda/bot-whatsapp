@@ -2111,30 +2111,6 @@ const HandleMsg = async (client, message, browser) => {
                     if (!isGroupAdmins) return reply(resMsg.error.admin)
                     await sendText('Oh beneran ya. Gapapa aku paham. Selamat tinggal 👋🏻🥲')
 
-                    let pos = ngegas.indexOf(chatId)
-                    if (pos !== -1) {
-                        ngegas.splice(pos, 1)
-                        writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
-                    }
-
-                    let posi = welcome.indexOf(chatId)
-                    if (posi !== -1) {
-                        welcome.splice(posi, 1)
-                        writeFileSync('./data/welcome.json', JSON.stringify(welcome))
-                    }
-
-                    let posa = antiLinkGroup.indexOf(chatId)
-                    if (posa !== -1) {
-                        antiLinkGroup.splice(posa, 1)
-                        writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
-                    }
-
-                    let posd = antiLink.indexOf(chatId)
-                    if (posd !== -1) {
-                        antiLink.splice(posd, 1)
-                        writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
-                    }
-
                     setTimeout(async () => {
                         await client.leaveGroup(groupId)
                     }, 2000)
@@ -2519,26 +2495,6 @@ const HandleMsg = async (client, message, browser) => {
                             await client.leaveGroup(_id)
                             await sleep(1000)
                             await client.deleteChat(_id)
-                            let pos = ngegas.indexOf(_id)
-                            if (pos !== -1) {
-                                ngegas.splice(pos, 1)
-                                writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
-                            }
-                            let posi = welcome.indexOf(_id)
-                            if (posi !== -1) {
-                                welcome.splice(posi, 1)
-                                writeFileSync('./data/welcome.json', JSON.stringify(welcome))
-                            }
-                            let posa = antiLinkGroup.indexOf(_id)
-                            if (posa !== -1) {
-                                antiLinkGroup.splice(posa, 1)
-                                writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
-                            }
-                            let posd = antiLink.indexOf(_id)
-                            if (posd !== -1) {
-                                antiLink.splice(posd, 1)
-                                writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
-                            }
                             count += 1
                         }
                     }

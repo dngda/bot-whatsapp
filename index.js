@@ -167,10 +167,12 @@ const start = async (client) => {
             const host = await client.getHostNumber() + '@c.us'
             const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
             const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
+            const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
+            const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
             const isWelcome = welcome.includes(event.chat)
             let profile = await client.getProfilePicFromServer(event.who)
             // kondisi ketika seseorang diinvite/join group lewat link
-            if (event.action === 'add' && event.who !== host && isWelcome) {
+            if (event.action === 'add' && event.who !== host && isWelcome && event.hasOwnProperty('by')) {
                 if (profile !== '' || profile !== undefined) await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Anjay keren fotonya member baru`)
                 await client.sendTextWithMentions(event.chat, `Halo semua! Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\n\nJangan lupa baca deskripsi group!`)
             }
@@ -180,15 +182,29 @@ const start = async (client) => {
                 let pushname = who.pushname || who.verifiedName || who.formattedName
                 await client.sendText(event.chat, `Eh ada yang keluar ya? Dadahhh ${pushname} 👋✨`)
             }
-            // 
+            // Saat host keluar
             if (event.action === 'remove' && event.who === host) {
-                let posi = welcome.indexOf(event.chat)
-                welcome.splice(posi, 1)
-                fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
-
-                let pos = ngegas.indexOf(event.chat)
-                ngegas.splice(pos, 1)
-                fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                let _id = event.chat
+                let pos = ngegas.indexOf(_id)
+                if (pos !== -1) {
+                    ngegas.splice(pos, 1)
+                    fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                }
+                let posi = welcome.indexOf(_id)
+                if (posi !== -1) {
+                    welcome.splice(posi, 1)
+                    fs.writeFileSync('./data/welcome.json', JSON.stringify(welcome))
+                }
+                let posa = antiLinkGroup.indexOf(_id)
+                if (posa !== -1) {
+                    antiLinkGroup.splice(posa, 1)
+                    fs.writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
+                }
+                let posd = antiLink.indexOf(_id)
+                if (posd !== -1) {
+                    antiLink.splice(posd, 1)
+                    fs.writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
+                }
             }
         })
 
