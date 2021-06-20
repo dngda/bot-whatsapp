@@ -111,7 +111,8 @@ const HandleMsg = async (client, message, browser) => {
         success: {
             join: 'Berhasil join group via link!',
             sticker: 'Here\'s your sticker',
-            greeting: `Hai guys 👋 perkenalkan saya SeroBot. Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`
+            greeting: `Hai guys 👋 perkenalkan saya SeroBot.` +
+                `Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`
         },
         badw: sample([
             'Capek saya mengcatat dosa anda',
@@ -218,9 +219,11 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         const sendFFU = async (url, capt) => {
+            if (!capt) capt = ''
             return await client.sendFileFromUrl(from, url, '', capt, id)
                 .catch(e => {
                     console.log(e)
+                    sendText(resMsg.error.norm)
                 })
         }
 
@@ -228,6 +231,14 @@ const HandleMsg = async (client, message, browser) => {
             return await client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
                 : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+        }
+
+        const getJSON = async (slash) => {
+            let { data } = await axios.get(slash).catch(e => {
+                console.log(e)
+                sendText(resMsg.error.norm)
+            })
+            sendText(JSON.stringify(data, null, 2))
         }
 
         const audioConverter = async (complexFilter, name) => {
@@ -291,7 +302,8 @@ const HandleMsg = async (client, message, browser) => {
         if (isCmd && isFiltered(from)) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
-            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), _whenGroup)
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
+                color(`${command}[${args.length}]`), 'from', color(pushname), _whenGroup)
             return reply('Mohon untuk perintah diberi jeda!')
         }
 
@@ -304,7 +316,8 @@ const HandleMsg = async (client, message, browser) => {
         if (chats != "" && isFiltered(from + croppedChats) && croppedChats != undefined) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
-            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
+                color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
             client.sendText(ownerNumber,
                 `Ada yang spam cuy:\n` +
                 `-> \`\`\`GroupId :\`\`\` ${groupId}\n` +
@@ -321,25 +334,36 @@ const HandleMsg = async (client, message, browser) => {
         if (isFiltered(pengirim) && !isCmd && chats != "") {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
-            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
+                color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
             return null
         }
 
         // Avoid kata kasar spam
         if (isFiltered(from) && isGroupMsg && isKasar) {
-            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle))
+            console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
+                color(`${command}[${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle))
             return reply('Mohon untuk tidak melakukan spam kata kasar!')
         }
 
         // Log Kata kasar
-        if (!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+        if (!isCmd && isKasar && isGroupMsg) {
+            console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
+                'from', color(pushname), 'in', color(name || formattedTitle))
+        }
 
         // Log Commands
         if (args.length === 0) var argsLog = color('with no args', 'grey')
         else var argsLog = (arg.length > 30) ? `${arg.substring(0, 30)}...` : arg
 
-        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname)) }
-        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+        if (isCmd && !isGroupMsg) {
+            console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
+                color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname))
+        }
+        if (isCmd && isGroupMsg) {
+            console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
+                color(`${command}[${args.length}]`), ':', color(argsLog, 'magenta'), 'from', color(pushname), 'in', color(name || formattedTitle))
+        }
 
         //[BETA] Avoid Spam Message
         if (isCmd) addFilter(from, 2000) // 2 sec delay before proessing commands
@@ -368,7 +392,8 @@ const HandleMsg = async (client, message, browser) => {
             }
             case /^=/.test(chats): {
                 if (chats.match(/\d[x÷×\=\+\-\*\/\^e]/g)) {
-                    await reply(`${eval(chats.slice(1).replace(/\^/g, '**').replace(/x/ig, '*').replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
+                    await reply(`${eval(chats.slice(1).replace(/\^/g, '**').replace(/x/ig, '*')
+                        .replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
                 }
                 break
             }
@@ -627,7 +652,15 @@ const HandleMsg = async (client, message, browser) => {
                                 return reply('Maaf terjadi error atau filenya terlalu besar!')
                             })
                     } else {
-                        await reply(`Tidak ada gambar/video!\nUntuk menggunakan ${prefix}sticker, kirim gambar/reply gambar atau *file png/webp* dengan caption\n*${prefix}sticker* (biasa uncrop)\n*${prefix}sticker crop* (square crop)\n*${prefix}sticker circle* (circle crop)\n*${prefix}sticker nobg* (tanpa background)\n\natau Kirim pesan dengan\n*${prefix}sticker <link_gambar>*\n\nUntuk membuat *sticker animasi.* Kirim video/gif atau reply/quote video/gif dengan caption *${prefix}sticker* max 8 detik`)
+                        await reply(`Tidak ada gambar/video!\n` +
+                            `Untuk menggunakan ${prefix}sticker, kirim gambar/reply gambar atau *file png/webp* dengan caption\n` +
+                            `*${prefix}sticker* (biasa uncrop)\n` +
+                            `*${prefix}sticker crop* (square crop)\n` +
+                            `*${prefix}sticker circle* (circle crop)\n` +
+                            `*${prefix}sticker nobg* (tanpa background)\n\n` +
+                            `Atau kirim pesan dengan\n` +
+                            `*${prefix}sticker <link_gambar>*\n\n` +
+                            `Untuk membuat *sticker animasi.* Kirim video/gif atau reply/quote video/gif dengan caption *${prefix}sticker* max 8 detik`)
                     }
                     break
                 }
@@ -711,7 +744,10 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'flip': {
-                    if (!isMedia && args.length === 0 && !isQuotedImage) return reply(`Flip gambar secara vertical atau horizontal. Kirim gambar dengan caption:\n${prefix}flip h -> untuk flip horizontal\n${prefix}flip v -> untuk flip vertical`)
+                    if (!isMedia && args.length === 0 && !isQuotedImage) return reply(
+                        `Flip gambar secara vertical atau horizontal. Kirim gambar dengan caption:\n` +
+                        `${prefix}flip h -> untuk flip horizontal\n` +
+                        `${prefix}flip v -> untuk flip vertical`)
                     const _enc = isQuotedImage ? quotedMsg : message
                     const _img = await decryptMedia(_enc)
                         .catch(e => {
@@ -751,13 +787,15 @@ const HandleMsg = async (client, message, browser) => {
                         }
 
                     } else {
-                        await reply(`Tidak ada gambar/format salah! Silakan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\ncontoh: ${prefix}memefy ini teks atas | ini teks bawah`)
+                        await reply(`Tidak ada gambar/format salah! Silakan kirim gambar dengan caption ${prefix}memefy <teks_atas> | <teks_bawah>\n` +
+                            `Contoh: ${prefix}memefy ini teks atas | ini teks bawah`)
                     }
                     break
                 }
 
                 case 'nulis': {
-                    if (args.length == 0 && !isQuotedChat) return reply(`Membuat bot menulis teks yang dikirim menjadi gambar\nPemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`)
+                    if (args.length == 0 && !isQuotedChat) return reply(`Membuat bot menulis teks yang dikirim menjadi gambar\n` +
+                        `Pemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`)
                     const content = isQuotedChat ? quotedMsgObj.content.toString() : arg
                     const ress = await api.tulis(content)
                         .catch((e) => {
@@ -829,13 +867,22 @@ const HandleMsg = async (client, message, browser) => {
                         }
                     }
                     else {
-                        await reply(`Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\ncontoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4`)
+                        await reply(`Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\n` +
+                            `Contoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4`)
                     }
                     break
                 case 'trans':
                 case 'translate':
                     if (args.length === 0 && !isQuotedChat) return reply(`Translate text ke kode bahasa, penggunaan: \n${prefix}trans <kode bahasa> <text>\nContoh : \n -> ${prefix}trans id some english or other language text here\n -> ${prefix}translate en beberapa kata bahasa indonesia atau bahasa lain. \n\nUntuk kode bahasa cek disini : https://anotepad.com/note/read/7fd833h4`)
-                    const lang = ['en', 'pt', 'af', 'sq', 'am', 'ar', 'hy', 'az', 'eu', 'be', 'bn', 'bs', 'bg', 'ca', 'ceb', 'ny', 'zh-CN', 'co', 'hr', 'cs', 'da', 'nl', 'eo', 'et', 'tl', 'fi', 'fr', 'fy', 'gl', 'ka', 'de', 'el', 'gu', 'ht', 'ha', 'haw', 'iw', 'hi', 'hmn', 'hu', 'is', 'ig', 'id', 'ga', 'it', 'ja', 'jw', 'kn', 'kk', 'km', 'rw', 'ko', 'ku', 'ky', 'lo', 'la', 'lv', 'lt', 'lb', 'mk', 'mg', 'ms', 'ml', 'mt', 'mi', 'mr', 'mn', 'my', 'ne', 'no', 'or', 'ps', 'fa', 'pl', 'pa', 'ro', 'ru', 'sm', 'gd', 'sr', 'st', 'sn', 'sd', 'si', 'sk', 'sl', 'so', 'es', 'su', 'sw', 'sv', 'tg', 'ta', 'tt', 'te', 'th', 'tr', 'tk', 'uk', 'ur', 'ug', 'uz', 'vi', 'cy', 'xh', 'yi', 'yo', 'zu', 'zh-TW']
+                    const lang = ['en', 'pt', 'af', 'sq', 'am', 'ar', 'hy', 'az', 'eu',
+                        'be', 'bn', 'bs', 'bg', 'ca', 'ceb', 'ny', 'zh-CN', 'co', 'hr', 'cs',
+                        'da', 'nl', 'eo', 'et', 'tl', 'fi', 'fr', 'fy', 'gl', 'ka', 'de', 'el',
+                        'gu', 'ht', 'ha', 'haw', 'iw', 'hi', 'hmn', 'hu', 'is', 'ig', 'id', 'ga',
+                        'it', 'ja', 'jw', 'kn', 'kk', 'km', 'rw', 'ko', 'ku', 'ky', 'lo', 'la', 'lv',
+                        'lt', 'lb', 'mk', 'mg', 'ms', 'ml', 'mt', 'mi', 'mr', 'mn', 'my', 'ne', 'no',
+                        'or', 'ps', 'fa', 'pl', 'pa', 'ro', 'ru', 'sm', 'gd', 'sr', 'st', 'sn', 'sd',
+                        'si', 'sk', 'sl', 'so', 'es', 'su', 'sw', 'sv', 'tg', 'ta', 'tt', 'te', 'th',
+                        'tr', 'tk', 'uk', 'ur', 'ug', 'uz', 'vi', 'cy', 'xh', 'yi', 'yo', 'zu', 'zh-TW']
 
                     if (lang.includes(args[0])) {
                         translate(isQuotedChat ? quotedMsgObj.content.toString() : arg.trim().substring(arg.indexOf(' ') + 1), {
@@ -877,23 +924,37 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'infosurah': {
                     if (args.length == 0) return reply(`*_${prefix}infosurah <nama surah>_*\nMenampilkan informasi lengkap mengenai surah tertentu. Contoh penggunan: ${prefix}infosurah al-baqarah`)
-                    var { data } = Surah
+                    let { data } = Surah
                     let idx = data.findIndex(function (post) {
                         if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                             return true
                     })
                     if (data[idx] === undefined) return reply(`Maaf format salah atau nama surah tidak sesuai`)
                     let pesan = ""
-                    pesan = pesan + "Nama : " + data[idx].name.transliteration.id + "\n" + "Asma : " + data[idx].name.short + "\n" + "Arti : " + data[idx].name.translation.id + "\n" + "Jumlah ayat : " + data[idx].numberOfVerses + "\n" + "Nomor surah : " + data[idx].number + "\n" + "Jenis : " + data[idx].revelation.id + "\n" + "Keterangan : " + data[idx].tafsir.id
+                    pesan = pesan +
+                        "Nama : " + data[idx].name.transliteration.id + "\n" +
+                        "Asma : " + data[idx].name.short + "\n" +
+                        "Arti : " + data[idx].name.translation.id + "\n" +
+                        "Jumlah ayat : " + data[idx].numberOfVerses + "\n" +
+                        "Nomor surah : " + data[idx].number + "\n" +
+                        "Jenis : " + data[idx].revelation.id + "\n" +
+                        "Keterangan : " + data[idx].tafsir.id
                     reply(pesan)
                     break
                 }
 
                 case 'surah': {
-                    if (args.length == 0) return reply(`*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama/nomor surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id\n${prefix}surah 1 1 id`)
+                    if (args.length == 0) return reply(
+                        `*_${prefix}surah <nama surah> <ayat>_*\n` +
+                        `Menampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia.\n` +
+                        `Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n` +
+                        `*_${prefix}surah <nama/nomor surah> <ayat> en/id_*\n` +
+                        `Menampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia.\n` +
+                        `Contoh penggunaan : ${prefix}surah al-baqarah 1 id\n` +
+                        `${prefix}surah 1 1 id`)
                     let nmr = 0
                     if (isNaN(args[0])) {
-                        var { data } = Surah
+                        let { data } = Surah
                         let idx = data.findIndex(function (post) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true
@@ -912,7 +973,7 @@ const HandleMsg = async (client, message, browser) => {
                                 return sendText(resMsg.error.norm)
                             })
                         if (resSurah === undefined) return reply(`Maaf error/format salah`)
-                        var { data } = resSurah.data
+                        let { data } = resSurah.data
                         let bhs = last(args)
                         let pesan = ""
                         pesan = pesan + data.text.arab + "\n\n"
@@ -928,7 +989,8 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'tafsir': {
-                    if (args.length == 0) return reply(`*_${prefix}tafsir <nama/nomor surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`)
+                    if (args.length == 0) return reply(`*_${prefix}tafsir <nama/nomor surah> <ayat>_*\n` +
+                        `Menampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`)
                     let nmr = 0
                     if (isNaN(args[0])) {
                         let { data } = Surah
@@ -960,10 +1022,13 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'alaudio': {
-                    if (args.length == 0) return reply(`*_${prefix}ALaudio <nama/nomor surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`)
+                    if (args.length == 0) return reply(`*_${prefix}ALaudio <nama/nomor surah>_*\nMenampilkan tautan dari audio surah tertentu.\n` +
+                        `Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama/nomor surah> <ayat>_*\n` +
+                        `Mengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n` +
+                        `*_${prefix}ALaudio <nama/nomor surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`)
                     let nmr = 0
                     if (isNaN(args[0])) {
-                        var { data } = Surah
+                        let { data } = Surah
                         let idx = data.findIndex(function (post) {
                             if ((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase()) || (post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
                                 return true
@@ -1020,7 +1085,8 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'jsholat':
                 case 'jsolat': {
-                    if (args.length === 0) return reply(`ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\nContoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`)
+                    if (args.length === 0) return reply(`ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\n` +
+                        `Contoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`)
                     if (args[0] == 'daerah') {
                         let resData = await get('https://api.banghasan.com/sholat/format/json/kota')
                             .catch(err => {
@@ -1271,6 +1337,15 @@ const HandleMsg = async (client, message, browser) => {
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     await client.sendFileFromUrl(from, result, '', '', _id).catch(err => reply(resMsg.error.norm).then(() => console.log(err)))
                     break
+                }
+
+                case 'igstory': {
+                    if (args.length == 2) return reply(
+                        `Download igstory sesuai username dan urutan storynya.\n` +
+                        `Penggunaan: ${prefix}igstory <username> <nomor urut>` +
+                        `Contoh: ${prefix}igstory awkarin 1`)
+                    let { data } = await axios.get(lolApi(`igstory/${args[0]}`))
+                    sendFFU(data.result[(+args[1]) - 1])
                 }
 
                 /* #endregion End of Media Downloader */
@@ -1585,7 +1660,7 @@ const HandleMsg = async (client, message, browser) => {
                         `${aC}Total Sembuh :${aC} ${data.sembuh}\n` +
                         `${aC}Total Mnggl  :${aC} ${data.meninggal}\n` +
                         `${aC}Total        :${aC} ${data.total}`
-                        )
+                    )
                     reply('Okey sebentar...')
                     const zoneStatus = await getLocationData(quotedMsg.lat, quotedMsg.lng)
                     if (zoneStatus.kode != 200) sendText('Maaf, Terjadi error ketika memeriksa lokasi yang anda kirim.')
@@ -1600,13 +1675,7 @@ const HandleMsg = async (client, message, browser) => {
 
                     break
                 case 'crjogja': {
-                    const url1 = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
-                    const url2 = 'https://screenshotapi.net/api/v1/screenshot?token=FREB5SDBA2FRMO4JDMSHXAEGNYLKYCA4&url=https%3A%2F%2Fsipora.staklimyogyakarta.com%2Fradar%2F&width=600&height=600&fresh=true&output=image'
-                    let isTrue = Boolean(Crypto.randomInt(0, 2))
-                    const urL = isTrue ? url1 : url2
-
-                    await sendText('Gotcha, please wait!')
-                    await client.simulateTyping(from, true)
+                    sendText('Gotcha, please wait!')
                     await client.sendFileFromUrl(from, urL, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/', id)
                         .then(() => {
                             client.simulateTyping(from, false)
@@ -1911,7 +1980,7 @@ const HandleMsg = async (client, message, browser) => {
                         return reply(`List ${args[0]} tidak ditemukan.`)
                     } else {
                         let number = arg.substr(arg.indexOf(' ') + 1).split(',').map((item) => {
-                            return item.trim() - 1
+                            return +item.trim() - 1
                         })
                         await number.reverse().forEach(async (num) => {
                             await list.removeListData(from, args[0], num)
