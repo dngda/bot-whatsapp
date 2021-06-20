@@ -1,3 +1,11 @@
+/**
+ * @ Author: SeroBot Team
+ * @ Create Time: 2021-01-02 20:31:13
+ * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
+ * @ Modified time: 2021-06-21 00:42:59
+ * @ Description:
+ */
+
 import { color, createReadFileSync, initGlobalVariable } from './utils/index.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import { schedule, sewa } from './lib/index.js'

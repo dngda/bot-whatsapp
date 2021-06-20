@@ -1,3 +1,11 @@
+/**
+ * @ Author: SeroBot Team
+ * @ Create Time: 2021-02-01 19:29:50
+ * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
+ * @ Modified time: 2021-06-21 00:44:40
+ * @ Description: Handling message
+ */
+
 /* #region Import */
 import { removeBackgroundFromImageBase64 } from 'remove.bg'
 import { decryptMedia } from '@open-wa/wa-automate'
@@ -1158,6 +1166,11 @@ const HandleMsg = async (client, message, browser) => {
                 case 'ttp': {
                     if (args.length == 0) reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
                     sendSFU(lolApi(`ttp`) + `&text=${arg}`)
+                    break
+                }
+
+                case 'trigger': {
+
                     break
                 }
                 /* #endregion */

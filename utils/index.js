@@ -1,3 +1,11 @@
+/**
+ * @ Author: SeroBot Team
+ * @ Create Time: 2021-05-31 22:33:11
+ * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
+ * @ Modified time: 2021-06-21 00:49:20
+ * @ Description:
+ */
+
 import request from 'request'
 import fs from 'fs-extra'
 import chalk from 'chalk'

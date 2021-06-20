@@ -1,3 +1,11 @@
+/**
+ * @ Author: ArugaZ/YogaSakti
+ * @ Create Time: 2021-05-31 22:33:11
+ * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
+ * @ Modified time: 2021-06-21 00:49:16
+ * @ Description:
+ */
+
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import { writeFile, readFileSync, unlinkSync } from 'fs'

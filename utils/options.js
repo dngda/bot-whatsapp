@@ -1,4 +1,12 @@
 /**
+ * @ Author: SeroBot Team
+ * @ Create Time: 2021-05-31 22:33:11
+ * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
+ * @ Modified time: 2021-06-21 00:50:02
+ * @ Description: options provided from owa issue :)
+ */
+
+/**
  * Get Client Options
  * @param  {Function} start function
  * @param  {Boolean} headless
