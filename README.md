@@ -1,8 +1,12 @@
 <p align="center">
-<img src="https://user-images.githubusercontent.com/35982346/112043469-492f3180-8b7b-11eb-9217-39ebce1a9e0f.png" height="128"/>
+<img src="https://user-images.githubusercontent.com/35982346/122661611-4792fb00-d1b6-11eb-9cd6-2c5e59aeba5a.png" height="128"/>
 </p>
 <p align="center">
-<a href="https://github.com/dngda/bot-whatsapp"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Sero Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a></p>
+<a href="https://github.com/dngda/bot-whatsapp"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Sero Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a><br>
+Multipurpose WhatsApp Bot using open-wa/wa-automate-nodejs library!
+</p>
+
+<h3 align="center">Made with ❤️ by</h3>
 <p align="center">
 <a href="https://github.com/dngda/"><img title="Author" src="https://img.shields.io/badge/author-dngda-blue?style=for-the-badge&logo=github"></a>
 </p>
@@ -10,11 +14,13 @@
 <a href="https://github.com/dngda/followers"><img title="Followers" src="https://img.shields.io/github/followers/dngda?color=blue&style=flat-square"></a>
 <a href="https://github.com/dngda/bot-whatsapp/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/dngda/bot-whatsapp?color=red&style=flat-square"></a>
 <a href="https://github.com/dngda/bot-whatsapp/network/members"><img title="Forks" src="https://img.shields.io/github/forks/dngda/bot-whatsapp?color=red&style=flat-square"></a>
-<a href="https://github.com/dngda/bot-whatsapp/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/dngda/bot-whatsapp?label=watchers&color=blue&style=flat-square"></a><br>
-<img src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c543.png" height="64"/>
+<a href="https://github.com/dngda/bot-whatsapp/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/dngda/bot-whatsapp?label=watchers&color=blue&style=flat-square"></a>
+  <br><a href="https://www.codefactor.io/repository/github/dngda/bot-whatsapp"><img src="https://www.codefactor.io/repository/github/dngda/bot-whatsapp/badge" alt="CodeFactor" /></a>
+  <br>
+<a href="https://github.com/open-wa/wa-automate-nodejs"><img src="https://raw.githubusercontent.com/open-wa/wa-automate-nodejs/master/resources/hotfix-logo.png" height="64"/></a>
 </p>
 
-## ReadMe-Please 🐱
+## Getting Started
 
 This project require NodeJS v12
 
