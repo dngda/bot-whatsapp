@@ -85,7 +85,7 @@ export default (headless, start) => {
         cacheEnabled: false,
         killProcessOnBrowserClose: true,
         throwErrorOnTosBlock: false,
-        chromiumArgs: ChromeArgs
+        chromiumArgs: chromeArgs
     }
     return options
 }
