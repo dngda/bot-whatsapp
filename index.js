@@ -5,7 +5,7 @@ import { create } from '@open-wa/wa-automate'
 import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
 import { HandleMsg } from './HandleMsg.js'
-import options from './utils/options.js'
+import options, { chromeArgs } from './utils/options.js'
 import puppeteer from 'puppeteer-extra'
 import PQueue from 'p-queue'
 import figlet from 'figlet'
@@ -39,15 +39,7 @@ const start = async (client) => {
         const browser = await puppeteer.launch({
             executablePath: path,
             headless: true,
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--aggressive-cache-discard',
-                '--disable-cache',
-                '--disable-application-cache',
-                '--disable-offline-load-stale-cache',
-                '--disk-cache-size=0'
-            ]
+            args: chromeArgs
         }).catch(e => console.log(e))
 
         // process unread message
