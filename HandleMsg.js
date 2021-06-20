@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 01:21:22
+ * @ Modified time: 2021-06-21 02:16:30
  * @ Description: Handling message
  */
 
@@ -43,7 +43,7 @@ db.chain = lodash.chain(db.data)
 /* #endregion */
 
 /* #region File Modules */
-import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, addFilter, color, isUrl } from './utils/index.js'
+import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, webp2jpg, isFiltered, addFilter, color, isUrl } from './utils/index.js'
 import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
@@ -785,7 +785,7 @@ const HandleMsg = async (client, message, browser) => {
                             let bottom = arg.split('|')[1]
                             let encryptMedia = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                             let mediaData = await decryptMedia(encryptMedia)
-                            let mData = isQuotedSticker ? Buffer.from(mediaData.toString('base64'), 'base64') : mediaData
+                            let mData = isQuotedSticker ? webp2jpg(mediaData) : mediaData
                             let getUrl = await uploadImages(mData, false)
                             let ImageBase64 = await meme.custom(getUrl, top, bottom)
                             client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id)

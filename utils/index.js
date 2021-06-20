@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 00:49:20
+ * @ Modified time: 2021-06-21 02:16:12
  * @ Description:
  */
 
@@ -12,6 +12,7 @@ import chalk from 'chalk'
 import moment from 'moment-timezone'
 import followPkg from 'follow-redirects'
 import updateJson from 'update-json-file'
+import canvas from 'canvas'
 
 const { get } = followPkg
 const { tz, duration } = moment
@@ -139,6 +140,18 @@ const unlinkIfExists = (path, path2) => {
     if (existsSync(path2)) unlinkSync(path2)
 }
 
+const webp2jpg = (mediaData) => {
+    let dataUrl = `data:image/webp;base64,${mediaData.toString('base64')}`
+    const img = new Image()
+    img.onload(() => {
+        var cvs = canvas.createCanvas(this.width, this.height)
+        cvs.getContext('2d').drawImage(this, 0, 0)
+    })
+    img.src = dataUrl
+    let resBase64 = cvs.toDataURL('image/jpeg').replace(/^data:image\/jpeg;base64,/, '')
+    return Buffer.from(resBase64, 'base64')
+}
+
 String.prototype.toDHms = function () {
     var sec_num = parseInt(this, 10) // don't forget the second param
     var hours = Math.floor(sec_num / 3600)
@@ -149,6 +162,7 @@ String.prototype.toDHms = function () {
     var time = days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' secs'
     return time
 }
+
 
 //Gobal declaration
 const initGlobalVariable = () => {
@@ -172,6 +186,7 @@ export {
     commandLog,
     isFiltered,
     addFilter,
+    webp2jpg,
     download,
     formatin,
     inArray,
