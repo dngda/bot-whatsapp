@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 02:16:12
+ * @ Modified time: 2021-06-21 02:51:13
  * @ Description:
  */
 
@@ -12,7 +12,7 @@ import chalk from 'chalk'
 import moment from 'moment-timezone'
 import followPkg from 'follow-redirects'
 import updateJson from 'update-json-file'
-import canvas from 'canvas'
+import webp from 'webp-converter'
 
 const { get } = followPkg
 const { tz, duration } = moment
@@ -141,15 +141,10 @@ const unlinkIfExists = (path, path2) => {
 }
 
 const webp2jpg = (mediaData) => {
-    let dataUrl = `data:image/webp;base64,${mediaData.toString('base64')}`
-    const img = new Image()
-    img.onload(() => {
-        var cvs = canvas.createCanvas(this.width, this.height)
-        cvs.getContext('2d').drawImage(this, 0, 0)
-    })
-    img.src = dataUrl
-    let resBase64 = cvs.toDataURL('image/jpeg').replace(/^data:image\/jpeg;base64,/, '')
-    return Buffer.from(resBase64, 'base64')
+    var buffer = Buffer.from(mediaData.toString('base64'), 'base64')
+    writeFileSync('./media/temp.jpg', buffer)
+    let buff = readFileSync('./media/temp.jpg')
+    return buff
 }
 
 String.prototype.toDHms = function () {
