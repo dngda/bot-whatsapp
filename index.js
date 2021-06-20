@@ -163,7 +163,6 @@ const start = async (client) => {
         // ketika seseorang masuk/keluar dari group
 
         client.onGlobalParticipantsChanged(async event => {
-            console.log(color('[LOGS]', 'grey'), `onGlobalParticipantsChanged event fired\n`, event)
             const host = await client.getHostNumber() + '@c.us'
             const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
             const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))

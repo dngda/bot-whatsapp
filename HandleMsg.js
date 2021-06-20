@@ -1342,10 +1342,11 @@ const HandleMsg = async (client, message, browser) => {
                 case 'igstory': {
                     if (args.length !== 2) return reply(
                         `Download igstory sesuai username dan urutan storynya.\n` +
-                        `Penggunaan: ${prefix}igstory <username> <nomor urut>` +
+                        `Penggunaan: ${prefix}igstory <username> <nomor urut>\n` +
                         `Contoh: ${prefix}igstory awkarin 1`)
                     let { data } = await axios.get(lolApi(`igstory/${args[0]}`))
-                    sendFFU(data.result[(+args[1]) - 1])
+                    reply(resMsg.wait)
+                    sendFFU(data.result[(data.result.length - +args[1] - 1)])
                     break
                 }
 
