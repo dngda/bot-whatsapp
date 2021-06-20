@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 00:44:40
+ * @ Modified time: 2021-06-21 00:56:06
  * @ Description: Handling message
  */
 
@@ -779,7 +779,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'memefy': {
-                    if ((isMedia || isQuotedImage) && args.length >= 1 && body.match("|")) {
+                    if ((isMedia || isQuotedImage || isQuotedSticker) && args.length >= 1 && body.match("|")) {
                         try {
                             let top = arg.split('|')[0]
                             let bottom = arg.split('|')[1]
@@ -1164,13 +1164,23 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'ttp': {
-                    if (args.length == 0) reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
+                    if (args.length == 0) reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
                     sendSFU(lolApi(`ttp`) + `&text=${arg}`)
                     break
                 }
 
                 case 'trigger': {
-
+                    if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger`)
+                    try {
+                        let enc = isQuotedImage ? quotedMsg : message
+                        let mediaData = await decryptMedia(enc)
+                        let _url = await uploadImages(mediaData, false)
+                        let resu = lolApi(`creator1/trigger`) + `&img=${_url}`
+                        sendSFU(resu)
+                    } catch (err) {
+                        console.log(err)
+                        await reply(resMsg.error.norm)
+                    }
                     break
                 }
                 /* #endregion */
