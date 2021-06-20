@@ -2,7 +2,7 @@
  * @ Author: ArugaZ/YogaSakti
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 00:49:16
+ * @ Modified time: 2021-06-21 01:16:29
  * @ Description:
  */
 
@@ -39,37 +39,33 @@ const fetchJson = (url, options) =>
  * @param {Object} options
  */
 
-const fetchText = (url, options) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const response = await fetch(url, options)
-            const text = await response.text()
-            return resolve(text)
-        } catch (err) {
-            console.error(err)
-            reject(err)
-        }
-    })
-}
+const fetchText = (url, options) => new Promise(async (resolve, reject) => {
+    try {
+        const response = await fetch(url, options)
+        const text = await response.text()
+        return resolve(text)
+    } catch (err) {
+        console.error(err)
+        reject(err)
+    }
+})
 
 /**
  * Fetch base64 from url
  * @param {String} url
  */
 
-const fetchBase64 = (url, mimetype) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const res = await fetch(url)
-            const _mimetype = mimetype || res.headers.get('content-type')
-            res.buffer()
-                .then((result_1) => resolve(`data:${_mimetype};base64,` + result_1.toString('base64')))
-        } catch (err) {
-            console.error(err)
-            reject(err)
-        }
-    })
-}
+const fetchBase64 = (url, mimetype) => new Promise(async (resolve, reject) => {
+    try {
+        const res = await fetch(url)
+        const _mimetype = mimetype || res.headers.get('content-type')
+        res.buffer()
+            .then((result_1) => resolve(`data:${_mimetype};base64,` + result_1.toString('base64')))
+    } catch (err) {
+        console.error(err)
+        reject(err)
+    }
+})
 
 /**
  * Upload Image to Telegra.ph
@@ -78,32 +74,29 @@ const fetchBase64 = (url, mimetype) => {
  * @param  {Boolean} resize
  */
 
-const uploadImages = (buffData, resize) => {
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve, reject) => {
-        const { ext } = await fromBuffer(buffData)
-        const filePath = 'utils/tmp.' + ext
-        const _buffData = resize ? await resizeImage(buffData, false) : buffData
-        writeFile(filePath, _buffData, { encoding: 'base64' }, (err) => {
-            if (err) return reject(err)
-            // console.log('Uploading image to telegra.ph server...')
-            const fileData = readFileSync(filePath)
-            const form = new FormData()
-            form.append('file', fileData, 'tmp.' + ext)
-            fetch('https://telegra.ph/upload', {
-                method: 'POST',
-                body: form
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.error) return reject(res.error)
-                    resolve('https://telegra.ph' + res[0].src)
-                })
-                .then(() => unlinkSync(filePath))
-                .catch(err => reject(err))
+const uploadImages = (buffData, resize) => new Promise(async (resolve, reject) => {
+    const { ext } = await fromBuffer(buffData)
+    const filePath = 'utils/tmp.' + ext
+    const _buffData = resize ? await resizeImage(buffData, false) : buffData
+    writeFile(filePath, _buffData, { encoding: 'base64' }, (err) => {
+        if (err) return reject(err)
+        // console.log('Uploading image to telegra.ph server...')
+        const fileData = readFileSync(filePath)
+        const form = new FormData()
+        form.append('file', fileData, 'tmp.' + ext)
+        fetch('https://telegra.ph/upload', {
+            method: 'POST',
+            body: form
         })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) return reject(res.error)
+                resolve('https://telegra.ph' + res[0].src)
+            })
+            .then(() => unlinkSync(filePath))
+            .catch(err => reject(err))
     })
-}
+})
 
 export {
     fetchJson,

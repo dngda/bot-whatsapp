@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 01:06:40
+ * @ Modified time: 2021-06-21 01:21:22
  * @ Description: Handling message
  */
 
@@ -785,7 +785,8 @@ const HandleMsg = async (client, message, browser) => {
                             let bottom = arg.split('|')[1]
                             let encryptMedia = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                             let mediaData = await decryptMedia(encryptMedia)
-                            let getUrl = await uploadImages(mediaData, false)
+                            let mData = isQuotedSticker ? Buffer.from(mediaData.toString('base64'), 'base64') : mediaData
+                            let getUrl = await uploadImages(mData, false)
                             let ImageBase64 = await meme.custom(getUrl, top, bottom)
                             client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id)
                                 .catch(() => {
@@ -1174,7 +1175,8 @@ const HandleMsg = async (client, message, browser) => {
                     try {
                         let enc = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
-                        let _url = await uploadImages(mediaData, false)
+                        let mData = isQuotedSticker ? Buffer.from(mediaData.toString('base64'), 'base64') : mediaData
+                        let _url = await uploadImages(mData, false)
                         let resu = lolApi(`creator1/trigger`) + `&img=${_url}`
                         sendSFU(resu)
                     } catch (err) {
