@@ -1073,7 +1073,7 @@ const HandleMsg = async (client, message, browser) => {
                     sendText(resMsg.wait)
                     let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                     try {
-                        ytid = ytid.replace(/&.+/g, '')
+                        ytid = ytid.replace(/&.+/g, '').replace('>', '')
                         let time = moment(t * 1000).format('mmss')
                         let path = `./media/temp_${time}.mp3`
 
@@ -1118,7 +1118,7 @@ const HandleMsg = async (client, message, browser) => {
                     sendText(resMsg.wait)
                     let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                     try {
-                        ytid = ytid.replace(/&.+/g, '')
+                        ytid = ytid.replace(/&.+/g, '').replace('>', '')
                         let time = moment(t * 1000).format('mmss')
                         let path = `./media/temp_${time}.mp4`
 
