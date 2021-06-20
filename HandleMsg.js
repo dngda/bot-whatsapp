@@ -1574,10 +1574,19 @@ const HandleMsg = async (client, message, browser) => {
                     break
 
                 case 'cekcovid':
-                    if (!isQuotedLocation) return reply(`Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}cekcovid`)
-
+                    let { data } = await axios.get('https://api.terhambar.com/negara/Indonesia')
+                    let aC = '```'
+                    if (!isQuotedLocation) return reply(`Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}cekcovid\n` +
+                        `Status covid di Indonesia\n` +
+                        `${aC}Tanggal      :${aC} ${data.terakhir}\n` +
+                        `${aC}Kasus Baru   :${aC} ${data.kasus_baru}\n` +
+                        `${aC}Meninggal    :${aC} ${data.meninggal_baru}\n` +
+                        `${aC}Penanganan   :${aC} ${data.penanganan}\n` +
+                        `${aC}Total Sembuh :${aC} ${data.sembuh}\n` +
+                        `${aC}Total Mnggl  :${aC} ${data.meninggal}\n` +
+                        `${aC}Total        :${aC} ${data.total}`
+                        )
                     reply('Okey sebentar...')
-                    console.log(`Request Status Zona Penyebaran Covid-19 (${quotedMsg.lat}, ${quotedMsg.lng}).`)
                     const zoneStatus = await getLocationData(quotedMsg.lat, quotedMsg.lng)
                     if (zoneStatus.kode != 200) sendText('Maaf, Terjadi error ketika memeriksa lokasi yang anda kirim.')
                     let datax = ''
@@ -1588,6 +1597,7 @@ const HandleMsg = async (client, message, browser) => {
                     })
                     const text = `*CEK LOKASI PENYEBARAN COVID-19*\nHasil pemeriksaan dari lokasi yang anda kirim adalah *${zoneStatus.status}* ${zoneStatus.optional}\n\nInformasi lokasi terdampak disekitar anda:\n${datax}`
                     sendText(text)
+
                     break
                 case 'crjogja': {
                     const url1 = 'http://api.screenshotlayer.com/api/capture?access_key=f56691eb8b1edb4062ed146cccaef885&url=https://sipora.staklimyogyakarta.com/radar/&viewport=600x600&width=600&force=1'
