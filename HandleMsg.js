@@ -1340,12 +1340,13 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'igstory': {
-                    if (args.length == 2) return reply(
+                    if (args.length !== 2) return reply(
                         `Download igstory sesuai username dan urutan storynya.\n` +
                         `Penggunaan: ${prefix}igstory <username> <nomor urut>` +
                         `Contoh: ${prefix}igstory awkarin 1`)
                     let { data } = await axios.get(lolApi(`igstory/${args[0]}`))
                     sendFFU(data.result[(+args[1]) - 1])
+                    break
                 }
 
                 /* #endregion End of Media Downloader */
