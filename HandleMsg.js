@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 00:56:06
+ * @ Modified time: 2021-06-21 01:06:40
  * @ Description: Handling message
  */
 
@@ -783,7 +783,7 @@ const HandleMsg = async (client, message, browser) => {
                         try {
                             let top = arg.split('|')[0]
                             let bottom = arg.split('|')[1]
-                            let encryptMedia = isQuotedImage ? quotedMsg : message
+                            let encryptMedia = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                             let mediaData = await decryptMedia(encryptMedia)
                             let getUrl = await uploadImages(mediaData, false)
                             let ImageBase64 = await meme.custom(getUrl, top, bottom)
@@ -1172,7 +1172,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'trigger': {
                     if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger`)
                     try {
-                        let enc = isQuotedImage ? quotedMsg : message
+                        let enc = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         let _url = await uploadImages(mediaData, false)
                         let resu = lolApi(`creator1/trigger`) + `&img=${_url}`
