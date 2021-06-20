@@ -368,7 +368,7 @@ const HandleMsg = async (client, message, browser) => {
             }
             case /^=/.test(chats): {
                 if (chats.match(/\d[x÷×\=\+\-\*\/\^e]/g)) {
-                    await reply(`${eval(chats.slice(1).replace('^', '**').replace('x', '*').replace('×', '*').replace('÷', '/').replace('%', '/100'))}`)
+                    await reply(`${eval(chats.slice(1).replace(/\^/g, '**').replace(/x/ig, '*').replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
                 }
                 break
             }
@@ -439,7 +439,7 @@ const HandleMsg = async (client, message, browser) => {
                         `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
                     )
                     const linkgrup = args[0]
-                    let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
+                    let islink = linkgrup.match(/(https:\/\/chat\.whatsapp\.com)/gi)
                     let chekgrup = await client.inviteInfo(linkgrup)
                         .catch(err => {
                             console.log(err.name, err.message)
@@ -636,7 +636,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'stickergiphy': {
                     if (args.length != 1) return reply(`Maaf, format pesan salah.\nKetik pesan dengan ${prefix}stickergiphy <link_giphy> (don't include <> symbol)`)
                     const isGiphy = url.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'))
-                    const isMediaGiphy = url.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'))
+                    const isMediaGiphy = url.match(new RegExp(/https?:\/\/media\.giphy\.com\/media/, 'gi'))
                     if (isGiphy) {
                         const getGiphyCode = url.match(new RegExp(/(\/|\-)(?:.(?!(\/|\-)))+$/, 'gi'))
                         if (!getGiphyCode) { return reply('Gagal mengambil kode giphy') }
@@ -1073,7 +1073,7 @@ const HandleMsg = async (client, message, browser) => {
                     sendText(resMsg.wait)
                     let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                     try {
-                        ytid = ytid.replace(/&.+/g, '').replace('>', '')
+                        ytid = ytid.replace(/&.+/g, '').replace(/>/g, '')
                         let time = moment(t * 1000).format('mmss')
                         let path = `./media/temp_${time}.mp3`
 
@@ -1118,7 +1118,7 @@ const HandleMsg = async (client, message, browser) => {
                     sendText(resMsg.wait)
                     let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                     try {
-                        ytid = ytid.replace(/&.+/g, '').replace('>', '')
+                        ytid = ytid.replace(/&.+/g, '').replace(/>/g, '')
                         let time = moment(t * 1000).format('mmss')
                         let path = `./media/temp_${time}.mp4`
 
