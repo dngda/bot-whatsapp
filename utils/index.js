@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 02:52:54
+ * @ Modified time: 2021-06-21 03:07:09
  * @ Description:
  */
 
@@ -139,13 +139,6 @@ const unlinkIfExists = (path, path2) => {
     if (existsSync(path2)) unlinkSync(path2)
 }
 
-const webp2jpg = (mediaData) => {
-    var buffer = Buffer.from(mediaData.toString('base64'), 'base64')
-    writeFileSync('./media/temp.jpg', buffer)
-    let buff = readFileSync('./media/temp.jpg')
-    return buff
-}
-
 String.prototype.toDHms = function () {
     var sec_num = parseInt(this, 10) // don't forget the second param
     var hours = Math.floor(sec_num / 3600)
@@ -180,7 +173,6 @@ export {
     commandLog,
     isFiltered,
     addFilter,
-    webp2jpg,
     download,
     formatin,
     inArray,
