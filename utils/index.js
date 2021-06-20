@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 02:51:13
+ * @ Modified time: 2021-06-21 02:52:54
  * @ Description:
  */
 
@@ -12,7 +12,6 @@ import chalk from 'chalk'
 import moment from 'moment-timezone'
 import followPkg from 'follow-redirects'
 import updateJson from 'update-json-file'
-import webp from 'webp-converter'
 
 const { get } = followPkg
 const { tz, duration } = moment
