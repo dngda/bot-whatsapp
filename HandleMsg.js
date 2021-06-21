@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 11:49:28
+ * @ Modified time: 2021-06-21 11:51:12
  * @ Description: Handling message
  */
 
@@ -1175,14 +1175,14 @@ const HandleMsg = async (client, message, browser) => {
                 case 'attp': {
                     if (args.length == 0) return reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`attp`, { txt = txt }))
+                    sendSFU(lolApi(`attp`, { txt: txt }))
                     break
                 }
 
                 case 'ttp': {
                     if (args.length == 0) return reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`ttp`, { txt = txt }))
+                    sendSFU(lolApi(`ttp`, { txt: txt }))
                     break
                 }
 
@@ -1193,7 +1193,7 @@ const HandleMsg = async (client, message, browser) => {
                         let enc = (isQuotedImage) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         let _url = await uploadImages(mediaData, false)
-                        let resu = (command === 'trigger') ? lolApi(`creator1/trigger`, { img = _url }) : lolApi(`editor/triggered`, { img = _url })
+                        let resu = (command === 'trigger') ? lolApi(`creator1/trigger`, { img: _url }) : lolApi(`editor/triggered`, { img: _url })
                         sendSFU(resu)
                     } catch (err) {
                         console.log(err)
