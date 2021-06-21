@@ -85,7 +85,6 @@ const lolApi = (slash, { txt = '', txt2 = '', txt3 = '', img = '' } = null) => {
     let pimg = (img != '') ? `&img=${img}` : ''
     return `https://lolhuman.herokuapp.com/api/${slash}?apikey=${apiLol}${ptext}${ptext2}${ptext3}${pimg}`
 }
-
 /* #endregion */
 
 /* #region Stats */
