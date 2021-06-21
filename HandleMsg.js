@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 08:02:23
+ * @ Modified time: 2021-06-21 09:35:47
  * @ Description: Handling message
  */
 
@@ -1199,7 +1199,7 @@ const HandleMsg = async (client, message, browser) => {
                         let path = `./media/temp_${time}.mp3`
 
                         let { videoDetails: inf } = await ytdl.getInfo(ytid)
-                        if (inf.lengthSeconds > 600) return reply(`Error. Durasi video lebih dari 10 menit!`)
+                        if (inf.lengthSeconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
                         let estimasi = inf.lengthSeconds / 200
                         let est = estimasi.toFixed(0)
                         const aC = '```'
@@ -1244,7 +1244,7 @@ const HandleMsg = async (client, message, browser) => {
                         let path = `./media/temp_${time}.mp4`
 
                         let { videoDetails: inf } = await ytdl.getInfo(ytid)
-                        if (inf.lengthSeconds > 600) return reply(`Error. Durasi video lebih dari 10 menit!`)
+                        if (inf.lengthSeconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
                         let estimasi = inf.lengthSeconds / 100
                         let est = estimasi.toFixed(0)
                         const aC = '```'
@@ -1285,7 +1285,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (!ytresult.hasOwnProperty('duration')) return reply(`Maaf fitur sedang dalam perbaikan`)
 
                     try {
-                        if (ytresult.seconds > 600) return reply(`Error. Durasi video lebih dari 10 menit!`)
+                        if (ytresult.seconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
                         let estimasi = ytresult.seconds / 200
                         let est = estimasi.toFixed(0)
                         const aC = '```'
@@ -1451,14 +1451,14 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'nightcore': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara ala nightcore. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}nightcore`)
-                    let complexFilter = `asetrate=44100*1.25,firequalizer=gain_entry='entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)'`
+                    let complexFilter = `asetrate=44100*1.25,bass=g=3'`
                     audioConverter(complexFilter, 'nightcore')
                     break
                 }
 
                 case 'deepslow': {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara menjadi deep dan pelan. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}deepslow`)
-                    let complexFilter = `atempo=1.1,asetrate=44100*0.7,firequalizer=gain_entry='entry(0,3);entry(250,2);entry(1000,0);entry(4000,-2);entry(16000,-3)'`
+                    let complexFilter = `atempo=1.1,asetrate=44100*0.7,bass=g=5'`
                     audioConverter(complexFilter, 'deepslow')
                     break
                 }
