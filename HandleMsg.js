@@ -78,11 +78,11 @@ const sleep = (delay) => new Promise((resolve) => {
     setTimeout(() => { resolve(true) }, delay)
 })
 
-const lolApi = (slash, { txt = null, txt2 = null, txt3 = null, img = null }) => {
-    let ptext = (txt != null) ? `&text=${encodeURIComponent(txt)}` : ''
-    let ptext2 = (txt2 != null) ? `&text=${encodeURIComponent(txt2)}` : ''
-    let ptext3 = (txt3 != null) ? `&text=${encodeURIComponent(txt3)}` : ''
-    let pimg = (img != null) ? `&img=${img}` : ''
+const lolApi = (slash, { txt = '', txt2 = '', txt3 = '', img = '' } = null) => {
+    let ptext = (txt != '') ? `&text=${encodeURIComponent(txt)}` : ''
+    let ptext2 = (txt2 != '') ? `&text=${encodeURIComponent(txt2)}` : ''
+    let ptext3 = (txt3 != '') ? `&text=${encodeURIComponent(txt3)}` : ''
+    let pimg = (img != '') ? `&img=${img}` : ''
     return `https://lolhuman.herokuapp.com/api/${slash}?apikey=${apiLol}${ptext}${ptext2}${ptext3}${pimg}`
 }
 
