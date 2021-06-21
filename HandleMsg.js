@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 11:27:17
+ * @ Modified time: 2021-06-21 11:49:28
  * @ Description: Handling message
  */
 
@@ -77,7 +77,15 @@ moment.tz.setDefault('Asia/Jakarta').locale('id')
 const sleep = (delay) => new Promise((resolve) => {
     setTimeout(() => { resolve(true) }, delay)
 })
-const lolApi = (slash) => `https://lolhuman.herokuapp.com/api/${slash}?apikey=${apiLol}`
+
+const lolApi = (slash, { txt = null, txt2 = null, txt3 = null, img = null }) => {
+    let ptext = (txt != null) ? `&text=${encodeURIComponent(txt)}` : ''
+    let ptext2 = (txt2 != null) ? `&text=${encodeURIComponent(txt2)}` : ''
+    let ptext3 = (txt3 != null) ? `&text=${encodeURIComponent(txt3)}` : ''
+    let pimg = (img != null) ? `&img=${img}` : ''
+    return `https://lolhuman.herokuapp.com/api/${slash}?apikey=${apiLol}${ptext}${ptext2}${ptext3}${pimg}`
+}
+
 /* #endregion */
 
 /* #region Stats */
@@ -219,14 +227,14 @@ const HandleMsg = async (client, message, browser) => {
                 })
         }
 
-        const reply = async (txt) => {
-            return await client.reply(from, txt, id)
+        const reply = async (txt, qId = id) => {
+            return await client.reply(from, txt, qId)
                 .catch(e => {
                     console.log(e)
                 })
         }
 
-        const sendFFU = async (url, capt) => {
+        const sendFFU = async (url, capt = '') => {
             sendText(resMsg.wait)
             if (!capt) capt = ''
             return await client.sendFileFromUrl(from, url, '', capt, id)
@@ -244,9 +252,9 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         const sendJSON = (txt) => sendText(JSON.stringify(txt, null, 2))
-        
-        const getJSON = async (slash) => {
-            let { data } = await axios.get(slash).catch(e => {
+
+        const getJSON = async (url) => {
+            let { data } = await axios.get(url).catch(e => {
                 console.log(e)
                 sendText(resMsg.error.norm)
             })
@@ -1167,14 +1175,14 @@ const HandleMsg = async (client, message, browser) => {
                 case 'attp': {
                     if (args.length == 0) return reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`attp`) + `&text=${encodeURIComponent(txt)}`)
+                    sendSFU(lolApi(`attp`, { txt = txt }))
                     break
                 }
 
                 case 'ttp': {
                     if (args.length == 0) return reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`ttp`) + `&text=${encodeURIComponent(txt)}`)
+                    sendSFU(lolApi(`ttp`, { txt = txt }))
                     break
                 }
 
@@ -1185,7 +1193,7 @@ const HandleMsg = async (client, message, browser) => {
                         let enc = (isQuotedImage) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         let _url = await uploadImages(mediaData, false)
-                        let resu = (command === 'trigger') ? lolApi(`creator1/trigger`) + `&img=${_url}` : lolApi(`editor/triggered`) + `&img=${_url}`
+                        let resu = (command === 'trigger') ? lolApi(`creator1/trigger`, { img = _url }) : lolApi(`editor/triggered`, { img = _url })
                         sendSFU(resu)
                     } catch (err) {
                         console.log(err)
