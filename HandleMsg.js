@@ -307,7 +307,7 @@ const HandleMsg = async (client, message, browser) => {
             }
         }
 
-        if (isDisabled && command != 'disablebot') {
+        if (isDisabled && command != 'enablebot') {
             if (isCmd) sendText('❌ Bot disabled!')
             return null
         }
