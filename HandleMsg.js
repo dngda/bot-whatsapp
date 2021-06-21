@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 03:08:01
+ * @ Modified time: 2021-06-21 07:37:55
  * @ Description: Handling message
  */
 
@@ -243,12 +243,14 @@ const HandleMsg = async (client, message, browser) => {
                 : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
         }
 
+        const sendJSON = (txt) => sendText(JSON.stringify(txt, null, 2))
+        
         const getJSON = async (slash) => {
             let { data } = await axios.get(slash).catch(e => {
                 console.log(e)
                 sendText(resMsg.error.norm)
             })
-            return sendText(JSON.stringify(data, null, 2))
+            return sendJSON(data)
         }
 
         const audioConverter = async (complexFilter, name) => {
@@ -2621,7 +2623,7 @@ const HandleMsg = async (client, message, browser) => {
                     let count = 0
                     for (let group of allGroupz) {
                         let _id = group.contact.id
-                        let isSewa = await sewa.isSewa(_id)
+                        let isSewa = sewa.isSewa(_id)
                         let isPrem = groupPrem.includes(_id)
                         if (!isPrem && !isSewa) {
                             await client.sendText(_id, `Maaf bot sedang pembersihan, total group aktif : ${allGroupz.length}.\nTerima kasih.`)
@@ -2759,17 +2761,19 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
-                case 'grouplist': {
+                case 'grouplist':
+                case 'listgroup': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     let msg = `List All Groups\n\n`
                     let groups = await client.getAllGroups()
                     let count = 1
                     groups.forEach((chat) => {
+                        let c = chat.groupMetadata
                         let td = '```'
-                        msg += `\n${td}${count < 10 ? count + '. ' : count + '.'} Nama   :${td} ${chat.name}\n`
-                        msg += `${td}    GroupId :${td} ${chat.groupMetadata.id}\n`
-                        msg += `${td}    Types   :${td} ${groupPrem.includes(chat.groupMetadata.id) ? '*Premium*' : 'Free/Sewa'}\n`
-                        msg += `${td}    Members :${td} ${chat.groupMetadata.participants.length}\n`
+                        msg += `\n${td}${count < 10 ? count + '. ' : count + '.'} Nama    :${td} ${chat.name}\n`
+                        msg += `${td}    GroupId :${td} ${c.id}\n`
+                        msg += `${td}    Types   :${td} ${groupPrem.includes(c.id) ? '*Premium*' : sewa.isSewa(c.id) ? '_Sewa_' : 'Free'}\n`
+                        msg += `${td}    Members :${td} ${c.participants.length}\n`
                         count++
                     })
                     sendText(msg)
