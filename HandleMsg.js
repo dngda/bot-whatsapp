@@ -105,8 +105,8 @@ scheduleJob('1 0 * * *', () => {
 
 /* #region Main Function */
 const HandleMsg = async (client, message, browser) => {
-    received++ //Count received
-    //default msg response
+    received++ //Count msg received
+    /* #region Default response message */
     const resMsg = {
         wait: sample([
             'Sedang diproses! Silakan tunggu sebentar...',
@@ -140,6 +140,7 @@ const HandleMsg = async (client, message, browser) => {
             'Hadehh...'
         ])
     }
+    /* #endregion */
 
     try {
         /* #region Variable Declarations */
@@ -287,8 +288,7 @@ const HandleMsg = async (client, message, browser) => {
         }
         /* #endregion helper functions */
 
-        /* #region Banned */
-        // Command that banned people can access
+        /* #region Command that banned people can access */
         if (isCmd) {
             // Typing
             client.simulateTyping(chatId, true)
@@ -306,7 +306,9 @@ const HandleMsg = async (client, message, browser) => {
                     break
             }
         }
+        /* #endregion */
 
+        /* #region Enable or Disable bot */
         if (isDisabled && command != 'enablebot') {
             if (isCmd) sendText('❌ Bot disabled!')
             return null
@@ -337,8 +339,9 @@ const HandleMsg = async (client, message, browser) => {
                     break
             }
         }
+        /* #endregion */
 
-        // Filter Banned People
+        /* #region Filter banned people */
         if (isBanned && !isGroupMsg && isCmd) {
             return sendText(`Maaf anda telah dibanned oleh bot karena melanggar Rules atau Term and Condition (${prefix}tnc).\nSilakan chat /owner untuk unban.`).then(() => {
                 console.log(color('[BANd]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command}[${args.length}]`), 'from', color(pushname))
@@ -428,7 +431,7 @@ const HandleMsg = async (client, message, browser) => {
         // [AUTO READ] Auto read message 
         client.sendSeen(chatId)
 
-        // Respon to real body of msg contain this case
+        /* #region Handle default msg */
         switch (true) {
             case /\b(hi|hy|halo|hai|hei|hello)\b/i.test(chats): {
                 await reply(`Halo ${pushname} 👋`)
@@ -471,6 +474,7 @@ const HandleMsg = async (client, message, browser) => {
             }
             default:
         }
+
         // Jika bot dimention maka akan merespon pesan
         if (message?.mentionedJidList.length == 1 && message.mentionedJidList.includes(botNumber)) {
             let txt = chats.replace(/@\d+/g, '')
@@ -481,14 +485,12 @@ const HandleMsg = async (client, message, browser) => {
                 reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
             }
         }
+        /* #endregion */
 
-        // Ini Command nya
+        /* #region Handle command message */
         if (isCmd) {
-            // Hits count
-            todayHits++
-            // Typing
+            todayHits++ // Command hits count
             client.simulateTyping(chat.id, true)
-            /* #region Begin of Switch case */
             switch (command) {
                 /* #region Menu, stats and info sewa*/
                 case 'notes':
@@ -2877,11 +2879,10 @@ const HandleMsg = async (client, message, browser) => {
                     if (chats.startsWith(prefix)) reply(`Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`)
                     client.simulateTyping(from, false)
                     break
-
             }
-            //#endregion End of switch case
             client.simulateTyping(chat.id, false)
         }
+        /* #endregion Handle command */
 
         /* #region Process Functions */
         //Tebak gambar
@@ -2982,6 +2983,5 @@ const HandleMsg = async (client, message, browser) => {
     }
 }
 /* #endregion */
-
 
 export { HandleMsg }
