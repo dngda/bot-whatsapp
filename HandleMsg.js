@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 10:53:16
+ * @ Modified time: 2021-06-21 11:04:00
  * @ Description: Handling message
  */
 
@@ -728,6 +728,11 @@ const HandleMsg = async (client, message, browser) => {
                         const _id = isQuotedChat ? quotedMsgObj.id : id
                         const _res = _input.replace(/[aiueo]/g, 'i')
                         reply(_res, _id)
+                        let ImageBase64 = await meme.custom('https://memegenerator.net/img/images/11599566.jpg', '', _res)
+                        client.sendFile(from, ImageBase64, 'image.png', '', id)
+                            .catch(() => {
+                                reply(resMsg.error.norm)
+                            })
                     }
                     else {
                         await reply(`Mengubah kalimat menjadi hilih gitu deh\n\nketik ${prefix}hilih kalimat\natau reply chat menggunakan ${prefix}hilih`)
