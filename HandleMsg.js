@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 11:55:06
+ * @ Modified time: 2021-06-21 11:57:52
  * @ Description: Handling message
  */
 
@@ -248,7 +248,7 @@ const HandleMsg = async (client, message, browser) => {
             sendText(resMsg.wait)
             return await client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
-                : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+                : reply(resMsg.success.sticker)).then(() => console.log(color('[LOGS]', 'grey'),`Sticker Processed for ${processTime(t, moment())} Seconds`))
         }
 
         const sendJSON = (txt) => sendText(JSON.stringify(txt, null, 2))
