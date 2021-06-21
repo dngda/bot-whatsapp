@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 11:17:06
+ * @ Modified time: 2021-06-21 11:21:31
  * @ Description: Handling message
  */
 
@@ -724,8 +724,8 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'hilih':
                     if (args.length != 0 || isQuotedChat) {
-                        const _input = isQuotedChat ? quotedMsgObj.content.toString() : body.slice(7)
-                        const _id = isQuotedChat ? quotedMsgObj.id : id
+                        const _input = isQuotedChat ? quotedMsg.body : arg
+                        const _id = isQuotedChat ? quotedMsg.id : id
                         const _res = _input.replace(/[aiueo]/g, 'i')
                         reply(_res, _id)
                         let ImageBase64 = await meme.custom('https://memegenerator.net/img/images/11599566.jpg', '', _res)
