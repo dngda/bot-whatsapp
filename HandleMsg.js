@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 11:57:52
+ * @ Modified time: 2021-06-21 15:04:13
  * @ Description: Handling message
  */
 
@@ -1329,7 +1329,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('end', () => {
-                                client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                await client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .saveToFile(path)
