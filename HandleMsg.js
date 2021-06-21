@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 11:51:12
+ * @ Modified time: 2021-06-21 11:55:06
  * @ Description: Handling message
  */
 
@@ -1192,7 +1192,7 @@ const HandleMsg = async (client, message, browser) => {
                     try {
                         let enc = (isQuotedImage) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
-                        let _url = await uploadImages(mediaData, false)
+                        let _url = await uploadImages(mediaData, true)
                         let resu = (command === 'trigger') ? lolApi(`creator1/trigger`, { img: _url }) : lolApi(`editor/triggered`, { img: _url })
                         sendSFU(resu)
                     } catch (err) {
