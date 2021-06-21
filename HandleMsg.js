@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 11:21:31
+ * @ Modified time: 2021-06-21 11:27:17
  * @ Description: Handling message
  */
 
@@ -729,7 +729,7 @@ const HandleMsg = async (client, message, browser) => {
                         const _res = _input.replace(/[aiueo]/g, 'i')
                         reply(_res, _id)
                         let ImageBase64 = await meme.custom('https://memegenerator.net/img/images/11599566.jpg', '', _res)
-                        client.sendFile(from, ImageBase64, 'image.png', '', id)
+                        client.sendFile(from, ImageBase64, 'image.png', '', _id)
                             .catch(() => {
                                 reply(resMsg.error.norm)
                             })
