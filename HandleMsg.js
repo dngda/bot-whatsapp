@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 09:35:47
+ * @ Modified time: 2021-06-21 10:53:16
  * @ Description: Handling message
  */
 
@@ -1160,24 +1160,27 @@ const HandleMsg = async (client, message, browser) => {
 
                 /* #region Maker */
                 case 'attp': {
-                    if (args.length == 0) reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
-                    sendSFU(lolApi(`attp`) + `&text=${arg}`)
+                    if (args.length == 0) return reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
+                    let txt = isQuotedChat ? quotedMsg.body : arg
+                    sendSFU(lolApi(`attp`) + `&text=${encodeURIComponent(txt)}`)
                     break
                 }
 
                 case 'ttp': {
-                    if (args.length == 0) reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
-                    sendSFU(lolApi(`ttp`) + `&text=${arg}`)
+                    if (args.length == 0) return reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
+                    let txt = isQuotedChat ? quotedMsg.body : arg
+                    sendSFU(lolApi(`ttp`) + `&text=${encodeURIComponent(txt)}`)
                     break
                 }
 
-                case 'trigger': {
-                    if (!isMedia && !isQuotedImage) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger`)
+                case 'trigger':
+                case 'trigger2': {
+                    if (!isMedia && !isQuotedImage) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
                         let enc = (isQuotedImage) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         let _url = await uploadImages(mediaData, false)
-                        let resu = lolApi(`creator1/trigger`) + `&img=${_url}`
+                        let resu = (command === 'trigger') ? lolApi(`creator1/trigger`) + `&img=${_url}` : lolApi(`editor/triggered`) + `&img=${_url}`
                         sendSFU(resu)
                     } catch (err) {
                         console.log(err)
