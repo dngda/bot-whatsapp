@@ -61,6 +61,7 @@ const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
 const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
 const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
 const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
+const disableBot = JSON.parse(createReadFileSync('./data/disablebot.json'))
 const groupPrem = JSON.parse(createReadFileSync('./data/premiumgroup.json'))
 const readMore = '͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏͏' //its 2000 characters so that makes whatsapp add 'readmore' button
 let {
@@ -216,6 +217,7 @@ const HandleMsg = async (client, message, browser) => {
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
         const isNgegas = ngegas.includes(chatId)
+        const isDisabled = disableBot.includes(chatId)
         /* #endregion */
 
         /* #region Helper Functions */
@@ -289,7 +291,7 @@ const HandleMsg = async (client, message, browser) => {
         // Command that banned people can access
         if (isCmd) {
             // Typing
-            client.simulateTyping(chat.id, true)
+            client.simulateTyping(chatId, true)
             switch (command) {
                 case 'owner':
                     return await client.sendContact(from, ownerNumber)
@@ -300,6 +302,41 @@ const HandleMsg = async (client, message, browser) => {
                 case 'donate':
                 case 'donasi':
                     return await sendText(menuId.textDonasi())
+                default:
+                    break
+            }
+        }
+
+        if (isDisabled) {
+            if (isCmd) sendText('❌ Bot disabled!')
+            return null
+        }
+
+        if (isCmd) {
+            client.simulateTyping(chatId, true)
+            switch (command) {
+                case 'enablebot': {
+                    if (!isGroupMsg) return reply(resMsg.error.group)
+                    if (!isGroupAdmins && !isOwnerBot) return reply(resMsg.error.admin)
+                    let pos = disableBot.indexOf(chatId)
+                    if (pos === -1) return reply('Bot memang masih aktif.')
+                    disableBot.splice(pos, 1)
+                    writeFileSync('./data/disablebot.json', JSON.stringify(disableBot))
+                    reply('✅ Bot untuk group diaktifkan kembali.')
+                    break
+                }
+                case 'disablebot': {
+                    if (!isGroupMsg) return reply(resMsg.error.group)
+                    if (!isGroupAdmins && !isOwnerBot) return reply(resMsg.error.admin)
+                    let pos = disableBot.indexOf(chatId)
+                    if (pos != -1) return reply('Bot memang dimatikan.')
+                    disableBot.push(chatId)
+                    writeFileSync('./data/disablebot.json', JSON.stringify(disableBot))
+                    reply('❌ Bot untuk group dimatikan.')
+                    break
+                }
+                default:
+                    break
             }
         }
 
@@ -318,7 +355,7 @@ const HandleMsg = async (client, message, browser) => {
         if (isNgegas && !isCmd) isKasar = await cariKasar(chats)
 
         /* #region Spam and Logging */
-        if (isCmd && isFiltered(from)) {
+        if (isCmd && isFiltered(chatId)) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
@@ -327,12 +364,12 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         // Spam cooldown
-        if (isFiltered(from + 'isCooldown')) {
+        if (isFiltered(chatId + 'isCooldown')) {
             if (isCmd) return reply(`Belum 1 menit`)
             else return null
         }
         // Notify repetitive msg
-        if (chats != "" && isFiltered(from + croppedChats) && croppedChats != undefined) {
+        if (chats != "" && isFiltered(chatId + croppedChats) && croppedChats != undefined) {
             let _whenGroup = ''
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'),
@@ -345,7 +382,7 @@ const HandleMsg = async (client, message, browser) => {
                 `-> \`\`\`Link    :\`\`\` wa.me/${pengirim.replace('@c.us', '')}\n` +
                 `-> \`\`\`Pname   :\`\`\` ${pushname}\n\n` +
                 `-> ${croppedChats}`)
-            addFilter(from + 'isCooldown', 60000)
+            addFilter(chatId + 'isCooldown', 60000)
             return reply(`SPAM detected!\nPesan selanjutnya akan diproses setelah 1 menit`)
         }
 
@@ -385,9 +422,9 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         //[BETA] Avoid Spam Message
-        if (isCmd) addFilter(from, 2000) // 2 sec delay before proessing commands
+        if (isCmd) addFilter(chatId, 2000) // 2 sec delay before proessing commands
         if (chats != "") addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
-        if (chats != "" && croppedChats != undefined) addFilter(from + croppedChats, 700) // 0.7 sec delay repetitive msg
+        if (chats != "" && croppedChats != undefined) addFilter(chatId + croppedChats, 700) // 0.7 sec delay repetitive msg
         /* #endregion Spam and Logging */
 
         // [AUTO READ] Auto read message 
