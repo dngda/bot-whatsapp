@@ -78,7 +78,7 @@ const sleep = (delay) => new Promise((resolve) => {
     setTimeout(() => { resolve(true) }, delay)
 })
 
-const lolApi = (slash, { txt = null, txt2 = null, txt3 = null, img = null }) => {
+const lolApi = (slash, { txt = null, txt2 = null, txt3 = null, img = null } = null) => {
     let ptext = (txt != null) ? `&text=${encodeURIComponent(txt)}` : ''
     let ptext2 = (txt2 != null) ? `&text=${encodeURIComponent(txt2)}` : ''
     let ptext3 = (txt3 != null) ? `&text=${encodeURIComponent(txt3)}` : ''
