@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 11:04:00
+ * @ Modified time: 2021-06-21 11:07:11
  * @ Description: Handling message
  */
 
@@ -1409,7 +1409,7 @@ const HandleMsg = async (client, message, browser) => {
                         `Contoh: ${prefix}igstory awkarin 1`)
                     let { data } = await axios.get(lolApi(`igstory/${args[0]}`))
                     reply(resMsg.wait)
-                    sendFFU(data.result[(data.result.length - +args[1] - 1)])
+                    sendFFU(data.result[(data.result.length - args[1])])
                     break
                 }
 
