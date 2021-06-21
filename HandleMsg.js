@@ -181,6 +181,8 @@ const HandleMsg = async (client, message, browser) => {
         })
         /* #endregion */
 
+        client.sendSeen(chatId) // Read chat
+
         /* #region Avoid Bug */
         // Avoid order/vcard type msg (bug troli/slayer) gatau work apa kgk 
         if (type === 'order' || quotedMsg?.type === 'order' || type === 'vcard' || quotedMsg?.type === 'vcard') {
@@ -427,9 +429,6 @@ const HandleMsg = async (client, message, browser) => {
         if (chats != "") addFilter(pengirim, 300) // 0.3 sec delay before receiving message from same sender
         if (chats != "" && croppedChats != undefined) addFilter(chatId + croppedChats, 700) // 0.7 sec delay repetitive msg
         /* #endregion Spam and Logging */
-
-        // [AUTO READ] Auto read message 
-        client.sendSeen(chatId)
 
         /* #region Handle default msg */
         switch (true) {
