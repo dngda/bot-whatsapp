@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 15:04:13
+ * @ Modified time: 2021-06-21 15:08:04
  * @ Description: Handling message
  */
 
@@ -248,7 +248,7 @@ const HandleMsg = async (client, message, browser) => {
             sendText(resMsg.wait)
             return await client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
-                : reply(resMsg.success.sticker)).then(() => console.log(color('[LOGS]', 'grey'),`Sticker Processed for ${processTime(t, moment())} Seconds`))
+                : reply(resMsg.success.sticker)).then(() => console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`))
         }
 
         const sendJSON = (txt) => sendText(JSON.stringify(txt, null, 2))
@@ -1329,8 +1329,8 @@ const HandleMsg = async (client, message, browser) => {
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('end', () => {
-                                await client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
-                                if (existsSync(path)) unlinkSync(path)
+                                client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                sleep(2000).then(() => { if (existsSync(path)) unlinkSync(path) })
                             })
                             .saveToFile(path)
                     } catch (err) {
