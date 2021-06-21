@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 07:37:55
+ * @ Modified time: 2021-06-21 07:56:03
  * @ Description: Handling message
  */
 
@@ -524,8 +524,8 @@ const HandleMsg = async (client, message, browser) => {
                     let uptime = (time + "").toDHms()
                     let statSewa = ''
                     if (isGroupMsg) {
-                        let exp = await sewa.getExp(from)
-                        statSewa += exp !== '' ? `\nGroup expire on: _${exp.trim()}_` : ''
+                        let exp = sewa.getExp(from)
+                        statSewa = (exp !== false) ? `\n\nGroup expire on: _${exp.trim()}_` : ''
                     }
                     sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n` +
                         `- *${groups.length}* Group Chats\n` +
