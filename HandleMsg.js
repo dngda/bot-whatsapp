@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 07:56:03
+ * @ Modified time: 2021-06-21 08:02:23
  * @ Description: Handling message
  */
 
@@ -423,7 +423,7 @@ const HandleMsg = async (client, message, browser) => {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
                     let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).catch(err => console.log(err))
-                    if (txt !== '') reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
+                    if (!!respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
                 }
                 break
             }
