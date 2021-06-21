@@ -307,7 +307,7 @@ const HandleMsg = async (client, message, browser) => {
             }
         }
 
-        if (isDisabled) {
+        if (isDisabled && command != 'disablebot') {
             if (isCmd) sendText('❌ Bot disabled!')
             return null
         }
@@ -322,8 +322,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (pos === -1) return reply('Bot memang masih aktif.')
                     disableBot.splice(pos, 1)
                     writeFileSync('./data/disablebot.json', JSON.stringify(disableBot))
-                    reply('✅ Bot untuk group diaktifkan kembali.')
-                    break
+                    return reply('✅ Bot untuk group diaktifkan kembali.')
                 }
                 case 'disablebot': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
@@ -332,8 +331,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (pos != -1) return reply('Bot memang dimatikan.')
                     disableBot.push(chatId)
                     writeFileSync('./data/disablebot.json', JSON.stringify(disableBot))
-                    reply('❌ Bot untuk group dimatikan.')
-                    break
+                    return reply('❌ Bot untuk group dimatikan.')
                 }
                 default:
                     break
