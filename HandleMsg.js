@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 15:46:19
+ * @ Modified time: 2021-06-22 16:40:43
  * @ Description: Handling message
  */
 
@@ -44,7 +44,7 @@ db.chain = lodash.chain(db.data)
 
 /* #region File Modules */
 import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, addFilter, color, isUrl } from './utils/index.js'
-import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebakgb, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
+import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebak, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
 /* #endregion */
@@ -288,6 +288,31 @@ const HandleMsg = async (client, message, browser) => {
                     unlinkIfExists(inpath, outpath)
                 })
                 .saveToFile(outpath)
+        }
+
+        const startTebakRoomTimer = (seconds, answer) => {
+            const hint = answer.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')
+            sleep(seconds * 1000 / 4).then(async () => {
+                const ans = await tebak.getAns(from)
+                if (ans === false) return true
+                else sendText(`⏳ ${((seconds * 1000) - (seconds * 1000 / 4 * 1)) / 1000} detik lagi`)
+                sleep(seconds * 1000 / 4).then(async () => {
+                    const ans1 = await tebak.getAns(from)
+                    if (ans1 === false) return true
+                    else sendText(`⏳ ${((seconds * 1000) - (seconds * 1000 / 4 * 2)) / 1000} detik lagi\nHint: ${hint}`)
+                    sleep(seconds * 1000 / 4).then(async () => {
+                        const ans2 = await tebak.getAns(from)
+                        if (ans2 === false) return true
+                        else sendText(`⏳ ${((seconds * 1000) - (seconds * 1000 / 4 * 3)) / 1000} detik lagi`)
+                        sleep(seconds * 1000 / 4).then(async () => {
+                            const ans3 = await tebak.getAns(from)
+                            if (ans3 === false) return true
+                            else sendText(`⌛ Waktu habis!\nJawabannya adalah: *${answer}*`)
+                            tebak.delRoom(from)
+                        })
+                    })
+                })
+            })
         }
         /* #endregion helper functions */
 
@@ -979,7 +1004,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 // TODO implement text pro
                 case 'textpro': {
-                    
+
                     break
                 }
 
@@ -1259,14 +1284,13 @@ const HandleMsg = async (client, message, browser) => {
                         if (inf.lengthSeconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
                         let estimasi = inf.lengthSeconds / 200
                         let est = estimasi.toFixed(0)
-                        const aC = '```'
                         client.sendFileFromUrl(from, `${inf.thumbnails[3].url}`, ``,
                             `Link video valid!\n\n` +
-                            `${aC}Judul   :${aC} ${inf.title}\n` +
-                            `${aC}Channel :${aC} ${inf.ownerChannelName}\n` +
-                            `${aC}Durasi  :${aC} ${inf.lengthSeconds}\n` +
-                            `${aC}Uploaded:${aC} ${inf.uploadDate}\n` +
-                            `${aC}View    :${aC} ${inf.viewCount}\n\n` +
+                            `${q3}Judul   :${q3} ${inf.title}\n` +
+                            `${q3}Channel :${q3} ${inf.ownerChannelName}\n` +
+                            `${q3}Durasi  :${q3} ${inf.lengthSeconds}\n` +
+                            `${q3}Uploaded:${q3} ${inf.uploadDate}\n` +
+                            `${q3}View    :${q3} ${inf.viewCount}\n\n` +
                             `Audio sedang dikirim ± ${est} menit`, id)
 
                         let stream = ytdl(ytid, { quality: 'highestaudio' })
@@ -1304,14 +1328,13 @@ const HandleMsg = async (client, message, browser) => {
                         if (inf.lengthSeconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
                         let estimasi = inf.lengthSeconds / 100
                         let est = estimasi.toFixed(0)
-                        const aC = '```'
                         client.sendFileFromUrl(from, `${inf.thumbnails[3].url}`, ``,
                             `Link video valid!\n\n` +
-                            `${aC}Judul   :${aC} ${inf.title}\n` +
-                            `${aC}Channel :${aC} ${inf.ownerChannelName}\n` +
-                            `${aC}Durasi  :${aC} ${inf.lengthSeconds}\n` +
-                            `${aC}Uploaded:${aC} ${inf.uploadDate}\n` +
-                            `${aC}View    :${aC} ${inf.viewCount}\n\n` +
+                            `${q3}Judul   :${q3} ${inf.title}\n` +
+                            `${q3}Channel :${q3} ${inf.ownerChannelName}\n` +
+                            `${q3}Durasi  :${q3} ${inf.lengthSeconds}\n` +
+                            `${q3}Uploaded:${q3} ${inf.uploadDate}\n` +
+                            `${q3}View    :${q3} ${inf.viewCount}\n\n` +
                             `Video sedang dikirim ± ${est} menit`, id)
 
                         ytdl(ytid, { quality: 'highest' }).pipe(createWriteStream(path))
@@ -1345,16 +1368,14 @@ const HandleMsg = async (client, message, browser) => {
                         if (ytresult.seconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
                         let estimasi = ytresult.seconds / 200
                         let est = estimasi.toFixed(0)
-                        const aC = '```'
-
                         await client.sendFileFromUrl(from, `${ytresult.thumbnail}`, ``,
                             `Video ditemukan!\n\n` +
-                            `${aC}Judul   :${aC} ${ytresult.title}\n` +
-                            `${aC}Channel :${aC} ${ytresult.author.name}\n` +
-                            `${aC}Durasi  :${aC} ${ytresult.timestamp}\n` +
-                            `${aC}Uploaded:${aC} ${ytresult.ago}\n` +
-                            `${aC}View    :${aC} ${ytresult.views}\n` +
-                            `${aC}Url     :${aC} ${ytresult.url}\n\n` +
+                            `${q3}Judul   :${q3} ${ytresult.title}\n` +
+                            `${q3}Channel :${q3} ${ytresult.author.name}\n` +
+                            `${q3}Durasi  :${q3} ${ytresult.timestamp}\n` +
+                            `${q3}Uploaded:${q3} ${ytresult.ago}\n` +
+                            `${q3}View    :${q3} ${ytresult.views}\n` +
+                            `${q3}Url     :${q3} ${ytresult.url}\n\n` +
                             `Audio sedang dikirim ± ${est} menit`, id)
 
                         //Download video and save as MP3 file
@@ -1577,7 +1598,7 @@ const HandleMsg = async (client, message, browser) => {
                         })
                     break
                 case 'quote':
-                case 'quotes':{
+                case 'quotes': {
                     const quotex = await api.quote()
                         .catch(() => {
                             reply(resMsg.error.norm)
@@ -1643,7 +1664,6 @@ const HandleMsg = async (client, message, browser) => {
                         return reply(resMsg.error.norm)
                     })
                     try {
-                        const aC = '```'
                         let psn =
                             `✪〘 Youtube Search 〙✪\n` +
                             `Query: ${arg}\n` +
@@ -1652,12 +1672,12 @@ const HandleMsg = async (client, message, browser) => {
                         ytresult.forEach(item => {
                             psn +=
                                 `\n--------------------------------------\n` +
-                                `${aC}Judul   :${aC} ${item.title}\n` +
-                                `${aC}Channel :${aC} ${item.author?.name}\n` +
-                                `${aC}Durasi  :${aC} ${item.timestamp}\n` +
-                                `${aC}Uploaded:${aC} ${item.ago}\n` +
-                                `${aC}View    :${aC} ${item.views}\n` +
-                                `${aC}Url     :${aC} ${item.url}`
+                                `${q3}Judul   :${q3} ${item.title}\n` +
+                                `${q3}Channel :${q3} ${item.author?.name}\n` +
+                                `${q3}Durasi  :${q3} ${item.timestamp}\n` +
+                                `${q3}Uploaded:${q3} ${item.ago}\n` +
+                                `${q3}View    :${q3} ${item.views}\n` +
+                                `${q3}Url     :${q3} ${item.url}`
                         })
                         reply(psn)
                     } catch (err) {
@@ -1768,16 +1788,15 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'cekcovid': {
                     let { data } = await axios.get('https://api.terhambar.com/negara/Indonesia')
-                    let aC = '```'
                     if (!isQuotedLocation) return reply(`Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}cekcovid\n\n` +
                         `Status covid di Indonesia\n` +
-                        `${aC}Tanggal      :${aC} ${data.terakhir}\n` +
-                        `${aC}Kasus Baru   :${aC} ${data.kasus_baru}\n` +
-                        `${aC}Meninggal    :${aC} ${data.meninggal_baru}\n` +
-                        `${aC}Penanganan   :${aC} ${data.penanganan}\n` +
-                        `${aC}Total Sembuh :${aC} ${data.sembuh}\n` +
-                        `${aC}Total Mnggl  :${aC} ${data.meninggal}\n` +
-                        `${aC}Total        :${aC} ${data.total}`
+                        `${q3}Tanggal      :${q3} ${data.terakhir}\n` +
+                        `${q3}Kasus Baru   :${q3} ${data.kasus_baru}\n` +
+                        `${q3}Meninggal    :${q3} ${data.meninggal_baru}\n` +
+                        `${q3}Penanganan   :${q3} ${data.penanganan}\n` +
+                        `${q3}Total Sembuh :${q3} ${data.sembuh}\n` +
+                        `${q3}Total Mnggl  :${q3} ${data.meninggal}\n` +
+                        `${q3}Total        :${q3} ${data.total}`
                     )
                     reply('Okey sebentar...')
                     const zoneStatus = await getLocationData(quotedMsg.lat, quotedMsg.lng)
@@ -1796,11 +1815,11 @@ const HandleMsg = async (client, message, browser) => {
                 case 'crjogja': {
                     sendText('Gotcha, please wait!')
                     let path = './media/crjogja.png'
-                    scraper.ssweb(browser, path, 'https://sipora.staklimyogyakarta.com/radar/', { width: 600, height: 600})
-                    .catch(e => {
-                        console.log(e)
-                        reply(resMsg.error.norm)
-                    })
+                    scraper.ssweb(browser, path, 'https://sipora.staklimyogyakarta.com/radar/', { width: 600, height: 600 })
+                        .catch(e => {
+                            console.log(e)
+                            reply(resMsg.error.norm)
+                        })
                     await client.sendFile(from, path, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/', id)
                         .then(() => {
                             client.simulateTyping(from, false)
@@ -1853,36 +1872,16 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 //Tebak Gambar
-                case 'tgb':
+                case 'tbg':
                 case 'tebakgambar': {
-                    const cek = await tebakgb.getAns(from)
-                    if (cek != false) return reply(`Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`)
-                    await tebakgb.getTebakGambar(from).then(async res => {
+                    const isRoomExist = await tebak.isRoomExist(from)
+                    if (isRoomExist) return reply(`Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`)
+                    await tebak.getTebakGambar(from).then(async res => {
                         let waktu = res.answer.split(' ').length - 1
                         let detik = waktu * 60
                         await client.sendFileFromUrl(from, res.image, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.\n\n*${prefix}skip* untuk skip`, id)
                             .then(() => {
-                                sleep(detik * 1000 / 4).then(async () => {
-                                    const ans = await tebakgb.getAns(from)
-                                    if (ans === false) return true
-                                    else sendText(`⏳ ${((detik * 1000) - (detik * 1000 / 4 * 1)) / 1000} detik lagi`)
-                                    sleep(detik * 1000 / 4).then(async () => {
-                                        const ans1 = await tebakgb.getAns(from)
-                                        if (ans1 === false) return true
-                                        else sendText(`⏳ ${((detik * 1000) - (detik * 1000 / 4 * 2)) / 1000} detik lagi\nHint: ${res.answer.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')}`)
-                                        sleep(detik * 1000 / 4).then(async () => {
-                                            const ans2 = await tebakgb.getAns(from)
-                                            if (ans2 === false) return true
-                                            else sendText(`⏳ ${((detik * 1000) - (detik * 1000 / 4 * 3)) / 1000} detik lagi`)
-                                            sleep(detik * 1000 / 4).then(async () => {
-                                                const ans3 = await tebakgb.getAns(from)
-                                                if (ans3 === false) return true
-                                                else sendText(`⌛ Waktu habis!\nJawabannya adalah: *${res.answer}*`)
-                                                tebakgb.delData(from)
-                                            })
-                                        })
-                                    })
-                                })
+                                startTebakRoomTimer(detik, res.answer)
                             })
                     }).catch((err) => {
                         console.log(err)
@@ -1891,10 +1890,19 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
+                case 'tba':
+                case 'tebakaku': {
+                    
+                    break
+                }
+
                 case 'skip': {
-                    tebakgb.getAns(from).then(res => {
-                        reply(`Sesi tebak gambar telah diskip!\nJawabannya: *${res.ans}*`)
-                        tebakgb.delData(from)
+                    tebak.getAns(from).then(res => {
+                        if (res == false) reply(`Tidak ada sesi Tebak berlangsung.`)
+                        else {
+                            reply(`Sesi tebak gambar telah diskip!\nJawabannya: *${res.ans}*`)
+                            tebak.delRoom(from)
+                        }
                     })
                     break
                 }
@@ -2890,11 +2898,11 @@ const HandleMsg = async (client, message, browser) => {
         /* #region Process Functions */
         //Tebak gambar
         if (!isCmd) {
-            tebakgb.getAns(from).then(res => {
+            tebak.getAns(from).then(res => {
                 if (res != false) {
                     if (res.ans?.toLowerCase() === chats?.toLowerCase()) {
                         reply(`✅ Jawaban benar! : *${res.ans}*`)
-                        tebakgb.delData(from)
+                        tebak.delData(from)
                     } else {
                         reply(`❌ Salah!`)
                     }
