@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
@@ -162,6 +163,7 @@ const initGlobalVariable = () => {
         hour: 'numeric',
         minute: 'numeric',
     }
+    global.q3 = '```'
 }
 
 export {
