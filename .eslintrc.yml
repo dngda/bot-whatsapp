@@ -8,4 +8,5 @@ parserOptions:
 rules: {}
 globals:
   LOCAL_DATE_OPTIONS: readonly
+  readMore: readonly
   q3: readonly

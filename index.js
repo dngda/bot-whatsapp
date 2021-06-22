@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 00:42:59
+ * @ Modified time: 2021-06-22 15:39:06
  * @ Description:
  */
 
@@ -177,9 +177,10 @@ const start = async (client) => {
             const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
             const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
             const isWelcome = welcome.includes(event.chat)
-            let profile = await client.getProfilePicFromServer(event.who)
+            const profile = await client.getProfilePicFromServer(event.who)
+            const hasByProperty = Object.prototype.hasOwnProperty.call(event, 'by')
             // kondisi ketika seseorang diinvite/join group lewat link
-            if (event.action === 'add' && event.who !== host && isWelcome && event.hasOwnProperty('by')) {
+            if (event.action === 'add' && event.who !== host && isWelcome && hasByProperty) {
                 if (profile !== '' || profile !== undefined) await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Anjay keren fotonya member baru`)
                 await client.sendTextWithMentions(event.chat, `Halo semua! Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\n\nJangan lupa baca deskripsi group!`)
             }

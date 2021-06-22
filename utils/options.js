@@ -2,15 +2,10 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 00:50:02
+ * @ Modified time: 2021-06-22 15:20:21
  * @ Description: options provided from owa issue :)
  */
 
-/**
- * Get Client Options
- * @param  {Function} start function
- * @param  {Boolean} headless
- */
 const chromeArgs = [
     '--disable-2d-canvas-clip-aa',
     '--disable-2d-canvas-image-chromium',
@@ -82,6 +77,11 @@ const chromeArgs = [
     '--window-position=0,0'
   ]
 
+/**
+ * Get Client Options
+ * @param  {Function} start function
+ * @param  {Boolean} headless
+ */
 export default (headless, start) => {
     const options = {
         sessionId: 'session',

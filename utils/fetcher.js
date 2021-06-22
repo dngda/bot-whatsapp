@@ -1,8 +1,9 @@
+/* eslint-disable no-async-promise-executor */
 /**
  * @ Author: ArugaZ/YogaSakti
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-21 01:16:29
+ * @ Modified time: 2021-06-22 15:17:06
  * @ Description:
  */
 
@@ -20,7 +21,6 @@ const { fromBuffer } = fileType
  *@param {String} url
  *@param {Object} options
  */
-
 const fetchJson = (url, options) =>
     new Promise((resolve, reject) =>
         fetch(url, options)
@@ -54,7 +54,6 @@ const fetchText = (url, options) => new Promise(async (resolve, reject) => {
  * Fetch base64 from url
  * @param {String} url
  */
-
 const fetchBase64 = (url, mimetype) => new Promise(async (resolve, reject) => {
     try {
         const res = await fetch(url)
@@ -73,7 +72,6 @@ const fetchBase64 = (url, mimetype) => new Promise(async (resolve, reject) => {
  * @param  {String} base64 image buffer
  * @param  {Boolean} resize
  */
-
 const uploadImages = (buffData, resize) => new Promise(async (resolve, reject) => {
     const { ext } = await fromBuffer(buffData)
     const filePath = 'utils/tmp.' + ext
