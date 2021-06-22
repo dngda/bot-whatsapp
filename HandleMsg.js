@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 15:27:45
+ * @ Modified time: 2021-06-22 15:46:19
  * @ Description: Handling message
  */
 
@@ -519,34 +519,34 @@ const HandleMsg = async (client, message, browser) => {
                         `Saweria: https://saweria.co/dngda \n` +
                         `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
                     )
-                    const linkgrup = args[0]
-                    let islink = linkgrup.match(/(https:\/\/chat\.whatsapp\.com)/gi)
-                    let chekgrup = await client.inviteInfo(linkgrup)
+                    const linkGroup = args[0]
+                    const isLinkGroup = linkGroup.match(/(https:\/\/chat\.whatsapp\.com)/gi)
+                    if (!isLinkGroup) return reply('Maaf link group-nya salah! Silakan kirim link yang benar')
+                    let groupInfo = await client.inviteInfo(linkGroup)
                         .catch(err => {
                             console.log(err.name, err.message)
                             return sendText(resMsg.error.norm)
                         })
-                    if (!islink) return reply('Maaf link group-nya salah! Silakan kirim link yang benar')
                     if (isOwnerBot) {
-                        await client.joinGroupViaLink(linkgrup)
+                        await client.joinGroupViaLink(linkGroup)
                             .then(async () => {
                                 await sendText(resMsg.success.join)
                                 setTimeout(async () => {
-                                    await client.sendText(chekgrup.id, resMsg.success.greeting)
+                                    await client.sendText(groupInfo.id, resMsg.success.greeting)
                                 }, 2000)
                             }).catch(async () => {
                                 return reply(resMsg.error.join)
                             })
                     } else {
-                        let cgrup = await client.getAllGroups()
-                        if (cgrup.length > groupLimit) return reply(
-                            `Mohon maaf, untuk mencegah overload\nSlot group gratis pada bot dibatasi.\nTotal group: ${cgrup.length}/${groupLimit}\nChat /owner untuk sewa\n` +
+                        let allGroup = await client.getAllGroups()
+                        if (allGroup.length > groupLimit) return reply(
+                            `Mohon maaf, untuk mencegah overload\nSlot group gratis pada bot dibatasi.\nTotal group: ${allGroup.length}/${groupLimit}\nChat /owner untuk sewa\n` +
                             `\nSewa aja murah kok. 10k masa aktif 1 bulan.\n` +
                             `Mau sewa otomatis? Gunakan link berikut:\n` +
                             `Saweria: https://saweria.co/dngda \n` +
                             `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
                         )
-                        if (cgrup.groupMetadata.participants.length < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
+                        if (groupInfo.size < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
                         await sewa.trialSewa(client, args[0]).then(res => {
                             if (res) reply(`Berhasil claim trial sewa bot selama 7 hari.`)
                             else reply(`Group sudah pernah claim trial. Tunggu habis dulu bro`)
