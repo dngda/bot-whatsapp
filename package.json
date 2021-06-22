@@ -1,13 +1,13 @@
 {
   "name": "bot-whatsapp",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "description": "Whatsapp Bot - Node Js",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index"
   },
-  "author": "Danang D A",
+  "author": "Danang Dwiyoga A",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dngda/bot-whatsapp.git"
@@ -16,7 +16,7 @@
     "url": "https://github.com/dngda/bot-whatsapp/issues"
   },
   "homepage": "https://github.com/dngda/bot-whatsapp",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "@open-wa/wa-automate": "^4.1.0",
     "app-root-path": "^3.0.0",
@@ -50,9 +50,7 @@
     "ytdl-core": "^4.8.0"
   },
   "devDependencies": {
-    "eslint": "^7.29.0",
-    "prettier": "^2.3.1",
-    "prettier-eslint": "^12.0.0"
+    "eslint": "^7.29.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.3"

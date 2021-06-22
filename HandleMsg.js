@@ -2926,7 +2926,7 @@ const HandleMsg = async (client, message, browser) => {
             let msg = ''
             if (type === 'image' && caption || type === 'video' && caption) msg = caption
             else msg = message.body
-            if (msg?.match(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) !== null) {
+            if (msg?.match(/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi) !== null) {
                 if (!isBotGroupAdmins) return sendText('Gagal melakukan kick, bot bukan admin')
                 if (isGroupAdmins) {
                     reply(`Duh admin yang share link. Gabisa dikick deh.`)
