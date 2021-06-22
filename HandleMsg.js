@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 17:05:12
+ * @ Modified time: 2021-06-22 17:06:55
  * @ Description: Handling message
  */
 
@@ -1914,7 +1914,7 @@ const HandleMsg = async (client, message, browser) => {
                     tebak.getAns(from).then(res => {
                         if (res == false) reply(`Tidak ada sesi Tebak berlangsung.`)
                         else {
-                            reply(`Sesi tebak gambar telah diskip!\nJawabannya: *${res.ans}*`)
+                            reply(`Sesi Tebak telah diskip!\nJawabannya: *${res.ans}*`)
                             tebak.delRoom(from)
                         }
                     })
