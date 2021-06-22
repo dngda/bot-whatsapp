@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 16:40:43
+ * @ Modified time: 2021-06-22 16:59:03
  * @ Description: Handling message
  */
 
@@ -1875,11 +1875,11 @@ const HandleMsg = async (client, message, browser) => {
                 case 'tbg':
                 case 'tebakgambar': {
                     const isRoomExist = await tebak.isRoomExist(from)
-                    if (isRoomExist) return reply(`Sesi tebak gambar sedang berlangsung. ${prefix}skip untuk skip sesi.`)
+                    if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakGambar(from).then(async res => {
-                        let waktu = res.answer.split(' ').length - 1
-                        let detik = waktu * 60
-                        await client.sendFileFromUrl(from, res.image, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${waktu} menit.\n\n*${prefix}skip* untuk skip`, id)
+                        let menit = res.answer.split(' ').length - 1
+                        let detik = menit * 60
+                        await client.sendFileFromUrl(from, res.image, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${menit} menit.\n\n*${prefix}skip* untuk skip`, id)
                             .then(() => {
                                 startTebakRoomTimer(detik, res.answer)
                             })
@@ -1890,9 +1890,23 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
-                case 'tba':
-                case 'tebakaku': {
-                    
+                case 'tbk':
+                case 'tebakkata': {
+                    const isRoomExist = await tebak.isRoomExist(from)
+                    if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
+                    await tebak.getTebakKata(from).then(async res => {
+                        let menit = 1
+                        let detik = menit * 60
+                        await reply(`Tebak kata yang berhubungan.\n` +
+                            `${q3+ res.pertanyaan +q3}\n` +
+                            `Banyak huruf: ${res.jawaban.length}\n\nWaktunya ${menit} menit.\n\n*${prefix}skip* untuk skip`)
+                            .then(() => {
+                                startTebakRoomTimer(detik, res.jawaban)
+                            })
+                    }).catch((err) => {
+                        console.log(err)
+                        reply(resMsg.error.norm)
+                    })
                     break
                 }
 
@@ -2896,13 +2910,13 @@ const HandleMsg = async (client, message, browser) => {
         /* #endregion Handle command */
 
         /* #region Process Functions */
-        //Tebak gambar
+        //Tebak room
         if (!isCmd) {
             tebak.getAns(from).then(res => {
                 if (res != false) {
                     if (res.ans?.toLowerCase() === chats?.toLowerCase()) {
                         reply(`✅ Jawaban benar! : *${res.ans}*`)
-                        tebak.delData(from)
+                        tebak.delRoom(from)
                     } else {
                         reply(`❌ Salah!`)
                     }
