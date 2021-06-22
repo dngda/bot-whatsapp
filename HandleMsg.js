@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 16:59:03
+ * @ Modified time: 2021-06-22 17:05:12
  * @ Description: Handling message
  */
 
@@ -291,7 +291,7 @@ const HandleMsg = async (client, message, browser) => {
         }
 
         const startTebakRoomTimer = (seconds, answer) => {
-            const hint = answer.replace(/\s/g, '\t').replace(/[^aeiou\t]/g, '_ ')
+            const hint = answer.replace(/\s/g, '\t').replace(/[^aeiou\t]/gi, '_ ')
             sleep(seconds * 1000 / 4).then(async () => {
                 const ans = await tebak.getAns(from)
                 if (ans === false) return true
@@ -1897,9 +1897,9 @@ const HandleMsg = async (client, message, browser) => {
                     await tebak.getTebakKata(from).then(async res => {
                         let menit = 1
                         let detik = menit * 60
-                        await reply(`Tebak kata yang berhubungan.\n` +
-                            `${q3+ res.pertanyaan +q3}\n` +
-                            `Banyak huruf: ${res.jawaban.length}\n\nWaktunya ${menit} menit.\n\n*${prefix}skip* untuk skip`)
+                        await reply(`Tebak kata yang berhubungan.\n\n` +
+                            `${q3+ res.pertanyaan +q3}\n\n` +
+                            `Jumlah huruf: ${res.jawaban.length}\nWaktunya ${menit} menit.\n*${prefix}skip* untuk skip`)
                             .then(() => {
                                 startTebakRoomTimer(detik, res.jawaban)
                             })
