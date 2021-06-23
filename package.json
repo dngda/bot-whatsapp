@@ -30,7 +30,7 @@
     "follow-redirects": "^1.14.1",
     "form-data": "^3.0.1",
     "free-translate": "^0.4.0",
-    "fs-extra": "^9.0.1",
+    "fs-extra": "^10.0.0",
     "gtts": "^0.2.1",
     "jimp": "^0.16.1",
     "lodash": "^4.17.21",
