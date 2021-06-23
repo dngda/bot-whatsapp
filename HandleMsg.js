@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-23 19:49:30
+ * @ Modified time: 2021-06-23 20:05:36
  * @ Description: Handling message
  */
 
@@ -1916,7 +1916,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakLirik(from).then(async res => {
                         let detik = 90
-                        await reply(`Tebak lirik untuk melengkapinya.\n\n` +
+                        await reply(`Tebak Lirik. Lengkapi lirik yang sesuai.\n\n` +
                             `${q3 + res.question + q3}\n\n` +
                             `Jumlah huruf: ${res.answer.length}\nWaktunya ${detik} detik.\n*${prefix}skip* untuk skip`)
                             .then(() => {
@@ -1935,7 +1935,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakJenaka(from).then(async res => {
                         let detik = 90
-                        await reply(`Tebak lirik untuk melengkapinya.\n\n` +
+                        await reply(`Tebakan Jenaka. Jawab pertanyaan dibawah ini.\n\n` +
                             `${q3 + res.question + q3}\n\n` +
                             `Jumlah kata: ${res.answer.split(/\s/ig).length}\n` +
                             `Jumlah huruf: ${res.answer.length}\n` +
