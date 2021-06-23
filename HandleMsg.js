@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-23 19:44:35
+ * @ Modified time: 2021-06-23 19:49:30
  * @ Description: Handling message
  */
 
@@ -1898,7 +1898,7 @@ const HandleMsg = async (client, message, browser) => {
                         let menit = 1
                         let detik = menit * 60
                         await reply(`Tebak kata yang berhubungan.\n\n` +
-                            `${q3+ res.pertanyaan +q3}\n\n` +
+                            `${q3 + res.pertanyaan + q3}\n\n` +
                             `Jumlah huruf: ${res.jawaban.length}\nWaktunya ${menit} menit.\n*${prefix}skip* untuk skip`)
                             .then(() => {
                                 startTebakRoomTimer(detik, res.jawaban)
@@ -1917,7 +1917,7 @@ const HandleMsg = async (client, message, browser) => {
                     await tebak.getTebakLirik(from).then(async res => {
                         let detik = 90
                         await reply(`Tebak lirik untuk melengkapinya.\n\n` +
-                            `${q3+ res.question +q3}\n\n` +
+                            `${q3 + res.question + q3}\n\n` +
                             `Jumlah huruf: ${res.answer.length}\nWaktunya ${detik} detik.\n*${prefix}skip* untuk skip`)
                             .then(() => {
                                 startTebakRoomTimer(detik, res.answer)
@@ -1928,7 +1928,28 @@ const HandleMsg = async (client, message, browser) => {
                     })
                     break
                 }
-                
+
+                case 'tbj':
+                case 'tebakjenaka': {
+                    const isRoomExist = await tebak.isRoomExist(from)
+                    if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
+                    await tebak.getTebakJenaka(from).then(async res => {
+                        let detik = 90
+                        await reply(`Tebak lirik untuk melengkapinya.\n\n` +
+                            `${q3 + res.question + q3}\n\n` +
+                            `Jumlah kata: ${res.answer.split(/\s/ig).length}\n` +
+                            `Jumlah huruf: ${res.answer.length}\n` +
+                            `Waktunya ${detik} detik.\n*${prefix}skip* untuk skip`)
+                            .then(() => {
+                                startTebakRoomTimer(detik, res.answer)
+                            })
+                    }).catch((err) => {
+                        console.log(err)
+                        reply(resMsg.error.norm)
+                    })
+                    break
+                }
+
                 // TODO add more tebak
 
                 // Skip room
@@ -1986,7 +2007,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
                     break
                 }
-                
+
                 case 'whatanime': {
                     if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
                         let mediaData
