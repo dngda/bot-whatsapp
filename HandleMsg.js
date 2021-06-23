@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 17:06:55
+ * @ Modified time: 2021-06-23 19:44:35
  * @ Description: Handling message
  */
 
@@ -1267,6 +1267,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
                     break
                 }
+                // TODO add more maker
                 /* #endregion */
 
                 /* #region Media Downloader */
@@ -1871,7 +1872,6 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
-                //Tebak Gambar
                 case 'tbg':
                 case 'tebakgambar': {
                     const isRoomExist = await tebak.isRoomExist(from)
@@ -1910,6 +1910,28 @@ const HandleMsg = async (client, message, browser) => {
                     break
                 }
 
+                case 'tbl':
+                case 'tebaklirik': {
+                    const isRoomExist = await tebak.isRoomExist(from)
+                    if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
+                    await tebak.getTebakLirik(from).then(async res => {
+                        let detik = 90
+                        await reply(`Tebak lirik untuk melengkapinya.\n\n` +
+                            `${q3+ res.question +q3}\n\n` +
+                            `Jumlah huruf: ${res.answer.length}\nWaktunya ${detik} detik.\n*${prefix}skip* untuk skip`)
+                            .then(() => {
+                                startTebakRoomTimer(detik, res.answer)
+                            })
+                    }).catch((err) => {
+                        console.log(err)
+                        reply(resMsg.error.norm)
+                    })
+                    break
+                }
+                
+                // TODO add more tebak
+
+                // Skip room
                 case 'skip': {
                     tebak.getAns(from).then(res => {
                         if (res == false) reply(`Tidak ada sesi Tebak berlangsung.`)
@@ -1920,6 +1942,7 @@ const HandleMsg = async (client, message, browser) => {
                     })
                     break
                 }
+
                 case 'skripsi': {
                     let skripsis = readFileSync('./src/skripsi.txt', 'utf8')
                     let _skrps = sample(skripsis.split('\n'))
@@ -1963,6 +1986,7 @@ const HandleMsg = async (client, message, browser) => {
                     }
                     break
                 }
+                
                 case 'whatanime': {
                     if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
                         let mediaData
