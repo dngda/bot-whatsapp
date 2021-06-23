@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-23 22:36:13
+ * @ Modified time: 2021-06-23 23:11:23
  * @ Description: Handling message
  */
 
@@ -69,7 +69,7 @@ let {
     groupLimit,
     prefix
 } = setting
-const Surah = JSON.parse(readFileSync('./src/surah.json'))
+const Surah = JSON.parse(readFileSync('./src/json/surah.json'))
 /* #endregion */
 
 /* #region Helper functions */
@@ -258,7 +258,7 @@ const HandleMsg = async (client, message, browser) => {
         const sendJSON = (txt) => sendText(JSON.stringify(txt, null, 2))
 
         // eslint-disable-next-line no-unused-vars
-        const getJSON = async (url) => {
+        const sendJSONFromUrl = async (url) => {
             let { data } = await axios.get(url).catch(e => {
                 console.log(e)
                 sendText(resMsg.error.norm)
@@ -1841,6 +1841,16 @@ const HandleMsg = async (client, message, browser) => {
                         })
                     break
                 }
+
+                case 'buildgi': {
+                    // data json dari scnya Niskata (https://github.com/Niskata/bot-whatsapp/blob/c5a2c01e7a0ce7cd846e07c1e28c10daf912aaa0/HandleMsg.js#L1024) :D
+                    if (args.length == 0) return reply(`Untuk melihat build character Genshin Impact. ${prefix}buildgi nama.\nContoh: ${prefix}buildgi jean`)
+                    const genshinBuild = JSON.parse(readFileSync('./src/json/genshinbuild.json'))
+                    const getBuild = lodash.find(genshinBuild, { name: args[0] })?.build
+                    if(getBuild === undefined) return reply(`Character tidak ditemukan`)
+                    sendFFU(getBuild)
+                    break
+                }
                 /* #endregion */
 
                 /* #region Hiburan */
@@ -1851,7 +1861,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'truth': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    let truths = readFileSync('./src/truth.txt', 'utf8')
+                    let truths = readFileSync('./src/txt/truth.txt', 'utf8')
                     let _truth = sample(truths.split('\n'))
                     await reply(_truth)
                         .catch((err) => {
@@ -1863,7 +1873,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'dare': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    let dares = readFileSync('./src/dare.txt', 'utf8')
+                    let dares = readFileSync('./src/txt/dare.txt', 'utf8')
                     let _dare = sample(dares.split('\n'))
                     await reply(_dare)
                         .catch((err) => {
@@ -1966,7 +1976,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'skripsi': {
-                    let skripsis = readFileSync('./src/skripsi.txt', 'utf8')
+                    let skripsis = readFileSync('./src/txt/skripsi.txt', 'utf8')
                     let _skrps = sample(skripsis.split('\n'))
                     let gtts = new gTTS(_skrps, 'id')
                     try {
@@ -2657,7 +2667,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     sewa.getListSewa(client).then(res => {
                         if (res != null) {
-                            sendText(JSON.stringify(res, null, 2))
+                            sendJSON(res)
                         }
                     })
                     break
