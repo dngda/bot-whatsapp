@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-23 20:05:36
+ * @ Modified time: 2021-06-23 21:12:07
  * @ Description: Handling message
  */
 
@@ -157,7 +157,7 @@ const HandleMsg = async (client, message, browser) => {
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
         const pengirim = sender.id
-        const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
+        const isBotGroupAdmin = groupAdmins.includes(botNumber) || false
         const stickerMetadata = { pack: 'Created with', author: 'SeroBot', keepScale: true }
         const stickerMetadataCircle = { pack: 'Created with', author: 'SeroBot', circle: true }
         const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
@@ -204,7 +204,7 @@ const HandleMsg = async (client, message, browser) => {
         /* #region [IDENTIFY] */
         var isKasar = false
         const isCmd = body.startsWith(prefix)
-        const isGroupAdmins = groupAdmins.includes(sender.id) || false
+        const isGroupAdmin = groupAdmins.includes(sender.id) || false
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
         const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
         const isQuotedChat = quotedMsg && quotedMsg.type === 'chat'
@@ -339,6 +339,7 @@ const HandleMsg = async (client, message, browser) => {
         /* #region Enable or Disable bot */
         if (isDisabled && command != 'enablebot') {
             if (isCmd) sendText('❌ Bot disabled!')
+            if (isGroupAdmin) sendText(`Kirim *${prefix}enablebot* untuk mengaktifkan!`)
             return null
         }
 
@@ -347,7 +348,7 @@ const HandleMsg = async (client, message, browser) => {
             switch (command) {
                 case 'enablebot': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins && !isOwnerBot) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin && !isOwnerBot) return reply(resMsg.error.admin)
                     let pos = disableBot.indexOf(chatId)
                     if (pos === -1) return reply('Bot memang masih aktif.')
                     disableBot.splice(pos, 1)
@@ -356,7 +357,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
                 case 'disablebot': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins && !isOwnerBot) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin && !isOwnerBot) return reply(resMsg.error.admin)
                     let pos = disableBot.indexOf(chatId)
                     if (pos != -1) return reply('Bot memang dimatikan.')
                     disableBot.push(chatId)
@@ -523,7 +524,7 @@ const HandleMsg = async (client, message, browser) => {
                 case 'help':
                 case 'start':
                     await sendText(menuId.textMenu(pushname, t))
-                    if ((isGroupMsg) && (isGroupAdmins)) sendText(`Menu Admin Grup: *${prefix}menuadmin*`)
+                    if ((isGroupMsg) && (isGroupAdmin)) sendText(`Menu Admin Grup: *${prefix}menuadmin*`)
                     if (isOwnerBot) sendText(`Menu Owner: *${prefix}menuowner*`)
                     break
                 case 'menuadmin':
@@ -2253,7 +2254,7 @@ const HandleMsg = async (client, message, browser) => {
                 /* #region Group Commands */
                 // Non Admin
                 case 'grouplink': {
-                    if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                    if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (isGroupMsg) {
                         const inviteLink = await client.getGroupInviteLink(groupId)
                         client.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name || formattedTitle}* Gunakan *${prefix}revoke* untuk mereset Link group`)
@@ -2265,9 +2266,9 @@ const HandleMsg = async (client, message, browser) => {
 
                 // Admin only
                 case "revoke": {
-                    if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
-                    if (isBotGroupAdmins) {
+                    if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (isBotGroupAdmin) {
                         client.revokeGroupInviteLink(from)
                             .then(() => {
                                 reply(`Berhasil Revoke Grup Link gunakan *${prefix}grouplink* untuk mendapatkan group invite link yang terbaru`)
@@ -2280,8 +2281,8 @@ const HandleMsg = async (client, message, browser) => {
                 }
                 case 'mutegroup': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
-                    if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (args.length != 1) return reply(`Untuk mengubah settingan group chat agar hanya admin saja yang bisa chat\n\nPenggunaan:\n${prefix}mutegrup on --aktifkan\n${prefix}mutegrup off --nonaktifkan`)
                     if (args[0] == 'on') {
                         client.setGroupToAdminsOnly(groupId, true).then(() => sendText('Berhasil mengubah agar hanya admin yang dapat chat!'))
@@ -2295,8 +2296,8 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'setprofile': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
-                    if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (isMedia && type == 'image' || isQuotedImage) {
                         let dataMedia = isQuotedImage ? quotedMsg : message
                         let _mimetype = dataMedia.mimetype
@@ -2316,7 +2317,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'welcome':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     if (args.length != 1) return reply(`Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`)
                     if (args[0] == 'on') {
                         welcome.push(chatId)
@@ -2334,7 +2335,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'add':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                    if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (args.length === 0) return reply(`Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`)
                     try {
                         await client.addParticipant(from, `${arg.replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '')}@c.us`)
@@ -2345,8 +2346,8 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'kick':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
-                    if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (mentionedJidList.length === 0) return reply('Maaf, format pesan salah.\nSilakan tag satu atau lebih orang yang akan dikeluarkan')
                     if (mentionedJidList[0] === botNumber) return await reply('Maaf, format pesan salah.\nTidak dapat mengeluarkan akun bot sendiri')
                     await client.sendTextWithMentions(from, `Request diterima, mengeluarkan:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
@@ -2358,8 +2359,8 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'promote':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
-                    if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (mentionedJidList.length != 1) return reply('Maaf, hanya bisa mempromote 1 user')
                     if (groupAdmins.includes(mentionedJidList[0])) return await reply('Maaf, user tersebut sudah menjadi admin.')
                     if (mentionedJidList[0] === botNumber) return await reply('Maaf, format pesan salah.\nTidak dapat mempromote akun bot sendiri')
@@ -2369,8 +2370,8 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'demote':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
-                    if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (mentionedJidList.length != 1) return reply('Maaf, hanya bisa mendemote 1 user')
                     if (!groupAdmins.includes(mentionedJidList[0])) return await reply('Maaf, user tersebut belum menjadi admin.')
                     if (mentionedJidList[0] === botNumber) return await reply('Maaf, format pesan salah.\nTidak dapat mendemote akun bot sendiri')
@@ -2381,7 +2382,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'yesbye': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     await sendText('Oh beneran ya. Gapapa aku paham. Selamat tinggal 👋🏻🥲')
 
                     setTimeout(async () => {
@@ -2395,7 +2396,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'bye': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     await sendText('Udah gak butuh aku lagi? yaudah. kirim /yesbye untuk mengeluarkan bot')
                     break
                 }
@@ -2432,7 +2433,7 @@ const HandleMsg = async (client, message, browser) => {
                 /* #region Anti Kasar */
                 case 'antikasar': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     if (args[0] === 'on') {
                         let pos = ngegas.indexOf(chatId)
                         if (pos != -1) return reply('Fitur anti kata kasar sudah aktif!')
@@ -2466,7 +2467,7 @@ const HandleMsg = async (client, message, browser) => {
 
                 case 'reset': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     const reset = db.chain.get('groups').find({ id: groupId }).assign({ members: [] }).value()
                     db.write()
                     if (reset) {
@@ -2500,9 +2501,9 @@ const HandleMsg = async (client, message, browser) => {
                 /* #region Anti-anti */
                 case 'antilinkgroup': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     if (args[0] === 'on') {
-                        if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                        if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                         let pos = antiLinkGroup.indexOf(chatId)
                         if (pos != -1) return reply('Fitur anti link group sudah aktif!')
                         antiLinkGroup.push(chatId)
@@ -2521,9 +2522,9 @@ const HandleMsg = async (client, message, browser) => {
                 }
                 case 'antilink': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmins) return reply(resMsg.error.admin)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     if (args[0] === 'on') {
-                        if (!isBotGroupAdmins) return reply(resMsg.error.botAdm)
+                        if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                         let posi = antiLinkGroup.indexOf(chatId)
                         if (posi != -1) {
                             // disable anti link group first
@@ -2974,8 +2975,8 @@ const HandleMsg = async (client, message, browser) => {
             if (type === 'image' && caption || type === 'video' && caption) msg = caption
             else msg = message.body
             if (msg?.match(/chat\.whatsapp\.com/gi) !== null) {
-                if (!isBotGroupAdmins) return sendText('Gagal melakukan kick, bot bukan admin')
-                if (isGroupAdmins) {
+                if (!isBotGroupAdmin) return sendText('Gagal melakukan kick, bot bukan admin')
+                if (isGroupAdmin) {
                     reply(`Duh admin yang share link group. Gabisa dikick deh.`)
                 } else {
                     console.log(color('[LOGS]', 'grey'), `Group link detected, kicking sender from ${name || formattedTitle}`)
@@ -2993,8 +2994,8 @@ const HandleMsg = async (client, message, browser) => {
             if (type === 'image' && caption || type === 'video' && caption) msg = caption
             else msg = message.body
             if (msg?.match(/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi) !== null) {
-                if (!isBotGroupAdmins) return sendText('Gagal melakukan kick, bot bukan admin')
-                if (isGroupAdmins) {
+                if (!isBotGroupAdmin) return sendText('Gagal melakukan kick, bot bukan admin')
+                if (isGroupAdmin) {
                     reply(`Duh admin yang share link. Gabisa dikick deh.`)
                 } else {
                     console.log(color('[LOGS]', 'grey'), `Any link detected, kicking sender from ${name || formattedTitle}`)
