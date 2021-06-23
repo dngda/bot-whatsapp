@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-23 21:15:35
+ * @ Modified time: 2021-06-23 22:36:13
  * @ Description: Handling message
  */
 
@@ -284,7 +284,7 @@ const HandleMsg = async (client, message, browser) => {
                 })
                 .on('end', () => {
                     client.sendFile(from, outpath, `${name}.mp3`, '', id)
-                        .then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                        .then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Seconds`))
                     unlinkIfExists(inpath, outpath)
                 })
                 .saveToFile(outpath)
@@ -714,7 +714,7 @@ const HandleMsg = async (client, message, browser) => {
                             if (!isUrl(url)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                             client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
-                                : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
+                                : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Seconds`))
                         } catch (e) {
                             console.log(`Sticker url err: ${e}`)
                             return sendText(resMsg.error.norm)
@@ -1305,7 +1305,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('end', () => {
-                                client.sendFile(from, path, `${ytid}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, path, `${ytid}.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Seconds`))
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .saveToFile(path)
@@ -1346,7 +1346,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('finish', () => {
-                                client.sendFile(from, path, `${ytid}.mp4`, inf.title, id).then(console.log(color('[LOGS]', 'grey'), `Video Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, path, `${ytid}.mp4`, inf.title, id).then(console.log(color('[LOGS]', 'grey'), `Video Processed for ${processTime(t, moment())} Seconds`))
                                 if (existsSync(path)) unlinkSync(path)
                             })
                     } catch (err) {
@@ -1393,7 +1393,7 @@ const HandleMsg = async (client, message, browser) => {
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('end', () => {
-                                client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Second`))
+                                client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Seconds`))
                                 sleep(2000).then(() => { if (existsSync(path)) unlinkSync(path) })
                             })
                             .saveToFile(path)
