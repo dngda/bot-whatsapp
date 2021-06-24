@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-24 18:35:58
+ * @ Modified time: 2021-06-24 18:40:10
  * @ Description: Handling message
  */
 
@@ -239,14 +239,16 @@ const HandleMsg = async (client, message, browser) => {
                 })
         }
 
+        const printError = (e) => {
+            sendText(resMsg.error.norm)
+            return console.log(e)
+        }
+
         const sendFFU = async (url, capt = '') => {
             sendText(resMsg.wait)
             if (!capt) capt = ''
             return await client.sendFileFromUrl(from, url, '', capt, id)
-                .catch(e => {
-                    console.log(e)
-                    sendText(resMsg.error.norm)
-                })
+                .catch(printError)
         }
 
         const sendSFU = async (url) => {
@@ -260,10 +262,7 @@ const HandleMsg = async (client, message, browser) => {
 
         // eslint-disable-next-line no-unused-vars
         const sendJSONFromUrl = async (url) => {
-            let { data } = await get(url).catch(e => {
-                console.log(e)
-                sendText(resMsg.error.norm)
-            })
+            let { data } = await get(url).catch(printError)
             return sendJSON(data)
         }
 
