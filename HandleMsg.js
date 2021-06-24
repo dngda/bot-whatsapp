@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-24 10:49:45
+ * @ Modified time: 2021-06-24 18:07:16
  * @ Description: Handling message
  */
 
@@ -1195,36 +1195,35 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length === 0) return reply(`ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\n` +
                         `Contoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`)
                     if (args[0] == 'daerah') {
-                        let resData = await get('https://api.banghasan.com/sholat/format/json/kota')
+                        let resData = await get('https://api.myquran.com/v1/sholat/kota/semua')
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
                             })
-                        var datas = resData.data.kota
+                        var data = resData.data
                         let hasil = '╔══✪〘 Daftar Kota 〙✪\n'
-                        for (let d of datas) {
-                            var kota = d.nama
+                        for (let d of data) {
                             hasil += '╠➥ '
-                            hasil += `${kota}\n`
+                            hasil += `${d.lokasi}\n`
                         }
                         hasil += '╚═〘 *SeroBot* 〙'
                         await reply(hasil)
                     } else {
-                        let resData = await get('https://api.banghasan.com/sholat/format/json/kota/nama/' + arg)
+                        let resData = await get('https://api.myquran.com/v1/sholat/kota/cari/' + arg)
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
                             })
                         try {
-                            var kodek = resData.data.kota[0].id
+                            var kodek = resData.data.data[0].id
                         } catch (err) {
                             return reply('Kota tidak ditemukan')
                         }
-                        var tgl = moment(t * 1000).format('YYYY-MM-DD')
-                        let resdatas = await get('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + kodek + '/tanggal/' + tgl)
-                        if (resdatas.data.jadwal.status === 'error') return reply('Internal server error')
-                        var jadwals = resdatas.data.jadwal.data
-                        let jadwal = `╔══✪〘 Jadwal Sholat di ${arg.replace(/^\w/, (c) => c.toUpperCase())} 〙✪\n`
+                        var tgl = moment(t * 1000).format('YYYY/MM/DD')
+                        let resdatas = await get('https://api.myquran.com/v1/sholat/jadwal/' + kodek + '/tanggal/' + tgl)
+                        if (resdatas.data.status === 'error') return reply('Internal server error')
+                        var jadwals = resdatas.data.jadwal
+                        let jadwal = `╔══✪〘 Jadwal Sholat di ${resdatas.data.lokasi} 〙✪\n`
                         jadwal += `╠> ${jadwals.tanggal}\n`
                         jadwal += `╠> ${q3}Imsak    : ${jadwals.imsak}${q3}\n`
                         jadwal += `╠> ${q3}Subuh    : ${jadwals.subuh}${q3}\n`
