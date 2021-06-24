@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-24 18:53:55
+ * @ Modified time: 2021-06-24 19:11:49
  * @ Description: Handling message
  */
 
@@ -818,8 +818,10 @@ const HandleMsg = async (client, message, browser) => {
                     break
 
                 case 'urltoimg':
-                case 'ssweb': {
-                    if (args.length === 0) return reply(`Screenshot website. ${prefix}ssweb <url>`)
+                case 'ssweb':
+                case 'gsearch':
+                case 'gs': {
+                    if (args.length === 0) return reply(`Screenshot website atau search Google. ${prefix}ssweb <url> atau ${prefix}gs <query>`)
                     let urlzz = ''
                     if (!isUrl(arg)) urlzz = `https://www.google.com/search?q=${encodeURIComponent(arg)}`
                     else urlzz = arg
