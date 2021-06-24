@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-24 18:40:10
+ * @ Modified time: 2021-06-24 18:47:51
  * @ Description: Handling message
  */
 
@@ -241,7 +241,8 @@ const HandleMsg = async (client, message, browser) => {
 
         const printError = (e) => {
             sendText(resMsg.error.norm)
-            return console.log(e)
+            console.log(color('[ERR>]', 'red'), e)
+            return null
         }
 
         const sendFFU = async (url, capt = '') => {
@@ -3059,6 +3060,7 @@ const HandleMsg = async (client, message, browser) => {
         /* #endregion Anti-anti */
     } catch (err) {
         console.log(color('[ERR>]', 'red'), err)
+        client.sendText(message.from, resMsg.error.norm)
     }
 }
 /* #endregion */
