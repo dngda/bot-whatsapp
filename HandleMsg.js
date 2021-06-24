@@ -338,7 +338,7 @@ const HandleMsg = async (client, message, browser) => {
         /* #region Enable or Disable bot */
         if (isDisabled && command != 'enablebot') {
             if (isCmd) sendText('❌ Bot disabled!')
-            if (isGroupAdmin) sendText(`Kirim *${prefix}enablebot* untuk mengaktifkan!`)
+            if (isGroupAdmin && isCmd) sendText(`Kirim *${prefix}enablebot* untuk mengaktifkan!`)
             return null
         }
 
