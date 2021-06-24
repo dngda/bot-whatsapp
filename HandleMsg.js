@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-24 18:47:51
+ * @ Modified time: 2021-06-24 18:53:55
  * @ Description: Handling message
  */
 
@@ -263,7 +263,7 @@ const HandleMsg = async (client, message, browser) => {
 
         // eslint-disable-next-line no-unused-vars
         const sendJSONFromUrl = async (url) => {
-            let { data } = await get(url).catch(printError)
+            let { data } = await get(url).catch(e => { return printError(e) })
             return sendJSON(data)
         }
 
@@ -495,7 +495,9 @@ const HandleMsg = async (client, message, browser) => {
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
-                    let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).then(() => console.log(color('[LOGS] Simi triggered and respond.', 'grey')))
+                    let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
+                        .then(() => console.log(color('[LOGS] Simi triggered and respond.', 'grey')))
+                        .catch(e => { return console.log(e) })
                     if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
                 }
                 break
@@ -509,7 +511,9 @@ const HandleMsg = async (client, message, browser) => {
             if (txt.length === 0) {
                 reply(`Iya, ada apa?`)
             } else {
-                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).then(() => console.log(color('[LOGS] Simi triggered and respond.', 'grey')))
+                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
+                    .then(() => console.log(color('[LOGS] Simi triggered and respond.', 'grey')))
+                    .catch(e => { return console.log(e) })
                 reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
             }
         }
