@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-24 18:07:16
+ * @ Modified time: 2021-06-24 18:10:52
  * @ Description: Handling message
  */
 
@@ -495,7 +495,7 @@ const HandleMsg = async (client, message, browser) => {
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
-                    let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).catch(err => console.log(err))
+                    let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
                     if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
                 }
                 break
@@ -509,7 +509,7 @@ const HandleMsg = async (client, message, browser) => {
             if (txt.length === 0) {
                 reply(`Iya, ada apa?`)
             } else {
-                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).catch(err => console.log(err))
+                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
                 reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
             }
         }
