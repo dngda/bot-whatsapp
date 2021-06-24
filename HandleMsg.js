@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 00:12:58
+ * @ Modified time: 2021-06-25 00:13:22
  * @ Description: Handling message
  */
 
@@ -687,7 +687,7 @@ const HandleMsg = async (client, message, browser) => {
                                         console.log(color('[LOGS]', 'grey'), `Sticker nobg Processed for ${processTime(t, moment())} Seconds`)
                                     }).catch(printError)
                             } catch (err) {
-                                console.log(color('[ERR>]', 'red'), e)
+                                console.log(color('[ERR>]', 'red'), err)
                                 if (err[0].code === 'unknown_foreground') reply('Maaf batas objek dan background tidak jelas!')
                                 else await reply('Maaf terjadi error atau batas penggunaan sudah tercapai!')
                             }
