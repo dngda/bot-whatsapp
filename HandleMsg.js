@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-23 23:11:23
+ * @ Modified time: 2021-06-24 10:31:28
  * @ Description: Handling message
  */
 
@@ -53,9 +53,11 @@ import { cariNsfw } from './lib/kataKotor.js'
 if (!existsSync('./data/stat.json')) {
     writeFileSync('./data/stat.json', `{ "todayHits" : 0, "received" : 0 }`)
 }
-const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
-const kataKasar = JSON.parse(createReadFileSync('./settings/katakasar.json'))
-const { apiNoBg, apiLol } = JSON.parse(createReadFileSync('./settings/api.json'))
+// settings
+const { stickerHash, ownerNumber, memberLimit, groupLimit, prefix } = JSON.parse(readFileSync('./settings/setting.json'))
+const { apiNoBg, apiLol } = JSON.parse(readFileSync('./settings/api.json'))
+const kataKasar = JSON.parse(readFileSync('./settings/katakasar.json'))
+// database
 const banned = JSON.parse(createReadFileSync('./data/banned.json'))
 const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
 const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
@@ -63,12 +65,7 @@ const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json')
 const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
 const disableBot = JSON.parse(createReadFileSync('./data/disablebot.json'))
 const groupPrem = JSON.parse(createReadFileSync('./data/premiumgroup.json'))
-let {
-    ownerNumber,
-    memberLimit,
-    groupLimit,
-    prefix
-} = setting
+// src
 const Surah = JSON.parse(readFileSync('./src/json/surah.json'))
 /* #endregion */
 
@@ -149,7 +146,7 @@ const HandleMsg = async (client, message, browser) => {
             message = message.quotedMsg
             message.t = _t
         }
-        let { body, type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
+        let { body, type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList, filehash } = message
         var { name, formattedTitle } = chat
         let { pushname, verifiedName, formattedName } = sender
         pushname = pushname || verifiedName || formattedName // verifiedName is the name of someone who uses a business account
@@ -163,14 +160,16 @@ const HandleMsg = async (client, message, browser) => {
         const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
         // Bot Prefix Aliases
         const regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-)(?=\w+)/g
-        // Serialized chats
+        // whole chats body
         let chats = ''
         if (type === 'chat') chats = body
         else chats = (type === 'image' || type === 'video') ? caption : ''
-        // Serialized body
+        // whole chats body contain commands
         if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
         else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
         const croppedChats = (chats?.length > 40) ? chats?.substring(0, 40) + '...' : chats
+        // sticker menu
+        if (filehash == stickerHash.menu) body = `${prefix}menu`
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
@@ -1847,7 +1846,7 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length == 0) return reply(`Untuk melihat build character Genshin Impact. ${prefix}buildgi nama.\nContoh: ${prefix}buildgi jean`)
                     const genshinBuild = JSON.parse(readFileSync('./src/json/genshinbuild.json'))
                     const getBuild = lodash.find(genshinBuild, { name: args[0] })?.build
-                    if(getBuild === undefined) return reply(`Character tidak ditemukan`)
+                    if (getBuild === undefined) return reply(`Character tidak ditemukan`)
                     sendFFU(getBuild)
                     break
                 }
