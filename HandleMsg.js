@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-24 18:10:52
+ * @ Modified time: 2021-06-24 18:35:58
  * @ Description: Handling message
  */
 
@@ -260,7 +260,7 @@ const HandleMsg = async (client, message, browser) => {
 
         // eslint-disable-next-line no-unused-vars
         const sendJSONFromUrl = async (url) => {
-            let { data } = await axios.get(url).catch(e => {
+            let { data } = await get(url).catch(e => {
                 console.log(e)
                 sendText(resMsg.error.norm)
             })
@@ -495,7 +495,7 @@ const HandleMsg = async (client, message, browser) => {
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
-                    let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
+                    let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).then(() => console.log(color('[LOGS] Simi triggered and respond.', 'grey')))
                     if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
                 }
                 break
@@ -509,7 +509,7 @@ const HandleMsg = async (client, message, browser) => {
             if (txt.length === 0) {
                 reply(`Iya, ada apa?`)
             } else {
-                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
+                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi')).then(() => console.log(color('[LOGS] Simi triggered and respond.', 'grey')))
                 reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
             }
         }
@@ -1195,44 +1195,43 @@ const HandleMsg = async (client, message, browser) => {
                     if (args.length === 0) return reply(`ketik *${prefix}jsholat <nama kabupaten>* untuk melihat jadwal sholat\n` +
                         `Contoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`)
                     if (args[0] == 'daerah') {
-                        let resData = await get('https://api.myquran.com/v1/sholat/kota/semua')
+                        let { data: semuaKota } = await get('https://api.myquran.com/v1/sholat/kota/semua')
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
                             })
-                        var data = resData.data
                         let hasil = '╔══✪〘 Daftar Kota 〙✪\n'
-                        for (let d of data) {
+                        for (let kota of semuaKota) {
                             hasil += '╠➥ '
-                            hasil += `${d.lokasi}\n`
+                            hasil += `${kota.lokasi}\n`
                         }
                         hasil += '╚═〘 *SeroBot* 〙'
                         await reply(hasil)
                     } else {
-                        let resData = await get('https://api.myquran.com/v1/sholat/kota/cari/' + arg)
+                        let { data: cariKota } = await get('https://api.myquran.com/v1/sholat/kota/cari/' + arg)
                             .catch(err => {
                                 console.log(err)
                                 return sendText(resMsg.error.norm)
                             })
                         try {
-                            var kodek = resData.data.data[0].id
+                            var kodek = cariKota.data[0].id
                         } catch (err) {
                             return reply('Kota tidak ditemukan')
                         }
                         var tgl = moment(t * 1000).format('YYYY/MM/DD')
-                        let resdatas = await get('https://api.myquran.com/v1/sholat/jadwal/' + kodek + '/tanggal/' + tgl)
-                        if (resdatas.data.status === 'error') return reply('Internal server error')
-                        var jadwals = resdatas.data.jadwal
-                        let jadwal = `╔══✪〘 Jadwal Sholat di ${resdatas.data.lokasi} 〙✪\n`
-                        jadwal += `╠> ${jadwals.tanggal}\n`
-                        jadwal += `╠> ${q3}Imsak    : ${jadwals.imsak}${q3}\n`
-                        jadwal += `╠> ${q3}Subuh    : ${jadwals.subuh}${q3}\n`
-                        jadwal += `╠> ${q3}Dzuhur   : ${jadwals.dzuhur}${q3}\n`
-                        jadwal += `╠> ${q3}Ashar    : ${jadwals.ashar}${q3}\n`
-                        jadwal += `╠> ${q3}Maghrib  : ${jadwals.maghrib}${q3}\n`
-                        jadwal += `╠> ${q3}Isya'    : ${jadwals.isya}${q3}\n`
-                        jadwal += '╚═〘 *SeroBot* 〙'
-                        reply(jadwal)
+                        let { data: jadwalData } = await get('https://api.myquran.com/v1/sholat/jadwal/' + kodek + '/tanggal/' + tgl)
+                        if (jadwalData.status === 'error') return reply('Internal server error')
+                        var jadwal = jadwalData.data.jadwal
+                        let jadwalMsg = `╔══✪〘 Jadwal Sholat di ${jadwalData.data.lokasi} 〙✪\n`
+                        jadwalMsg += `╠> ${jadwal.tanggal}\n`
+                        jadwalMsg += `╠> ${q3}Imsak    : ${jadwal.imsak}${q3}\n`
+                        jadwalMsg += `╠> ${q3}Subuh    : ${jadwal.subuh}${q3}\n`
+                        jadwalMsg += `╠> ${q3}Dzuhur   : ${jadwal.dzuhur}${q3}\n`
+                        jadwalMsg += `╠> ${q3}Ashar    : ${jadwal.ashar}${q3}\n`
+                        jadwalMsg += `╠> ${q3}Maghrib  : ${jadwal.maghrib}${q3}\n`
+                        jadwalMsg += `╠> ${q3}Isya'    : ${jadwal.isya}${q3}\n`
+                        jadwalMsg += '╚═〘 *SeroBot* 〙'
+                        reply(jadwalMsg)
                     }
                     break
                 }
@@ -1479,7 +1478,7 @@ const HandleMsg = async (client, message, browser) => {
                         `Download igstory sesuai username dan urutan storynya.\n` +
                         `Penggunaan: ${prefix}igstory <username> <nomor urut>\n` +
                         `Contoh: ${prefix}igstory awkarin 1`)
-                    let { data } = await axios.get(lolApi(`igstory/${args[0].replace(/@/, '')}`))
+                    let { data } = await get(lolApi(`igstory/${args[0].replace(/@/, '')}`))
                     sendFFU(data.result[(data.result.length - args[1])])
                     break
                 }
@@ -1789,7 +1788,7 @@ const HandleMsg = async (client, message, browser) => {
                 }
 
                 case 'cekcovid': {
-                    let { data } = await axios.get('https://api.terhambar.com/negara/Indonesia')
+                    let { data } = await get('https://api.terhambar.com/negara/Indonesia')
                     if (!isQuotedLocation) return reply(`Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}cekcovid\n\n` +
                         `Status covid di Indonesia\n` +
                         `${q3}Tanggal      :${q3} ${data.terakhir}\n` +
