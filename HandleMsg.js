@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-24 10:31:28
+ * @ Modified time: 2021-06-24 10:49:45
  * @ Description: Handling message
  */
 
@@ -169,7 +169,9 @@ const HandleMsg = async (client, message, browser) => {
         else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
         const croppedChats = (chats?.length > 40) ? chats?.substring(0, 40) + '...' : chats
         // sticker menu
-        if (filehash == stickerHash.menu) body = `${prefix}menu`
+        for (let menu in stickerHash) {
+            if (filehash == stickerHash[menu]) body = `${prefix + menu}`
+        }
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
