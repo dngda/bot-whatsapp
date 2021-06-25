@@ -2,13 +2,13 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 09:22:34
+ * @ Modified time: 2021-06-25 10:15:43
  * @ Description: Handling message
  */
 
 /* #region Import */
 import { removeBackgroundFromImageBase64 } from 'remove.bg'
-import { decryptMedia } from '@open-wa/wa-automate'
+import { decryptMedia, Client } from '@open-wa/wa-automate'
 import { exec, spawn } from 'child_process'
 import { scheduleJob } from 'node-schedule'
 import { translate } from 'free-translate'
@@ -101,7 +101,7 @@ scheduleJob('1 0 * * *', () => {
 /* #endregion */
 
 /* #region Main Function */
-const HandleMsg = async (client, message, browser) => {
+const HandleMsg = async (client = new Client(), message, browser) => {
     received++ //Count msg received
     /* #region Default response message */
     const resMsg = {

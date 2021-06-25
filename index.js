@@ -2,14 +2,14 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 15:39:06
+ * @ Modified time: 2021-06-25 10:12:25
  * @ Description:
  */
 
 import { color, createReadFileSync, initGlobalVariable } from './utils/index.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import { schedule, sewa } from './lib/index.js'
-import { create } from '@open-wa/wa-automate'
+import { create, Client } from '@open-wa/wa-automate'
 import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
 import { HandleMsg } from './HandleMsg.js'
@@ -34,7 +34,7 @@ queue.on('next', () => {
     if (queue.size > 0 || queue.pending > 0) console.log(color('[==>>]', 'red'), `In-process: ${queue.pending} In-queue: ${queue.size}`)
 })
 
-const start = async (client) => {
+const start = async (client = new Client()) => {
     try {
         console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
         console.log(color(figlet.textSync('  SeroBot', { font: 'Ghost', horizontalLayout: 'default' })))
