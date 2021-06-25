@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:56:26
+ * @ Modified time: 2021-06-25 13:59:35
  * @ Description: Handling message
  */
 
@@ -831,7 +831,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     if ((isMedia || isQuotedImage) && args.length >= 1) {
                         try {
                             let top = '', bottom = ''
-                            if (/|/g.test(arg)) {
+                            if (!/\|/g.test(arg)) {
                                 bottom = arg
                             } else {
                                 top = arg.split('|')[0]
