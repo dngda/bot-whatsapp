@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 18:41:07
+ * @ Modified time: 2021-06-26 03:05:28
  * @ Description: Handling message
  */
 
@@ -1384,9 +1384,12 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls) && urls.match(/facebook/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Facebook') }
                     await sendText(resMsg.wait)
-                    let res = await api.fbdl(urls).catch(printError)
+                    let res = await api.fbdl(urls).catch(n => {
+                        reply(`Link tidak valid. Pastikan hanya link video dari facebook yang bersifat publik.`)
+                        console.log(n.message)
+                    })
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    await client.sendFileFromUrl(from, res.result, '', '', _id).catch(printError)
+                    if (res) await client.sendFileFromUrl(from, res.result, '', '', _id)
                     break
                 }
                 case 'twdl': {
