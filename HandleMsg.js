@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 15:21:56
+ * @ Modified time: 2021-06-25 16:01:27
  * @ Description: Handling message
  */
 
@@ -76,10 +76,10 @@ const sleep = (delay) => new Promise((resolve) => {
     setTimeout(() => { resolve(true) }, delay)
 })
 
-const lolApi = (slash, parm = { txt: null, txt2: null, txt3: null, img: null }) => {
-    let ptext = (parm.txt != null) ? `&text=${encodeURIComponent(parm.txt)}` : ''
-    let ptext2 = (parm.txt2 != null) ? `&text=${encodeURIComponent(parm.txt2)}` : ''
-    let ptext3 = (parm.txt3 != null) ? `&text=${encodeURIComponent(parm.txt3)}` : ''
+const lolApi = (slash, parm = { text: null, text2: null, text3: null, img: null }) => {
+    let ptext = (parm.text != null) ? `&text=${encodeURIComponent(parm.text)}` : ''
+    let ptext2 = (parm.text2 != null) ? `&text=${encodeURIComponent(parm.text2)}` : ''
+    let ptext3 = (parm.text3 != null) ? `&text=${encodeURIComponent(parm.text3)}` : ''
     let pimg = (parm.img != null) ? `&img=${parm.img}` : ''
     return `https://lolhuman.herokuapp.com/api/${slash}?apikey=${apiLol}${ptext}${ptext2}${ptext3}${pimg}`
 }
@@ -870,8 +870,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     if (args.length == 0 && !isQuotedChat) return reply(`Membuat bot menulis teks yang dikirim menjadi gambar\n` +
                         `Pemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`)
                     const content = isQuotedChat ? quotedMsgObj.content.toString() : arg
-                    const ress = await api.tulis(content).catch(printError)
-                    await client.sendImage(from, ress, '', ``, id).catch(printError)
+                    await client.sendImage(from, lolApi(`nulis`, {text: content}), '', ``, id).catch(printError)
                     break
                 }
 
@@ -1166,14 +1165,14 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                 case 'attp': {
                     if (args.length == 0) return reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`attp`, { txt: txt }))
+                    sendSFU(lolApi(`attp`, { text: txt }))
                     break
                 }
 
                 case 'ttp': {
                     if (args.length == 0) return reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`ttp`, { txt: txt }))
+                    sendSFU(lolApi(`ttp`, { text: txt }))
                     break
                 }
 
