@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:39:23
+ * @ Modified time: 2021-06-25 13:43:18
  * @ Description: Handling message
  */
 
@@ -245,7 +245,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
             let errMsg = `${e.name} ${e.message}`
             let cropErr = errMsg.length > 100 ? errMsg.substr(0, 100) + '...' : errMsg
             console.log(color('[ERR>]', 'red'), "{ " + croppedChats + " }\n", e)
-            client.sendText(ownerNumber, `[ ${croppedChats} ] ${cropErr}`)
+            client.sendText(ownerNumber, `{ ${croppedChats} }\n${cropErr}`)
             return null
         }
 
