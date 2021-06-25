@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-26 03:05:28
+ * @ Modified time: 2021-06-26 03:08:52
  * @ Description: Handling message
  */
 
@@ -821,7 +821,9 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     let path = './media/flipped.png'
                     if (args[0] === 'v') image.flip(false, true).write(path)
                     else if (args[0] === 'h') image.flip(true, false).write(path)
-                    else return reply(`Argumen salah`)
+                    else return reply(`Argumen salah.\n` +
+                        `${prefix}flip h -> untuk flip horizontal\n` +
+                        `${prefix}flip v -> untuk flip vertical`)
 
                     await client.sendImage(from, path, '', '', id).catch(printError)
                     break
@@ -870,7 +872,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     if (args.length == 0 && !isQuotedChat) return reply(`Membuat bot menulis teks yang dikirim menjadi gambar\n` +
                         `Pemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`)
                     const content = isQuotedChat ? quotedMsgObj.content.toString() : arg
-                    await client.sendImage(from, lolApi(`nulis`, {text: content}), '', ``, id).catch(printError)
+                    await client.sendImage(from, lolApi(`nulis`, { text: content }), '', ``, id).catch(printError)
                     break
                 }
 
