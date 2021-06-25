@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:17:49
+ * @ Modified time: 2021-06-25 13:27:14
  * @ Description: Handling message
  */
 
@@ -243,7 +243,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
         const printError = (e) => {
             sendText(resMsg.error.norm)
             console.log(color('[ERR>]', 'red'), "{ " + croppedChats + " }\n", e)
-            client.sendText(ownerNumber, "{ " + croppedChats + " }\n", e.name, e.message)
+            client.sendText(ownerNumber, `[ ${croppedChats} ] ${e.name} ${e.message}`)
             return null
         }
 
@@ -1137,7 +1137,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                             return reply('Kota tidak ditemukan')
                         }
                         var tgl = moment(t * 1000).format('YYYY/MM/DD')
-                        let { data: jadwalData } = await get('https://api.myquran.com/v1/sholat/jadwal/' + kodek + tgl)
+                        let { data: jadwalData } = await get(`https://api.myquran.com/v1/sholat/jadwal/${kodek}/${tgl}`)
                         if (jadwalData.status === 'false') return reply('Internal server error')
                         var jadwal = jadwalData.data.jadwal
                         let jadwalMsg = `╔══✪〘 Jadwal Sholat di ${jadwalData.data.lokasi} 〙✪\n`
