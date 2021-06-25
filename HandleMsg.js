@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 10:15:43
+ * @ Modified time: 2021-06-25 11:27:20
  * @ Description: Handling message
  */
 
@@ -1181,6 +1181,18 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     } catch (err) { printError(err) }
                     break
                 }
+                
+                case 'wasted': {
+                    if (!isMedia && !isQuotedImage) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
+                    try {
+                        let enc = (isQuotedImage) ? quotedMsg : message
+                        let mediaData = await decryptMedia(enc)
+                        let _url = await uploadImages(mediaData, true)
+                        sendSFU(lolApi(`editor/wasted`, { img: _url }))
+                    } catch (err) { printError(err) }
+                    break
+                }
+                
                 // TODO add more maker
                 /* #endregion */
 
