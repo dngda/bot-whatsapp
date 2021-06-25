@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 16:01:27
+ * @ Modified time: 2021-06-25 16:05:01
  * @ Description: Handling message
  */
 
@@ -465,7 +465,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
 
         /* #region Handle default msg */
         switch (true) {
-            case /\b(hi|hy|halo|hai|hei|hello)\b/i.test(chats): {
+            case /^\b(hi|hy|halo|hai|hei|hello)\b/i.test(chats): {
                 await reply(`Halo ${pushname} 👋`)
                 break
             }
