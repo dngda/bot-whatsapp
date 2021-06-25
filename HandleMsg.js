@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 00:13:22
+ * @ Modified time: 2021-06-25 09:22:34
  * @ Description: Handling message
  */
 
@@ -22,6 +22,7 @@ import Crypto from 'crypto'
 import jimp from 'jimp'
 import fs from 'fs-extra'
 import axios from 'axios'
+import math from 'mathjs'
 import gTTS from 'gtts'
 
 //Common-Js
@@ -476,8 +477,8 @@ const HandleMsg = async (client, message, browser) => {
                 break
             }
             case /^=/.test(chats): {
-                if (chats.match(/\d[x÷×=+\-*/^e]/g)) {
-                    await reply(`${eval(chats.slice(1).replace(/\^/g, '**').replace(/x/ig, '*')
+                if (chats.match(/\d[x÷×=+\-*/^ei]/gi)) {
+                    await reply(`${math.evaluate(chats.slice(1).replace(/x/ig, '*')
                         .replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
                 }
                 break
