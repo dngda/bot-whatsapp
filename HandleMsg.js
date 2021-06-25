@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:43:18
+ * @ Modified time: 2021-06-25 13:47:03
  * @ Description: Handling message
  */
 
@@ -44,7 +44,7 @@ db.chain = lodash.chain(db.data)
 /* #endregion */
 
 /* #region File Modules */
-import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, addFilter, color, isUrl } from './utils/index.js'
+import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, addFilter, isUrl } from './utils/index.js'
 import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebak, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
