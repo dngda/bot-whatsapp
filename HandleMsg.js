@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 16:10:38
+ * @ Modified time: 2021-06-25 16:16:30
  * @ Description: Handling message
  */
 
@@ -649,7 +649,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                             let _metadata = null
                             if (args[0] === 'crop') _metadata = stickerMetadataCrop
                             else _metadata = (args[0] === 'circle') ? stickerMetadataCircle : stickerMetadata
-                            let mediaData = await decryptMedia(encryptMedia).catch(printError)
+                            let mediaData = await decryptMedia(encryptMedia).catch(e => printError(e, false))
                             if (mediaData) {
                                 if (isQuotedWebp) {
                                     await client.sendRawWebpAsSticker(from, mediaData.toString('base64'), true)
@@ -677,7 +677,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                                 let _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
 
                                 let mediaData = await decryptMedia(encryptedMedia)
-                                    .catch(printError)
+                                    .catch(e => printError(e, false))
                                 if (mediaData === undefined) return sendText(resMsg.error.norm)
                                 let base64img = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                                 let outFile = './media/noBg.png'
@@ -710,7 +710,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                         reply(resMsg.wait)
                         let encryptedMedia = isQuotedVideo ? quotedMsg : message
                         let mediaData = await decryptMedia(encryptedMedia)
-                            .catch(printError)
+                            .catch(e => printError(e, false))
                         await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
                             .then(() => {
                                 sendText(resMsg.success.sticker)
