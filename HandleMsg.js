@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 11:43:03
+ * @ Modified time: 2021-06-25 13:17:49
  * @ Description: Handling message
  */
 
@@ -243,6 +243,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
         const printError = (e) => {
             sendText(resMsg.error.norm)
             console.log(color('[ERR>]', 'red'), "{ " + croppedChats + " }\n", e)
+            client.sendText(ownerNumber, "{ " + croppedChats + " }\n", e.name, e.message)
             return null
         }
 
@@ -1181,7 +1182,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     } catch (err) { printError(err) }
                     break
                 }
-                
+
                 case 'wasted': {
                     if (!isMedia && !isQuotedImage) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
@@ -1192,7 +1193,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     } catch (err) { printError(err) }
                     break
                 }
-                
+
                 // TODO add more maker
                 /* #endregion */
 
@@ -2901,6 +2902,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
     } catch (err) {
         console.log(color('[ERR>]', 'red'), err)
         client.sendText(message.from, resMsg.error.norm)
+        client.sendText(ownerNumber, err.name, err.message)
     }
 }
 /* #endregion */
