@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 16:16:30
+ * @ Modified time: 2021-06-25 16:27:52
  * @ Description: Handling message
  */
 
@@ -2428,7 +2428,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     if (!quotedMsg) return reply(`Maaf, format pesan salah Silakan.\nReply pesan bot dengan caption ${prefix}del`)
                     if (!quotedMsgObj.fromMe) return reply(`Maaf, format pesan salah Silakan.\nReply pesan bot dengan caption ${prefix}del`)
                     client.simulateTyping(from, false)
-                    await client.deleteMessage(from, quotedMsg.id, false).catch(printError)
+                    await client.deleteMessage(from, quotedMsg.id, false).catch(e => printError(e, false))
                     break
                 case 'sfx':
                 case 'listvn': {
