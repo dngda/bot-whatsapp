@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 11:35:09
+ * @ Modified time: 2021-06-25 11:43:03
  * @ Description: Handling message
  */
 
@@ -15,6 +15,7 @@ import { translate } from 'free-translate'
 import moment from 'moment-timezone'
 import appRoot from 'app-root-path'
 import ffmpeg from 'fluent-ffmpeg'
+import { evaluate } from 'mathjs'
 import toPdf from 'office-to-pdf'
 import fetch from 'node-fetch'
 import ytdl from 'ytdl-core'
@@ -22,7 +23,6 @@ import Crypto from 'crypto'
 import jimp from 'jimp'
 import fs from 'fs-extra'
 import axios from 'axios'
-import math from 'mathjs'
 import gTTS from 'gtts'
 
 //Common-Js
@@ -478,7 +478,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
             }
             case /^=/.test(chats): {
                 if (chats.match(/\d[x÷×=+\-*/^ei]/gi)) {
-                    await reply(`${math.evaluate(chats.slice(1).replace(/x/ig, '*')
+                    await reply(`${evaluate(chats.slice(1).replace(/x/ig, '*')
                         .replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
                 }
                 break
