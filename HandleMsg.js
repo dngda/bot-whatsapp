@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:27:14
+ * @ Modified time: 2021-06-25 13:39:23
  * @ Description: Handling message
  */
 
@@ -242,8 +242,10 @@ const HandleMsg = async (client = new Client(), message, browser) => {
 
         const printError = (e) => {
             sendText(resMsg.error.norm)
+            let errMsg = `${e.name} ${e.message}`
+            let cropErr = errMsg.length > 100 ? errMsg.substr(0, 100) + '...' : errMsg
             console.log(color('[ERR>]', 'red'), "{ " + croppedChats + " }\n", e)
-            client.sendText(ownerNumber, `[ ${croppedChats} ] ${e.name} ${e.message}`)
+            client.sendText(ownerNumber, `[ ${croppedChats} ] ${cropErr}`)
             return null
         }
 
@@ -2900,9 +2902,11 @@ const HandleMsg = async (client = new Client(), message, browser) => {
         }
         /* #endregion Anti-anti */
     } catch (err) {
+        let errMsg = `${err.name} ${err.message}`
+        let cropErr = errMsg.length > 100 ? errMsg.substr(0, 100) + '...' : errMsg
         console.log(color('[ERR>]', 'red'), err)
         client.sendText(message.from, resMsg.error.norm)
-        client.sendText(ownerNumber, err.name, err.message)
+        client.sendText(ownerNumber, cropErr)
     }
 }
 /* #endregion */
