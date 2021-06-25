@@ -1,11 +1,11 @@
 <p align="center">
-<img src="https://user-images.githubusercontent.com/35982346/122661611-4792fb00-d1b6-11eb-9cd6-2c5e59aeba5a.png" height="128"/>
+<img src="https://user-images.githubusercontent.com/35982346/123402400-e57d3000-d5d1-11eb-84c0-6881b56ad370.png" height="128"/>
 </p>
 <p align="center">
-<a href="https://github.com/dngda/bot-whatsapp"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Sero Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a><br>
-Multipurpose WhatsApp Bot using open-wa/wa-automate-nodejs library!
+<a href="https://github.com/dngda/bot-whatsapp"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Sero Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
+  <br>
+Multipurpose WhatsApp Bot using open-wa/wa-automate-nodejs library!<hr>
 </p>
-
 <h3 align="center">Made with ❤️ by</h3>
 <p align="center">
 <a href="https://github.com/dngda/"><img title="Author" src="https://img.shields.io/badge/author-dngda-blue?style=for-the-badge&logo=github"></a>
