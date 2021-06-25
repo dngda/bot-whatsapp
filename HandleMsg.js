@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:59:35
+ * @ Modified time: 2021-06-25 15:21:56
  * @ Description: Handling message
  */
 
@@ -240,12 +240,12 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                 })
         }
 
-        const printError = (e) => {
+        const printError = (e, sendToOwner = true) => {
             sendText(resMsg.error.norm)
             let errMsg = `${e.name} ${e.message}`
             let cropErr = errMsg.length > 100 ? errMsg.substr(0, 100) + '...' : errMsg
             console.log(color('[ERR>]', 'red'), "{ " + croppedChats + " }\n", e)
-            client.sendText(ownerNumber, `{ ${croppedChats} }\n${cropErr}`)
+            if (sendToOwner) client.sendText(ownerNumber, `{ ${croppedChats} }\n${cropErr}`)
             return null
         }
 
@@ -656,13 +656,13 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                                         .then(() => {
                                             sendText(resMsg.success.sticker)
                                             console.log(color('[LOGS]', 'grey'), `Sticker from webp Processed for ${processTime(t, moment())} Seconds`)
-                                        }).catch(printError)
+                                        }).catch(e => printError(e, false))
                                 } else {
                                     await client.sendImageAsSticker(from, mediaData, _metadata)
                                         .then(() => {
                                             sendText(resMsg.success.sticker)
                                             console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
-                                        }).catch(printError)
+                                        }).catch(e => printError(e, false))
                                 }
                             }
                         } catch (err) {
@@ -689,7 +689,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                                     .then(() => {
                                         sendText(resMsg.success.sticker)
                                         console.log(color('[LOGS]', 'grey'), `Sticker nobg Processed for ${processTime(t, moment())} Seconds`)
-                                    }).catch(printError)
+                                    }).catch(e => printError(e, false))
                             } catch (err) {
                                 console.log(color('[ERR>]', 'red'), err)
                                 if (err[0].code === 'unknown_foreground') reply('Maaf batas objek dan background tidak jelas!')
@@ -1343,21 +1343,29 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     await sendText(resMsg.wait)
 
-                    let result = await scraper.snaptik(browser, urls).catch(err => reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`).then(() => console.log(err)))
+                    let result = await scraper.snaptik(browser, urls).catch(err => {
+                        console.log(err)
+                        return reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`)
+                    })
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let _mp4Url = ''
                     switch (command) {
-                        case 'tiktok': _mp4Url = result.source; break
-                        case 'tiktok1': _mp4Url = result.server1; break
-                        case 'tiktok2': _mp4Url = result.server2; break
+                        case 'tiktok': _mp4Url = result?.source; break
+                        case 'tiktok1': _mp4Url = result?.server1; break
+                        case 'tiktok2': _mp4Url = result?.server2; break
                         case 'tiktok3': {
                             let ress = await scraper.ssstik(browser, urls).catch(printError)
-                            _mp4Url = ress.mp4
+                            _mp4Url = ress?.mp4
                             break
                         }
                         default:
                     }
-                    await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`).then(() => console.log(err)))
+                    if (_mp4Url != undefined) {
+                        await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => {
+                            console.log(err)
+                            return reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`)
+                        })
+                    }
                     break
                 }
 
@@ -1643,7 +1651,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
                     const img = await scraper.gimage(browser, arg).catch(printError)
                     if (img === null) return reply(resMsg.error.norm).then(() => console.log(`img return null`))
-                    await client.sendFileFromUrl(from, img, '', '', id).catch(printError)
+                    await client.sendFileFromUrl(from, img, '', '', id).catch(e => printError(e, false))
                     break
                 }
 
