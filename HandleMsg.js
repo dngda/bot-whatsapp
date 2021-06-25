@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:47:03
+ * @ Modified time: 2021-06-25 13:56:26
  * @ Description: Handling message
  */
 
@@ -828,10 +828,15 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                 }
 
                 case 'memefy': {
-                    if ((isMedia || isQuotedImage) && args.length >= 1 && body.match("|")) {
+                    if ((isMedia || isQuotedImage) && args.length >= 1) {
                         try {
-                            let top = arg.split('|')[0]
-                            let bottom = arg.split('|')[1]
+                            let top = '', bottom = ''
+                            if (/|/g.test(arg)) {
+                                bottom = arg
+                            } else {
+                                top = arg.split('|')[0]
+                                bottom = arg.split('|')[1]
+                            }
                             let encryptMedia = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                             let mediaData = await decryptMedia(encryptMedia)
                             let getUrl = await uploadImages(mediaData, false)
