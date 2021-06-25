@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 11:27:20
+ * @ Modified time: 2021-06-25 11:35:09
  * @ Description: Handling message
  */
 
@@ -1136,8 +1136,8 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                             return reply('Kota tidak ditemukan')
                         }
                         var tgl = moment(t * 1000).format('YYYY/MM/DD')
-                        let { data: jadwalData } = await get('https://api.myquran.com/v1/sholat/jadwal/' + kodek + '/tanggal/' + tgl)
-                        if (jadwalData.status === 'error') return reply('Internal server error')
+                        let { data: jadwalData } = await get('https://api.myquran.com/v1/sholat/jadwal/' + kodek + tgl)
+                        if (jadwalData.status === 'false') return reply('Internal server error')
                         var jadwal = jadwalData.data.jadwal
                         let jadwalMsg = `╔══✪〘 Jadwal Sholat di ${jadwalData.data.lokasi} 〙✪\n`
                         jadwalMsg += `╠> ${jadwal.tanggal}\n`
