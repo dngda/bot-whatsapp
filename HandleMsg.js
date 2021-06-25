@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 16:27:52
+ * @ Modified time: 2021-06-25 17:30:46
  * @ Description: Handling message
  */
 
@@ -499,7 +499,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
-                    let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
+                    let respon = await api.simi(txt.replace(/\b(sero)\b/ig, 'simi'))
                         .then(() => console.log(color('[LOGS] Simi triggered and respond.', 'grey')))
                         .catch(e => { return console.log(e) })
                     if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
@@ -515,7 +515,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
             if (txt.length === 0) {
                 reply(`Iya, ada apa?`)
             } else {
-                let respon = await api.simi(txt.replace(/\b(sero|serobot)\b/ig, 'simi'))
+                let respon = await api.simi(txt.replace(/\b(sero)\b/ig, 'simi'))
                     .then(() => console.log(color('[LOGS] Simi triggered and respond.', 'grey')))
                     .catch(e => { return console.log(e) })
                 if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero').replace(/\b(bima)\b/ig, 'owner'))
