@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-26 03:08:52
+ * @ Modified time: 2021-06-26 07:52:38
  * @ Description: Handling message
  */
 
@@ -500,7 +500,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
                     let respon = await api.simi(txt.replace(/\b(sero)\b/ig, 'simi'))
-                        .then(() => console.log(color('[LOGS] Simi triggered and respond:', 'grey')), respon)
+                        .then(data => console.log(color('[LOGS] Simi triggered and respond:', 'grey'), data))
                         .catch(e => { return console.log(e) })
                     if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
                 }
@@ -516,7 +516,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                 reply(`Iya, ada apa?`)
             } else {
                 let respon = await api.simi(txt.replace(/\b(sero)\b/ig, 'simi'))
-                    .then(() => console.log(color('[LOGS] Simi triggered and respond:', 'grey')), respon)
+                    .then(data => console.log(color('[LOGS] Simi triggered and respond:', 'grey'), data))
                     .catch(e => { return console.log(e) })
                 if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
             }
