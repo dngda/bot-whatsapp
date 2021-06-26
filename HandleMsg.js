@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-26 08:09:50
+ * @ Modified time: 2021-06-27 01:52:01
  * @ Description: Handling message
  */
 
@@ -580,8 +580,8 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                             `Saweria: https://saweria.co/dngda \n` +
                             `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
                         )
-                        if (groupInfo.size < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
-                        await sewa.trialSewa(client, args[0]).then(res => {
+                        if (groupInfo?.size < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
+                        if (groupInfo?.id) await sewa.trialSewa(client, args[0]).then(res => {
                             if (res) reply(`Berhasil claim trial sewa bot selama 7 hari.`)
                             else reply(`Group sudah pernah claim trial. Tunggu habis dulu bro`)
                         }).catch(e => {
