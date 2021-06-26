@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-26 07:52:38
+ * @ Modified time: 2021-06-26 08:09:50
  * @ Description: Handling message
  */
 
@@ -319,6 +319,15 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                 })
             })
         }
+
+        const doSimi = async (inp) => {
+            let respon = await api.simi(inp.replace(/\b(sero)\b/ig, 'simi'))
+                .catch(e => { return console.log(e) })
+            if (respon) {
+                console.log(color('[LOGS] Simi triggered and respond:', 'grey'), respon)
+                reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
+            }
+        }
         /* #endregion helper functions */
 
         /* #region Command that banned people can access */
@@ -499,10 +508,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
-                    let respon = await api.simi(txt.replace(/\b(sero)\b/ig, 'simi'))
-                        .then(data => console.log(color('[LOGS] Simi triggered and respond:', 'grey'), data))
-                        .catch(e => { return console.log(e) })
-                    if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
+                    doSimi(txt)
                 }
                 break
             }
@@ -515,10 +521,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
             if (txt.length === 0) {
                 reply(`Iya, ada apa?`)
             } else {
-                let respon = await api.simi(txt.replace(/\b(sero)\b/ig, 'simi'))
-                    .then(data => console.log(color('[LOGS] Simi triggered and respond:', 'grey'), data))
-                    .catch(e => { return console.log(e) })
-                if (respon) reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
+                doSimi(txt)
             }
         }
         /* #endregion */
