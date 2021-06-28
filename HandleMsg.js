@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 20:22:00
+ * @ Modified time: 2021-06-29 02:02:33
  * @ Description: Handling message
  */
 
@@ -488,10 +488,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 break
             }
             case /^=/.test(chats): {
-                if (chats.match(/\d[x÷×=+\-*/^ei]/gi)) {
-                    await reply(`${evaluate(chats.slice(1).replace(/x/ig, '*')
-                        .replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
-                }
+                await reply(`${evaluate(chats.slice(1).replace(/x/ig, '*')
+                    .replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
                 break
             }
             case /\bping\b/i.test(chats): {
@@ -1096,7 +1094,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             let pesan = ""
                             let resSurah = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
                                 .catch(printError)
-                            let { name : surahName, name_translations, number_of_ayah, number_of_surah, recitations } = resSurah.data
+                            let { name: surahName, name_translations, number_of_ayah, number_of_surah, recitations } = resSurah.data
                             pesan = pesan + "Audio Quran Surah ke-" + number_of_surah + " " + surahName + " (" + name_translations.ar + ") " + "dengan jumlah " + number_of_ayah + " ayat\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[0].name + " :\n" + recitations[0].audio_url + "\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[1].name + " :\n" + recitations[1].audio_url + "\n"
