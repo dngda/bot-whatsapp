@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 18:23:29
+ * @ Modified time: 2021-06-28 18:38:31
  * @ Description: Handling message
  */
 
@@ -207,14 +207,14 @@ const HandleMsg = async (client = new Client(), message, browser) => {
         var isKasar = false
         const isCmd = body.startsWith(prefix)
         const isGroupAdmin = groupAdmins.includes(sender.id) || false
-        const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
-        const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
-        const isQuotedChat = quotedMsg && quotedMsg.type === 'chat'
-        const isQuotedLocation = quotedMsg && quotedMsg.type === 'location'
-        const isQuotedDocs = quotedMsg && quotedMsg.type === 'document'
-        const isQuotedAudio = quotedMsg && quotedMsg.type === 'audio'
-        const isQuotedPtt = quotedMsg && quotedMsg.type === 'ptt'
-        const isQuotedSticker = quotedMsg && quotedMsg.type === 'sticker'
+        const isQuotedImage = quotedMsg?.type === 'image'
+        const isQuotedVideo = quotedMsg?.type === 'video'
+        const isQuotedChat = quotedMsg?.type === 'chat'
+        const isQuotedLocation = quotedMsg?.type === 'location'
+        const isQuotedDocs = quotedMsg?.type === 'document'
+        const isQuotedAudio = quotedMsg?.type === 'audio'
+        const isQuotedPtt = quotedMsg?.type === 'ptt'
+        const isQuotedSticker = quotedMsg?.type === 'sticker'
         const isQuotedPng = isQuotedDocs && quotedMsg.filename.includes('.png')
         const isQuotedWebp = isQuotedDocs && quotedMsg.filename.includes('.webp')
         const isAntiLinkGroup = antiLinkGroup.includes(chatId)
