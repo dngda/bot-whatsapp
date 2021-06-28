@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:23:21
+ * @ Modified time: 2021-06-28 19:24:50
  * @ Description: Handling message
  */
 
@@ -101,7 +101,7 @@ scheduleJob('1 0 * * *', () => {
 /* #endregion */
 
 /* #region Main Function */
-const HandleMsg = async (client = new Client(), message, browser) => {
+const HandleMsg = async (message, browser, client = new Client()) => {
     received++ //Count msg received
     /* #region Default response message */
     const resMsg = {

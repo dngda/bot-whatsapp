@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:48:02
+ * @ Modified time: 2021-06-28 19:25:42
  * @ Description:
  */
 
@@ -55,7 +55,7 @@ const start = async (client = new Client()) => {
             unreadMessages.forEach(message => {
                 setTimeout(
                     async function () {
-                        if (!message.isGroupMsg) await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
+                        if (!message.isGroupMsg) await queue.add(() => HandleMsg(message, browser, client)).catch(err => {
                             console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
                             if (queue.isPaused) queue.start()
                         })
@@ -73,7 +73,7 @@ const start = async (client = new Client()) => {
                         client.cutMsgCache()
                     }
                 })
-            await queue.add(() => HandleMsg(client, message, browser)).catch(err => {
+            await queue.add(() => HandleMsg(message, browser, client)).catch(err => {
                 console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
                 if (queue.isPaused) queue.start()
             })
