@@ -15,7 +15,7 @@ Multipurpose WhatsApp Bot using open-wa/wa-automate-nodejs library!<hr>
 <a href="https://github.com/dngda/bot-whatsapp/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/dngda/bot-whatsapp?color=red&style=flat-square"></a>
 <a href="https://github.com/dngda/bot-whatsapp/network/members"><img title="Forks" src="https://img.shields.io/github/forks/dngda/bot-whatsapp?color=red&style=flat-square"></a>
 <a href="https://github.com/dngda/bot-whatsapp/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/dngda/bot-whatsapp?label=watchers&color=blue&style=flat-square"></a>
-  <br><a href="https://www.codefactor.io/repository/github/dngda/bot-whatsapp"><img src="https://www.codefactor.io/repository/github/dngda/bot-whatsapp/badge" alt="CodeFactor" /></a>
+  <br><a href="https://www.codefactor.io/repository/github/dngda/bot-whatsapp"><img src="https://www.codefactor.io/repository/github/dngda/bot-whatsapp/badge" alt="CodeFactor" /></a> <a href="https://sonarcloud.io/dashboard?id=dngda_bot-whatsapp"><img src="https://sonarcloud.io/api/project_badges/measure?project=dngda_bot-whatsapp&metric=alert_status" alt="SonarCloud" /></a>
   <br>
 <a href="https://github.com/open-wa/wa-automate-nodejs"><img src="https://raw.githubusercontent.com/open-wa/wa-automate-nodejs/master/resources/hotfix-logo.png" height="64"/></a>
 </p>
