@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-29 02:02:33
+ * @ Modified time: 2021-06-29 02:20:06
  * @ Description: Handling message
  */
 
@@ -488,8 +488,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 break
             }
             case /^=/.test(chats): {
-                await reply(`${evaluate(chats.slice(1).replace(/x/ig, '*')
-                    .replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
+                try {
+                    await reply(`${evaluate(chats.slice(1).replace(/x/ig, '*')
+                        .replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100'))}`)
+                } catch (e) {
+                    reply(`${e.name} ${e.message}`)
+                }
                 break
             }
             case /\bping\b/i.test(chats): {
