@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:30:22
+ * @ Modified time: 2021-06-28 19:45:13
  * @ Description: Handling message
  */
 
@@ -1096,8 +1096,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             let pesan = ""
                             let resSurah = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
                                 .catch(printError)
-                            let { name, name_translations, number_of_ayah, number_of_surah, recitations } = resSurah.data
-                            pesan = pesan + "Audio Quran Surah ke-" + number_of_surah + " " + name + " (" + name_translations.ar + ") " + "dengan jumlah " + number_of_ayah + " ayat\n"
+                            let { name : surahName, name_translations, number_of_ayah, number_of_surah, recitations } = resSurah.data
+                            pesan = pesan + "Audio Quran Surah ke-" + number_of_surah + " " + surahName + " (" + name_translations.ar + ") " + "dengan jumlah " + number_of_ayah + " ayat\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[0].name + " :\n" + recitations[0].audio_url + "\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[1].name + " :\n" + recitations[1].audio_url + "\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[2].name + " :\n" + recitations[2].audio_url + "\n"
@@ -1277,8 +1277,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                         ytdl(ytid, { quality: 'highest' }).pipe(createWriteStream(path))
                             .on('error', (err) => {
-                                console.log('An error occurred: ' + err.message)
-                                reply(resMsg.error.norm)
+                                printError(err, false)
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('finish', () => {
@@ -1508,8 +1507,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'fakta':
                     fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
                         .then(res => res.text())
-                        .then(body => {
-                            let splitnix = body.split('\n')
+                        .then(faktaBody => {
+                            let splitnix = faktaBody.split('\n')
                             let randomnix = sample(splitnix)
                             reply(randomnix)
                         })
@@ -1518,8 +1517,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'katabijak':
                     fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/katabijax.txt')
                         .then(res => res.text())
-                        .then(body => {
-                            let splitbijak = body.split('\n')
+                        .then(kataBody => {
+                            let splitbijak = kataBody.split('\n')
                             let randombijak = sample(splitbijak)
                             reply(randombijak)
                         })
@@ -1528,8 +1527,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'pantun':
                     fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/pantun.txt')
                         .then(res => res.text())
-                        .then(body => {
-                            let splitpantun = body.split('\n')
+                        .then(pantunBody => {
+                            let splitpantun = pantunBody.split('\n')
                             let randompantun = sample(splitpantun)
                             reply(' ' + randompantun.replace(/aruga-line/g, "\n"))
                         })
@@ -1551,8 +1550,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (args[0] == 'random' || args[0] == 'waifu' || args[0] == 'husbu' || args[0] == 'neko') {
                         fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/anime/' + args[0] + '.txt')
                             .then(res => res.text())
-                            .then(body => {
-                                let randomnime = body.split('\n')
+                            .then(animeBody => {
+                                let randomnime = animeBody.split('\n')
                                 let randomnimex = sample(randomnime)
                                 client.sendFileFromUrl(from, randomnimex, '', 'Nih...', id)
                             })
@@ -1847,7 +1846,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 // Skip room
                 case 'skip': {
                     tebak.getAns(from).then(res => {
-                        if (res == false) reply(`Tidak ada sesi Tebak berlangsung.`)
+                        if (!res) reply(`Tidak ada sesi Tebak berlangsung.`)
                         else {
                             reply(`Sesi Tebak telah diskip!\nJawabannya: *${res.ans}*`)
                             tebak.delRoom(from)
@@ -1958,7 +1957,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 `)
                     } else if (args.length > 0) {
                         let res = await list.getListData(from, args[0])
-                        if (res == false || res == null) return reply(`List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`)
+                        if (!res) return reply(`List tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createlist ${args[0]}* (mohon hanya gunakan 1 kata untuk nama list)`)
                         let desc = ''
                         if (res.desc !== 'Tidak ada') {
                             desc = `║ _${res.desc}_\n`
@@ -2096,7 +2095,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 `)
                     } else if (args.length > 0) {
                         let res = await note.getNoteData(from, args[0])
-                        if (res == false || res == null) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createnote ${args[0]} (isinya)* \n(mohon hanya gunakan 1 kata untuk nama note)`)
+                        if (!res) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createnote ${args[0]} (isinya)* \n(mohon hanya gunakan 1 kata untuk nama note)`)
 
                         let respon = `✪〘 ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
                         respon += `\n\n${res.content}`
@@ -2760,10 +2759,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let msg = `List All Groups\n\n`
                     let groups = await client.getAllGroups()
                     let count = 1
-                    groups.forEach((chat) => {
-                        let c = chat.groupMetadata
+                    groups.forEach((group) => {
+                        let c = group.groupMetadata
                         let td = '```'
-                        msg += `\n${td}${count < 10 ? count + '. ' : count + '.'} Nama    :${td} ${chat.name}\n`
+                        msg += `\n${td}${count < 10 ? count + '. ' : count + '.'} Nama    :${td} ${group.name}\n`
                         msg += `${td}    GroupId :${td} ${c.id}\n`
                         msg += `${td}    Types   :${td} ${groupPrem.includes(c.id) ? '*Premium*' : sewa.isSewa(c.id) ? '_Sewa_' : 'Free'}\n`
                         msg += `${td}    Members :${td} ${c.participants.length}\n`
@@ -2830,7 +2829,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         //Tebak room
         if (!isCmd) {
             tebak.getAns(from).then(res => {
-                if (res != false) {
+                if (res) {
                     if (res.ans?.toLowerCase() === chats?.toLowerCase()) {
                         reply(`✅ Jawaban benar! : *${res.ans}*`)
                         tebak.delRoom(from)
@@ -2883,9 +2882,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             const _denda = sample([1000, 2000, 3000, 5000, 10000])
             const find = db.chain.get('groups').find({ id: groupId }).value()
             if (find && find.id === groupId) {
-                const cekuser = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
-                const isIn = inArray(pengirim, cekuser)
-                if (cekuser && isIn !== -1) {
+                const existUser = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
+                const isIn = inArray(pengirim, existUser)
+                if (existUser && isIn !== -1) {
                     const denda = db.chain.get('groups').filter({ id: groupId }).map('members[' + isIn + ']')
                         .find({ id: pengirim }).update('denda', n => n + _denda).value()
                     db.write()
@@ -2906,10 +2905,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         db.chain.get('groups').find({ id: groupId }).set('members', [{ id: pengirim, denda: _denda }]).value()
                         db.write()
                     } else {
-                        const cekuser = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
-                        cekuser.push({ id: pengirim, denda: _denda })
+                        const foundUser = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
+                        foundUser.push({ id: pengirim, denda: _denda })
                         await reply(`${resMsg.badw}\n\nDenda +${_denda}`)
-                        db.chain.get('groups').find({ id: groupId }).set('members', cekuser).value()
+                        db.chain.get('groups').find({ id: groupId }).set('members', foundUser).value()
                         db.write()
                     }
                 }

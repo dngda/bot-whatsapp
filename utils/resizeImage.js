@@ -2,8 +2,8 @@
  * @ Author: YogaSakti
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:51:39
- * @ Description:
+ * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
+ * @ Modified time: 2021-06-28 19:48:08
  */
 
 import sharp from 'sharp'

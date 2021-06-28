@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 15:20:21
+ * @ Modified time: 2021-06-28 19:46:37
  * @ Description: options provided from owa issue :)
  */
 
@@ -83,7 +83,7 @@ const chromeArgs = [
  * @param  {Boolean} headless
  */
 export default (headless, start) => {
-    const options = {
+    return {
         sessionId: 'session',
         headless: headless,
         useChrome: true,
@@ -95,7 +95,6 @@ export default (headless, start) => {
         throwErrorOnTosBlock: false,
         chromiumArgs: chromeArgs
     }
-    return options
 }
 
 export { chromeArgs }

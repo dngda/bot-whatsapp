@@ -3,7 +3,7 @@
  * @ Author: ArugaZ/YogaSakti
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-22 15:17:06
+ * @ Modified time: 2021-06-28 19:48:47
  * @ Description:
  */
 
@@ -11,7 +11,7 @@ import fetch from 'node-fetch'
 import FormData from 'form-data'
 import { writeFile, readFileSync, unlinkSync } from 'fs'
 import fileType from 'file-type'
-import resizeImage from './imageProcessing.js'
+import resizeImage from './resizeImage.js'
 
 const { fromBuffer } = fileType
 
@@ -92,7 +92,7 @@ const uploadImages = (buffData, resize) => new Promise(async (resolve, reject) =
                 resolve('https://telegra.ph' + res[0].src)
             })
             .then(() => unlinkSync(filePath))
-            .catch(err => reject(err))
+            .catch(e => reject(e))
     })
 })
 

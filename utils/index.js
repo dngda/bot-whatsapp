@@ -3,7 +3,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-25 13:50:01
+ * @ Modified time: 2021-06-28 19:47:24
  * @ Description:
  */
 
@@ -147,8 +147,7 @@ String.prototype.toDHms = function () {
     var seconds = sec_num - (hours * 3600) - (minutes * 60)
     var days = 0
     if (hours >= 24) { days = Math.floor(hours / 24); hours = hours % 24 }
-    var time = days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' secs'
-    return time
+    return days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' secs'
 }
 
 
