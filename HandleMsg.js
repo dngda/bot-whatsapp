@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:24:50
+ * @ Modified time: 2021-06-28 19:30:22
  * @ Description: Handling message
  */
 
@@ -177,7 +177,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
         const args = body.trim().split(/\s/).slice(1)
-        const url = args.length !== 0 ? args[0] : ''
         const sfx = readdirSync('./src/sfx/').map(item => {
             return item.replace('.mp3', '')
         })
@@ -701,8 +700,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         }
                     } else if (args.length === 1) {
                         try {
-                            if (!isUrl(url)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
-                            sendSFU(url, false)
+                            if (!isUrl(args[0])) { return reply('Maaf, link yang kamu kirim tidak valid.') }
+                            sendSFU(args[0], false)
                         } catch (e) {
                             console.log(`Sticker url err: ${e}`)
                             return sendText(resMsg.error.norm)
@@ -737,10 +736,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'stikergiphy':
                 case 'stickergiphy': {
                     if (args.length != 1) return reply(`Maaf, format pesan salah.\nKetik pesan dengan ${prefix}stickergiphy <link_giphy> (don't include <> symbol)`)
-                    const isGiphy = url.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'))
-                    const isMediaGiphy = url.match(new RegExp(/https?:\/\/media\.giphy\.com\/media/, 'gi'))
+                    const isGiphy = args[0].match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'))
+                    const isMediaGiphy = args[0].match(new RegExp(/https?:\/\/media\.giphy\.com\/media/, 'gi'))
                     if (isGiphy) {
-                        const getGiphyCode = url.match(new RegExp(/(\/|-)(?:.(?!(\/|-)))+$/, 'gi'))
+                        const getGiphyCode = args[0].match(new RegExp(/(\/|-)(?:.(?!(\/|-)))+$/, 'gi'))
                         if (!getGiphyCode) { return reply('Gagal mengambil kode giphy') }
                         const giphyCode = getGiphyCode[0].replace(/[-/]/gi, '')
                         const smallGifUrl = 'https://media.giphy.com/media/' + giphyCode + '/giphy-downsized.gif'
@@ -749,9 +748,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                         }).catch(printError)
                     } else if (isMediaGiphy) {
-                        const gifUrl = url.match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'))
+                        const gifUrl = args[0].match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'))
                         if (!gifUrl) { return reply('Gagal mengambil kode giphy') }
-                        const smallGifUrl = url.replace(gifUrl[0], 'giphy-downsized.gif')
+                        const smallGifUrl = args[0].replace(gifUrl[0], 'giphy-downsized.gif')
                         client.sendGiphyAsSticker(from, smallGifUrl)
                             .then(() => {
                                 reply(resMsg.success.sticker)
@@ -2186,8 +2185,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                         await client.setGroupIcon(groupId, imageBase64)
                     } else if (args.length === 1) {
-                        if (!isUrl(url)) { await reply('Maaf, link yang kamu kirim tidak valid.') }
-                        client.setGroupIconByUrl(groupId, url).then((r) => (!r && r != undefined)
+                        if (!isUrl(args[0])) { await reply('Maaf, link yang kamu kirim tidak valid.') }
+                        client.setGroupIconByUrl(groupId, args[0]).then((r) => (!r && r != undefined)
                             ? reply('Maaf, link yang kamu kirim tidak memuat gambar.')
                             : reply('Berhasil mengubah profile group'))
                     } else {
