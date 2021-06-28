@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:45:13
+ * @ Modified time: 2021-06-28 20:22:00
  * @ Description: Handling message
  */
 
@@ -1320,9 +1320,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         ffmpeg({ source: stream })
                             .setFfmpegPath('./bin/ffmpeg')
                             .on('error', (err) => {
-                                console.log('An error occurred: ' + err.message)
-                                reply(resMsg.error.norm)
                                 if (existsSync(path)) unlinkSync(path)
+                                printError(err, false)
                             })
                             .on('end', () => {
                                 client.sendFile(from, path, `audio.mp3`, '', id).then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Seconds`))
