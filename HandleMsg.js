@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 18:38:31
+ * @ Modified time: 2021-06-28 18:51:56
  * @ Description: Handling message
  */
 
@@ -227,14 +227,14 @@ const HandleMsg = async (client = new Client(), message, browser) => {
 
         /* #region Helper Functions */
         const sendText = async (txt) => {
-            return await client.sendText(from, txt)
+            return client.sendText(from, txt)
                 .catch(e => {
                     console.log(e)
                 })
         }
 
         const reply = async (txt, qId = id) => {
-            return await client.reply(from, txt, qId)
+            return client.reply(from, txt, qId)
                 .catch(e => {
                     console.log(e)
                 })
@@ -252,13 +252,13 @@ const HandleMsg = async (client = new Client(), message, browser) => {
         const sendFFU = async (url, capt = '') => {
             sendText(resMsg.wait)
             if (!capt) capt = ''
-            return await client.sendFileFromUrl(from, url, '', capt, id)
+            return client.sendFileFromUrl(from, url, '', capt, id)
                 .catch(printError)
         }
 
         const sendSFU = async (url) => {
             sendText(resMsg.wait)
-            return await client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
+            return client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
                 : reply(resMsg.success.sticker)).then(() => console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`))
         }
