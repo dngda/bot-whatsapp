@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:07:39
+ * @ Modified time: 2021-06-28 19:16:42
  * @ Description: Handling message
  */
 
@@ -271,11 +271,11 @@ const HandleMsg = async (client = new Client(), message, browser) => {
             return data && sendJSON(data)
         }
 
-        const audioConverter = async (complexFilter, name) => {
+        const audioConverter = async (complexFilter, filterName) => {
             const _inp = await decryptMedia(quotedMsg)
             let time = moment(t * 1000).format('mmss')
-            let inpath = `./media/in_${name}_${time}.mp3`
-            let outpath = `./media/out_${name}_${time}.mp3`
+            let inpath = `./media/in_${filterName}_${time}.mp3`
+            let outpath = `./media/out_${filterName}_${time}.mp3`
             writeFileSync(inpath, _inp)
 
             ffmpeg(inpath)
@@ -283,12 +283,12 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                 .complexFilter(complexFilter)
                 .on('error', (err) => {
                     console.log('An error occurred: ' + err.message)
-                    if (name === 'custom') reply(err.message + '\nContohnya bisa dilihat disini https://www.vacing.com/ffmpeg_audio_filters/index.html')
+                    if (filterName === 'custom') reply(err.message + '\nContohnya bisa dilihat disini https://www.vacing.com/ffmpeg_audio_filters/index.html')
                     else reply(resMsg.error.norm)
                     unlinkIfExists(inpath, outpath)
                 })
                 .on('end', () => {
-                    client.sendFile(from, outpath, `${name}.mp3`, '', id)
+                    client.sendFile(from, outpath, `${filterName}.mp3`, '', id)
                         .then(console.log(color('[LOGS]', 'grey'), `Audio Processed for ${processTime(t, moment())} Seconds`))
                     unlinkIfExists(inpath, outpath)
                 })
