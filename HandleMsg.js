@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:16:42
+ * @ Modified time: 2021-06-28 19:23:21
  * @ Description: Handling message
  */
 
@@ -256,8 +256,8 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                 .catch(printError)
         }
 
-        const sendSFU = async (url) => {
-            sendText(resMsg.wait)
+        const sendSFU = async (url, sendWait = true) => {
+            if (sendWait) sendText(resMsg.wait)
             return client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
                 : reply(resMsg.success.sticker)).then(() => console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`))
@@ -702,9 +702,7 @@ const HandleMsg = async (client = new Client(), message, browser) => {
                     } else if (args.length === 1) {
                         try {
                             if (!isUrl(url)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
-                            client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
-                                ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
-                                : reply(resMsg.success.sticker)).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Seconds`))
+                            sendSFU(url, false)
                         } catch (e) {
                             console.log(`Sticker url err: ${e}`)
                             return sendText(resMsg.error.norm)
