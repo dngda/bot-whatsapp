@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-29 02:20:06
+ * @ Modified time: 2021-06-30 16:22:05
  * @ Description: Handling message
  */
 
@@ -1217,8 +1217,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                     try {
                         ytid = ytid.replace(/&.+/g, '').replace(/>/g, '')
-                        let time = moment(t * 1000).format('mmss')
-                        let path = `./media/temp_${time}.mp3`
+                        let path = `./media/temp_${t}.mp3`
 
                         let { videoDetails: inf } = await ytdl.getInfo(ytid)
                         if (inf.lengthSeconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
@@ -1261,8 +1260,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let ytid = args[0].substr((args[0].indexOf('=')) != -1 ? (args[0].indexOf('=') + 1) : (args[0].indexOf('be/') + 3))
                     try {
                         ytid = ytid.replace(/&.+/g, '').replace(/>/g, '')
-                        let time = moment(t * 1000).format('mmss')
-                        let path = `./media/temp_${time}.mp4`
+                        let path = `./media/temp_${t}.mp4`
 
                         let { videoDetails: inf } = await ytdl.getInfo(ytid)
                         if (inf.lengthSeconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
@@ -1315,8 +1313,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             `Audio sedang dikirim ± ${est} menit`, id)
 
                         //Download video and save as MP3 file
-                        let time = moment(t * 1000).format('mmss')
-                        let path = `./media/temp_${time}.mp3`
+                        let path = `./media/temp_${t}.mp3`
 
                         let stream = ytdl(ytresult.videoId, { quality: 'highestaudio' })
                         ffmpeg({ source: stream })
