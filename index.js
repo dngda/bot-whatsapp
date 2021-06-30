@@ -2,19 +2,20 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:25:42
+ * @ Modified time: 2021-06-30 16:14:03
  * @ Description:
  */
 
 import { createReadFileSync, initGlobalVariable } from './utils/index.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import { schedule, sewa } from './lib/index.js'
+import options, { chromeArgs } from './utils/options.js'
 import { create, Client } from '@open-wa/wa-automate'
+import { schedule, sewa } from './lib/index.js'
 import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
 import { HandleMsg } from './HandleMsg.js'
-import options, { chromeArgs } from './utils/options.js'
 import puppeteer from 'puppeteer-extra'
+import { spawn } from 'child_process'
 import PQueue from 'p-queue'
 import figlet from 'figlet'
 import fs from 'fs-extra'
@@ -92,10 +93,16 @@ const start = async (client = new Client()) => {
             })
             console.log(color('[LOGS]', 'grey'), `${jobList.jobs.length} ScheduledJobs Loaded`)
 
-            // check sewa every 4 hour
+            // check sewa every 4 hours
             scheduleJob('0 */4 * * *', () => {
                 console.log(color('[LOGS]', 'grey'), `Checking sewa expiring...`)
                 sewa.checkExpireSewa(client).catch(e => console.log(e))
+            })
+
+            // Restart session every 6 hours
+            scheduleJob('0 */6 * * *', () => {
+                client.sendText(ownerNumber, `Server bot akan direstart!`)
+                spawn('restart.cmd')
             })
 
             // Clear chat every day at 01:01
