@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-30 16:22:05
+ * @ Modified time: 2021-06-30 16:52:17
  * @ Description: Handling message
  */
 
@@ -1221,13 +1221,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                         let { videoDetails: inf } = await ytdl.getInfo(ytid)
                         if (inf.lengthSeconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
+                        let dur = `${('0' + (inf.lengthSeconds / 60).toFixed(0)).slice(-2)}:${('0' + (inf.lengthSeconds % 60)).slice(-2)}`
                         let estimasi = inf.lengthSeconds / 200
                         let est = estimasi.toFixed(0)
                         client.sendFileFromUrl(from, `${inf.thumbnails[3].url}`, ``,
                             `Link video valid!\n\n` +
                             `${q3}Judul   :${q3} ${inf.title}\n` +
                             `${q3}Channel :${q3} ${inf.ownerChannelName}\n` +
-                            `${q3}Durasi  :${q3} ${inf.lengthSeconds}\n` +
+                            `${q3}Durasi  :${q3} ${dur}\n` +
                             `${q3}Uploaded:${q3} ${inf.uploadDate}\n` +
                             `${q3}View    :${q3} ${inf.viewCount}\n\n` +
                             `Audio sedang dikirim ± ${est} menit`, id)
@@ -1264,13 +1265,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                         let { videoDetails: inf } = await ytdl.getInfo(ytid)
                         if (inf.lengthSeconds > 900) return reply(`Error. Durasi video lebih dari 15 menit!`)
+                        let dur = `${('0' + (inf.lengthSeconds / 60).toFixed(0)).slice(-2)}:${('0' + (inf.lengthSeconds % 60)).slice(-2)}`
                         let estimasi = inf.lengthSeconds / 100
                         let est = estimasi.toFixed(0)
                         client.sendFileFromUrl(from, `${inf.thumbnails[3].url}`, ``,
                             `Link video valid!\n\n` +
                             `${q3}Judul   :${q3} ${inf.title}\n` +
                             `${q3}Channel :${q3} ${inf.ownerChannelName}\n` +
-                            `${q3}Durasi  :${q3} ${inf.lengthSeconds}\n` +
+                            `${q3}Durasi  :${q3} ${dur}\n` +
                             `${q3}Uploaded:${q3} ${inf.uploadDate}\n` +
                             `${q3}View    :${q3} ${inf.viewCount}\n\n` +
                             `Video sedang dikirim ± ${est} menit`, id)
