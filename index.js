@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-30 16:14:03
+ * @ Modified time: 2021-07-01 00:43:35
  * @ Description:
  */
 
@@ -100,7 +100,7 @@ const start = async (client = new Client()) => {
             })
 
             // Restart session every 6 hours
-            scheduleJob('0 */6 * * *', () => {
+            scheduleJob('30 */6 * * *', () => {
                 client.sendText(ownerNumber, `Server bot akan direstart!`)
                 spawn('restart.cmd')
             })
