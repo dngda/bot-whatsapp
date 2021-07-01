@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-01 21:23:30
+ * @ Modified time: 2021-07-02 02:04:40
  * @ Description:
  */
 
@@ -99,12 +99,6 @@ const start = async (client = new Client()) => {
                 console.log(color('[LOGS]', 'grey'), `Checking sewa expiring...`)
                 sewa.checkExpireSewa(client).catch(e => console.log(e))
             })
-
-            // Restart session every 6 hours
-            // scheduleJob('30 */6 * * *', () => {
-            //     client.sendText(ownerNumber, `Server bot akan direstart!`)
-            //     spawn('restart.cmd')
-            // })
 
             // Clear chat every day at 01:01
             scheduleJob('1 1 * * *', async () => {

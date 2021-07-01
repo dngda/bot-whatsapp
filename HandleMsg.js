@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 01:43:21
+ * @ Modified time: 2021-07-02 02:06:37
  * @ Description: Handling message
  */
 
@@ -1177,6 +1177,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'ttp': {
                     if (args.length == 0) return reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
+                    reply(resMsg.wait)
                     let txt = isQuotedChat ? quotedMsg.body : arg
                     let ttpBuff = await canvas.ttp(txt).catch(printError)
                     client.sendImageAsSticker(from, ttpBuff, stickerMetadata).catch(printError)
@@ -2733,8 +2734,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'restart': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
-                    reply(`Server bot akan direstart!`)
-                    spawn('restart.cmd')
+                    await reply(`Server bot akan direstart!`)
+                    await sleep(2000)
+                    spawn('pm2 restart all')
                     break
                 }
 
