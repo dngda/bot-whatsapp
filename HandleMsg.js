@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 02:11:11
+ * @ Modified time: 2021-07-02 02:20:18
  * @ Description: Handling message
  */
 
@@ -259,7 +259,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             if (sendWait) sendText(resMsg.wait)
             return client.sendStickerfromUrl(from, url, null, stickerMetadata).then((r) => (!r && r != undefined)
                 ? sendText('Maaf, link yang kamu kirim tidak memuat gambar.')
-                : reply(resMsg.success.sticker)).then(() => console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`))
+                : sendText(resMsg.success.sticker)).then(() => console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`))
         }
 
         const sendJSON = (txt) => sendText(JSON.stringify(txt, null, 2))
@@ -1170,8 +1170,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 /* #region Maker */
                 case 'attp': {
                     if (args.length == 0) return reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
+                    reply(resMsg.wait)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`attp`, { text: txt }))
+                    sendSFU(lolApi(`attp`, { text: txt }), false)
                     break
                 }
 
@@ -1188,11 +1189,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'trigger2': {
                     if (!isMedia && !isQuotedImage) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
+                        reply(resMsg.wait)
                         let enc = (isQuotedImage) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         let _url = await uploadImages(mediaData, true)
                         let resu = (command === 'trigger') ? lolApi(`creator1/trigger`, { img: _url }) : lolApi(`editor/triggered`, { img: _url })
-                        sendSFU(resu)
+                        sendSFU(resu, false)
                     } catch (err) { printError(err) }
                     break
                 }
@@ -1200,10 +1202,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'wasted': {
                     if (!isMedia && !isQuotedImage) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
+                        reply(resMsg.wait)
                         let enc = (isQuotedImage) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         let _url = await uploadImages(mediaData, true)
-                        sendSFU(lolApi(`editor/wasted`, { img: _url }))
+                        sendSFU(lolApi(`editor/wasted`, { img: _url }), false)
                     } catch (err) { printError(err) }
                     break
                 }
