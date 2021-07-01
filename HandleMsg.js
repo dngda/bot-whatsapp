@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-30 19:18:07
+ * @ Modified time: 2021-07-01 12:42:33
  * @ Description: Handling message
  */
 
@@ -45,7 +45,7 @@ db.chain = lodash.chain(db.data)
 
 /* #region File Modules */
 import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, addFilter, isUrl } from './utils/index.js'
-import { getLocationData, urlShortener, cariKasar, schedule, cekResi, tebak, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
+import { getLocationData, urlShortener, cariKasar, schedule, canvas, cekResi, tebak, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
 /* #endregion */
@@ -1178,7 +1178,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'ttp': {
                     if (args.length == 0) return reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`ttp`, { text: txt }))
+                    let ttpBuff = await canvas.ttp(txt).catch(printError)
+                    client.sendImageAsSticker(from, ttpBuff, stickerMetadata).catch(printError)
                     break
                 }
 
@@ -1336,10 +1337,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
 
-                case 'tiktok':
-                case 'tiktok1':
-                case 'tiktok2':
-                case 'tiktok3': {
+                case 'tiktok': case 'tt':
+                case 'tiktok1': case 'tt1':
+                case 'tiktok2': case 'tt2':
+                case 'tiktok3': case 'tt3': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok tanpa watermark. Bagaimana caranya?\nTinggal ketik ${prefix}tiktok (alamat video tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
@@ -1352,10 +1353,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let _mp4Url = ''
                     switch (command) {
-                        case 'tiktok': _mp4Url = result?.source; break
-                        case 'tiktok1': _mp4Url = result?.server1; break
-                        case 'tiktok2': _mp4Url = result?.server2; break
-                        case 'tiktok3': {
+                        case 'tiktok': case 'tt': _mp4Url = result?.source; break
+                        case 'tiktok1': case 'tt1': _mp4Url = result?.server1; break
+                        case 'tiktok2': case 'tt2': _mp4Url = result?.server2; break
+                        case 'tiktok3': case 'tt3': {
                             let ress = await scraper.ssstik(browser, urls).catch(printError)
                             _mp4Url = ress?.mp4
                             break
@@ -1371,14 +1372,16 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
 
-                case 'tiktokmp3': {
+                case 'tiktokmp3':
+                case 'ttmp3': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 (alamat video Tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     await sendText(resMsg.wait)
                     let result = await scraper.qload(urls).catch(e => { return printError(e) })
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    await client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(printError)
+                    if (result.mp3) await client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(printError)
+                    else reply('Maaf, link yang kamu kirim tidak valid.')
                     break
                 }
 
