@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 02:06:37
+ * @ Modified time: 2021-07-02 02:11:11
  * @ Description: Handling message
  */
 
@@ -323,7 +323,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             let respon = await api.simi(inp.replace(/\b(sero)\b/ig, 'simi'))
                 .catch(e => { return console.log(e) })
             if (respon) {
-                console.log(color('[LOGS] Simi triggered and respond:', 'grey'), respon)
+                console.log(color('[LOGS] Simi respond:', 'grey'), respon)
                 reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
             }
         }
