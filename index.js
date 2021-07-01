@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-01 00:43:35
+ * @ Modified time: 2021-07-01 21:18:02
  * @ Description:
  */
 
@@ -15,6 +15,7 @@ import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
 import { HandleMsg } from './HandleMsg.js'
 import puppeteer from 'puppeteer-extra'
+// eslint-disable-next-line no-unused-vars
 import { spawn } from 'child_process'
 import PQueue from 'p-queue'
 import figlet from 'figlet'
@@ -100,10 +101,10 @@ const start = async (client = new Client()) => {
             })
 
             // Restart session every 6 hours
-            scheduleJob('30 */6 * * *', () => {
-                client.sendText(ownerNumber, `Server bot akan direstart!`)
-                spawn('restart.cmd')
-            })
+            // scheduleJob('30 */6 * * *', () => {
+            //     client.sendText(ownerNumber, `Server bot akan direstart!`)
+            //     spawn('restart.cmd')
+            // })
 
             // Clear chat every day at 01:01
             scheduleJob('1 1 * * *', async () => {
