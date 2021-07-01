@@ -13,8 +13,7 @@ module.exports = {
       "data",
       "node_modules",
       "media",
-      "logs",
-      ".*"
+      "logs"
     ]
   }]
 }
