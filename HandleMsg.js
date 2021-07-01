@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 02:20:18
+ * @ Modified time: 2021-07-02 06:56:42
  * @ Description: Handling message
  */
 
@@ -66,6 +66,7 @@ const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json')
 const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
 const disableBot = JSON.parse(createReadFileSync('./data/disablebot.json'))
 const groupPrem = JSON.parse(createReadFileSync('./data/premiumgroup.json'))
+const ownerBotOnly = JSON.parse(createReadFileSync('./data/ownerbotonly.json'))
 // src
 const Surah = JSON.parse(readFileSync('./src/json/surah.json'))
 /* #endregion */
@@ -216,6 +217,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const isQuotedSticker = quotedMsg?.type === 'sticker'
         const isQuotedPng = isQuotedDocs && quotedMsg.filename.includes('.png')
         const isQuotedWebp = isQuotedDocs && quotedMsg.filename.includes('.webp')
+        const isGroupOwnerBotOnly = ownerBotOnly.includes(chatId)
         const isAntiLinkGroup = antiLinkGroup.includes(chatId)
         const isAntiLink = antiLink.includes(chatId)
         const isOwnerBot = ownerNumber.includes(pengirim)
@@ -223,6 +225,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const isNgegas = ngegas.includes(chatId)
         const isDisabled = disableBot.includes(chatId)
         /* #endregion */
+
+        if (isGroupOwnerBotOnly && !isOwnerBot) return null
 
         /* #region Helper Functions */
         const sendText = async (txt) => {
@@ -566,9 +570,17 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         await client.joinGroupViaLink(linkGroup)
                             .then(async () => {
                                 await sendText(resMsg.success.join)
-                                setTimeout(async () => {
-                                    await client.sendText(groupInfo.id, resMsg.success.greeting)
-                                }, 2000)
+                                if (args[1] != 'owneronly') {
+                                    setTimeout(async () => {
+                                        await client.sendText(groupInfo.id, resMsg.success.greeting)
+                                    }, 2000)
+                                } else {
+                                    let pos = ownerBotOnly.indexOf(chatId)
+                                    if (pos != -1) {
+                                        ownerBotOnly.push(chatId)
+                                        writeFileSync('./data/ownerbotonly.json', JSON.stringify(ownerBotOnly))
+                                    }
+                                }
                             }).catch(async () => {
                                 return reply(resMsg.error.join)
                             })
@@ -2488,6 +2500,27 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 /* #endregion other */
 
                 /* #region Owner Commands */
+                case 'owneronly': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    if (!isGroupMsg) return reply(resMsg.error.group)
+                    if (args[0] === 'on') {
+                        let pos = ownerBotOnly.indexOf(chatId)
+                        if (pos != -1) return reply('Sudah aktif!')
+                        ownerBotOnly.push(chatId)
+                        writeFileSync('./data/ownerbotonly.json', JSON.stringify(ownerBotOnly))
+                        reply('Owner only mode')
+                    } else if (args[0] === 'off') {
+                        let pos = ownerBotOnly.indexOf(chatId)
+                        if (pos === -1) return reply('Belum aktif!')
+                        ownerBotOnly.splice(pos, 1)
+                        writeFileSync('./data/ownerbotonly.json', JSON.stringify(ownerBotOnly))
+                        reply('Public mode')
+                    } else {
+                        reply(`/owneronly on/off`)
+                    }
+                    break
+                }
+
                 case 'leavegroup': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length == 0) return reply(`Untuk mengeluarkan bot dari groupId\n\nCaranya ketik: \n${prefix}leavegroup <groupId> <alasan>`)
