@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-01 13:12:24
+ * @ Modified time: 2021-07-01 13:18:48
  * @ Description: Handling message
  */
 
@@ -1017,7 +1017,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     } else {
                         nmr = args[0]
                     }
-                    let ayat = args[1] | 1
+                    let ayat = args[1] || 1
 
                     if (!isNaN(nmr)) {
                         let resSurah = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
@@ -1053,7 +1053,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     } else {
                         nmr = args[0]
                     }
-                    let ayat = args[1] | 1
+                    let ayat = args[1] || 1
                     console.log(nmr)
                     if (!isNaN(nmr)) {
                         let resSurah = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
