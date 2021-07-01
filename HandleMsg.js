@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-01 13:18:48
+ * @ Modified time: 2021-07-02 01:43:21
  * @ Description: Handling message
  */
 
@@ -2537,6 +2537,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     sewa.getListSewa(client).then(res => {
                         if (res != null) {
                             sendJSON(res)
+                            sendText('Total sewa: ' + res.length)
                         }
                     })
                     break
