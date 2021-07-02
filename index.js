@@ -44,6 +44,7 @@ const start = async (client = new Client()) => {
         console.log(color('[DEV]'), color('Danang', 'yellow'))
         console.log(color('[~>>]'), color('BOT Started!', 'green'))
         console.log(color('[>..]'), color('Owner Commands: /menuowner', 'green'))
+        client.sendText(ownerNumber, `✅ Bot Started!`)
 
         puppeteer.use(StealthPlugin())
         const browser = await puppeteer.launch({
