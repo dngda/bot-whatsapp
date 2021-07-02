@@ -3,7 +3,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 22:06:38
+ * @ Modified time: 2021-07-02 22:18:45
  * @ Description:
  */
 
@@ -151,7 +151,7 @@ String.prototype.toDHms = function () {
     return days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' secs'
 }
 
-const webpToPng = (buff) => new ((resolve, reject) => {
+const webpToPng = (buff) => new Promise((resolve, reject) => {
     const inp = `./media/sss.webp`
     const out = `./media/sss.png`
     writeFileSync(inp, buff)
