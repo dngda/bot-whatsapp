@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 07:35:40
+ * @ Modified time: 2021-07-02 07:38:53
  * @ Description: Handling message
  */
 
@@ -2165,7 +2165,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 case 'listonline': {
-                    if (isGroupMsg) return reply(resMsg.error.group)
+                    if (!isGroupMsg) return reply(resMsg.error.group)
                     let msg = `╔══✪〘 List Online 〙✪\n${readMore}`
                     chat.presence.chatstates.forEach(item => {
                         msg += `╠> @${item.id.replace(/@c\.us/g, '')}\n`
