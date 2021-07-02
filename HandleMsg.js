@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 07:05:46
+ * @ Modified time: 2021-07-02 07:07:44
  * @ Description: Handling message
  */
 
@@ -575,9 +575,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                         await client.sendText(groupInfo.id, resMsg.success.greeting)
                                     }, 2000)
                                 } else {
-                                    let pos = ownerBotOnly.indexOf(chatId)
-                                    if (pos != -1) {
-                                        ownerBotOnly.push(chatId)
+                                    let pos = ownerBotOnly.indexOf(groupInfo.id)
+                                    if (pos == -1) {
+                                        ownerBotOnly.push(groupInfo.id)
                                         writeFileSync('./data/ownerbotonly.json', JSON.stringify(ownerBotOnly))
                                     }
                                 }
