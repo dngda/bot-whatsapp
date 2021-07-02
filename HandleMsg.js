@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 07:38:53
+ * @ Modified time: 2021-07-02 16:37:20
  * @ Description: Handling message
  */
 
@@ -1442,6 +1442,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `Penggunaan: ${prefix}igstory <username> <nomor urut>\n` +
                         `Contoh: ${prefix}igstory awkarin 1`)
                     let { data } = await get(lolApi(`igstory/${args[0].replace(/@/, '')}`))
+                    if (data.result.length < args[1]) return reply(`Story tidak ditemukan. Jumlah: ${data.result.length}`)
                     sendFFU(data.result[(data.result.length - args[1])])
                     break
                 }
@@ -1914,13 +1915,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'whatanime': {
                     if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
-                        let mediaData
-                        if (isMedia) {
-                            mediaData = await decryptMedia(message)
-                        } else {
-                            mediaData = await decryptMedia(quotedMsg)
-                        }
-                        const imgBS4 = `data:${mimetype};base64,${mediaData.toString('base64')}`
+                        let encMedia = isQuotedImage ? quotedMsg : message
+                        let _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+                        let mediaData = await decryptMedia(encMedia)
+                        const imgBS4 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                         reply('Searching....')
                         fetch('https://trace.moe/api/search', {
                             method: 'POST',
