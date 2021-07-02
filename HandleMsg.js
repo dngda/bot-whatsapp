@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 07:07:44
+ * @ Modified time: 2021-07-02 07:35:40
  * @ Description: Handling message
  */
 
@@ -2164,6 +2164,17 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
 
+                case 'listonline': {
+                    if (isGroupMsg) return reply(resMsg.error.group)
+                    let msg = `╔══✪〘 List Online 〙✪\n${readMore}`
+                    chat.presence.chatstates.forEach(item => {
+                        msg += `╠> @${item.id.replace(/@c\.us/g, '')}\n`
+                    })
+                    msg += '╚═〘 *SeroBot* 〙'
+                    await client.sendTextWithMentions(from, msg)
+                    break
+                }
+
                 // Admin only
                 case "revoke": {
                     if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
@@ -2312,7 +2323,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     } else {
                         let res = `╔══✪〘 Mention All 〙✪\n${readMore}`
                         for (let m of groupMem) {
-                            res += `╠➥ @${m.id.replace(/@c\.us/g, '')}\n`
+                            res += `╠> @${m.id.replace(/@c\.us/g, '')}\n`
                         }
                         res += '╚═〘 *SeroBot* 〙'
                         await client.sendTextWithMentions(from, res)
