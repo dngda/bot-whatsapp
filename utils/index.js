@@ -3,7 +3,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:47:24
+ * @ Modified time: 2021-07-02 22:06:38
  * @ Description:
  */
 
@@ -13,6 +13,7 @@ import chalk from 'chalk'
 import moment from 'moment-timezone'
 import followPkg from 'follow-redirects'
 import updateJson from 'update-json-file'
+import Ffmpeg from 'fluent-ffmpeg'
 
 const { get } = followPkg
 const { tz, duration } = moment
@@ -150,6 +151,20 @@ String.prototype.toDHms = function () {
     return days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' secs'
 }
 
+const webpToPng = (buff) => new ((resolve, reject) => {
+    const inp = `./media/sss.webp`
+    const out = `./media/sss.png`
+    writeFileSync(inp, buff)
+    Ffmpeg(inp)
+        .setFfmpegPath('./bin/ffmpeg')
+        .save(out)
+        .on('end', () => {
+            resolve(readFileSync(out))
+        })
+        .on('error', (e) => {
+            reject(e)
+        })
+})
 
 //Gobal declaration
 const initGlobalVariable = () => {
@@ -175,6 +190,7 @@ export {
     processTime,
     commandLog,
     isFiltered,
+    webpToPng,
     addFilter,
     download,
     formatin,

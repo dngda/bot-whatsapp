@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 16:37:20
+ * @ Modified time: 2021-07-02 22:10:04
  * @ Description: Handling message
  */
 
@@ -14,7 +14,7 @@ import { scheduleJob } from 'node-schedule'
 import { translate } from 'free-translate'
 import moment from 'moment-timezone'
 import appRoot from 'app-root-path'
-import ffmpeg from 'fluent-ffmpeg'
+import Ffmpeg from 'fluent-ffmpeg'
 import { evaluate } from 'mathjs'
 import toPdf from 'office-to-pdf'
 import fetch from 'node-fetch'
@@ -44,7 +44,7 @@ db.chain = lodash.chain(db.data)
 /* #endregion */
 
 /* #region File Modules */
-import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, addFilter, isUrl } from './utils/index.js'
+import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, webpToPng, addFilter, isUrl } from './utils/index.js'
 import { getLocationData, urlShortener, cariKasar, schedule, canvas, cekResi, tebak, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
@@ -281,7 +281,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             let outpath = `./media/out_${filterName}_${time}.mp3`
             writeFileSync(inpath, _inp)
 
-            ffmpeg(inpath)
+            Ffmpeg(inpath)
                 .setFfmpegPath('./bin/ffmpeg')
                 .complexFilter(complexFilter)
                 .on('error', (err) => {
@@ -844,7 +844,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 case 'memefy': {
-                    if ((isMedia || isQuotedImage) && args.length >= 1) {
+                    if ((isMedia || isQuotedImage || isQuotedSticker) && args.length >= 1) {
                         try {
                             let top = '', bottom = ''
                             if (!/\|/g.test(arg)) {
@@ -855,6 +855,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             }
                             let encryptMedia = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                             let mediaData = await decryptMedia(encryptMedia)
+                            if (isQuotedSticker) mediaData = await webpToPng(mediaData)
                             let getUrl = await uploadImages(mediaData, false)
                             let ImageBase64 = await meme.custom(getUrl, top, bottom)
                             client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id).catch(printError)
@@ -1199,11 +1200,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'trigger':
                 case 'trigger2': {
-                    if (!isMedia && !isQuotedImage) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
+                    if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
                         reply(resMsg.wait)
-                        let enc = (isQuotedImage) ? quotedMsg : message
+                        let enc = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
+                        if (isQuotedSticker) mediaData = await webpToPng(mediaData)
                         let _url = await uploadImages(mediaData, true)
                         let resu = (command === 'trigger') ? lolApi(`creator1/trigger`, { img: _url }) : lolApi(`editor/triggered`, { img: _url })
                         sendSFU(resu, false)
@@ -1212,11 +1214,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 case 'wasted': {
-                    if (!isMedia && !isQuotedImage) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
+                    if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
                         reply(resMsg.wait)
-                        let enc = (isQuotedImage) ? quotedMsg : message
+                        let enc = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
+                        if (isQuotedSticker) mediaData = await webpToPng(mediaData)
                         let _url = await uploadImages(mediaData, true)
                         sendSFU(lolApi(`editor/wasted`, { img: _url }), false)
                     } catch (err) { printError(err) }
@@ -1252,7 +1255,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                         let stream = ytdl(ytid, { quality: 'highestaudio' })
 
-                        ffmpeg({ source: stream })
+                        Ffmpeg({ source: stream })
                             .setFfmpegPath('./bin/ffmpeg')
                             .on('error', (err) => {
                                 console.log('An error occurred: ' + err.message)
@@ -1335,7 +1338,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let path = `./media/temp_${t}.mp3`
 
                         let stream = ytdl(ytresult.videoId, { quality: 'highestaudio' })
-                        ffmpeg({ source: stream })
+                        Ffmpeg({ source: stream })
                             .setFfmpegPath('./bin/ffmpeg')
                             .on('error', (err) => {
                                 if (existsSync(path)) unlinkSync(path)
@@ -2838,14 +2841,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case '>':
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     client.simulateTyping(from, false)
-                    try {
-                        eval(`(async() => {
+                    eval(`(async() => {
+                            try {
                                 ${arg}
-                            })()`)
-                    } catch (e) {
-                        console.log(e)
-                        await sendText(`${e.name}: ${e.message}`)
-                    }
+                            } catch (e) {
+                                console.log(e)
+                                await sendText(e.toString())
+                            }
+                        })()`)
                     break
 
                 case 'shell':
