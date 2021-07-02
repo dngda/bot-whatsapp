@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 07:03:40
+ * @ Modified time: 2021-07-02 07:05:46
  * @ Description: Handling message
  */
 
@@ -2281,7 +2281,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'yesbye': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isGroupAdmin) return reply(resMsg.error.admin)
-                    await sendText('Oh beneran ya. Gapapa aku paham. Selamat tinggal 👋🏻🥲')
+                    await sendText('Oh beneran ya.\nGapapa aku paham. Selamat tinggal 👋🏻🥲')
 
                     setTimeout(async () => {
                         await client.leaveGroup(groupId)
