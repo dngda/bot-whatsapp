@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 06:56:42
+ * @ Modified time: 2021-07-02 07:03:40
  * @ Description: Handling message
  */
 
@@ -2772,7 +2772,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     await reply(`Server bot akan direstart!`)
                     await sleep(2000)
-                    spawn('pm2 restart all')
+                    spawn('pm2 reload all')
                     break
                 }
 
