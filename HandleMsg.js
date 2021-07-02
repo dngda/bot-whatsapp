@@ -860,7 +860,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             let getUrl = await uploadImages(mediaData, false)
                             let ImageBase64 = await meme.custom(getUrl, top, bottom)
                             if (!isQuotedSticker) client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id).catch(printError)
-                            else await client.sendImageAsSticker(from, mediaData, stickerMetadata)
+                            else await client.sendImageAsSticker(from, ImageBase64, stickerMetadata)
                                 .then(() => {
                                     sendText(resMsg.success.sticker)
                                     console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
