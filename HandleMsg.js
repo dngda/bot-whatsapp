@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 22:10:04
+ * @ Modified time: 2021-07-02 22:23:20
  * @ Description: Handling message
  */
 
@@ -846,6 +846,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'memefy': {
                     if ((isMedia || isQuotedImage || isQuotedSticker) && args.length >= 1) {
                         try {
+                            reply(resMsg.wait)
                             let top = '', bottom = ''
                             if (!/\|/g.test(arg)) {
                                 bottom = arg
@@ -858,7 +859,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             if (isQuotedSticker) mediaData = await webpToPng(mediaData)
                             let getUrl = await uploadImages(mediaData, false)
                             let ImageBase64 = await meme.custom(getUrl, top, bottom)
-                            client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id).catch(printError)
+                            if (!isQuotedSticker) client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id).catch(printError)
+                            else await client.sendImageAsSticker(from, mediaData, stickerMetadata)
+                                .then(() => {
+                                    sendText(resMsg.success.sticker)
+                                    console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
+                                }).catch(e => printError(e, false))
                         } catch (err) {
                             printError(err)
                         }
