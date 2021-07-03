@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 05:37:18
+ * @ Modified time: 2021-07-04 05:38:37
  * @ Description: Handling message
  */
 
@@ -513,7 +513,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
-                    doSimi(txt)
+                    return doSimi(txt)
                 }
                 break
             }
