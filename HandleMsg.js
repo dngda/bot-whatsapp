@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 22:23:20
+ * @ Modified time: 2021-07-03 19:25:02
  * @ Description: Handling message
  */
 
@@ -1195,11 +1195,20 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
 
-                case 'ttp': {
+                case 'ttp':
+                case 'ttpc': {
                     if (args.length == 0) return reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
                     reply(resMsg.wait)
-                    let txt = isQuotedChat ? quotedMsg.body : arg
-                    let ttpBuff = await canvas.ttp(txt).catch(printError)
+                    let ttpBuff
+                    if (command == `ttpc`) {
+                        let col1 = args[0].split(`-`)[0]
+                        let col2 = args[0].split(`-`)[1]
+                        let txt = isQuotedChat ? quotedMsg.body : arg1
+                        ttpBuff = await canvas.ttp(txt, col1, col2).catch(printError)
+                    }else {
+                        let txt = isQuotedChat ? quotedMsg.body : arg
+                        ttpBuff = await canvas.ttp(txt).catch(printError)
+                    }
                     client.sendImageAsSticker(from, ttpBuff, stickerMetadata).catch(printError)
                     break
                 }
