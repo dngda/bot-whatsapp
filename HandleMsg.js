@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-03 19:25:02
+ * @ Modified time: 2021-07-03 19:45:50
  * @ Description: Handling message
  */
 
@@ -1197,14 +1197,22 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'ttp':
                 case 'ttpc': {
-                    if (args.length == 0) return reply(`Text to picture. Contoh ${prefix}ttp Halo sayang`)
+                    if (args.length == 0) return reply(
+                        `Text to picture. Contoh:\n` +
+                        `${prefix}ttp Halo sayang\n` +
+                        `${prefix}ttpc red Halo (warna merah)\n` +
+                        `${prefix}ttpc red+blue Halo (warna merah stroke biru)\n` +
+                        `${prefix}ttpc red-blue Halo (warna gradasi merah-biru)\n` +
+                        `${prefix}ttpc red-blue+white Halo (warna gradasi merah-biru stroke putih)\n`
+                        )
                     reply(resMsg.wait)
                     let ttpBuff
                     if (command == `ttpc`) {
                         let col1 = args[0].split(`-`)[0]
                         let col2 = args[0].split(`-`)[1]
+                        let strk = args[0].split(`+`)[1]
                         let txt = isQuotedChat ? quotedMsg.body : arg1
-                        ttpBuff = await canvas.ttp(txt, col1, col2).catch(printError)
+                        ttpBuff = await canvas.ttp(txt, col1, col2, strk).catch(printError)
                     }else {
                         let txt = isQuotedChat ? quotedMsg.body : arg
                         ttpBuff = await canvas.ttp(txt).catch(printError)
