@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 05:38:37
+ * @ Modified time: 2021-07-04 05:41:57
  * @ Description: Handling message
  */
 
@@ -2757,35 +2757,21 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
 
-                case 'deletepm': {//menghapus seluruh pesan diakun bot selain group
-                    if (!isOwnerBot) return reply(resMsg.error.owner)
-                    const allChat1 = await client.getAllChats()
-                    reply(`Processed to delete ${allChat1.length} chat!`)
-                    let count = 0
-                    for (let dchat of allChat1) {
-                        await sleep(1000)
-                        if (!dchat.isGroup) {
-                            client.deleteChat(dchat.id)
-                            count += 1
+                case 'cleanchat': {
+                    const chats = await client.getAllChats()
+                    client.sendText(from, `Processed auto clear with ${chats.length} chat!`)
+                    let deleted = 0, cleared = 0
+                    for (let chat of chats) {
+                        if (!chat.isGroup && chat.id !== ownerNumber) {
+                            await client.deleteChat(chat.id)
+                            deleted += 1
+                        }
+                        if (chat.id === ownerNumber || chat.isGroup) {
+                            await client.clearChat(chat.id)
+                            cleared += 1
                         }
                     }
-                    reply(`Delete all Private chats success! Total: ${count} chats`)
-                    break
-                }
-
-                case 'clearpm': {//menghapus seluruh pesan diakun bot tanpa menghapus chat selain group
-                    if (!isOwnerBot) return reply(resMsg.error.owner)
-                    const allChat1 = await client.getAllChats()
-                    reply(`Processed to clear ${allChat1.length} chat!`)
-                    let count = 0
-                    for (let dchat of allChat1) {
-                        await sleep(1000)
-                        if (!dchat.isGroup) {
-                            client.clearChat(dchat.id)
-                            count += 1
-                        }
-                    }
-                    reply(`Clear all Private chats success! Total: ${count} chats`)
+                    client.sendText(from, `Chat deleted : ${deleted}\nChat cleared : ${cleared}`)
                     break
                 }
 
