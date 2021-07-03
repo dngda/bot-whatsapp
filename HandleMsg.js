@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-03 20:08:31
+ * @ Modified time: 2021-07-03 21:24:21
  * @ Description: Handling message
  */
 
@@ -529,6 +529,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 doSimi(txt)
             }
         }
+        if (quotedMsg.fromMe && !isCmd && type === `chat`) doSimi(chats)
         /* #endregion */
 
         /* #region Handle command message */
@@ -1204,7 +1205,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `${prefix}ttpc red+blue Halo (warna merah stroke biru)\n` +
                         `${prefix}ttpc red-blue Halo (warna gradasi merah-biru)\n` +
                         `${prefix}ttpc red-blue+white Halo (warna gradasi merah-biru stroke putih)\n`
-                        )
+                    )
                     reply(resMsg.wait)
                     let ttpBuff
                     if (command == `ttpc`) {
@@ -1213,7 +1214,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let strk = args[0].split(`+`)[1]
                         let txt = isQuotedChat ? quotedMsg.body : arg1
                         ttpBuff = await canvas.ttp(txt, col1, col2, strk).catch(printError)
-                    }else {
+                    } else {
                         let txt = isQuotedChat ? quotedMsg.body : arg
                         ttpBuff = await canvas.ttp(txt).catch(printError)
                     }
