@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-03 19:45:50
+ * @ Modified time: 2021-07-03 19:48:59
  * @ Description: Handling message
  */
 
@@ -1208,7 +1208,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     reply(resMsg.wait)
                     let ttpBuff
                     if (command == `ttpc`) {
-                        let col1 = args[0].split(`-`)[0]
+                        let col1 = args[0].split(`-`)[0] || args[0].split(`+`)[0]
                         let col2 = args[0].split(`-`)[1]
                         let strk = args[0].split(`+`)[1]
                         let txt = isQuotedChat ? quotedMsg.body : arg1
