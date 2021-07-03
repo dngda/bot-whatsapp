@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-03 21:30:57
+ * @ Modified time: 2021-07-04 05:37:18
  * @ Description: Handling message
  */
 
@@ -529,7 +529,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 doSimi(txt)
             }
         }
-        if (quotedMsg?.fromMe && !isCmd && type === `chat`) doSimi(chats)
+        if (quotedMsg?.fromMe && !isCmd && type === `chat`) return doSimi(chats)
         /* #endregion */
 
         /* #region Handle command message */
