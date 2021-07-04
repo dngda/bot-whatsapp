@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 12:43:33
+ * @ Modified time: 2021-07-04 14:04:33
  * @ Description: Handling message
  */
 
@@ -2639,6 +2639,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (args.length !== 2) return reply(`Untuk menyewakan bot\n\nCaranya ketik: \n${prefix}addsewa <brphari> <linkgroup/id>`)
                     sewa.sewaBot(client, args[1], args[0]).then(res => {
                         if (res) reply(`Berhasil menyewakan bot selama ${args[0]} hari.`)
+                        else reply(`Gagal menyewakan bot!`)
                     }).catch(printError)
                     break
                 }
