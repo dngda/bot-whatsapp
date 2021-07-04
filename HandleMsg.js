@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 05:41:57
+ * @ Modified time: 2021-07-04 12:23:59
  * @ Description: Handling message
  */
 
@@ -17,6 +17,7 @@ import appRoot from 'app-root-path'
 import Ffmpeg from 'fluent-ffmpeg'
 import { evaluate } from 'mathjs'
 import toPdf from 'office-to-pdf'
+import { inspect } from 'util'
 import fetch from 'node-fetch'
 import ytdl from 'ytdl-core'
 import Crypto from 'crypto'
@@ -515,6 +516,41 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let txt = chats.replace(/@\d+/g, '')
                     return doSimi(txt)
                 }
+                break
+            }
+            case /^>/.test(chats): {
+                if (!isOwnerBot) return reply(resMsg.error.owner)
+                client.simulateTyping(from, false)
+                try {
+                    let evaled = eval(`(async() => {
+                            try {
+                                ${chats.slice(2)}
+                            } catch (e) {
+                                console.log(e)
+                                sendText(e.toString())
+                            }
+                        })()`)
+                    if (typeof evaled !== 'string') evaled = inspect(evaled)
+                    sendText(`${evaled}`)
+                } catch (err) {
+                    console.log(err)
+                    sendText(`${err}`)
+                }
+                break
+            }
+
+            case /^\$/.test(chats): {
+                if (!isOwnerBot) return reply(resMsg.error.owner)
+                client.simulateTyping(from, false)
+                exec(chats.slice(2), (err, stdout, stderr) => {
+                    if (err) {
+                        sendText(err)
+                        console.error(err)
+                    } else {
+                        sendText(stdout + stderr)
+                        console.log(stdout, stderr)
+                    }
+                })
                 break
             }
             default:
@@ -2845,37 +2881,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     groupPrem.push(args[0])
                     writeFileSync('./data/premiumgroup.json', JSON.stringify(groupPrem))
                     reply(`Berhasil`)
-                    break
-                }
-
-                case '>':
-                    if (!isOwnerBot) return reply(resMsg.error.owner)
-                    client.simulateTyping(from, false)
-                    eval(`(async() => {
-                            try {
-                                ${arg}
-                            } catch (e) {
-                                console.log(e)
-                                await sendText(e.toString())
-                            }
-                        })()`)
-                    break
-
-                case 'shell':
-                case '=': {
-                    if (!isOwnerBot) return reply(resMsg.error.owner)
-                    exec(arg, (err, stdout, stderr) => {
-                        if (err) {
-                            //some err occurred
-                            console.error(err)
-                        } else {
-                            // the *entire* stdout and stderr (buffered)
-                            sendText(stdout + stderr)
-                            console.log(`stdout: ${stdout}`)
-                            console.log(`stderr: ${stderr}`)
-                        }
-                    })
-                    client.simulateTyping(from, false)
                     break
                 }
                 /* #endregion */
