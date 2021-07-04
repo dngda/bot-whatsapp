@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 12:23:59
+ * @ Modified time: 2021-07-04 12:39:03
  * @ Description: Handling message
  */
 
@@ -1865,7 +1865,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     await tebak.getTebakGambar(from).then(async res => {
                         let menit = res.answer.split(' ').length - 1
                         let detik = menit * 60
-                        await client.sendFileFromUrl(from, res.image, '', `Tebak Gambar diatas. \nJawab dengan mengirimkan jawabannya langsung.\n\nWaktunya ${menit} menit.\n\n*${prefix}skip* untuk skip`, id)
+                        await client.sendFileFromUrl(from, res.image, '', `Tebak Gambar diatas.\nJawab dengan *membalas pesan ini*.\n\nWaktunya ${menit} menit.\n\n*${prefix}skip* untuk skip`, id)
                             .then(() => {
                                 startTebakRoomTimer(detik, res.answer)
                             })
@@ -1880,7 +1880,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     await tebak.getTebakKata(from).then(async res => {
                         let menit = 1
                         let detik = menit * 60
-                        await reply(`Tebak kata yang berhubungan.\n\n` +
+                        await reply(`Tebak kata yang berhubungan.\nJawab dengan *membalas pesan ini*.\n\n` +
                             `${q3 + res.pertanyaan + q3}\n\n` +
                             `Jumlah huruf: ${res.jawaban.length}\nWaktunya ${menit} menit.\n*${prefix}skip* untuk skip`)
                             .then(() => {
@@ -1896,7 +1896,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakLirik(from).then(async res => {
                         let detik = 90
-                        await reply(`Tebak Lirik. Lengkapi lirik yang sesuai.\n\n` +
+                        await reply(`Tebak Lirik. Lengkapi lirik yang sesuai.\nJawab dengan *membalas pesan ini*.\n\n` +
                             `${q3 + res.question + q3}\n\n` +
                             `Jumlah huruf: ${res.answer.length}\nWaktunya ${detik} detik.\n*${prefix}skip* untuk skip`)
                             .then(() => {
@@ -1912,7 +1912,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakJenaka(from).then(async res => {
                         let detik = 90
-                        await reply(`Tebakan Jenaka. Jawab pertanyaan dibawah ini.\n\n` +
+                        await reply(`Tebakan Jenaka.\nJawab dengan *membalas pesan ini*.\n\n` +
                             `${q3 + res.question + q3}\n\n` +
                             `Jumlah kata: ${res.answer.split(/\s/ig).length}\n` +
                             `Jumlah huruf: ${res.answer.length}\n` +
@@ -2898,7 +2898,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         //Tebak room
         if (!isCmd) {
             tebak.getAns(from).then(res => {
-                if (res) {
+                if (res && quotedMsg?.fromMe) {
                     if (res.ans?.toLowerCase() === chats?.toLowerCase()) {
                         reply(`✅ Jawaban benar! : *${res.ans}*`)
                         tebak.delRoom(from)
