@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 19:56:33
+ * @ Modified time: 2021-07-04 21:30:58
  * @ Description: Handling message
  */
 
@@ -257,7 +257,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             sendText(resMsg.wait)
             if (!capt) capt = ''
             return client.sendFileFromUrl(from, url, '', capt, id)
-                .catch(e => { return printError(e)})
+                .catch(e => { return printError(e) })
         }
 
         const sendSFU = async (url, sendWait = true) => {
@@ -271,7 +271,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
         // eslint-disable-next-line no-unused-vars
         const sendJSONFromUrl = async (url) => {
-            let { data } = await get(url).catch(e => { return printError(e)})
+            let { data } = await get(url).catch(e => { return printError(e) })
             return data && sendJSON(data)
         }
 
@@ -508,7 +508,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 const theSFX = chats?.toLowerCase().match(new RegExp(sfx.join("|")))
                 const path = `./src/sfx/${theSFX}.mp3`
                 const _id = (quotedMsg != null) ? quotedMsgObj.id : id
-                await client.sendPtt(from, path, _id).catch(e => { return printError(e)})
+                await client.sendPtt(from, path, _id).catch(e => { return printError(e) })
                 break
             }
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
@@ -566,7 +566,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             }
         }
         if (quotedMsg?.fromMe && !isCmd && type === `chat`) tebak.getAns(from).then(res => {
-            if(!res) return doSimi(chats)
+            if (!res) return doSimi(chats)
         })
         /* #endregion */
 
@@ -604,7 +604,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     const linkGroup = args[0]
                     const isLinkGroup = linkGroup.match(/(https:\/\/chat\.whatsapp\.com)/gi)
                     if (!isLinkGroup) return reply('Maaf link group-nya salah! Silakan kirim link yang benar')
-                    let groupInfo = await client.inviteInfo(linkGroup).catch(e => { return printError(e)})
+                    let groupInfo = await client.inviteInfo(linkGroup).catch(e => { return printError(e) })
                     if (isOwnerBot) {
                         await client.joinGroupViaLink(linkGroup)
                             .then(async () => {
@@ -799,7 +799,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         client.sendGiphyAsSticker(from, smallGifUrl).then(() => {
                             reply(resMsg.success.sticker)
                             console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
-                        }).catch(e => { return printError(e)})
+                        }).catch(e => { return printError(e) })
                     } else if (isMediaGiphy) {
                         const gifUrl = args[0].match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'))
                         if (!gifUrl) { return reply('Gagal mengambil kode giphy') }
@@ -809,7 +809,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 reply(resMsg.success.sticker)
                                 console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                             })
-                            .catch(e => { return printError(e)})
+                            .catch(e => { return printError(e) })
                     } else {
                         await reply('Maaf, perintah sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]')
                     }
@@ -822,7 +822,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (args.length == 0) return reply(`ketik ${prefix}shortlink <url>`)
                     if (!isUrl(args[0])) return reply('Maaf, url yang kamu kirim tidak valid. Pastikan menggunakan format http/https')
                     const shorted = await urlShortener(args[0])
-                    await sendText(shorted).catch(e => { return printError(e)})
+                    await sendText(shorted).catch(e => { return printError(e) })
                     break
                 }
 
@@ -833,7 +833,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         const _res = _input.replace(/[aiueo]/g, 'i')
                         reply(_res, _id)
                         const ImageBase64 = await meme.custom('https://memegenerator.net/img/images/11599566.jpg', '', _res)
-                        client.sendFile(from, ImageBase64, 'image.png', '', _id).catch(e => { return printError(e)})
+                        client.sendFile(from, ImageBase64, 'image.png', '', _id).catch(e => { return printError(e) })
                     }
                     else {
                         await reply(`Mengubah kalimat menjadi hilih gitu deh\n\nketik ${prefix}hilih kalimat\natau reply chat menggunakan ${prefix}hilih`)
@@ -850,8 +850,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     else urlzz = arg
                     const path = './media/ssweb.png'
                     scraper.ssweb(browser, path, urlzz).then(async res => {
-                        if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${urlzz}`, id).catch(e => { return printError(e)})
-                    }).catch(e => { return printError(e)})
+                        if (res === true) await client.sendImage(from, path, 'ssweb.png', `Captured from ${urlzz}`, id).catch(e => { return printError(e) })
+                    }).catch(e => { return printError(e) })
                     break
                 }
 
@@ -869,7 +869,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `${prefix}flip h -> untuk flip horizontal\n` +
                         `${prefix}flip v -> untuk flip vertical`)
                     const _enc = isQuotedImage ? quotedMsg : message
-                    const _img = await decryptMedia(_enc).catch(e => { return printError(e)})
+                    const _img = await decryptMedia(_enc).catch(e => { return printError(e) })
                     let image = await read(_img)
                     let path = './media/flipped.png'
                     if (args[0] === 'v') image.flip(false, true).write(path)
@@ -878,7 +878,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `${prefix}flip h -> untuk flip horizontal\n` +
                         `${prefix}flip v -> untuk flip vertical`)
 
-                    await client.sendImage(from, path, '', '', id).catch(e => { return printError(e)})
+                    await client.sendImage(from, path, '', '', id).catch(e => { return printError(e) })
                     break
                 }
 
@@ -898,7 +898,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             if (isQuotedSticker) mediaData = await webpToPng(mediaData)
                             let getUrl = await uploadImages(mediaData, false)
                             let ImageBase64 = await meme.custom(getUrl, top, bottom)
-                            if (!isQuotedSticker) client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id).catch(e => { return printError(e)})
+                            if (!isQuotedSticker) client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id).catch(e => { return printError(e) })
                             else await client.sendImageAsSticker(from, ImageBase64, stickerMetadata)
                                 .then(() => {
                                     sendText(resMsg.success.sticker)
@@ -932,7 +932,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (args.length == 0 && !isQuotedChat) return reply(`Membuat bot menulis teks yang dikirim menjadi gambar\n` +
                         `Pemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`)
                     const content = isQuotedChat ? quotedMsgObj.content.toString() : arg
-                    await client.sendImage(from, lolApi(`nulis`, { text: content }), '', ``, id).catch(e => { return printError(e)})
+                    await client.sendImage(from, lolApi(`nulis`, { text: content }), '', ``, id).catch(e => { return printError(e) })
                     break
                 }
 
@@ -962,7 +962,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             let gtts = new gTTS(arg1, args[0])
                             gtts.save('./media/tts.mp3', function () {
                                 client.sendPtt(from, './media/tts.mp3', id)
-                                    .catch(e => { return printError(e)})
+                                    .catch(e => { return printError(e) })
                             })
                         } catch (err) {
                             console.log(color('[ERR>]', 'red'), err.name, err.message)
@@ -974,7 +974,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             const dataText = quotedMsgObj.content.toString()
                             let gtts = new gTTS(dataText, args[0])
                             gtts.save('./media/tts.mp3', function () {
-                                client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id).catch(e => { return printError(e)})
+                                client.sendPtt(from, './media/tts.mp3', quotedMsgObj.id).catch(e => { return printError(e) })
                             })
                         } catch (err) {
                             console.log(color('[ERR>]', 'red'), err.name, err.message)
@@ -1004,7 +1004,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             from: 'auto', to: args[0]
                         }).then(n => {
                             reply(n)
-                        }).catch(e => { return printError(e)})
+                        }).catch(e => { return printError(e) })
                     } else {
                         reply(`Kode bahasa tidak valid`)
                     }
@@ -1079,7 +1079,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                     if (!isNaN(nmr)) {
                         let resSurah = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
-                            .catch(e => { return printError(e)})
+                            .catch(e => { return printError(e) })
                         if (resSurah === undefined) return reply(`Maaf error/format salah`)
                         let { data } = resSurah.data
                         let bhs = last(args)
@@ -1115,7 +1115,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     console.log(nmr)
                     if (!isNaN(nmr)) {
                         let resSurah = await get('https://api.quran.sutanlab.id/surah/' + nmr + "/" + ayat)
-                            .catch(e => { return printError(e)})
+                            .catch(e => { return printError(e) })
                         let { data } = resSurah.data
                         let pesan = ""
                         pesan = pesan + "Tafsir Q.S. " + data.surah.name.transliteration.id + ":" + ayat + "\n\n"
@@ -1155,7 +1155,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         if (isNaN(ayat)) {
                             let pesan = ""
                             let resSurah = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
-                                .catch(e => { return printError(e)})
+                                .catch(e => { return printError(e) })
                             let { name: surahName, name_translations, number_of_ayah, number_of_surah, recitations } = resSurah.data
                             pesan = pesan + "Audio Quran Surah ke-" + number_of_surah + " " + surahName + " (" + name_translations.ar + ") " + "dengan jumlah " + number_of_ayah + " ayat\n"
                             pesan = pesan + "Dilantunkan oleh " + recitations[0].name + " :\n" + recitations[0].audio_url + "\n"
@@ -1190,7 +1190,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `Contoh: *${prefix}jsholat sleman*\nUntuk melihat daftar daerah, ketik *${prefix}jsholat daerah*`)
                     if (args[0] == 'daerah') {
                         let { data: semuaKota } = await get('https://api.myquran.com/v1/sholat/kota/semua')
-                            .catch(e => { return printError(e)})
+                            .catch(e => { return printError(e) })
                         let hasil = '╔══✪〘 Daftar Kota 〙✪\n'
                         for (let kota of semuaKota) {
                             hasil += '╠➥ '
@@ -1200,7 +1200,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         await reply(hasil)
                     } else {
                         let { data: cariKota } = await get('https://api.myquran.com/v1/sholat/kota/cari/' + arg)
-                            .catch(e => { return printError(e)})
+                            .catch(e => { return printError(e) })
                         try {
                             var kodek = cariKota.data[0].id
                         } catch (err) {
@@ -1251,10 +1251,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let col2 = args[0].split(`+`)[0].split(`-`)[1]
                         let strk = args[0].split(`+`)[1]
                         let txt = isQuotedChat ? quotedMsg.body : arg1
-                        ttpBuff = await canvas.ttp(txt, col1, col2, strk).catch(e => { return printError(e)})
+                        ttpBuff = await canvas.ttp(txt, col1, col2, strk).catch(e => { return printError(e) })
                     } else {
                         let txt = isQuotedChat ? quotedMsg.body : arg
-                        ttpBuff = await canvas.ttp(txt).catch(e => { return printError(e)})
+                        ttpBuff = await canvas.ttp(txt).catch(e => { return printError(e) })
                     }
                     client.sendImageAsSticker(from, ttpBuff, stickerMetadata)
                     break
@@ -1377,7 +1377,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'play': { //Silakan kalian custom sendiri jika ada yang ingin diubah
                     if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
-                    let _ytresult = await api.ytsearch(arg).catch(e => { return printError(e)})
+                    let _ytresult = await api.ytsearch(arg).catch(e => { return printError(e) })
                     let ytresult = _ytresult[0]
                     const hasDurationProperty = Object.prototype.hasOwnProperty.call(ytresult, 'duration')
                     if (!hasDurationProperty) return reply(`Maaf fitur sedang dalam perbaikan`)
@@ -1438,7 +1438,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         case 'tiktok1': case 'tt1': _mp4Url = result?.server1; break
                         case 'tiktok2': case 'tt2': _mp4Url = result?.server2; break
                         case 'tiktok3': case 'tt3': {
-                            let ress = await scraper.ssstik(browser, urls).catch(e => { return printError(e)})
+                            let ress = await scraper.ssstik(browser, urls).catch(e => { return printError(e) })
                             _mp4Url = ress?.mp4
                             break
                         }
@@ -1461,7 +1461,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     sendText(resMsg.wait)
                     let result = await scraper.qload(urls).catch(e => { return printError(e) })
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    if (result.mp3) client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(e => { return printError(e)})
+                    if (result.mp3) client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(e => { return printError(e) })
                     else reply('Maaf, link yang kamu kirim tidak valid.')
                     break
                 }
@@ -1484,10 +1484,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!urls.includes('twitter')) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Twitter') }
                     sendText(resMsg.wait)
-                    let result = await api.twdl(urls).catch(e => { return printError(e)})
+                    let result = await api.twdl(urls).catch(e => { return printError(e) })
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let uls = lodash.find(result, { resolution: "720p" })?.link || lodash.find(result, { resolution: "360p" })?.link || lodash.find(result, { resolution: "270p" })?.link
-                    client.sendFileFromUrl(from, uls, '', '', _id).catch(e => { return printError(e)})
+                    if (uls) client.sendFileFromUrl(from, uls, '', '', _id)
                     break
                 }
                 case 'igdl': {
@@ -1495,9 +1495,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!urls.includes('instagram')) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Instagram') }
                     sendText(resMsg.wait)
-                    let result = await api.igdl(urls).catch(e => { return printError(e)})
+                    let result = await api.igdl(urls).catch(e => { return printError(e) })
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    client.sendFileFromUrl(from, result, '', '', _id).catch(e => { return printError(e)})
+                    if (result) client.sendFileFromUrl(from, result, '', '', _id)
                     break
                 }
 
@@ -1584,7 +1584,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         .then(res => {
                             reply(res)
                         })
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 /* #endregion */
 
@@ -1597,7 +1597,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             let randomnix = sample(splitnix)
                             reply(randomnix)
                         })
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 case 'katabijak':
                     fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/katabijax.txt')
@@ -1607,7 +1607,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             let randombijak = sample(splitbijak)
                             reply(randombijak)
                         })
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 case 'pantun':
                     fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/pantun.txt')
@@ -1617,14 +1617,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             let randompantun = sample(splitpantun)
                             reply(' ' + randompantun.replace(/aruga-line/g, "\n"))
                         })
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 case 'quote':
                 case 'quotes': {
                     const quotex = await api.quote()
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     await reply(quotex)
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 }
                 /* #endregion Random kata */
@@ -1640,7 +1640,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 let randomnimex = sample(randomnime)
                                 client.sendFileFromUrl(from, randomnimex, '', 'Nih...', id)
                             })
-                            .catch(e => { return printError(e)})
+                            .catch(e => { return printError(e) })
                     } else {
                         reply(`Maaf query tidak tersedia. Silakan ketik ${prefix}anime untuk melihat list query`)
                     }
@@ -1651,7 +1651,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'meme': {
                     const randmeme = await meme.random()
                     client.sendFileFromUrl(from, randmeme.url, '', randmeme.title, id)
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 }
                 /* #endregion */
@@ -1664,13 +1664,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             if (res == '') return reply(`Maaf kata "${args[0]}" tidak tersedia di KBBI`)
                             reply(res + `\n\nMore: https://kbbi.web.id/${args[0]}`)
 
-                        }).catch(e => { return printError(e)})
+                        }).catch(e => { return printError(e) })
                     break
                 }
                 case 'ytsearch':
                 case 'yt': {
                     if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
-                    let ytresult = await api.ytsearch(arg).catch(e => { return printError(e)})
+                    let ytresult = await api.ytsearch(arg).catch(e => { return printError(e) })
                     try {
                         let psn =
                             `✪〘 Youtube Search 〙✪\n` +
@@ -1727,9 +1727,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'pin2': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari pinterest v2.\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto\n\nGunakan apabila /pinterest atau /pin error`)
                     if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
-                    let img = await scraper.pinterest(browser, arg).catch(e => { return printError(e)})
+                    let img = await scraper.pinterest(browser, arg).catch(e => { return printError(e) })
                     if (img === null) return reply(resMsg.error.norm).then(() => console.log(`img return null`))
-                    await client.sendFileFromUrl(from, img, '', '', id).catch(e => { return printError(e)})
+                    await client.sendFileFromUrl(from, img, '', '', id).catch(e => { return printError(e) })
                     break
                 }
 
@@ -1739,7 +1739,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'gimage': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari google image\nketik: ${prefix}gimage [search]\ncontoh: ${prefix}gimage naruto`)
                     if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
-                    const img = await scraper.gimage(browser, arg).catch(e => { return printError(e)})
+                    const img = await scraper.gimage(browser, arg).catch(e => { return printError(e) })
                     if (img === null) return reply(resMsg.error.norm).then(() => console.log(`img return null`))
                     await client.sendFileFromUrl(from, img, '', '', id).catch(e => printError(e, false))
                     break
@@ -1752,13 +1752,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     const hasilreddit = await api.sreddit(arg)
                     if (hasilreddit.nsfw === true) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
                     await client.sendFileFromUrl(from, hasilreddit.url, '', hasilreddit.title, id)
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 }
                 case 'lirik':
                 case 'lyric': {
                     if (args.length === 0) return reply(`Untuk mencari lirik dengan nama lagu atau potongan lirik\nketik: ${prefix}lirik <query>\nContoh: ${prefix}lirik lathi`)
-                    let res = await api.lirik(arg).catch(e => { return printError(e)})
+                    let res = await api.lirik(arg).catch(e => { return printError(e) })
                     if (res == null) return reply(`Lirik tidak ditemukan.`)
                     await reply(res.lirik)
                     break
@@ -1806,7 +1806,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     sendText('Gotcha, please wait!')
                     let path = './media/crjogja.png'
                     scraper.ssweb(browser, path, 'https://sipora.staklimyogyakarta.com/radar/', { width: 600, height: 600 })
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     await client.sendFile(from, path, '', 'Captured from https://sipora.staklimyogyakarta.com/radar/', id)
                         .then(() => {
                             client.simulateTyping(from, false)
@@ -1821,7 +1821,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (args.length == 0) return reply(`Untuk melihat cuaca pada suatu daerah\nketik: ${prefix}cuaca [daerah]`)
                     const cuaca = await api.cuaca(arg)
                     await reply(cuaca)
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 }
 
@@ -1847,7 +1847,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let truths = readFileSync('./src/txt/truth.txt', 'utf8')
                     let _truth = sample(truths.split('\n'))
                     await reply(_truth)
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 }
 
@@ -1856,7 +1856,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let dares = readFileSync('./src/txt/dare.txt', 'utf8')
                     let _dare = sample(dares.split('\n'))
                     await reply(_dare)
-                        .catch(e => { return printError(e)})
+                        .catch(e => { return printError(e) })
                     break
                 }
 
@@ -1871,7 +1871,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             .then(() => {
                                 startTebakRoomTimer(detik, res.answer)
                             })
-                    }).catch(e => { return printError(e)})
+                    }).catch(e => { return printError(e) })
                     break
                 }
 
@@ -1888,7 +1888,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             .then(() => {
                                 startTebakRoomTimer(detik, res.jawaban)
                             })
-                    }).catch(e => { return printError(e)})
+                    }).catch(e => { return printError(e) })
                     break
                 }
 
@@ -1904,7 +1904,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             .then(() => {
                                 startTebakRoomTimer(detik, res.answer)
                             })
-                    }).catch(e => { return printError(e)})
+                    }).catch(e => { return printError(e) })
                     break
                 }
 
@@ -1922,7 +1922,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             .then(() => {
                                 startTebakRoomTimer(detik, res.answer)
                             })
-                    }).catch(e => { return printError(e)})
+                    }).catch(e => { return printError(e) })
                     break
                 }
 
@@ -2009,7 +2009,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                     reply(teks)
                                 })
                             })
-                            .catch(e => { return printError(e)})
+                            .catch(e => { return printError(e) })
                     } else {
                         reply(`Maaf format salah\n\nSilakan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`)
                     }
@@ -2247,7 +2247,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             .then(() => {
                                 reply(`Berhasil Revoke Grup Link gunakan *${prefix}grouplink* untuk mendapatkan group invite link yang terbaru`)
                             })
-                            .catch(e => { return printError(e)})
+                            .catch(e => { return printError(e) })
                     }
                     break
                 }
@@ -2640,7 +2640,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     sewa.sewaBot(client, args[1], args[0]).then(res => {
                         if (res) reply(`Berhasil menyewakan bot selama ${args[0]} hari.`)
                         else reply(`Gagal menyewakan bot!`)
-                    }).catch(e => { return printError(e)})
+                    }).catch(e => { return printError(e) })
                     break
                 }
 
@@ -2844,14 +2844,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     await client.contactUnblock(`${arg.replace(/\+/g, '').replace(/\s/g, '').replace(/-/g, '')}@c.us`).then((n) => {
                         if (n) return reply(`Berhasil unblock ${arg}.`)
                         else reply(`Nomor ${arg} tidak terdaftar.`)
-                    }).catch(e => { return printError(e)})
+                    }).catch(e => { return printError(e) })
                     break
                 }
 
                 case 'getinfo': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (args.length === 0) return reply(`Kasih link groupnya bro`)
-                    let inf = await client.inviteInfo(arg).catch(e => { return printError(e)})
+                    let inf = await client.inviteInfo(arg).catch(e => { return printError(e) })
                     sendText(JSON.stringify(inf, null, 2))
                     break
                 }
