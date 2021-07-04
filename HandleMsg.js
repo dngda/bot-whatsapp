@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 12:39:03
+ * @ Modified time: 2021-07-04 12:43:33
  * @ Description: Handling message
  */
 
@@ -565,7 +565,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 doSimi(txt)
             }
         }
-        if (quotedMsg?.fromMe && !isCmd && type === `chat`) return doSimi(chats)
+        if (quotedMsg?.fromMe && !isCmd && type === `chat`) tebak.getAns(from).then(res => {
+            if(!res) return doSimi(chats)
+        })
         /* #endregion */
 
         /* #region Handle command message */
