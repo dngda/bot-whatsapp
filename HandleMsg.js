@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 14:04:33
+ * @ Modified time: 2021-07-04 19:46:10
  * @ Description: Handling message
  */
 
@@ -1445,7 +1445,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         default:
                     }
                     if (_mp4Url != undefined) {
-                        await client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => {
+                        client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => {
                             console.log(err)
                             return reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`)
                         })
@@ -1458,10 +1458,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok music/mp3. How?\n${prefix}tiktokmp3 (alamat video Tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
-                    await sendText(resMsg.wait)
+                    sendText(resMsg.wait)
                     let result = await scraper.qload(urls).catch(e => { return printError(e) })
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    if (result.mp3) await client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(printError)
+                    if (result.mp3) client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(printError)
                     else reply('Maaf, link yang kamu kirim tidak valid.')
                     break
                 }
@@ -1469,35 +1469,35 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'fbdl': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Facebook video post. How?\n${prefix}fbdl (alamat video Facebook)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
-                    if (!isUrl(urls) && urls.match(/facebook/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Facebook') }
-                    await sendText(resMsg.wait)
+                    if (urls.match(/facebook/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Facebook') }
+                    sendText(resMsg.wait)
                     let res = await api.fbdl(urls).catch(n => {
                         reply(`Link tidak valid. Pastikan hanya link video dari facebook yang bersifat publik.`)
                         console.log(n.message)
                     })
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    if (res) await client.sendFileFromUrl(from, res.result, '', '', _id)
+                    if (res) client.sendFileFromUrl(from, res.result, '', '', _id)
                     break
                 }
                 case 'twdl': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Twitter video post. How?\n${prefix}twdl (alamat video Twitter)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
-                    if (!isUrl(urls) && urls.match(/twitter/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Twitter') }
-                    await sendText(resMsg.wait)
+                    if (urls.match(/twitter/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Twitter') }
+                    sendText(resMsg.wait)
                     let result = await api.twdl(urls).catch(printError)
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let uls = lodash.find(result, { resolution: "720p" })?.link || lodash.find(result, { resolution: "360p" })?.link || lodash.find(result, { resolution: "270p" })?.link
-                    await client.sendFileFromUrl(from, uls, '', '', _id).catch(printError)
+                    client.sendFileFromUrl(from, uls, '', '', _id).catch(printError)
                     break
                 }
                 case 'igdl': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Instagram video post. How?\n${prefix}igdl (alamat video Instagram)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
-                    if (!isUrl(urls) && urls.match(/instagram/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Instagram') }
-                    await sendText(resMsg.wait)
+                    if (urls.match(/instagram/gi).length == 0) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Instagram') }
+                    sendText(resMsg.wait)
                     let result = await api.igdl(urls).catch(printError)
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    await client.sendFileFromUrl(from, result, '', '', _id).catch(printError)
+                    client.sendFileFromUrl(from, result, '', '', _id).catch(printError)
                     break
                 }
 
