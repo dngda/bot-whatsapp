@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 13:56:55
+ * @ Modified time: 2021-07-05 14:46:05
  * @ Description: Handling message
  */
 
@@ -84,6 +84,20 @@ const lolApi = (slash, parm = { text: null, text2: null, text3: null, img: null 
     let ptext3 = (parm.text3 != null) ? `&text=${encodeURIComponent(parm.text3)}` : ''
     let pimg = (parm.img != null) ? `&img=${parm.img}` : ''
     return `https://lolhuman.herokuapp.com/api/${slash}?apikey=${apiLol}${ptext}${ptext2}${ptext3}${pimg}`
+}
+// previous cmd
+let previousCmds = []
+
+const savePrevCmd = (sender, prevCmd) => {
+    if (!hasPrevCmd(sender)) previousCmds.push({ sender: sender, prevCmd: prevCmd })
+}
+
+const getPrevCmd = (sender) => {
+    return previousCmds.find(n => n.sender == sender).prevCmd
+}
+
+const hasPrevCmd = (sender) => {
+    return !!previousCmds.find(n => n.sender == sender)
 }
 /* #endregion */
 
@@ -175,6 +189,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         for (let menu in stickerHash) {
             if (filehash == stickerHash[menu]) body = `${prefix + menu}`, chats = body
         }
+        if (hasPrevCmd(sender)) body = `${getPrevCmd(sender)} ${chats}}`
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
@@ -1476,7 +1491,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     })
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let msg = `Link valid. Tunggu videonya atau download manual pakai link berikut.\n`
-                    for (let u of res){
+                    for (let u of res) {
                         msg += `Quality: ${u.quality == '6' ? 'HD' : 'SD'} : ` + await urlShortener(u.url) + '\n'
                     }
                     if (res) sendText(msg)
@@ -1676,7 +1691,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
                 case 'ytsearch':
                 case 'yt': {
-                    if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
+                    // if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
+                    if (args.length == 0) {
+                        savePrevCmd(sender, prefix + command)
+                        return reply(`Masukkan query...`)
+                    }
                     let ytresult = await api.ytsearch(arg).catch(e => { return printError(e) })
                     try {
                         let psn =
