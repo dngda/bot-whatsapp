@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 14:46:05
+ * @ Modified time: 2021-07-05 14:56:36
  * @ Description: Handling message
  */
 
@@ -88,16 +88,19 @@ const lolApi = (slash, parm = { text: null, text2: null, text3: null, img: null 
 // previous cmd
 let previousCmds = []
 
-const savePrevCmd = (sender, prevCmd) => {
-    if (!hasPrevCmd(sender)) previousCmds.push({ sender: sender, prevCmd: prevCmd })
+const savePrevCmd = (inpSender, prevCmd) => {
+    if (!hasPrevCmd(inpSender)) previousCmds.push({ sender: inpSender, prevCmd: prevCmd })
 }
 
-const getPrevCmd = (sender) => {
-    return previousCmds.find(n => n.sender == sender).prevCmd
+const getPrevCmd = (inpSender) => {
+    return previousCmds.find(n => n.sender == inpSender).prevCmd
 }
 
-const hasPrevCmd = (sender) => {
-    return !!previousCmds.find(n => n.sender == sender)
+const hasPrevCmd = (inpSender) => {
+    return !!previousCmds.find(n => n.sender == inpSender)
+}
+const delPrevCmd = (inpSender) => {
+    previousCmds = previousCmds.filter(({ sender }) => sender !== inpSender)
 }
 /* #endregion */
 
@@ -189,7 +192,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         for (let menu in stickerHash) {
             if (filehash == stickerHash[menu]) body = `${prefix + menu}`, chats = body
         }
-        if (hasPrevCmd(sender)) body = `${getPrevCmd(sender)} ${chats}}`
+        if (hasPrevCmd(pengirim)) {
+            body = `${getPrevCmd(pengirim)} ${chats}}`
+            delPrevCmd(pengirim)
+        }
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const arg1 = arg.trim().substring(arg.indexOf(' ') + 1)
