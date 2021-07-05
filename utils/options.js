@@ -2,8 +2,8 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-06-28 19:46:37
- * @ Description: options provided from owa issue :)
+ * @ Modified time: 2021-07-05 13:14:32
+ * @ Description: options provided from owa issue (https://github.com/open-wa/wa-automate-nodejs/issues/563#issuecomment-647030529)
  */
 
 const chromeArgs = [
@@ -74,7 +74,12 @@ const chromeArgs = [
     '--silent-debugger-extension-api',
     '--single-process',
     '--unhandled-rejections=strict',
-    '--window-position=0,0'
+    '--window-position=0,0',
+    '--aggressive-cache-discard',
+    '--disable-cache',
+    '--disable-application-cache',
+    '--disable-offline-load-stale-cache',
+    '--disk-cache-size=0'
   ]
 
 /**

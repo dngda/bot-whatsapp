@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-04 21:30:58
+ * @ Modified time: 2021-07-05 13:35:35
  * @ Description: Handling message
  */
 
@@ -1471,12 +1471,19 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!urls.includes('facebook')) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Facebook') }
                     sendText(resMsg.wait)
-                    let res = await api.fbdl(urls).catch(n => {
-                        reply(`Link tidak valid. Pastikan hanya link video dari facebook yang bersifat publik.`)
-                        console.log(n.message)
+                    let res = await scraper.facebookSaveFrom(browser, urls).catch(n => {
+                        return printError(n)
                     })
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    if (res) client.sendFileFromUrl(from, res.result, '', '', _id)
+                    let msg = `Link valid. Tunggu videonya atau download manual pakai link berikut.\n`
+                    for (let u in res){
+                        msg += `Quality: ${u.quality == '6' ? 'HD' : 'SD'}\nUrl: ` + await urlShortener(u.url) + '\n'
+                    }
+                    if (res) sendText(msg)
+                    else sendText(`Request timeout. Link private! Pastikan link bersifat publik.`)
+                    let uls = lodash.find(res, { quality: '4' }).url || lodash.find(res, { quality: '6' }).url
+                    if (uls) client.sendFileFromUrl(from, uls, '', '', _id)
+                    else sendText(`Request timeout. Link private! Pastikan link bersifat publik.`)
                     break
                 }
                 case 'twdl': {

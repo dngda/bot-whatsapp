@@ -2,21 +2,19 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 02:04:40
+ * @ Modified time: 2021-07-05 13:20:04
  * @ Description:
  */
 
 import { createReadFileSync, initGlobalVariable } from './utils/index.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import options, { chromeArgs } from './utils/options.js'
 import { create, Client } from '@open-wa/wa-automate'
 import { schedule, sewa } from './lib/index.js'
 import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
 import { HandleMsg } from './HandleMsg.js'
+import options from './utils/options.js'
 import puppeteer from 'puppeteer-extra'
-// eslint-disable-next-line no-unused-vars
-import { spawn } from 'child_process'
 import PQueue from 'p-queue'
 import figlet from 'figlet'
 import fs from 'fs-extra'
@@ -50,20 +48,25 @@ const start = async (client = new Client()) => {
         const browser = await puppeteer.launch({
             executablePath: path,
             headless: true,
-            args: chromeArgs
+            args: [
+                '--single-process',
+                '--no-zygote',
+                '--renderer-process-limit=1',
+                '--no-first-run',
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--ignore-certificate-errors'
+            ]
         }).catch(e => console.log(e))
 
         // process unread message
-        client.getAllUnreadMessages().then(unreadMessages => {
-            unreadMessages.forEach(message => {
-                setTimeout(
-                    async function () {
-                        if (!message.isGroupMsg) await queue.add(() => HandleMsg(message, browser, client)).catch(err => {
-                            console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
-                            if (queue.isPaused) queue.start()
-                        })
-                    }, 1000)
-            })
+        client.getAllUnreadMessages().then(async unreadMessages => {
+            for (let message in unreadMessages) {
+                if (!message.isGroupMsg) await queue.add(() => HandleMsg(message, browser, client)).catch(err => {
+                    console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
+                    if (queue.isPaused) queue.start()
+                })
+            }
         })
 
         // ketika seseorang mengirim pesan
