@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 14:59:42
+ * @ Modified time: 2021-07-05 15:16:40
  * @ Description: Handling message
  */
 
@@ -87,15 +87,17 @@ const lolApi = (slash, parm = { text: null, text2: null, text3: null, img: null 
 }
 // previous cmd
 let previousCmds = []
-
 const savePrevCmd = (inpSender, prevCmd) => {
-    if (!hasPrevCmd(inpSender)) previousCmds.push({ sender: inpSender, prevCmd: prevCmd })
+    if (!hasPrevCmd(inpSender)) {
+        previousCmds.push({ sender: inpSender, prevCmd: prevCmd })
+        setTimeout(() => {
+            delPrevCmd(inpSender)
+        }, 15000)
+    }
 }
-
 const getPrevCmd = (inpSender) => {
     return previousCmds.find(n => n.sender == inpSender).prevCmd
 }
-
 const hasPrevCmd = (inpSender) => {
     return !!previousCmds.find(n => n.sender == inpSender)
 }
@@ -193,7 +195,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             if (filehash == stickerHash[menu]) body = `${prefix + menu}`, chats = body
         }
         if (hasPrevCmd(pengirim)) {
-            body = `${getPrevCmd(pengirim)} ${chats}}`
+            body = `${getPrevCmd(pengirim)} ${chats}`
             delPrevCmd(pengirim)
         }
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
@@ -1697,10 +1699,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
                 case 'ytsearch':
                 case 'yt': {
-                    // if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
                     if (args.length == 0) {
                         savePrevCmd(pengirim, prefix + command)
-                        return reply(`Masukkan query...`)
+                        return reply(`${q3}Mau nyari apa? kirim query dalam 15 detik...${q3}`)
                     }
                     let ytresult = await api.ytsearch(arg).catch(e => { return printError(e) })
                     try {
