@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 14:56:36
+ * @ Modified time: 2021-07-05 14:59:42
  * @ Description: Handling message
  */
 
@@ -1699,7 +1699,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'yt': {
                     // if (args.length == 0) return reply(`Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play <judul lagu>\nContoh: ${prefix}play radioactive but im waking up`)
                     if (args.length == 0) {
-                        savePrevCmd(sender, prefix + command)
+                        savePrevCmd(pengirim, prefix + command)
                         return reply(`Masukkan query...`)
                     }
                     let ytresult = await api.ytsearch(arg).catch(e => { return printError(e) })
