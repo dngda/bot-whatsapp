@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 15:16:40
+ * @ Modified time: 2021-07-05 19:50:11
  * @ Description: Handling message
  */
 
@@ -293,9 +293,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const sendJSON = (txt) => sendText(JSON.stringify(txt, null, 2))
 
         // eslint-disable-next-line no-unused-vars
-        const sendJSONFromUrl = async (url) => {
-            let { data } = await get(url).catch(e => { return printError(e) })
-            return data && sendJSON(data)
+        const sendJFU = async (url) => {
+            try {
+                let { data } = await get(url)
+                return data && sendJSON(data)
+            } catch (e) {
+                sendText(e.toString())
+            }
         }
 
         const audioConverter = async (complexFilter, filterName) => {
@@ -348,8 +352,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         const doSimi = async (inp) => {
-            let respon = await api.simi(inp.replace(/\b(sero)\b/ig, 'simi'))
-                .catch(e => { return console.log(e) })
+            let respon = null
+            if (useLol) respon = await api.simiLol(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(e) })
+                else respon = await api.simiZens(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(e) })
             if (respon) {
                 console.log(color('[LOGS] Simi respond:', 'grey'), respon)
                 reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
@@ -550,7 +555,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 ${chats.slice(2)}
                             } catch (e) {
                                 console.log(e)
-                                sendText(e.toString())
+                                return sendText(e.toString())
                             }
                         })()`)
                     if (typeof evaled !== 'string') evaled = inspect(evaled)
