@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 13:35:35
+ * @ Modified time: 2021-07-05 13:56:55
  * @ Description: Handling message
  */
 
@@ -1476,8 +1476,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     })
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let msg = `Link valid. Tunggu videonya atau download manual pakai link berikut.\n`
-                    for (let u in res){
-                        msg += `Quality: ${u.quality == '6' ? 'HD' : 'SD'}\nUrl: ` + await urlShortener(u.url) + '\n'
+                    for (let u of res){
+                        msg += `Quality: ${u.quality == '6' ? 'HD' : 'SD'} : ` + await urlShortener(u.url) + '\n'
                     }
                     if (res) sendText(msg)
                     else sendText(`Request timeout. Link private! Pastikan link bersifat publik.`)

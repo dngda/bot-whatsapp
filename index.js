@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 13:20:04
+ * @ Modified time: 2021-07-05 13:57:30
  * @ Description:
  */
 
@@ -61,7 +61,7 @@ const start = async (client = new Client()) => {
 
         // process unread message
         client.getAllUnreadMessages().then(async unreadMessages => {
-            for (let message in unreadMessages) {
+            for (let message of unreadMessages) {
                 if (!message.isGroupMsg) await queue.add(() => HandleMsg(message, browser, client)).catch(err => {
                     console.log((err.name === 'TimeoutError') ? `${color('[==>>]', 'red')} Error task process timeout!` : err)
                     if (queue.isPaused) queue.start()
