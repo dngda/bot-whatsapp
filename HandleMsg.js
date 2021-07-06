@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 19:50:11
+ * @ Modified time: 2021-07-06 12:24:28
  * @ Description: Handling message
  */
 
@@ -46,7 +46,7 @@ db.chain = lodash.chain(db.data)
 
 /* #region File Modules */
 import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, webpToPng, addFilter, isUrl } from './utils/index.js'
-import { getLocationData, urlShortener, cariKasar, schedule, canvas, cekResi, tebak, scraper, menuId, sewa, meme, kbbi, list, note, api } from './lib/index.js'
+import { getLocationData, urlShortener, cariKasar, schedule, canvas, cekResi, tebak, scraper, menuId, sewa, meme, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
 /* #endregion */
@@ -1460,17 +1460,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         return reply(resMsg.error.norm + `\nGunakan *${prefix}tiktok1 ${prefix}tiktok2* atau *${prefix}tiktok3* untuk mencoba server lain`)
                     })
                     let _id = quotedMsg != null ? quotedMsg.id : id
-                    let _mp4Url = ''
-                    switch (command) {
-                        case 'tiktok': case 'tt': _mp4Url = result?.source; break
-                        case 'tiktok1': case 'tt1': _mp4Url = result?.server1; break
-                        case 'tiktok2': case 'tt2': _mp4Url = result?.server2; break
-                        case 'tiktok3': case 'tt3': {
-                            let ress = await scraper.ssstik(browser, urls).catch(e => { return printError(e) })
+                    let _mp4Url = result?.source
+                    if (command.endsWith('1')) _mp4Url = result?.server1
+                    if (command.endsWith('2')) _mp4Url = result?.server2
+                    if (command.endsWith('3')) {
+                        let ress = await scraper.ssstik(browser, urls).catch(e => { return printError(e) })
                             _mp4Url = ress?.mp4
-                            break
-                        }
-                        default:
                     }
                     if (_mp4Url != undefined) {
                         client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => {
@@ -1694,7 +1689,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 /* #region Search Any */
                 case 'kbbi': {
                     if (args.length != 1) return reply(`Mencari arti kata dalam KBBI\nPenggunaan: ${prefix}kbbi <kata>\ncontoh: ${prefix}kbbi apel`)
-                    kbbi(args[0])
+                    scraper.kbbi(args[0])
                         .then(res => {
                             if (res == '') return reply(`Maaf kata "${args[0]}" tidak tersedia di KBBI`)
                             reply(res + `\n\nMore: https://kbbi.web.id/${args[0]}`)
@@ -1730,11 +1725,19 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 case 'pin':
-                case 'pinterest': {
+                case 'pinterest': 
+                case 'pin2':
+                case 'pinterest2': 
+                case 'pin3':
+                case 'pinterest3': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`)
                     if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
+                    let pin = (q) => api.pinterest(q) 
+                    if (command.endsWith('2')) pin = (q) => scraper.pinterestLight(q)
+                    if (command.endsWith('3')) pin = (q) => scraper.pinterest(browser, q)
+
                     if (args[0] === '+') {
-                        await api.pinterest(arg.trim().substring(arg.indexOf(' ') + 1))
+                        await pin(arg1)
                             .then(res => {
                                 let img = sampleSize(res, 10)
                                 img.forEach(async i => {
@@ -1742,7 +1745,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 })
                             })
                     } else {
-                        await api.pinterest(arg)
+                        await pin(arg)
                             .then(res => {
                                 let img = sample(res)
                                 if (img === null || img === undefined) return reply(resMsg.error.norm + `\nAtau result tidak ditemukan.`)
@@ -1750,24 +1753,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 client.sendFileFromUrl(from, img, '', '', id)
                                     .catch(e => {
                                         console.log(`fdci err : ${e}`)
-                                        reply(resMsg.error.norm + '\nCoba gunakan /pin2 atau /pinterest2')
+                                        reply(resMsg.error.norm + '\nCoba gunakan /pin2 atau /pin3')
                                     })
                             })
                             .catch(e => {
                                 console.log(`fdci err : ${e}`)
-                                return reply(resMsg.error.norm + '\nCoba gunakan /pin2 atau /pinterest2')
+                                return reply(resMsg.error.norm + '\nCoba gunakan /pin2 atau /pin3')
                             })
                     }
-                    break
-                }
-
-                case 'pinterest2':
-                case 'pin2': {
-                    if (args.length == 0) return reply(`Untuk mencari gambar dari pinterest v2.\nketik: ${prefix}pin2 [search]\ncontoh: ${prefix}pin2 naruto\n\nGunakan apabila /pinterest atau /pin error`)
-                    if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
-                    let img = await scraper.pinterest(browser, arg).catch(e => { return printError(e) })
-                    if (img === null) return reply(resMsg.error.norm).then(() => console.log(`img return null`))
-                    await client.sendFileFromUrl(from, img, '', '', id).catch(e => { return printError(e) })
                     break
                 }
 

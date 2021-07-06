@@ -39,7 +39,6 @@
     "moment-timezone": "^0.5.33",
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
-    "node-scrapy": "^0.5.0",
     "office-to-pdf": "^4.0.0",
     "p-queue": "^7.1.0",
     "puppeteer-extra-plugin-stealth": "^2.7.8",
