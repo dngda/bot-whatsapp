@@ -3,7 +3,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 19:51:02
+ * @ Modified time: 2021-07-09 00:44:21
  * @ Description:
  */
 
@@ -11,11 +11,10 @@ import request from 'request'
 import fs from 'fs-extra'
 import chalk from 'chalk'
 import moment from 'moment-timezone'
-import followPkg from 'follow-redirects'
 import updateJson from 'update-json-file'
 import Ffmpeg from 'fluent-ffmpeg'
 
-const { get } = followPkg
+const { apiLol } = JSON.parse(readFileSync('./settings/api.json'))
 const { tz, duration } = moment
 const { head } = request
 const { existsSync, unlinkSync, readFileSync, createWriteStream, writeFileSync } = fs
@@ -96,15 +95,6 @@ const download = (url, path, callback) => {
     })
 }
 
-/**
- *@param {String} url
- */
-const redir = (url) => {
-    get(url, response => {
-        return response.responseUrl
-    })
-}
-
 const createReadFileSync = (path) => {
     if (existsSync(path)) {
         return readFileSync(path)
@@ -115,7 +105,7 @@ const createReadFileSync = (path) => {
     }
 }
 
-function formatin(duit) {
+const formatin = (duit) => {
     let reverse = duit.toString().split('').reverse().join('')
     let ribuan = reverse.match(/\d{1,3}/g)
     ribuan = ribuan.join('.').split('').reverse().join('')
@@ -166,6 +156,40 @@ const webpToPng = (buff) => new Promise((resolve, reject) => {
         })
 })
 
+const sleep = (delay) => new Promise((resolve) => {
+    setTimeout(() => { resolve(true) }, delay)
+})
+
+const lolApi = (slash, parm = { text: null, text2: null, text3: null, img: null }) => {
+    let ptext = (parm.text != null) ? `&text=${encodeURIComponent(parm.text)}` : ''
+    let ptext2 = (parm.text2 != null) ? `&text=${encodeURIComponent(parm.text2)}` : ''
+    let ptext3 = (parm.text3 != null) ? `&text=${encodeURIComponent(parm.text3)}` : ''
+    let pimg = (parm.img != null) ? `&img=${parm.img}` : ''
+    return `https://lolhuman.herokuapp.com/api/${slash}?apikey=${apiLol}${ptext}${ptext2}${ptext3}${pimg}`
+}
+
+// previous cmd
+let previousCmds = []
+const prev = {
+    savePrevCmd: (inpSender, prevCmd) => {
+        if (!hasPrevCmd(inpSender)) {
+            previousCmds.push({ sender: inpSender, prevCmd: prevCmd })
+            setTimeout(() => {
+                delPrevCmd(inpSender)
+            }, 15000)
+        }
+    },
+    getPrevCmd: (inpSender) => {
+        return previousCmds.find(n => n.sender == inpSender).prevCmd
+    },
+    hasPrevCmd: (inpSender) => {
+        return !!previousCmds.find(n => n.sender == inpSender)
+    },
+    delPrevCmd: (inpSender) => {
+        previousCmds = previousCmds.filter(({ sender }) => sender !== inpSender)
+    }
+}
+
 //Gobal declaration
 const initGlobalVariable = () => {
     global.LOCAL_DATE_OPTIONS = {
@@ -196,7 +220,9 @@ export {
     download,
     formatin,
     inArray,
-    redir,
+    lolApi,
+    sleep,
     isUrl,
+    prev,
     last,
 }

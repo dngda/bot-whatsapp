@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-08 19:45:59
+ * @ Modified time: 2021-07-09 00:53:23
  * @ Description: Handling message
  */
 
@@ -45,7 +45,10 @@ db.chain = lodash.chain(db.data)
 /* #endregion */
 
 /* #region File Modules */
-import { createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last, unlinkIfExists, isFiltered, webpToPng, addFilter, isUrl } from './utils/index.js'
+import {
+    createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last,
+    unlinkIfExists, isFiltered, webpToPng, addFilter, isUrl, sleep, lolApi, prev
+} from './utils/index.js'
 import { getLocationData, urlShortener, cariKasar, schedule, canvas, cekResi, tebak, scraper, menuId, sewa, meme, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
@@ -57,7 +60,7 @@ if (!existsSync('./data/stat.json')) {
 }
 // settings
 const { stickerHash, ownerNumber, memberLimit, groupLimit, prefix, groupOfc } = JSON.parse(readFileSync('./settings/setting.json'))
-const { apiNoBg, apiLol } = JSON.parse(readFileSync('./settings/api.json'))
+const { apiNoBg } = JSON.parse(readFileSync('./settings/api.json'))
 const kataKasar = JSON.parse(readFileSync('./settings/katakasar.json'))
 // database
 const banned = JSON.parse(createReadFileSync('./data/banned.json'))
@@ -74,36 +77,7 @@ const Surah = JSON.parse(readFileSync('./src/json/surah.json'))
 
 /* #region Helper functions */
 moment.tz.setDefault('Asia/Jakarta').locale('id')
-const sleep = (delay) => new Promise((resolve) => {
-    setTimeout(() => { resolve(true) }, delay)
-})
 
-const lolApi = (slash, parm = { text: null, text2: null, text3: null, img: null }) => {
-    let ptext = (parm.text != null) ? `&text=${encodeURIComponent(parm.text)}` : ''
-    let ptext2 = (parm.text2 != null) ? `&text=${encodeURIComponent(parm.text2)}` : ''
-    let ptext3 = (parm.text3 != null) ? `&text=${encodeURIComponent(parm.text3)}` : ''
-    let pimg = (parm.img != null) ? `&img=${parm.img}` : ''
-    return `https://lolhuman.herokuapp.com/api/${slash}?apikey=${apiLol}${ptext}${ptext2}${ptext3}${pimg}`
-}
-// previous cmd
-let previousCmds = []
-const savePrevCmd = (inpSender, prevCmd) => {
-    if (!hasPrevCmd(inpSender)) {
-        previousCmds.push({ sender: inpSender, prevCmd: prevCmd })
-        setTimeout(() => {
-            delPrevCmd(inpSender)
-        }, 15000)
-    }
-}
-const getPrevCmd = (inpSender) => {
-    return previousCmds.find(n => n.sender == inpSender).prevCmd
-}
-const hasPrevCmd = (inpSender) => {
-    return !!previousCmds.find(n => n.sender == inpSender)
-}
-const delPrevCmd = (inpSender) => {
-    previousCmds = previousCmds.filter(({ sender }) => sender !== inpSender)
-}
 /* #endregion */
 
 /* #region Stats */
@@ -194,9 +168,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         for (let menu in stickerHash) {
             if (filehash == stickerHash[menu]) body = `${prefix + menu}`, chats = body
         }
-        if (hasPrevCmd(pengirim)) {
-            body = `${getPrevCmd(pengirim)} ${chats}`
-            delPrevCmd(pengirim)
+        if (prev.hasPrevCmd(pengirim)) {
+            body = `${prev.getPrevCmd(pengirim)} ${chats}`
+            prev.delPrevCmd(pengirim)
         }
         const command = body.trim().replace(prefix, '').split(/\s/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
@@ -354,7 +328,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const doSimi = async (inp) => {
             let respon = null
             if (useLol) respon = await api.simiLol(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(e) })
-                else respon = await api.simiZens(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(e) })
+            else respon = await api.simiZens(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(e) })
             if (respon) {
                 console.log(color('[LOGS] Simi respond:', 'grey'), respon)
                 reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
@@ -696,8 +670,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `Uptime: _${uptime}_ ${statSewa}`)
                     break
                 }
-                /* #endregion Menu, stats and info sewa */
+            }
+            /* #endregion Menu, stats and info sewa */
 
+            switch (command) {
                 /* #region Sticker */
                 case 'getimage':
                 case 'stikertoimg':
@@ -844,7 +820,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion Sticker */
+            }
 
+            switch (command) {
                 /* #region Any Converter */
                 case 'shortlink': {
                     if (args.length == 0) return reply(`ketik ${prefix}shortlink <url>`)
@@ -1047,7 +1025,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 /* #endregion Any Converter */
+            }
 
+            switch (command) {
                 /* #region Islam Commands */
                 case 'listsurah': {
                     try {
@@ -1253,7 +1233,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion Islam Commands */
+            }
 
+            switch (command) {
                 /* #region Maker */
                 case 'attp': {
                     if (args.length == 0) return reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
@@ -1319,7 +1301,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 // TODO add more maker
                 /* #endregion */
+            }
 
+            switch (command) {
                 /* #region Media Downloader */
                 case 'ytmp3': {
                     if (args.length == 0) return reply(`Untuk mendownload audio dari youtube\nketik: ${prefix}ytmp3 <link yt> (don't include <> symbol)`)
@@ -1466,7 +1450,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (command.endsWith('2')) _mp4Url = result?.server2
                     if (command.endsWith('3')) {
                         let ress = await scraper.ssstik(browser, urls).catch(e => { return printError(e) })
-                            _mp4Url = ress?.mp4
+                        _mp4Url = ress?.mp4
                     }
                     if (_mp4Url != undefined) {
                         client.sendFileFromUrl(from, _mp4Url, '', '', _id).catch(err => {
@@ -1542,9 +1526,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     sendFFU(data.result[(data.result.length - args[1])])
                     break
                 }
-
                 /* #endregion End of Media Downloader */
+            }
 
+            switch (command) {
                 /* #region Audio Converter */
                 case 'tomp3': {
                     if (!isQuotedVideo) return reply(`Convert mp4/video ke mp3/audio. ${prefix}tomp3`)
@@ -1607,9 +1592,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion End of Audio Converter */
+            }
 
+            switch (command) {
                 /* #region Primbon */
-                case 'artinama':
+                case 'artinama': {
                     if (args.length == 0) return reply(`Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama nama kamu`)
                     api.artinama(arg)
                         .then(res => {
@@ -1617,8 +1604,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         })
                         .catch(e => { return printError(e) })
                     break
+                }
                 /* #endregion */
+            }
 
+            switch (command) {
                 /* #region Random Kata */
                 case 'fakta':
                     fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
@@ -1659,7 +1649,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion Random kata */
+            }
 
+            switch (command) {
                 /* #region Random Images */
                 case 'anime': {
                     if (args.length == 0) return reply(`Untuk menggunakan ${prefix}anime\nSilakan ketik: ${prefix}anime [query]\nContoh: ${prefix}anime random\n\nquery yang tersedia:\nrandom, waifu, husbu, neko`)
@@ -1686,7 +1678,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion */
+            }
 
+            switch (command) {
                 /* #region Search Any */
                 case 'kbbi': {
                     if (args.length != 1) return reply(`Mencari arti kata dalam KBBI\nPenggunaan: ${prefix}kbbi <kata>\ncontoh: ${prefix}kbbi apel`)
@@ -1701,7 +1695,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'ytsearch':
                 case 'yt': {
                     if (args.length == 0) {
-                        savePrevCmd(pengirim, prefix + command)
+                        prev.savePrevCmd(pengirim, prefix + command)
                         return reply(`${q3}Mau nyari apa? kirim query dalam 15 detik...${q3}`)
                     }
                     let ytresult = await api.ytsearch(arg).catch(e => { return printError(e) })
@@ -1726,14 +1720,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 case 'pin':
-                case 'pinterest': 
+                case 'pinterest':
                 case 'pin2':
-                case 'pinterest2': 
+                case 'pinterest2':
                 case 'pin3':
                 case 'pinterest3': {
                     if (args.length == 0) return reply(`Untuk mencari gambar dari pinterest\nketik: ${prefix}pinterest [search]\ncontoh: ${prefix}pinterest naruto`)
                     if (await cariNsfw(chats.toLowerCase())) return reply(`Hayo mau cari apa? Tobat lah bro masih ajee hadehh kagak modal lagi.`)
-                    let pin = (q) => api.pinterest(q) 
+                    let pin = (q) => api.pinterest(q)
                     if (command.endsWith('2')) pin = (q) => scraper.pinterestLight(q)
                     if (command.endsWith('3')) pin = (q) => scraper.pinterest(browser, q)
 
@@ -1796,7 +1790,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion End of search any */
+            }
 
+            switch (command) {
                 /* #region Informasi commands */
                 case 'resi':
                 case 'cekresi': {
@@ -1867,7 +1863,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion */
+            }
 
+            switch (command) {
                 /* #region Hiburan */
                 case 'tod':
                     if (!isGroupMsg) return reply(resMsg.error.group)
@@ -2049,7 +2047,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 /* #endregion Hiburan */
+            }
 
+            switch (command) {
                 /* #region List Creator Commands */
                 case 'list':
                 case 'lists': {
@@ -2190,7 +2190,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion */
+            }
 
+            switch (command) {
                 /* #region Note Creator Commands */
                 case 'note':
                 case 'notes': {
@@ -2245,7 +2247,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion */
+            }
 
+            switch (command) {
                 /* #region Group Commands */
                 // Non Admin
                 case 'grouplink': {
@@ -2431,9 +2435,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     reply(`Feature coming soon`)
                     break
                 }
-
                 /* #endregion Group */
+            }
 
+            switch (command) {
                 /* #region Anti Kasar */
                 case 'antikasar': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
@@ -2501,7 +2506,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     }
                     break
                 /* #endregion anti kasar */
+            }
 
+            switch (command) {
                 /* #region Anti-anti */
                 case 'antilinkgroup': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
@@ -2553,7 +2560,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion Anti */
+            }
 
+            switch (command) {
                 /* #region Other commands */
                 case 'del':
                     if (!quotedMsg) return reply(`Maaf, format pesan salah Silakan.\nReply pesan bot dengan caption ${prefix}del`)
@@ -2604,7 +2613,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion other */
+            }
 
+            switch (command) {
                 /* #region Owner Commands */
                 case 'owneronly': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
@@ -2919,11 +2930,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
                 /* #endregion */
-
-                default:
-                    if (chats.startsWith(prefix)) reply(`Perintah tidak ditemukan.\n${prefix}menu untuk melihat daftar perintah!`)
-                    client.simulateTyping(from, false)
-                    break
             }
             client.simulateTyping(chat.id, false)
         }

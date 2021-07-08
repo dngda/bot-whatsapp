@@ -28,7 +28,6 @@
     "figlet": "^1.5.0",
     "file-type": "^16.4.0",
     "fluent-ffmpeg": "^2.1.2",
-    "follow-redirects": "^1.14.1",
     "form-data": "^4.0.0",
     "free-translate": "^0.4.0",
     "fs-extra": "^10.0.0",
