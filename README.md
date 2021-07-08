@@ -65,6 +65,7 @@ After running it you need to scan the QR
 - Get Api Genius on [this website](https://genius.com/developers)
 - Get Api Itech on [this website](https://api.i-tech.id)
 - Get Api Zeks on [this website](https://api.zeks.xyz)
+- Get Api Ocr on [this website](https://ocr.space/OCRAPI)
 ---
 
 ## Features

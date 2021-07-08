@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-06 14:48:04
+ * @ Modified time: 2021-07-08 17:26:41
  * @ Description: Handling message
  */
 
@@ -945,6 +945,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'ocr': {
                     if (!isMedia && !isQuotedImage) return reply(`Scan tulisan dari gambar. Reply gambar atau kirim gambar dengan caption ${prefix}ocr`)
                     try {
+                        sendText(resMsg.wait)
                         let enc = isQuotedImage ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         let _url = await uploadImages(mediaData, false)
