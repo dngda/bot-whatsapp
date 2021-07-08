@@ -1,0 +1,13 @@
+diff --git a/node_modules/fluent-ffmpeg/lib/processor.js b/node_modules/fluent-ffmpeg/lib/processor.js
+index 5a8e56d..d7fdf2f 100644
+--- a/node_modules/fluent-ffmpeg/lib/processor.js
++++ b/node_modules/fluent-ffmpeg/lib/processor.js
+@@ -149,7 +149,7 @@ module.exports = function(proto) {
+       var stderrClosed = false;
+ 
+       // Spawn process
+-      var ffmpegProc = spawn(command, args, options);
++      var ffmpegProc = spawn(command, args, {options, windowsHide: true});
+ 
+       if (ffmpegProc.stderr) {
+         ffmpegProc.stderr.setEncoding('utf8');
