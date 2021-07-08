@@ -3,7 +3,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 00:44:21
+ * @ Modified time: 2021-07-09 01:18:46
  * @ Description:
  */
 
@@ -14,10 +14,10 @@ import moment from 'moment-timezone'
 import updateJson from 'update-json-file'
 import Ffmpeg from 'fluent-ffmpeg'
 
-const { apiLol } = JSON.parse(readFileSync('./settings/api.json'))
 const { tz, duration } = moment
 const { head } = request
 const { existsSync, unlinkSync, readFileSync, createWriteStream, writeFileSync } = fs
+const { apiLol } = JSON.parse(readFileSync('./settings/api.json'))
 
 tz.setDefault('Asia/Jakarta').locale('id')
 
