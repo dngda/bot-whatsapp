@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-08 19:11:09
+ * @ Modified time: 2021-07-08 19:45:59
  * @ Description: Handling message
  */
 
@@ -56,7 +56,7 @@ if (!existsSync('./data/stat.json')) {
     writeFileSync('./data/stat.json', `{ "todayHits" : 0, "received" : 0 }`)
 }
 // settings
-const { stickerHash, ownerNumber, memberLimit, groupLimit, prefix } = JSON.parse(readFileSync('./settings/setting.json'))
+const { stickerHash, ownerNumber, memberLimit, groupLimit, prefix, groupOfc } = JSON.parse(readFileSync('./settings/setting.json'))
 const { apiNoBg, apiLol } = JSON.parse(readFileSync('./settings/api.json'))
 const kataKasar = JSON.parse(readFileSync('./settings/katakasar.json'))
 // database
@@ -138,7 +138,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             norm: 'Maaf, Ada yang error! Coba lagi beberapa menit kemudian.',
             admin: 'Perintah ini hanya untuk admin group!',
             owner: 'Perintah ini hanya untuk owner bot!',
-            group: 'Maaf, perintah ini hanya dapat dipakai didalam group!',
+            group: `Maaf, perintah ini hanya dapat dipakai didalam group!${groupOfc ? `\nJoin sini ${groupOfc}` : ''}`,
             botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin',
             join: 'Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong'
         },
