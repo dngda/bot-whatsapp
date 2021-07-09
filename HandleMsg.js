@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 07:53:55
+ * @ Modified time: 2021-07-09 08:11:03
  * @ Description: Handling message
  */
 
@@ -2480,7 +2480,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         writeFileSync('./data/ngegasKick.json', JSON.stringify(antiKasarKick))
                         reply('Fitur Anti Kasar kick sudah di non-Aktifkan')
                     } else {
-                        reply(`Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\nApabila denda mencapai 50k akan terkena kick\nPenggunaan\n${prefix}antikasarkick on --mengaktifkan\n${prefix}antikasarkick off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`)
+                        reply(`Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda. Apabila denda mencapai 20k akan terkena kick\n\nPenggunaan\n${prefix}antikasarkick on --mengaktifkan\n${prefix}antikasarkick off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`)
                     }
                     break
                 }
@@ -3023,11 +3023,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         .find({ id: pengirim }).update('denda', n => n + _denda).value()
                     db.write()
                     if (denda) {
-                        await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda))
-                        if (denda.denda >= 50000 && isNgegasKick && !isGroupAdmin) {
+                        await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda) + `${isNgegasKick ? `\nAuto kick apabila denda lebih dari 20rb` : ''}`)
+                        if (denda.denda >= 20000 && isNgegasKick && !isGroupAdmin) {
                             banned.push(pengirim)
                             writeFileSync('./data/banned.json', JSON.stringify(banned))
-                            reply(`╔══✪〘 SELAMAT 〙✪\n║\n║ Anda akan dikick dari group.\n║ Karena denda anda melebihi 50rb.\n║ Mampos~\n║\n╚═〘 SeroBot 〙`)
+                            reply(`╔══✪〘 SELAMAT 〙✪\n║\n║ Anda akan dikick dari group.\n║ Karena denda anda melebihi 20rb.\n║ Mampos~\n║\n╚═〘 SeroBot 〙`)
                             db.chain.get('groups').filter({ id: groupId }).map('members[' + isIn + ']')
                                 .remove({ id: pengirim }).value()
                             db.write()
@@ -3051,7 +3051,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     } else {
                         const foundUser = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
                         foundUser.push({ id: pengirim, denda: _denda })
-                        await reply(`${resMsg.badw}\n\nDenda +${_denda}`)
+                        await reply(`${resMsg.badw}\n\nDenda +Rp${formatin(_denda)}${isNgegasKick ? `\nAuto kick apabila denda lebih dari 20rb` : ''}`)
                         db.chain.get('groups').find({ id: groupId }).set('members', foundUser).value()
                         db.write()
                     }
@@ -3059,7 +3059,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             } else {
                 db.chain.get('groups').push({ id: groupId, members: [{ id: pengirim, denda: _denda }] }).value()
                 db.write()
-                await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp${_denda}`)
+                await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp${formatin(_denda)}${isNgegasKick ? `\nAuto kick apabila denda lebih dari 20rb` : ''}`)
             }
         }
         /* #endregion Anti-anti */
