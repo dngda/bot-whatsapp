@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 09:06:07
+ * @ Modified time: 2021-07-09 09:29:18
  * @ Description: Handling message
  */
 
@@ -2323,15 +2323,18 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isGroupAdmin) return reply(resMsg.error.admin)
                     if (args.length != 1) return reply(`Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`)
-                    if (args[0] == 'on') {
+                    if (args[0] === 'on') {
+                        let pos = welcome.indexOf(chatId)
+                        if (pos != -1) return reply('Fitur welcome sudah aktif!')
                         welcome.push(chatId)
                         writeFileSync('./data/welcome.json', JSON.stringify(welcome))
-                        reply('Welcome Message sekarang diaktifkan!')
-                    } else if (args[0] == 'off') {
-                        let posi = welcome.indexOf(chatId)
-                        welcome.splice(posi, 1)
+                        reply('Fitur welcome sudah di Aktifkan')
+                    } else if (args[0] === 'off') {
+                        let pos = welcome.indexOf(chatId)
+                        if (pos === -1) return reply('Fitur welcome memang belum aktif!')
+                        welcome.splice(pos, 1)
                         writeFileSync('./data/welcome.json', JSON.stringify(welcome))
-                        reply('Welcome Message sekarang dinonaktifkan')
+                        reply('Fitur welcome sudah di non-Aktifkan')
                     } else {
                         reply(`Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`)
                     }
