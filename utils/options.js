@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 13:14:32
+ * @ Modified time: 2021-07-09 13:26:43
  * @ Description: options provided from owa issue (https://github.com/open-wa/wa-automate-nodejs/issues/563#issuecomment-647030529)
  */
 
@@ -101,5 +101,3 @@ export default (headless, start) => {
         chromiumArgs: chromeArgs
     }
 }
-
-export { chromeArgs }

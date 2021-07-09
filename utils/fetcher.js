@@ -3,7 +3,7 @@
  * @ Author: ArugaZ/YogaSakti
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-02 00:47:58
+ * @ Modified time: 2021-07-09 13:31:29
  * @ Description:
  */
 
@@ -74,7 +74,7 @@ const fetchBase64 = (url, mimetype) => new Promise(async (resolve, reject) => {
  */
 const uploadImages = (buffData, resize) => new Promise(async (resolve, reject) => {
     const { ext } = await fromBuffer(buffData)
-    const filePath = 'media/tmp.' + ext
+    const filePath = './media/tmp.' + ext
     const _buffData = resize ? await resizeImage(buffData, false) : buffData
     writeFile(filePath, _buffData, { encoding: 'base64' }, (err) => {
         if (err) return reject(err)
