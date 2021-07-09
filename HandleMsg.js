@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 09:29:18
+ * @ Modified time: 2021-07-09 10:12:15
  * @ Description: Handling message
  */
 
@@ -3022,8 +3022,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (denda) {
                         await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda) + `${isNgegasKick ? `\nAuto kick apabila denda lebih dari 20rb` : ''}`)
                         if (denda.denda >= 20000 && isNgegasKick && !isGroupAdmin) {
-                            banned.push(pengirim)
-                            writeFileSync('./data/banned.json', JSON.stringify(banned))
                             reply(`╔══✪〘 SELAMAT 〙✪\n║\n║ Anda akan dikick dari group.\n║ Karena denda anda melebihi 20rb.\n║ Mampos~\n║\n╚═〘 SeroBot 〙`)
                             db.chain.get('groups').filter({ id: groupId }).map('members[' + isIn + ']')
                                 .remove({ id: pengirim }).value()
