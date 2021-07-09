@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 08:11:03
+ * @ Modified time: 2021-07-09 08:19:18
  * @ Description: Handling message
  */
 
@@ -3012,7 +3012,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         // Kata kasar function
-        if (!isCmd && isGroupMsg && (isNgegas || isNgegas) && (type == "image" || type == "chat") && isKasar) {
+        if (!isCmd && isGroupMsg && (isNgegas || isNgegasKick) && (type == "image" || type == "chat") && isKasar) {
             const _denda = sample([1000, 2000, 3000, 5000, 10000])
             const find = db.chain.get('groups').find({ id: groupId }).value()
             if (find && find.id === groupId) {
