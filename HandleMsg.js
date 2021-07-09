@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 00:53:23
+ * @ Modified time: 2021-07-09 07:53:55
  * @ Description: Handling message
  */
 
@@ -64,8 +64,9 @@ const { apiNoBg } = JSON.parse(readFileSync('./settings/api.json'))
 const kataKasar = JSON.parse(readFileSync('./settings/katakasar.json'))
 // database
 const banned = JSON.parse(createReadFileSync('./data/banned.json'))
-const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
 const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
+const antiKasar = JSON.parse(createReadFileSync('./data/ngegas.json'))
+const antiKasarKick = JSON.parse(createReadFileSync('./data/ngegaskick.json'))
 const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
 const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
 const disableBot = JSON.parse(createReadFileSync('./data/disablebot.json'))
@@ -220,7 +221,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const isAntiLink = antiLink.includes(chatId)
         const isOwnerBot = ownerNumber.includes(pengirim)
         const isBanned = banned.includes(pengirim)
-        const isNgegas = ngegas.includes(chatId)
+        const isNgegas = antiKasar.includes(chatId)
+        const isNgegasKick = antiKasarKick.includes(chatId)
         const isDisabled = disableBot.includes(chatId)
         /* #endregion */
 
@@ -402,7 +404,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         else if (isBanned) return null
         /* #endregion Banned */
 
-        if (isNgegas && !isCmd) isKasar = await cariKasar(chats)
+        if ((isNgegas || isNgegasKick) && !isCmd) isKasar = await cariKasar(chats)
 
         /* #region Spam and Logging */
         if (isCmd && isFiltered(chatId)) {
@@ -2444,19 +2446,41 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isGroupAdmin) return reply(resMsg.error.admin)
                     if (args[0] === 'on') {
-                        let pos = ngegas.indexOf(chatId)
+                        let pos = antiKasar.indexOf(chatId)
                         if (pos != -1) return reply('Fitur anti kata kasar sudah aktif!')
-                        ngegas.push(chatId)
-                        writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                        antiKasar.push(chatId)
+                        writeFileSync('./data/ngegas.json', JSON.stringify(antiKasar))
                         reply('Fitur Anti Kasar sudah di Aktifkan')
                     } else if (args[0] === 'off') {
-                        let pos = ngegas.indexOf(chatId)
+                        let pos = antiKasar.indexOf(chatId)
                         if (pos === -1) return reply('Fitur anti kata memang belum aktif!')
-                        ngegas.splice(pos, 1)
-                        writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                        antiKasar.splice(pos, 1)
+                        writeFileSync('./data/ngegas.json', JSON.stringify(antiKasar))
                         reply('Fitur Anti Kasar sudah di non-Aktifkan')
                     } else {
                         reply(`Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}antikasar on --mengaktifkan\n${prefix}antikasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`)
+                    }
+                    break
+                }
+
+                case 'antikasarkick': {
+                    if (!isGroupMsg) return reply(resMsg.error.group)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (args[0] === 'on') {
+                        if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
+                        let pos = antiKasarKick.indexOf(chatId)
+                        if (pos != -1) return reply('Fitur anti kata kasar kick sudah aktif!')
+                        antiKasarKick.push(chatId)
+                        writeFileSync('./data/ngegaskick.json', JSON.stringify(antiKasarKick))
+                        reply('Fitur Anti Kasar kick sudah di Aktifkan')
+                    } else if (args[0] === 'off') {
+                        let pos = antiKasarKick.indexOf(chatId)
+                        if (pos === -1) return reply('Fitur anti kata kasar kick memang belum aktif!')
+                        antiKasarKick.splice(pos, 1)
+                        writeFileSync('./data/ngegasKick.json', JSON.stringify(antiKasarKick))
+                        reply('Fitur Anti Kasar kick sudah di non-Aktifkan')
+                    } else {
+                        reply(`Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\nApabila denda mencapai 50k akan terkena kick\nPenggunaan\n${prefix}antikasarkick on --mengaktifkan\n${prefix}antikasarkick off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`)
                     }
                     break
                 }
@@ -2644,10 +2668,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let _groupId = args[0]
                     await client.sendText(_groupId, arg1).catch(() => reply('Error'))
 
-                    let pos = ngegas.indexOf(_groupId)
+                    let pos = antiKasar.indexOf(_groupId)
                     if (pos !== -1) {
-                        ngegas.splice(pos, 1)
-                        writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                        antiKasar.splice(pos, 1)
+                        writeFileSync('./data/ngegas.json', JSON.stringify(antiKasar))
                     }
 
                     let posi = welcome.indexOf(_groupId)
@@ -2988,7 +3012,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         // Kata kasar function
-        if (!isCmd && isGroupMsg && isNgegas && chat.type !== "image" && isKasar) {
+        if (!isCmd && isGroupMsg && (isNgegas || isNgegas) && (type == "image" || type == "chat") && isKasar) {
             const _denda = sample([1000, 2000, 3000, 5000, 10000])
             const find = db.chain.get('groups').find({ id: groupId }).value()
             if (find && find.id === groupId) {
@@ -3000,6 +3024,16 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     db.write()
                     if (denda) {
                         await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda))
+                        if (denda.denda >= 50000 && isNgegasKick && !isGroupAdmin) {
+                            banned.push(pengirim)
+                            writeFileSync('./data/banned.json', JSON.stringify(banned))
+                            reply(`╔══✪〘 SELAMAT 〙✪\n║\n║ Anda akan dikick dari group.\n║ Karena denda anda melebihi 50rb.\n║ Mampos~\n║\n╚═〘 SeroBot 〙`)
+                            db.chain.get('groups').filter({ id: groupId }).map('members[' + isIn + ']')
+                                .remove({ id: pengirim }).value()
+                            db.write()
+                            await sleep(3000)
+                            client.removeParticipant(groupId, pengirim)
+                        }
                         if (denda.denda >= 2000000) {
                             banned.push(pengirim)
                             writeFileSync('./data/banned.json', JSON.stringify(banned))
