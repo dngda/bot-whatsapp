@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 08:30:18
+ * @ Modified time: 2021-07-09 09:06:07
  * @ Description: Handling message
  */
 
@@ -1476,37 +1476,30 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
 
-                case 'fbdl': {
-                    if (args.length === 0 && !isQuotedChat) return reply(`Download Facebook video post. How?\n${prefix}fbdl (alamat video Facebook)\nTanpa tanda kurung`)
+                case 'fbdl':
+                case 'twdl': {
+                    if (args.length === 0 && !isQuotedChat && command == 'fbdl') return reply(`Download Facebook video post. How?\n${prefix}fbdl (alamat video Facebook)\nTanpa tanda kurung`)
+                    if (args.length === 0 && !isQuotedChat && command == 'twdl') return reply(`Download Twitter video post. How?\n${prefix}twdl (alamat video Twitter)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
-                    if (!urls.includes('facebook')) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Facebook') }
+                    if (!urls.includes('facebook') && !urls.includes('twitter')) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Facebook atau Twitter') }
                     sendText(resMsg.wait)
-                    let res = await scraper.facebookSaveFrom(browser, urls).catch(n => {
+                    let res = await scraper.saveFrom(browser, urls).catch(n => {
                         return printError(n)
                     })
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     let msg = `Link valid. Tunggu videonya atau download manual pakai link berikut.\n`
                     for (let u of res) {
-                        msg += `Quality: ${u.quality == '6' ? 'HD' : 'SD'} : ` + await urlShortener(u.url) + '\n'
+                        msg += `Quality: ${u.quality} : ` + await urlShortener(u.url) + '\n'
                     }
                     if (res) sendText(msg)
-                    else sendText(`Request timeout. Link private! Pastikan link bersifat publik.`)
-                    let uls = lodash.find(res, { quality: '4' }).url || lodash.find(res, { quality: '6' }).url
+                    let uls
+                    if (command == 'fbdl') uls = lodash.find(res, { quality: '4' }).url || lodash.find(res, { quality: '6' }).url
+                    if (command == 'twdl') uls = lodash.find(res, { quality: '580' }).url || lodash.find(res, { quality: '640' }).url
                     if (uls) client.sendFileFromUrl(from, uls, '', '', _id)
                     else sendText(`Request timeout. Link private! Pastikan link bersifat publik.`)
                     break
                 }
-                case 'twdl': {
-                    if (args.length === 0 && !isQuotedChat) return reply(`Download Twitter video post. How?\n${prefix}twdl (alamat video Twitter)\nTanpa tanda kurung`)
-                    let urls = isQuotedChat ? quotedMsg.body : arg
-                    if (!urls.includes('twitter')) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Twitter') }
-                    sendText(resMsg.wait)
-                    let result = await api.twdl(urls).catch(e => { return printError(e) })
-                    let _id = quotedMsg != null ? quotedMsg.id : id
-                    let uls = lodash.find(result, { resolution: "720p" })?.link || lodash.find(result, { resolution: "360p" })?.link || lodash.find(result, { resolution: "270p" })?.link
-                    if (uls) client.sendFileFromUrl(from, uls, '', '', _id)
-                    break
-                }
+
                 case 'igdl': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Instagram video post. How?\n${prefix}igdl (alamat video Instagram)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
@@ -1515,6 +1508,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let result = await api.igdl(urls).catch(e => { return printError(e) })
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     if (result) client.sendFileFromUrl(from, result, '', '', _id)
+                    else reply(`Error! Not found`)
                     break
                 }
 
