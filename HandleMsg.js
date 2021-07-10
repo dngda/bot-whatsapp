@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 15:07:33
+ * @ Modified time: 2021-07-10 17:53:32
  * @ Description: Handling message
  */
 
@@ -243,8 +243,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 })
         }
 
-        const printError = (e, sendToOwner = true) => {
-            sendText(resMsg.error.norm)
+        const printError = (e, sendToOwner = true, sendError = true) => {
+            if (sendError) sendText(resMsg.error.norm)
             let errMsg = `${e.name} ${e.message}`
             let cropErr = errMsg.length > 100 ? errMsg.substr(0, 100) + '...' : errMsg
             console.log(color('[ERR>]', 'red'), "{ " + croppedChats + " }\n", e)
@@ -1273,6 +1273,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'trigger2': {
                     if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
+                        if (quotedMsg?.isAnimated) return reply(`Error! Tidak support sticker bergerak.`)
                         reply(resMsg.wait)
                         let enc = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
@@ -1287,6 +1288,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'wasted': {
                     if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
+                        if (quotedMsg?.isAnimated) return reply(`Error! Tidak support sticker bergerak.`)
                         reply(resMsg.wait)
                         let enc = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
@@ -1777,7 +1779,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'lyric': {
                     if (args.length === 0) return reply(`Untuk mencari lirik dengan nama lagu atau potongan lirik\nketik: ${prefix}lirik <query>\nContoh: ${prefix}lirik lathi`)
                     let res = await api.lyric(arg).catch(e => { return printError(e) })
-                    if (res == null) return reply(`Lirik tidak ditemukan.`)
                     await reply(res)
                     break
                 }
