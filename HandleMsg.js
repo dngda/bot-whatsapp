@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 19:20:02
+ * @ Modified time: 2021-07-10 20:03:00
  * @ Description: Handling message
  */
 
@@ -102,33 +102,34 @@ const HandleMsg = async (message, browser, client = new Client()) => {
     /* #region Default response message */
     const resMsg = {
         wait: sample([
-            'Sedang diproses! Silakan tunggu sebentar...',
-            'Okey siap, sedang diproses!',
-            'Okey tenang tunggu bentar!',
-            'Okey, tunggu sebentar...',
-            'Shap, silakan tunggu!',
-            'Baiklah, sabar ya!'
+            '⏳ Okey siap, sedang diproses!',
+            '⏳ Okey tenang tunggu bentar!',
+            '⏳ Okey, tunggu sebentar...',
+            '⏳ Shap, silakan tunggu!',
+            '⏳ Baiklah, sabar ya!',
+            '⏳ Sedang diproses!',
+            '⏳ Otw!'
         ]),
         error: {
-            norm: 'Maaf, Ada yang error! Coba lagi beberapa menit kemudian.',
-            admin: 'Perintah ini hanya untuk admin group!',
-            owner: 'Perintah ini hanya untuk owner bot!',
-            group: `Maaf, perintah ini hanya dapat dipakai didalam group!${groupOfc ? `\nJoin sini ${groupOfc}` : ''}`,
-            botAdm: 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin',
-            join: 'Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong'
+            norm: '❌ Maaf, Ada yang error! Coba lagi beberapa menit kemudian.',
+            admin: '⛔ Perintah ini hanya untuk admin group!',
+            owner: '⛔ Perintah ini hanya untuk owner bot!',
+            group: `⛔ Maaf, perintah ini hanya dapat dipakai didalam group!${groupOfc ? `\nJoin sini ${groupOfc}` : ''}`,
+            botAdm: '⛔ Perintah ini hanya bisa di gunakan ketika bot menjadi admin',
+            join: '💣 Gagal! Sepertinya Bot pernah dikick dari group itu ya? Yah, Bot gabisa masuk lagi dong'
         },
         success: {
-            join: 'Berhasil join group via link!',
-            sticker: 'Here\'s your sticker',
-            greeting: `Hai guys 👋 perkenalkan saya SeroBot.` +
+            join: '✅ Berhasil join group via link!',
+            sticker: 'Here\'s your sticker 🎉',
+            greeting: `Hai guys 👋 perkenalkan saya SeroBot 🤖` +
                 `Untuk melihat perintah atau menu yang tersedia pada bot, kirim *${prefix}menu*. Tapi sebelumnya pahami dulu *${prefix}tnc*`
         },
         badw: sample([
-            'Capek saya mengcatat dosa anda',
-            'Yo rasah nggo misuh cuk!',
-            'Jaga ketikanmu sahabat!',
-            'Istighfar dulu sodaraku',
-            'Ada masalah apasih?',
+            'Capek saya mengcatat dosa Anda 😒',
+            'Yo rasah nggo misuh cuk! 😠',
+            'Jaga ketikanmu sahabat! 😉',
+            'Istighfar dulu sodaraku 😀',
+            'Ada masalah apasih? 🤔',
             'Astaghfirullah...',
             'Hadehh...'
         ])
@@ -334,7 +335,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             else respon = await api.simiZens(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(e) })
             if (respon) {
                 console.log(color('[LOGS] Simi respond:', 'grey'), respon)
-                reply(respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
+                reply('🤖: ' + respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
             }
         }
         /* #endregion helper functions */
@@ -346,7 +347,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             switch (command) {
                 case 'owner':
                     return await client.sendContact(from, ownerNumber)
-                        .then(() => sendText('Jika ada pertanyaan tentang bot Silakan chat nomor di atas'))
+                        .then(() => sendText('Jika ada pertanyaan tentang bot silakan chat nomor di atas ⬆\nChat tidak jelas akan diabaikan.'))
                 case 'rules':
                 case 'tnc':
                     return await sendText(menuId.textTnC())
@@ -361,7 +362,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
         /* #region Enable or Disable bot */
         if (isDisabled && command != 'enablebot') {
-            if (isCmd) sendText('❌ Bot disabled!')
+            if (isCmd) sendText('⛔ DISABLED!')
             if (isGroupAdmin && isCmd) sendText(`Kirim *${prefix}enablebot* untuk mengaktifkan!`)
             return null
         }
@@ -2354,7 +2355,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'yesbye': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isGroupAdmin) return reply(resMsg.error.admin)
-                    await sendText('Oh beneran ya.\nGapapa aku paham. Selamat tinggal 👋🏻🥲')
+                    await sendText('Oh beneran ya 🤖\nGapapa aku paham. Selamat tinggal semua 👋🏻🥲')
 
                     setTimeout(async () => {
                         await client.leaveGroup(groupId)
@@ -2368,7 +2369,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'bye': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isGroupAdmin) return reply(resMsg.error.admin)
-                    await sendText('Udah gak butuh aku lagi? yaudah. kirim /yesbye untuk mengeluarkan bot')
+                    await sendText('😓 Udah gak butuh aku lagi? yaudah. Kirim */yesbye* untuk mengeluarkan bot 🤖')
                     break
                 }
 
@@ -2377,7 +2378,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     const groupMem = await client.getGroupMembers(groupId)
                     if (args.length != 0) {
-                        let res = `${arg}\n${readMore}`
+                        let res = `${arg}\n\n------------------${readMore}`
                         for (let m of groupMem) {
                             res += `@${m.id.replace(/@c\.us/g, '')} `
                         }
