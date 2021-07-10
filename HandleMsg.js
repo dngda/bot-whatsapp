@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 17:53:32
+ * @ Modified time: 2021-07-10 19:20:02
  * @ Description: Handling message
  */
 
@@ -2002,40 +2002,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 case 'whatanime': {
-                    if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
-                        let encMedia = isQuotedImage ? quotedMsg : message
-                        let _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
-                        let mediaData = await decryptMedia(encMedia)
-                        const imgBS4 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
-                        reply('Searching....')
-                        fetch('https://trace.moe/api/search', {
-                            method: 'POST',
-                            body: JSON.stringify({ image: imgBS4 }),
-                            headers: { "Content-Type": "application/json" }
-                        })
-                            .then(respon => respon.json())
-                            .then(resolt => {
-                                if (resolt.docs && resolt.docs.length <= 0) {
-                                    reply('Maaf, saya tidak tau ini anime apa, pastikan gambar yang akan di Search tidak Buram/Kepotong')
-                                }
-                                const { is_adult, title, title_chinese, title_romaji, title_english, episode, similarity, filename, at, tokenthumb, anilist_id } = resolt.docs[0]
-                                let teks = ''
-                                if (similarity < 0.92) {
-                                    teks = '*Saya memiliki keyakinan rendah dalam hal ini* :\n\n'
-                                }
-                                teks += `➸ *Title Japanese* : ${title}\n➸ *Title chinese* : ${title_chinese}\n➸ *Title Romaji* : ${title_romaji}\n➸ *Title English* : ${title_english}\n`
-                                teks += `➸ *R-18?* : ${is_adult}\n`
-                                teks += `➸ *Eps* : ${episode.toString()}\n`
-                                teks += `➸ *Kesamaan* : ${(similarity * 100).toFixed(1)}%\n`
-                                var video = `https://media.trace.moe/video/${anilist_id}/${encodeURIComponent(filename)}?t=${at}&token=${tokenthumb}`;
-                                client.sendFileFromUrl(from, video, 'anime.mp4', teks, id).catch(() => {
-                                    reply(teks)
-                                })
-                            })
-                            .catch(e => { return printError(e) })
-                    } else {
-                        reply(`Maaf format salah\n\nSilakan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`)
-                    }
+                    sendText(`Fitur broken. Kesini aja https://trace.moe`)
                     break
                 }
 
