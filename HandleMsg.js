@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 22:22:14
+ * @ Modified time: 2021-07-10 22:31:40
  * @ Description: Handling message
  */
 
@@ -1791,7 +1791,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'lyric': {
                     if (args.length === 0) return reply(`Untuk mencari lirik dengan nama lagu atau potongan lirik\nketik: ${prefix}lirik <query>\nContoh: ${prefix}lirik lathi`)
                     let res = await api.lyric(arg).catch(e => { return printError(e) })
-                    await reply(res)
+                    if (res) reply(res)
                     break
                 }
                 /* #endregion End of search any */
