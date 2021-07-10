@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 21:48:32
+ * @ Modified time: 2021-07-10 22:22:14
  * @ Description: Handling message
  */
 
@@ -521,9 +521,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 let res = await note.getNoteData(from, chats.slice(1))
                 if (!res) return reply(`Note/catatan tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createnote ${chats.slice(1)} (tulis isinya)* \nMohon hanya gunakan 1 kata untuk nama note`)
 
-                let respon = `✪〘 ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
+                let respon = `✪〘 ${chats.slice(1).toUpperCase()} 〙✪`
                 respon += `\n\n${res.content}`
-                respon += '\n\n〘 *Note by SeroBot* 〙'
                 await reply(respon)
                 break
             }
@@ -2171,7 +2170,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'notes': {
                     if (args.length === 0) {
                         let theNote = await note.getNoteName(from)
-                        let _what = isGroupMsg ? `Group` : `Chat`
+                        let _what = isGroupMsg ? `group` : `chat`
                         let _msg
                         if (theNote === false || theNote === '') {
                             _msg = `${_what} ini belum memiliki note.`
@@ -2186,16 +2185,16 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let res = await note.getNoteData(from, args[0])
                         if (!res) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createnote ${args[0]} (isinya)* \n(mohon hanya gunakan 1 kata untuk nama note)`)
 
-                        let respon = `✪〘 ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
+                        let respon = `✪〘 ${chats.slice(1).toUpperCase()} 〙✪`
                         respon += `\n\n${res.content}`
-                        respon += '\n\n〘 *Note by SeroBot* 〙'
                         await reply(respon)
                     }
                     break
                 }
 
                 case 'createnote': {
-                    if (args.length < 2 && (isQuotedChat && args.length != 1)) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note> <isinya>* contoh: ${prefix}createnote rules isi notesnya disini\n(mohon hanya gunakan 1 kata untuk nama note)\nAtau reply chat dengan *${prefix}createnote <nama_note>*`)
+                    if (args.length < 2 && !isQuotedChat) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note> <isinya>* contoh: ${prefix}createnote rules isi notesnya disini\nMohon hanya gunakan 1 kata untuk nama note\nAtau reply chat dengan *${prefix}createnote <nama_note>*`)
+                    if (isQuotedChat && args.length != 0) return reply(`Nama notenya apa?`)
                     let content = isQuotedChat ? quotedMsg.body : arg1
                     const respon = await note.createNote(from, args[0], content)
                     await reply((respon === false) ? `Note ${args[0]} sudah ada, gunakan nama lain.` : `Note ${args[0]} berhasil dibuat.`)
@@ -2972,7 +2971,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             let msg = ''
             if (type === 'image' && caption || type === 'video' && caption) msg = caption
             else msg = message.body
-            if (msg?.match(/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi) !== null) {
+            if (msg?.match(/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi) !== null) {
                 if (!isBotGroupAdmin) return sendText('Gagal melakukan kick, bot bukan admin')
                 if (isGroupAdmin) {
                     reply(`Duh admin yang share link. Gabisa dikick deh.`)
