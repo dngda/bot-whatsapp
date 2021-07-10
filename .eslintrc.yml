@@ -9,6 +9,6 @@ rules: {}
 globals:
   LOCAL_DATE_OPTIONS: readonly
   readMore: readonly
-  useLol: writable
   color: readonly
+  simi: writable
   q3: readonly

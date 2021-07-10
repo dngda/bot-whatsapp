@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 23:22:28
+ * @ Modified time: 2021-07-11 00:36:59
  * @ Description: Handling message
  */
 
@@ -330,9 +330,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         const doSimi = async (inp) => {
-            let respon = null
-            if (useLol) respon = await api.simiLol(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(color('[ERR>]', 'red'), e) })
-            else respon = await api.simiZens(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(color('[ERR>]', 'red'), e) })
+            let apiSimi = (q) => api.simiLol(q)
+            if (simi == 1) apiSimi = (q) => api.simiLol(q)
+            if (simi == 2) apiSimi = (q) => api.simiZens(q)
+            if (simi == 3) apiSimi = (q) => api.simiVF(q)
+            let respon = await apiSimi(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(color('[ERR>]', 'red'), e) })
             if (respon) {
                 console.log(color('[LOGS] Simi respond:', 'grey'), respon)
                 reply('🤖: ' + respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
