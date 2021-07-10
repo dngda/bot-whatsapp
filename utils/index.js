@@ -3,7 +3,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 01:18:46
+ * @ Modified time: 2021-07-11 00:21:00
  * @ Description:
  */
 
@@ -172,10 +172,10 @@ const lolApi = (slash, parm = { text: null, text2: null, text3: null, img: null 
 let previousCmds = []
 const prev = {
     savePrevCmd: (inpSender, prevCmd) => {
-        if (!hasPrevCmd(inpSender)) {
+        if (!prev.hasPrevCmd(inpSender)) {
             previousCmds.push({ sender: inpSender, prevCmd: prevCmd })
             setTimeout(() => {
-                delPrevCmd(inpSender)
+                prev.delPrevCmd(inpSender)
             }, 15000)
         }
     },
