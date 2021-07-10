@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-09 10:12:15
+ * @ Modified time: 2021-07-10 12:53:17
  * @ Description: Handling message
  */
 
@@ -279,6 +279,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         const audioConverter = async (complexFilter, filterName) => {
+            reply(resMsg.wait + `\nEstimasi ± ${(+quotedMsg.duration / 100).toFixed(0)} menit.`)
             const _inp = await decryptMedia(quotedMsg)
             let time = moment(t * 1000).format('mmss')
             let inpath = `./media/in_${filterName}_${time}.mp3`
@@ -523,7 +524,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 break
             }
             case /^>/.test(chats): {
-                if (!isOwnerBot) return reply(resMsg.error.owner)
+                if (!isOwnerBot) return null
                 client.simulateTyping(from, false)
                 try {
                     let evaled = eval(`(async() => {
@@ -544,7 +545,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             }
 
             case /^\$/.test(chats): {
-                if (!isOwnerBot) return reply(resMsg.error.owner)
+                if (!isOwnerBot) return null
                 client.simulateTyping(from, false)
                 exec(chats.slice(2), (err, stdout, stderr) => {
                     if (err) {
@@ -757,14 +758,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 else await reply('Maaf terjadi error atau batas penggunaan sudah tercapai!')
                             }
                         }
-                    } else if (args.length === 1) {
-                        try {
-                            if (!isUrl(args[0])) { return reply('Maaf, link yang kamu kirim tidak valid.') }
-                            sendSFU(args[0], false)
-                        } catch (e) {
-                            console.log(`Sticker url err: ${e}`)
-                            return sendText(resMsg.error.norm)
-                        }
+                    } else if (args.length === 1 && isUrl(args[0])) {
+                        sendSFU(args[0], false)
                     } else if ((isMedia && mimetype === 'video/mp4') || isQuotedVideo) {
                         reply(resMsg.wait)
                         let encryptedMedia = isQuotedVideo ? quotedMsg : message
@@ -786,7 +781,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             `*${prefix}sticker circle* (circle crop)\n` +
                             `*${prefix}sticker nobg* (tanpa background)\n\n` +
                             `Atau kirim pesan dengan\n` +
-                            `*${prefix}sticker <link_gambar>*\n\n` +
+                            `*${prefix}sticker https://urlgambar*\n\n` +
                             `Untuk membuat *sticker animasi.* Kirim video/gif atau reply/quote video/gif dengan caption *${prefix}sticker* max 8 detik`)
                     }
                     break
@@ -853,6 +848,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'gsearch':
                 case 'gs': {
                     if (args.length === 0) return reply(`Screenshot website atau search Google. ${prefix}ssweb <url> atau ${prefix}gs <query>`)
+                    sendText(resMsg.wait)
                     let urlzz = ''
                     if (!isUrl(arg)) urlzz = `https://www.google.com/search?q=${encodeURIComponent(arg)}`
                     else urlzz = arg
@@ -866,7 +862,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'qr':
                 case 'qrcode': {
                     if (args.length == 0) return reply(`Untuk membuat kode QR, ketik ${prefix}qrcode <kata>\nContoh:  ${prefix}qrcode nama saya SeroBot`)
-                    reply(resMsg.wait);
+                    reply(resMsg.wait)
                     await client.sendFileFromUrl(from, `http://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(arg)}&size=500x500`, '', '', id)
                     break
                 }
