@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 22:33:14
+ * @ Modified time: 2021-07-10 22:54:56
  * @ Description: Handling message
  */
 
@@ -2186,7 +2186,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let res = await note.getNoteData(from, args[0])
                         if (!res) return reply(`Note tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createnote ${args[0]} (isinya)* \n(mohon hanya gunakan 1 kata untuk nama note)`)
 
-                        let respon = `✪〘 ${chats.slice(1).toUpperCase()} 〙✪`
+                        let respon = `✪〘 ${args[0].toUpperCase()} 〙✪`
                         respon += `\n\n${res.content}`
                         await reply(respon)
                     }
@@ -2195,7 +2195,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'createnote': {
                     if (args.length < 2 && !isQuotedChat) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note> <isinya>* contoh: ${prefix}createnote rules isi notesnya disini\nMohon hanya gunakan 1 kata untuk nama note\nAtau reply chat dengan *${prefix}createnote <nama_note>*`)
-                    if (isQuotedChat && args.length != 0) return reply(`Nama notenya apa?`)
+                    if (isQuotedChat && args.length == 0) return reply(`Nama notenya apa?`)
                     let content = isQuotedChat ? quotedMsg.body : arg1
                     const respon = await note.createNote(from, args[0], content)
                     await reply((respon === false) ? `Note ${args[0]} sudah ada, gunakan nama lain.` : `Note ${args[0]} berhasil dibuat.`)
