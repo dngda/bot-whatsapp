@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 20:03:00
+ * @ Modified time: 2021-07-10 20:15:35
  * @ Description: Handling message
  */
 
@@ -331,8 +331,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
         const doSimi = async (inp) => {
             let respon = null
-            if (useLol) respon = await api.simiLol(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(e) })
-            else respon = await api.simiZens(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(e) })
+            if (useLol) respon = await api.simiLol(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(color('[ERR>]', 'red'), e) })
+            else respon = await api.simiZens(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(color('[ERR>]', 'red'), e) })
             if (respon) {
                 console.log(color('[LOGS] Simi respond:', 'grey'), respon)
                 reply('🤖: ' + respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
@@ -2985,7 +2985,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         .find({ id: pengirim }).update('denda', n => n + _denda).value()
                     db.write()
                     if (denda) {
-                        await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda) + `${isNgegasKick && !isGroupAdmin? `\nAuto kick jika denda > 20rb` : ''}`)
+                        await reply(`${resMsg.badw}\n\nDenda +${_denda}\nTotal : Rp` + formatin(denda.denda) + `${isNgegasKick && !isGroupAdmin ? `\nAuto kick jika denda > 20rb` : ''}`)
                         if (denda.denda > 20000 && isNgegasKick && !isGroupAdmin) {
                             reply(`╔══✪〘 SELAMAT 〙✪\n║\n║ Anda akan dikick dari group.\n║ Karena denda anda melebihi 20rb.\n║ Mampos~\n║\n╚═〘 SeroBot 〙`)
                             db.chain.get('groups').filter({ id: groupId }).map('members[' + isIn + ']')
@@ -3011,7 +3011,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     } else {
                         const foundUser = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
                         foundUser.push({ id: pengirim, denda: _denda })
-                        await reply(`${resMsg.badw}\n\nDenda +Rp${formatin(_denda)}${isNgegasKick && !isGroupAdmin? `\nAuto kick jika denda > 20rb` : ''}`)
+                        await reply(`${resMsg.badw}\n\nDenda +Rp${formatin(_denda)}${isNgegasKick && !isGroupAdmin ? `\nAuto kick jika denda > 20rb` : ''}`)
                         db.chain.get('groups').find({ id: groupId }).set('members', foundUser).value()
                         db.write()
                     }
