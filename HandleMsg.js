@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-10 20:15:35
+ * @ Modified time: 2021-07-10 21:48:32
  * @ Description: Handling message
  */
 
@@ -517,6 +517,16 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 await client.sendPtt(from, path, _id).catch(e => { return printError(e) })
                 break
             }
+            case /^#\S*$/ig.test(chats): {
+                let res = await note.getNoteData(from, chats.slice(1))
+                if (!res) return reply(`Note/catatan tidak ada, silakan buat dulu. \nGunakan perintah: *${prefix}createnote ${chats.slice(1)} (tulis isinya)* \nMohon hanya gunakan 1 kata untuk nama note`)
+
+                let respon = `✪〘 ${args[0].replace(/^\w/, (c) => c.toUpperCase())} 〙✪`
+                respon += `\n\n${res.content}`
+                respon += '\n\n〘 *Note by SeroBot* 〙'
+                await reply(respon)
+                break
+            }
             case /\b(bot|sero|serobot)\b/ig.test(chats): {
                 if (!isCmd) {
                     let txt = chats.replace(/@\d+/g, '')
@@ -890,6 +900,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'memefy': {
                     if ((isMedia || isQuotedImage || isQuotedSticker) && args.length >= 1) {
                         try {
+                            if (quotedMsg?.isAnimated) return reply(`Error! Tidak support sticker bergerak.`)
                             reply(resMsg.wait)
                             let top = '', bottom = ''
                             if (!/\|/g.test(arg)) {
@@ -1516,6 +1527,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `Download igstory sesuai username dan urutan storynya.\n` +
                         `Penggunaan: ${prefix}igstory <username> <nomor urut>\n` +
                         `Contoh: ${prefix}igstory awkarin 1`)
+                    sendText(resMsg.wait)
                     let { data } = await get(lolApi(`igstory/${args[0].replace(/@/, '')}`))
                     if (data.result.length < args[1]) return reply(`Story tidak ditemukan. Jumlah: ${data.result.length}`)
                     sendFFU(data.result[(data.result.length - args[1])])
@@ -1810,7 +1822,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `${q3}Total Mnggl  :${q3} ${data.meninggal}\n` +
                         `${q3}Total        :${q3} ${data.total}`
                     )
-                    reply('Okey sebentar...')
+                    reply(resMsg.wait)
                     const zoneStatus = await getLocationData(quotedMsg.lat, quotedMsg.lng)
                     if (zoneStatus.kode != 200) sendText('Maaf, Terjadi error ketika memeriksa lokasi yang anda kirim.')
                     let datax = ''
@@ -1825,7 +1837,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 case 'crjogja': {
-                    sendText('Gotcha, please wait!')
+                    sendText(resMsg.wait)
                     let path = './media/crjogja.png'
                     scraper.ssweb(browser, path, 'https://sipora.staklimyogyakarta.com/radar/', { width: 600, height: 600 })
                         .catch(e => { return printError(e) })
@@ -2166,7 +2178,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         } else {
                             _msg = `Notes yang ada di ${_what}: ${theNote.join(', ')}`
                         }
-                        reply(`${_msg}\n\nMenampilkan notes/catatan yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}note <nama note>*
+                        reply(`${_msg}\n\nMenampilkan notes/catatan yang tersimpan di database bot untuk group ini.\nPenggunaan:\n-> *${prefix}note <nama note>* atau gunakan *#namanote*
                                 \nUntuk membuat note gunakan perintah:\n-> *${prefix}createnote <nama note> <isi note>* contoh: ${prefix}createnote rules Isi notesnya disini
                                 \nUntuk menghapus note gunakan perintah:\n-> *${prefix}deletenote <nama note>* contoh: ${prefix}deletenote rules
                                 `)
@@ -2183,8 +2195,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 case 'createnote': {
-                    if (args.length === 0) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note> <isinya>* contoh: ${prefix}createnote rules isi notesnya disini\n(mohon hanya gunakan 1 kata untuk nama note)`)
-                    const respon = await note.createNote(from, args[0], arg1)
+                    if (args.length < 2 && (isQuotedChat && args.length != 1)) return reply(`Untuk membuat note gunakan perintah: *${prefix}createnote <nama note> <isinya>* contoh: ${prefix}createnote rules isi notesnya disini\n(mohon hanya gunakan 1 kata untuk nama note)\nAtau reply chat dengan *${prefix}createnote <nama_note>*`)
+                    let content = isQuotedChat ? quotedMsg.body : arg1
+                    const respon = await note.createNote(from, args[0], content)
                     await reply((respon === false) ? `Note ${args[0]} sudah ada, gunakan nama lain.` : `Note ${args[0]} berhasil dibuat.`)
                     break
                 }
