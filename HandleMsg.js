@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-11 10:12:13
+ * @ Modified time: 2021-07-11 10:46:07
  * @ Description: Handling message
  */
 
@@ -1507,7 +1507,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (res) sendText(msg)
                     let uls
                     if (command == 'fbdl') uls = lodash.find(res, { quality: '4' }).url || lodash.find(res, { quality: '6' }).url
-                    if (command == 'twdl') uls = lodash.find(res, { quality: '580' }).url || lodash.find(res, { quality: '640' }).url
+                    if (command == 'twdl') uls = res[1].url || res[0].url
                     if (uls) client.sendFileFromUrl(from, uls, '', '', _id)
                     else sendText(`Request timeout. Link private! Pastikan link bersifat publik.`)
                     break
@@ -2296,7 +2296,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             ? reply('Maaf, link yang kamu kirim tidak memuat gambar.')
                             : reply('Berhasil mengubah profile group'))
                     } else {
-                        reply(`Commands ini digunakan untuk mengganti icon/profile group chat\n\n\nPenggunaan:\n1. Silakan kirim/reply sebuah gambar dengan caption ${prefix}setprofile\n\n2. Silakan ketik ${prefix}setprofile linkImage`)
+                        reply(`Perintah ini digunakan untuk mengganti icon/profile group chat\n\nPenggunaan:\n1. Silakan kirim/reply sebuah gambar dengan caption ${prefix}setprofile\n\n2. Silakan ketik ${prefix}setprofile linkImage`)
                     }
                     break
                 }
@@ -2491,7 +2491,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'klasemen':
                 case 'klasmen':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isNgegas) return reply(`Anti-Toxic tidak aktif, aktifkan menggunakan perintah ${prefix}antikasar on`)
+                    if (!isNgegas && !isNgegasKick) return reply(`Anti kasar tidak aktif, aktifkan menggunakan perintah\n-> *${prefix}antikasar on* atau *${prefix}antikasarkick on*`)
                     try {
                         const klasemen = db.chain.get('groups').filter({ id: groupId }).map('members').value()[0]
                         if (klasemen == null) return reply(`Belum ada yang berkata kasar`)
