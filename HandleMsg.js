@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-11 10:11:14
+ * @ Modified time: 2021-07-11 10:12:13
  * @ Description: Handling message
  */
 
@@ -59,6 +59,7 @@ if (!existsSync('./data/stat.json')) {
     writeFileSync('./data/stat.json', `{ "todayHits" : 0, "received" : 0 }`)
 }
 // settings
+// eslint-disable-next-line no-unused-vars
 const { stickerHash, ownerNumber, memberLimit, groupLimit, prefix, groupOfc } = JSON.parse(readFileSync('./settings/setting.json'))
 const { apiNoBg } = JSON.parse(readFileSync('./settings/api.json'))
 const kataKasar = JSON.parse(readFileSync('./settings/katakasar.json'))
@@ -658,8 +659,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             console.log(color('[ERR>]', 'red'), e)
                             reply(resMsg.error.join)
                         })
-                    } */
-                    break
+                    }
+                    break */
                 }
                 case 'stat':
                 case 'stats':
