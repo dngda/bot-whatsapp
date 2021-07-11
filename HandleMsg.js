@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-11 10:46:07
+ * @ Modified time: 2021-07-11 17:12:13
  * @ Description: Handling message
  */
 
@@ -611,8 +611,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 case 'join':
                 case 'sewa': {
-                    return reply(`Fitur broken. wait for update!`)
-                    /* if (args.length == 0) return reply(
+                    if (args.length == 0) return reply(
                         `Jika kalian ingin menculik bot ke group\n` +
                         `Silakan kontak owner atau gunakan perintah:\n -> ${prefix}join (link group) jika slot gratis masih tersedia.\n` +
                         `\nSlot gratis habis? Sewa aja murah kok.\nCuma 10k masa aktif 1 bulan.\n` +
@@ -660,7 +659,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             reply(resMsg.error.join)
                         })
                     }
-                    break */
+                    break
                 }
                 case 'stat':
                 case 'stats':
