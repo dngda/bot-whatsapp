@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-11 00:36:59
+ * @ Modified time: 2021-07-11 09:18:50
  * @ Description: Handling message
  */
 
@@ -643,11 +643,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     } else {
                         let allGroup = await client.getAllGroups()
                         if (allGroup.length > groupLimit) return reply(
-                            `Mohon maaf, untuk mencegah overload\nSlot group gratis pada bot dibatasi.\nTotal group: ${allGroup.length}/${groupLimit}\nChat /owner untuk sewa\n` +
+                            `Mohon maaf, untuk mencegah overload\nSlot group free pada bot dibatasi.\nTotal group: ${allGroup.length}/${groupLimit}\nChat /owner untuk sewa\n` +
                             `\nSewa aja murah kok. 10k masa aktif 1 bulan.\n` +
                             `Mau sewa otomatis? Gunakan link berikut:\n` +
                             `Saweria: https://saweria.co/dngda \n` +
-                            `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
+                            `Masukkan hanya link group kalian dalam kolom *"Pesan"* di website saweria`
                         )
                         if (groupInfo?.size < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
                         if (groupInfo?.id) await sewa.trialSewa(client, args[0]).then(res => {
@@ -1299,7 +1299,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 case 'wasted': {
-                    if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
+                    if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Add wasted effect pada gambar. Reply gambar atau kirim gambar dengan caption ${prefix}wasted`)
                     try {
                         if (quotedMsg?.isAnimated) return reply(`Error! Tidak support sticker bergerak.`)
                         reply(resMsg.wait)
@@ -2242,7 +2242,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'listonline': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     let msg = `╔══✪〘 List Online 〙✪\n${readMore}`
-                    chat.presence.chatstates.forEach(item => {
+                    lodash.filter(chat.presence.chatstates, (n) => !!n?.type).forEach(item => {
                         msg += `╠> @${item.id.replace(/@c\.us/g, '')}\n`
                     })
                     msg += '╚═〘 *SeroBot* 〙'
