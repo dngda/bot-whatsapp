@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-05 13:57:30
+ * @ Modified time: 2021-07-11 17:09:37
  * @ Description:
  */
 
@@ -178,7 +178,7 @@ const start = async (client = new Client()) => {
 
         client.onGlobalParticipantsChanged(async event => {
             const host = await client.getHostNumber() + '@c.us'
-            const ngegas = JSON.parse(createReadFileSync('./data/ngegas.json'))
+            const ngegas = JSON.parse(createReadFileSync('./data/ngegaskick.json'))
             const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
             const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
             const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
@@ -187,14 +187,14 @@ const start = async (client = new Client()) => {
             const hasByProperty = Object.prototype.hasOwnProperty.call(event, 'by')
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome && hasByProperty) {
-                if (profile !== '' || profile !== undefined) await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Anjay keren fotonya member baru`)
-                await client.sendTextWithMentions(event.chat, `Halo semua! Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\n\nJangan lupa baca deskripsi group!`)
+                if (profile !== '' || profile !== undefined) await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Halo semua! Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\nJangan lupa baca deskripsi group!`)
+                else await client.sendTextWithMentions(event.chat, `Halo semua!👋 Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\n\nJangan lupa baca deskripsi group!`)
             }
             // kondisi ketika seseorang dikick/keluar dari group
             if (event.action === 'remove' && event.who !== host && isWelcome) {
                 let who = await client.getContact(event.who)
                 let pushname = who.pushname || who.verifiedName || who.formattedName
-                await client.sendText(event.chat, `Eh ada yang keluar ya? Dadahhh ${pushname} 👋✨`)
+                await client.sendText(event.chat, `⚙ Eh ada yang keluar ya? Dadahhh ${pushname} 👋✨`)
             }
             // Saat host keluar
             if (event.action === 'remove' && event.who === host) {
@@ -202,7 +202,7 @@ const start = async (client = new Client()) => {
                 let pos = ngegas.indexOf(_id)
                 if (pos !== -1) {
                     ngegas.splice(pos, 1)
-                    fs.writeFileSync('./data/ngegas.json', JSON.stringify(ngegas))
+                    fs.writeFileSync('./data/ngegaskick.json', JSON.stringify(ngegas))
                 }
                 let posi = welcome.indexOf(_id)
                 if (posi !== -1) {
