@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-11 17:12:13
+ * @ Modified time: 2021-07-12 19:22:59
  * @ Description: Handling message
  */
 
@@ -939,7 +939,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let enc = isQuotedImage ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         let _url = await uploadImages(mediaData, false)
-                        let resu = await api.ocr(_url)
+                        let resu = await api.ocr(_url).catch(printError)
                         reply(resu)
                     } catch (err) {
                         printError(err)
