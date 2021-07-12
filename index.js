@@ -2,14 +2,14 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-11 17:09:37
+ * @ Modified time: 2021-07-12 11:04:07
  * @ Description:
  */
 
 import { createReadFileSync, initGlobalVariable } from './utils/index.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import { create, Client } from '@open-wa/wa-automate'
-import { schedule, sewa } from './lib/index.js'
+import { canvas, schedule, sewa } from './lib/index.js'
 import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
 import { HandleMsg } from './HandleMsg.js'
@@ -183,21 +183,29 @@ const start = async (client = new Client()) => {
             const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
             const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
             const isWelcome = welcome.includes(event.chat)
+            
             const profile = await client.getProfilePicFromServer(event.who)
+            const who = await client.getContact(event.who)
+            const pushname = who.pushname || who.verifiedName || who.formattedName
+            const chat = await client.getChatById(event.chat)
             const hasByProperty = Object.prototype.hasOwnProperty.call(event, 'by')
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome && hasByProperty) {
-                if (profile !== '' || profile !== undefined) await client.sendFileFromUrl(event.chat, profile, 'profile.jpg', `Halo semua! Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\nJangan lupa baca deskripsi group!`)
-                else await client.sendTextWithMentions(event.chat, `Halo semua!👋 Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}\n\nSelamat datang, semoga betah ya 👋✨\n\nJangan lupa baca deskripsi group!`)
+                const welcomeData = await canvas.welcome(
+                    profile.eurl,
+                    chat.contact.profilePicThumbObj.eurl,
+                    pushname,
+                    chat.contact.name || chat.formattedTitle,
+                    chat.groupMetadata.participants.length).catch(err => console.log(color('[ERR>]', 'red'), err))
+                await client.sendImage(event.chat, welcomeData, 'welcome.jpg', `Halo semua!👋✨ Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}`)
+                
             }
             // kondisi ketika seseorang dikick/keluar dari group
             if (event.action === 'remove' && event.who !== host && isWelcome) {
-                let who = await client.getContact(event.who)
-                let pushname = who.pushname || who.verifiedName || who.formattedName
                 await client.sendText(event.chat, `⚙ Eh ada yang keluar ya? Dadahhh ${pushname} 👋✨`)
             }
             // Saat host keluar
-            if (event.action === 'remove' && event.who === host) {
+            if (event.action === 'remove' && event.who == host) {
                 let _id = event.chat
                 let pos = ngegas.indexOf(_id)
                 if (pos !== -1) {
