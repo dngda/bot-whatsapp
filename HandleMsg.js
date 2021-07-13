@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-12 19:22:59
+ * @ Modified time: 2021-07-13 18:06:49
  * @ Description: Handling message
  */
 
@@ -1592,6 +1592,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara menjadi deep dan pelan. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}deepslow`)
                     let complexFilter = `atempo=1.1,asetrate=44100*0.7,bass=g=5'`
                     audioConverter(complexFilter, 'deepslow')
+                    break
+                }
+
+                case '8d': {
+                    if (!isQuotedPtt && !isQuotedAudio) return reply(`Mengubah suara 8d surround effect. Silakan quote/balas audio atau voice notes dengan perintah ${prefix}8d`)
+                    let complexFilter = `apulsator=hz=1/16`
+                    audioConverter(complexFilter, 'pulsator')
                     break
                 }
 
