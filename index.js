@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-12 11:04:07
+ * @ Modified time: 2021-07-13 10:18:10
  * @ Description:
  */
 
@@ -192,7 +192,7 @@ const start = async (client = new Client()) => {
             // kondisi ketika seseorang diinvite/join group lewat link
             if (event.action === 'add' && event.who !== host && isWelcome && hasByProperty) {
                 const welcomeData = await canvas.welcome(
-                    profile.eurl,
+                    profile,
                     chat.contact.profilePicThumbObj.eurl,
                     pushname,
                     chat.contact.name || chat.formattedTitle,
