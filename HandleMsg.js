@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-14 00:30:13
+ * @ Modified time: 2021-07-14 00:32:28
  * @ Description: Handling message
  */
 
@@ -1175,7 +1175,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         }
                         if (isNaN(ayat)) {
                             let pesan = ""
-                            let resSurah = await get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/' + nmr + '.json')
+                            let resSurah = await get('https://raw.githubusercontent.com/ArugaZ/scraper-results/main/islam/surah/' + nmr + '.json')
                                 .catch(e => { return printError(e) })
                             let { name: surahName, name_translations, number_of_ayah, number_of_surah, recitations } = resSurah.data
                             pesan = pesan + "Audio Quran Surah ke-" + number_of_surah + " " + surahName + " (" + name_translations.ar + ") " + "dengan jumlah " + number_of_ayah + " ayat\n"
