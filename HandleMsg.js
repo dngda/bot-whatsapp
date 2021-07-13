@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-13 18:06:49
+ * @ Modified time: 2021-07-14 00:30:13
  * @ Description: Handling message
  */
 
@@ -1627,7 +1627,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             switch (command) {
                 /* #region Random Kata */
                 case 'fakta':
-                    fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
+                    fetch('https://raw.githubusercontent.com/ArugaZ/scraper-results/main/random/faktaunix.txt')
                         .then(res => res.text())
                         .then(faktaBody => {
                             let splitnix = faktaBody.split('\n')
@@ -1637,7 +1637,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         .catch(e => { return printError(e) })
                     break
                 case 'katabijak':
-                    fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/katabijax.txt')
+                    fetch('https://raw.githubusercontent.com/ArugaZ/scraper-results/main/random/katabijax.txt')
                         .then(res => res.text())
                         .then(kataBody => {
                             let splitbijak = kataBody.split('\n')
@@ -1647,7 +1647,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         .catch(e => { return printError(e) })
                     break
                 case 'pantun':
-                    fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/pantun.txt')
+                    fetch('https://raw.githubusercontent.com/ArugaZ/scraper-results/main/random/pantun.txt')
                         .then(res => res.text())
                         .then(pantunBody => {
                             let splitpantun = pantunBody.split('\n')
@@ -1672,7 +1672,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'anime': {
                     if (args.length == 0) return reply(`Untuk menggunakan ${prefix}anime\nSilakan ketik: ${prefix}anime [query]\nContoh: ${prefix}anime random\n\nquery yang tersedia:\nrandom, waifu, husbu, neko`)
                     if (args[0] == 'random' || args[0] == 'waifu' || args[0] == 'husbu' || args[0] == 'neko') {
-                        fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/anime/' + args[0] + '.txt')
+                        fetch('https://raw.githubusercontent.com/ArugaZ/scraper-results/main/random/anime/' + args[0] + '.txt')
                             .then(res => res.text())
                             .then(animeBody => {
                                 let randomnime = animeBody.split('\n')
