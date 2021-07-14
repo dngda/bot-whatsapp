@@ -1,10 +1,8 @@
 {
     "apiNoBg": ["YOUR-API-KEY-HERE", "ADD-OTHER-API-KEY-HERE-FOR-MORE-LIMIT", "AND-AGAIN"],
-    "apiTobz": "YOUR-API-KEY-HERE",
-    "apiVH": "YOUR-API-KEY-HERE",
     "apiFarzain": "YOUR-API-KEY-HERE",
     "apiItech": "YOUR-API-KEY-HERE",
-    "apiZeks": "YOUR-API-KEY-HERE",
+    "api404": "YOUR-API-KEY-HERE",
     "apiLol": "YOUR-API-KEY-HERE",
     "apiGenius": "YOUR-API-KEY-HERE",
     "apiOcr": "YOUR-API-KEY-HERE",
