@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-14 18:57:16
+ * @ Modified time: 2021-07-14 21:16:55
  * @ Description: Handling message
  */
 
@@ -156,7 +156,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const isBotGroupAdmin = groupAdmins.includes(botNumber) || false
         const stickerMetadata = { pack: 'Created with', author: 'SeroBot', keepScale: true }
         const stickerMetadataCircle = { pack: 'Created with', author: 'SeroBot', circle: true }
-        const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot' }
+        const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot', cropPosition: 'center' }
         // Bot Prefix Aliases
         const regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-)(?=\w+)/g
         // whole chats body
@@ -778,7 +778,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let encryptedMedia = isQuotedVideo ? quotedMsg : message
                         let mediaData = await decryptMedia(encryptedMedia)
                             .catch(e => printError(e, false))
-                        await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0', log: true }, stickerMetadata)
+                        await client.sendMp4AsSticker(from, mediaData, { endTime: '00:00:09.0' }, stickerMetadata)
                             .then(() => {
                                 sendText(resMsg.success.sticker)
                                 console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
@@ -828,6 +828,17 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         await reply('Maaf, perintah sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]')
                     }
                     break
+                }
+
+                case 'take':
+                case 'takestik':
+                case 'takesticker': {
+                    if (!isQuotedSticker && args.length == 0) return reply(`Edit sticker pack dan author.\n${prefix}take packname|author`)
+                    client.sendImageAsSticker(from, (await decryptMedia(quotedMsg)), { 
+                        pack: arg.split('|')[0], 
+                        author: arg.split('|')[1], 
+                        keepScale: true                        
+                    })
                 }
                 /* #endregion Sticker */
             }
