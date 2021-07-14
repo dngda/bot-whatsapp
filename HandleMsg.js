@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-14 00:32:28
+ * @ Modified time: 2021-07-14 14:56:13
  * @ Description: Handling message
  */
 
@@ -1517,7 +1517,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!urls.includes('instagram')) { return reply('Maaf, link yang kamu kirim tidak valid. Pastikan hanya link Instagram') }
                     sendText(resMsg.wait)
-                    let result = await api.igdl(urls).catch(e => { return printError(e) })
+                    let result = await scraper.saveFrom(browser, urls.replace(/[?&]utm_medium=[^&]+/, ''), true).catch(e => { return printError(e) })
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     if (result) client.sendFileFromUrl(from, result, '', '', _id)
                     else reply(`Error! Not found`)
@@ -1530,9 +1530,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `Penggunaan: ${prefix}igstory <username> <nomor urut>\n` +
                         `Contoh: ${prefix}igstory awkarin 1`)
                     sendText(resMsg.wait)
-                    let { data } = await get(lolApi(`igstory/${args[0].replace(/@/, '')}`))
-                    if (data.result.length < args[1]) return reply(`Story tidak ditemukan. Jumlah: ${data.result.length}`)
-                    sendFFU(data.result[(data.result.length - args[1])])
+                    let data = await scraper.saveFromStory(browser, args[0].replace(/@/, '')).then(e => printError(e, false))
+                    if (data.length < args[1]) return reply(`Story tidak ditemukan. Jumlah: ${data.length}`)
+                    sendFFU(data[data.length - 1])
                     break
                 }
                 /* #endregion End of Media Downloader */
