@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-14 21:16:55
+ * @ Modified time: 2021-07-15 11:44:26
  * @ Description: Handling message
  */
 
@@ -60,7 +60,7 @@ if (!existsSync('./data/stat.json')) {
 }
 // settings
 // eslint-disable-next-line no-unused-vars
-const { stickerHash, ownerNumber, memberLimit, groupLimit, prefix, groupOfc } = JSON.parse(readFileSync('./settings/setting.json'))
+let { stickerHash, ownerNumber, memberLimit, groupLimit, prefix, groupOfc } = JSON.parse(readFileSync('./settings/setting.json'))
 const { apiNoBg } = JSON.parse(readFileSync('./settings/api.json'))
 const kataKasar = JSON.parse(readFileSync('./settings/katakasar.json'))
 // database
@@ -158,14 +158,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const stickerMetadataCircle = { pack: 'Created with', author: 'SeroBot', circle: true }
         const stickerMetadataCrop = { pack: 'Created with', author: 'SeroBot', cropPosition: 'center' }
         // Bot Prefix Aliases
-        const regex = /(^\/|^!|^\$|^%|^&|^\+|^\.|^,|^<|^>|^-)(?=\w+)/g
-        // whole chats body
-        let chats = ''
+        const regex = /^[\\/!$^%&+.,-](?=\w+)/
+        let chats = '' // whole chats body
         if (type === 'chat') chats = body
-        else chats = (type === 'image' || type === 'video') ? caption : ''
-        // whole chats body contain commands
-        if (type === 'chat' && body.replace(regex, prefix).startsWith(prefix)) body = body.replace(regex, prefix)
-        else body = ((type === 'image' && caption || type === 'video' && caption) && caption.replace(regex, prefix).startsWith(prefix)) ? caption.replace(regex, prefix) : ''
+        else chats = (type === 'image' && caption || type === 'video' && caption) ? caption : ''
+        prefix = regex.test(chats) ? chats.match(regex)[0] : '/'
+        body = chats.startsWith(prefix) ? chats : '' // whole chats body contain commands
         const croppedChats = (chats?.length > 40) ? chats?.substring(0, 40) + '...' : chats
         // sticker menu
         for (let menu in stickerHash) {
@@ -338,7 +336,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             let respon = await apiSimi(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(color('[ERR>]', 'red'), e) })
             if (respon) {
                 console.log(color('[LOGS] Simi respond:', 'grey'), respon)
-                reply('▸' + respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
+                reply('▸ ' + respon.replace(/\b(simi|simsim|simsimi)\b/ig, 'sero'))
             }
         }
         /* #endregion helper functions */
@@ -545,11 +543,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 ${chats.slice(2)}
                             } catch (e) {
                                 console.log(e)
-                                return sendText(e.toString())
+                                sendText(\`\${e}\`)
                             }
                         })()`)
                     if (typeof evaled !== 'string') evaled = inspect(evaled)
-                    sendText(`${evaled}`)
+                    if (chats.includes('return')) sendText(`${evaled}`)
                 } catch (err) {
                     console.log(err)
                     sendText(`${err}`)
@@ -834,10 +832,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'takestik':
                 case 'takesticker': {
                     if (!isQuotedSticker && args.length == 0) return reply(`Edit sticker pack dan author.\n${prefix}take packname|author`)
-                    client.sendImageAsSticker(from, (await decryptMedia(quotedMsg)), { 
-                        pack: arg.split('|')[0], 
-                        author: arg.split('|')[1], 
-                        keepScale: true                        
+                    client.sendImageAsSticker(from, (await decryptMedia(quotedMsg)), {
+                        pack: arg.split('|')[0],
+                        author: arg.split('|')[1],
+                        keepScale: true
                     })
                 }
                 /* #endregion Sticker */
@@ -2412,7 +2410,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     const groupMem = await client.getGroupMembers(groupId)
                     if (args.length != 0) {
-                        let res = `${arg}\n\n------------------${readMore}`
+                        let res = `✪〘 Mention All 〙✪\n${arg}\n\n------------------\n${readMore}`
                         for (let m of groupMem) {
                             res += `@${m.id.replace(/@c\.us/g, '')} `
                         }
@@ -2970,9 +2968,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             })
         }
         // Anti link group function
-        if (isAntiLinkGroup && isGroupMsg && (type === 'chat' || type === 'image' || type === 'video')) {
+        if (isAntiLinkGroup && isGroupMsg && ['chat', 'video', 'image'].includes(type)) {
             let msg = ''
-            if (type === 'image' && caption || type === 'video' && caption) msg = caption
+            if (['video', 'image'].includes(type) && caption) msg = caption
             else msg = message.body
             if (msg?.match(/chat\.whatsapp\.com/gi) !== null) {
                 if (!isBotGroupAdmin) return sendText('Gagal melakukan kick, bot bukan admin')
@@ -2989,9 +2987,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         // Anti semua link function
-        if (isAntiLink && isGroupMsg && (type === 'chat' || type === 'image' || type === 'video')) {
+        if (isAntiLink && isGroupMsg && ['chat', 'video', 'image'].includes(type)) {
             let msg = ''
-            if (type === 'image' && caption || type === 'video' && caption) msg = caption
+            if (['video', 'image'].includes(type) && caption) msg = caption
             else msg = message.body
             if (msg?.match(/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi) !== null) {
                 if (!isBotGroupAdmin) return sendText('Gagal melakukan kick, bot bukan admin')
@@ -3008,7 +3006,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         // Kata kasar function
-        if (!isCmd && isGroupMsg && (isNgegas || isNgegasKick) && (type == "image" || type == "chat") && isKasar) {
+        if (!isCmd && isGroupMsg && (isNgegas || isNgegasKick) && ['chat', 'video', 'image'].includes(type) && isKasar) {
             const _denda = sample([1000, 2000, 3000, 5000, 10000])
             const find = db.chain.get('groups').find({ id: groupId }).value()
             if (find && find.id === groupId) {
