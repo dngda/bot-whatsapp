@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-15 19:05:42
+ * @ Modified time: 2021-07-15 22:04:43
  * @ Description: Handling message
  */
 
@@ -23,6 +23,7 @@ import ytdl from 'ytdl-core'
 import Crypto from 'crypto'
 import jimp from 'jimp'
 import fs from 'fs-extra'
+import https from 'https'
 import axios from 'axios'
 import gTTS from 'gtts'
 
@@ -75,6 +76,7 @@ const groupPrem = JSON.parse(createReadFileSync('./data/premiumgroup.json'))
 const ownerBotOnly = JSON.parse(createReadFileSync('./data/ownerbotonly.json'))
 // src
 const Surah = JSON.parse(readFileSync('./src/json/surah.json'))
+const httpsAgent = new https.Agent({ rejectUnauthorized: false })
 /* #endregion */
 
 /* #region Helper functions */
@@ -544,12 +546,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 ${chats.slice(2)}
                             } catch (e) {
                                 console.log(e)
-                                sendText(\`\${e}\`)
+                                sendText(e.toString())
                             }
                         })()`)
                     if (typeof evaled !== 'string') evaled = inspect(evaled)
                     if (chats.includes('return')) sendText(`${evaled}`)
-                    else reply(`✅`)
+                    else reply(`✅OK!`)
                 } catch (err) {
                     console.log(err)
                     sendText(`${err}`)
@@ -1213,7 +1215,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                 pesan = pesan + data.translation.id
                             }
                             pesan = pesan + "\n\n(Q.S. " + data.surah.name.transliteration.id + ":" + args[1] + ")"
-                            await client.sendFileFromUrl(from, data.audio.secondary[0], '', '', id)
+                            await client.sendFileFromUrl(from, data.audio.primary, '', '', id, { httpsAgent: httpsAgent })
                             await reply(pesan)
                         }
                     }
