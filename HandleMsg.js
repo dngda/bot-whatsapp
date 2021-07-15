@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-15 13:14:13
+ * @ Modified time: 2021-07-15 19:05:42
  * @ Description: Handling message
  */
 
@@ -330,6 +330,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
         const doSimi = async (inp) => {
             let apiSimi = (q) => api.simiLol(q)
+            if (simi == 0) return null
             if (simi == 1) apiSimi = (q) => api.simiLol(q)
             if (simi == 2) apiSimi = (q) => api.simi404(q)
             if (simi == 3) apiSimi = (q) => api.simiSumi(q)
