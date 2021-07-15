@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-13 10:18:10
+ * @ Modified time: 2021-07-15 13:04:38
  * @ Description:
  */
 
@@ -137,11 +137,12 @@ const start = async (client = new Client()) => {
                 if (groups.length > groupLimit) {
                     console.log(color('[==>>]', 'red'), `So this is exceeding the group limit.`)
                     client.sendText(chat.groupMetadata.id,
-                        `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\nTotal group: ${groups.length}/${groupLimit}\nChat /owner untuk sewa\n` +
-                        `Sewa aja murah kok. 10k masa aktif 1 bulan.\n` +
+                        `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\n` +
+                        `Total group: ${groups.length}/${groupLimit}\n` +
+                        `Chat /owner untuk sewa. harga 10k masa aktif 1 bulan.\n` +
                         `Mau sewa otomatis? Buka link berikut:\n` +
                         `Saweria: https://saweria.co/dngda \n` +
-                        `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
+                        `*Masukkan hanya link group kalian dalam kolom "Pesan" di website saweria*`
                     )
                     setTimeout(() => {
                         client.leaveGroup(chat.groupMetadata.id)
@@ -159,7 +160,7 @@ const start = async (client = new Client()) => {
             // ketika seseorang menelpon nomor bot
             if (!call.isGroup || !call.participants.length > 1) {
                 console.log(color('[==>>]', 'red'), `Someone is calling bot, lol~ id: ${call.peerJid}`)
-                client.sendText(call.peerJid, `Maaf tidak bisa menerima panggilan.\nIni robot, bukan manusia. Awas kena block!\nChat https://wa.me/${ownerNumber.replace('@c.us', '')} untuk buka block.`)
+                client.sendText(call.peerJid, `⛔ Maaf tidak bisa menerima panggilan.\n🤖 Ini robot, bukan manusia. Maaf bot akan block otomatis!\n💬 Chat https://wa.me/${ownerNumber.replace('@c.us', '')}?text=Halo!%20Tolong%20buka%20block%20saya%20pada%20Serobot`)
                 setTimeout(() => {
                     client.contactBlock(call.peerJid)
                 }, 3000)
@@ -183,7 +184,6 @@ const start = async (client = new Client()) => {
             const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
             const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
             const isWelcome = welcome.includes(event.chat)
-            
             const profile = await client.getProfilePicFromServer(event.who)
             const who = await client.getContact(event.who)
             const pushname = who.pushname || who.verifiedName || who.formattedName
@@ -197,7 +197,7 @@ const start = async (client = new Client()) => {
                     pushname,
                     chat.contact.name || chat.formattedTitle,
                     chat.groupMetadata.participants.length).catch(err => console.log(color('[ERR>]', 'red'), err))
-                await client.sendImage(event.chat, welcomeData, 'welcome.jpg', `Halo semua!👋✨ Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}`)
+                await client.sendImage(event.chat, welcomeData, 'welcome.png', `Halo semua!👋✨ Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}`)
                 
             }
             // kondisi ketika seseorang dikick/keluar dari group

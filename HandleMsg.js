@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-15 11:44:26
+ * @ Modified time: 2021-07-15 13:14:13
  * @ Description: Handling message
  */
 
@@ -548,6 +548,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         })()`)
                     if (typeof evaled !== 'string') evaled = inspect(evaled)
                     if (chats.includes('return')) sendText(`${evaled}`)
+                    else reply(`✅`)
                 } catch (err) {
                     console.log(err)
                     sendText(`${err}`)
@@ -595,27 +596,29 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'menu':
                 case 'help':
                 case 'start':
-                    await sendText(menuId.textMenu(pushname, t))
+                    await sendText(menuId.textMenu(pushname, t, prefix))
                     if ((isGroupMsg) && (isGroupAdmin)) sendText(`Menu Admin Grup: *${prefix}menuadmin*`)
                     if (isOwnerBot) sendText(`Menu Owner: *${prefix}menuowner*`)
                     break
                 case 'menuadmin':
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    await sendText(menuId.textAdmin())
+                    await sendText(menuId.textAdmin(prefix))
                     break
                 case 'menuowner':
                     if (!isOwnerBot) return reply(resMsg.error.owner)
-                    await sendText(menuId.textOwner())
+                    await sendText(menuId.textOwner(prefix))
                     break
                 case 'join':
                 case 'sewa': {
                     if (args.length == 0) return reply(
                         `Jika kalian ingin menculik bot ke group\n` +
-                        `Silakan kontak owner atau gunakan perintah:\n -> ${prefix}join (link group) jika slot gratis masih tersedia.\n` +
-                        `\nSlot gratis habis? Sewa aja murah kok.\nCuma 10k masa aktif 1 bulan.\n` +
-                        `\nMau sewa otomatis? Gunakan link berikut:\n` +
+                        `Silakan kontak owner atau gunakan perintah:\n` +
+                        `-> ${prefix}join (link group) jika slot gratis masih tersedia.\n` +
+                        `\nSlot gratis habis? Sewa aja murah kok.\n` +
+                        `Cuma 10k masa aktif 1 bulan.\n` +
+                        `Mau sewa otomatis? Gunakan link berikut:\n` +
                         `Saweria: https://saweria.co/dngda \n` +
-                        `*Masukkan link group kalian dalam kolom "Pesan" di website saweria*`
+                        `*Masukkan *hanya* link group kalian dalam kolom "Pesan" di website saweria*`
                     )
                     const linkGroup = args[0]
                     const isLinkGroup = linkGroup.match(/(https:\/\/chat\.whatsapp\.com)/gi)
@@ -642,8 +645,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     } else {
                         let allGroup = await client.getAllGroups()
                         if (allGroup.length > groupLimit) return reply(
-                            `Mohon maaf, untuk mencegah overload\nSlot group free pada bot dibatasi.\nTotal group: ${allGroup.length}/${groupLimit}\nChat /owner untuk sewa\n` +
-                            `\nSewa aja murah kok. 10k masa aktif 1 bulan.\n` +
+                            `Mohon maaf, untuk mencegah overload\n` +
+                            `Slot group free pada bot dibatasi.\n` +
+                            `Total group: ${allGroup.length}/${groupLimit}\n\n` +
+                            `Chat /owner untuk sewa. Harga 10k masa aktif 1 bulan.\n` +
                             `Mau sewa otomatis? Gunakan link berikut:\n` +
                             `Saweria: https://saweria.co/dngda \n` +
                             `Masukkan hanya link group kalian dalam kolom *"Pesan"* di website saweria`
