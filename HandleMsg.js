@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-15 22:04:43
+ * @ Modified time: 2021-07-16 13:38:56
  * @ Description: Handling message
  */
 
@@ -551,7 +551,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         })()`)
                     if (typeof evaled !== 'string') evaled = inspect(evaled)
                     if (chats.includes('return')) sendText(`${evaled}`)
-                    else reply(`✅OK!`)
+                    else reply(`✅ OK!`)
                 } catch (err) {
                     console.log(err)
                     sendText(`${err}`)
@@ -2266,6 +2266,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'listonline': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     let msg = `╔══✪〘 List Online 〙✪\n${readMore}`
                     lodash.filter(chat.presence.chatstates, (n) => !!n?.type).forEach(item => {
                         msg += `╠> @${item.id.replace(/@c\.us/g, '')}\n`
@@ -2416,6 +2417,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'tagall':
                 case 'alle': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     const groupMem = await client.getGroupMembers(groupId)
                     if (args.length != 0) {
                         let res = `✪〘 Mention All 〙✪\n${arg}\n\n------------------\n${readMore}`
