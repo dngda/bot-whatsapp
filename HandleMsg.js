@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-16 13:38:56
+ * @ Modified time: 2021-07-16 14:18:02
  * @ Description: Handling message
  */
 
@@ -283,9 +283,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const audioConverter = async (complexFilter, filterName) => {
             reply(resMsg.wait + `\nEstimasi ± ${(+quotedMsg.duration / 100).toFixed(0)} menit.`)
             const _inp = await decryptMedia(quotedMsg)
-            let time = moment(t * 1000).format('mmss')
-            let inpath = `./media/in_${filterName}_${time}.mp3`
-            let outpath = `./media/out_${filterName}_${time}.mp3`
+            let inpath = `./media/in_${filterName}_${t}.mp3`
+            let outpath = `./media/out_${filterName}_${t}.mp3`
             writeFileSync(inpath, _inp)
 
             Ffmpeg(inpath)
@@ -598,19 +597,22 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 /* #region Menu, stats and info sewa*/
                 case 'menu':
                 case 'help':
-                case 'start':
+                case 'start': {
                     await sendText(menuId.textMenu(pushname, t, prefix))
                     if ((isGroupMsg) && (isGroupAdmin)) sendText(`Menu Admin Grup: *${prefix}menuadmin*`)
                     if (isOwnerBot) sendText(`Menu Owner: *${prefix}menuowner*`)
                     break
-                case 'menuadmin':
+                }
+                case 'menuadmin': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     await sendText(menuId.textAdmin(prefix))
                     break
-                case 'menuowner':
+                }
+                case 'menuowner': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     await sendText(menuId.textOwner(prefix))
                     break
+                }
                 case 'join':
                 case 'sewa': {
                     if (args.length == 0) return reply(
@@ -859,7 +861,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     break
                 }
 
-                case 'hilih':
+                case 'hilih': {
                     if (args.length != 0 || isQuotedChat) {
                         const _input = isQuotedChat ? quotedMsg.body : arg
                         const _id = isQuotedChat ? quotedMsg.id : id
@@ -872,6 +874,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         await reply(`Mengubah kalimat menjadi hilih gitu deh\n\nketik ${prefix}hilih kalimat\natau reply chat menggunakan ${prefix}hilih`)
                     }
                     break
+                }
 
                 case 'urltoimg':
                 case 'ssweb':
@@ -1034,7 +1037,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         'or', 'ps', 'fa', 'pl', 'pa', 'ro', 'ru', 'sm', 'gd', 'sr', 'st', 'sn', 'sd',
                         'si', 'sk', 'sl', 'so', 'es', 'su', 'sw', 'sv', 'tg', 'ta', 'tt', 'te', 'th',
                         'tr', 'tk', 'uk', 'ur', 'ug', 'uz', 'vi', 'cy', 'xh', 'yi', 'yo', 'zu', 'zh-TW']
-
                     if (lang.includes(args[0])) {
                         translate(isQuotedChat ? quotedMsgObj.content.toString() : arg.trim().substring(arg.indexOf(' ') + 1), {
                             from: 'auto', to: args[0]
@@ -1049,7 +1051,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 // TODO implement text pro
                 case 'textpro': {
-
+                    sendText(`Feature coming soon`)
                     break
                 }
 
@@ -1928,7 +1930,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakGambar(from).then(async res => {
-                        let menit = res.answer.split(' ').length - 1
+                        let menit = res.answer.split(' ').length > 2 ? 3 : 1
                         let detik = menit * 60
                         await client.sendFileFromUrl(from, res.image, '', `Tebak Gambar diatas.\nJawab dengan *membalas pesan ini*.\n\nWaktunya ${menit} menit.\n\n*${prefix}skip* untuk skip`, id)
                             .then(() => {
@@ -1943,11 +1945,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakKata(from).then(async res => {
-                        let menit = 1
-                        let detik = menit * 60
+                        let detik = 60
                         await reply(`Tebak kata yang berhubungan.\nJawab dengan *membalas pesan ini*.\n\n` +
                             `${q3 + res.pertanyaan + q3}\n\n` +
-                            `Jumlah huruf: ${res.jawaban.length}\nWaktunya ${menit} menit.\n*${prefix}skip* untuk skip`)
+                            `Jumlah huruf: ${res.jawaban.length}\nWaktunya ${detik} detik.\n*${prefix}skip* untuk skip`)
                             .then(() => {
                                 startTebakRoomTimer(detik, res.jawaban)
                             })
@@ -1960,7 +1961,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakLirik(from).then(async res => {
-                        let detik = 90
+                        let detik = 100
                         await reply(`Tebak Lirik. Lengkapi lirik yang sesuai.\nJawab dengan *membalas pesan ini*.\n\n` +
                             `${q3 + res.question + q3}\n\n` +
                             `Jumlah huruf: ${res.answer.length}\nWaktunya ${detik} detik.\n*${prefix}skip* untuk skip`)
@@ -1976,7 +1977,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakJenaka(from).then(async res => {
-                        let detik = 90
+                        let detik = 100
                         await reply(`Tebakan Jenaka.\nJawab dengan *membalas pesan ini*.\n\n` +
                             `${q3 + res.question + q3}\n\n` +
                             `Jumlah kata: ${res.answer.split(/\s/ig).length}\n` +
@@ -1994,9 +1995,9 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 // Skip room
                 case 'skip': {
                     tebak.getAns(from).then(res => {
-                        if (!res) reply(`Tidak ada sesi Tebak berlangsung.`)
+                        if (!res) reply(`⛔ Tidak ada sesi Tebak berlangsung.`)
                         else {
-                            reply(`Sesi Tebak telah diskip!\nJawabannya: *${res.ans}*`)
+                            reply(`⏭ Sesi Tebak telah diskip!\nJawabannya: *${res.ans}*`)
                             tebak.delRoom(from)
                         }
                     })
@@ -2266,7 +2267,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'listonline': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
-                    if (!isGroupAdmin) return reply(resMsg.error.admin)
                     let msg = `╔══✪〘 List Online 〙✪\n${readMore}`
                     lodash.filter(chat.presence.chatstates, (n) => !!n?.type).forEach(item => {
                         msg += `╠> @${item.id.replace(/@c\.us/g, '')}\n`
@@ -2289,15 +2289,16 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     }
                     break
                 }
-                case 'mutegroup': {
+                case 'mutegroup':
+                case 'group': {
                     if (!isGroupMsg) return reply(resMsg.error.group)
                     if (!isGroupAdmin) return reply(resMsg.error.admin)
                     if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (args.length != 1) return reply(`Untuk mengubah settingan group chat agar hanya admin saja yang bisa chat\n\nPenggunaan:\n${prefix}mutegrup on --aktifkan\n${prefix}mutegrup off --nonaktifkan`)
-                    if (args[0] == 'on') {
-                        client.setGroupToAdminsOnly(groupId, true).then(() => sendText('Berhasil mengubah agar hanya admin yang dapat chat!'))
-                    } else if (args[0] == 'off') {
-                        client.setGroupToAdminsOnly(groupId, false).then(() => sendText('Berhasil mengubah agar semua anggota dapat chat!'))
+                    if (args[0] == 'on' || args[0] == 'close' || args[0] == 'tutup') {
+                        client.setGroupToAdminsOnly(groupId, true).then(() => sendText('⛔ Berhasil mengubah agar hanya *admin* yang dapat chat!'))
+                    } else if (args[0] == 'off' || args[0] == 'open' || args[0] == 'buka') {
+                        client.setGroupToAdminsOnly(groupId, false).then(() => sendText('✅ Berhasil mengubah agar *semua* anggota dapat chat!'))
                     } else {
                         reply(`Untuk mengubah settingan group chat agar hanya admin saja yang bisa chat\n\nPenggunaan:\n${prefix}mutegrup on --aktifkan\n${prefix}mutegrup off --nonaktifkan`)
                     }
@@ -2365,7 +2366,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (mentionedJidList[0] === botNumber) return await reply('Maaf, format pesan salah.\nTidak dapat mengeluarkan akun bot sendiri')
                     await client.sendTextWithMentions(from, `Request diterima, mengeluarkan:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
                     for (let ment of mentionedJidList) {
-                        if (groupAdmins.includes(ment)) return await sendText('Gagal, kamu tidak bisa mengeluarkan admin grup.')
+                        if (groupAdmins.includes(ment)) return await sendText('⛔ Gagal, kamu tidak bisa mengeluarkan admin group.')
+                        if (ownerNumber.includes(ment)) return await sendText('⛔ Gagal, kamu tidak bisa mengeluarkan owner bot.\nYa kali gue durkaha.')
                         await client.removeParticipant(groupId, ment)
                     }
                     break
@@ -2433,12 +2435,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         res += '╚═〘 *SeroBot* 〙'
                         await client.sendTextWithMentions(from, res)
                     }
-                    break
-                }
-
-                case 'tag': {
-                    if (!isGroupMsg) return reply(resMsg.error.group)
-                    reply(`Feature coming soon`)
                     break
                 }
                 /* #endregion Group */
