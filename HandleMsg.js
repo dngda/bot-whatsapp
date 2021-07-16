@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-16 14:18:02
+ * @ Modified time: 2021-07-17 00:18:43
  * @ Description: Handling message
  */
 
@@ -1840,7 +1840,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 case 'cekcovid': {
-                    let { data } = await get('https://api.terhambar.com/negara/Indonesia')
+                    let { data } = await get('https://api.terhambar.com/negara/Indonesia', { httpsAgent: httpsAgent })
                     if (!isQuotedLocation) return reply(`Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}cekcovid\n\n` +
                         `Status covid di Indonesia\n` +
                         `${q3}Tanggal      :${q3} ${data.terakhir}\n` +
