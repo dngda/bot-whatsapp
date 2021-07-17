@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 01:41:16
+ * @ Modified time: 2021-07-18 01:52:38
  * @ Description: Handling message
  */
 
@@ -50,7 +50,7 @@ import {
     createReadFileSync, processTime, commandLog, receivedLog, formatin, inArray, last,
     unlinkIfExists, isFiltered, webpToPng, addFilter, isUrl, sleep, lolApi, prev
 } from './utils/index.js'
-import { getLocationData, urlShortener, cariKasar, schedule, canvas, cekResi, tebak, scraper, menuId, sewa, meme, list, note, api } from './lib/index.js'
+import { getLocationData, urlShortener, cariKasar, schedule, canvas, cekResi, tebak, scraper, menuId, sewa, list, note, api } from './lib/index.js'
 import { uploadImages } from './utils/fetcher.js'
 import { cariNsfw } from './lib/kataKotor.js'
 /* #endregion */
@@ -867,8 +867,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         const _id = isQuotedChat ? quotedMsg.id : id
                         const _res = _input.replace(/[aiueo]/g, 'i')
                         reply(_res, _id)
-                        const ImageBase64 = await meme.custom('https://memegenerator.net/img/images/11599566.jpg', '', _res)
-                        client.sendFile(from, ImageBase64, 'image.png', '', _id).catch(e => { return printError(e) })
+                        const sUrl = api.memegen('https://memegenerator.net/img/images/11599566.jpg', '', _res)
+                        client.sendFileFromUrl(from, sUrl, 'image.png', '', _id).catch(e => { return printError(e) })
                     }
                     else {
                         await reply(`Mengubah kalimat menjadi hilih gitu deh\n\nketik ${prefix}hilih kalimat\natau reply chat menggunakan ${prefix}hilih`)
