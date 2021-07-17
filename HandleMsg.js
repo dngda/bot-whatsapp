@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-17 17:54:55
+ * @ Modified time: 2021-07-17 19:48:30
  * @ Description: Handling message
  */
 
@@ -254,8 +254,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             return null
         }
 
-        const sendFFU = async (url, capt = '') => {
-            sendText(resMsg.wait)
+        const sendFFU = async (url, capt = '', sendWait = true) => {
+            if (sendWait) sendText(resMsg.wait)
             if (!capt) capt = ''
             return client.sendFileFromUrl(from, url, '', capt, id)
                 .catch(e => { return printError(e) })
@@ -1551,7 +1551,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     sendText(resMsg.wait)
                     let data = await scraper.saveFromStory(browser, args[0].replace(/@/, '')).catch(e => printError(e, false))
                     if (data.length < args[1]) return reply(`Story tidak ditemukan. Jumlah: ${data.length}`)
-                    sendFFU(data[+args[1] - 1])
+                    sendFFU(data[+args[1] - 1], '', false)
                     break
                 }
                 /* #endregion End of Media Downloader */
