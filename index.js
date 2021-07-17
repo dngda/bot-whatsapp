@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-15 13:04:38
+ * @ Modified time: 2021-07-17 17:46:36
  * @ Description:
  */
 
@@ -13,6 +13,7 @@ import { canvas, schedule, sewa } from './lib/index.js'
 import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
 import { HandleMsg } from './HandleMsg.js'
+import { spawn } from 'child_process'
 import options from './utils/options.js'
 import puppeteer from 'puppeteer-extra'
 import PQueue from 'p-queue'
@@ -198,7 +199,7 @@ const start = async (client = new Client()) => {
                     chat.contact.name || chat.formattedTitle,
                     chat.groupMetadata.participants.length).catch(err => console.log(color('[ERR>]', 'red'), err))
                 await client.sendImage(event.chat, welcomeData, 'welcome.png', `Halo semua!👋✨ Anggota kita nambah satu nih\n-> @${event.who.replace(/@c\.us/g, '')}`)
-                
+
             }
             // kondisi ketika seseorang dikick/keluar dari group
             if (event.action === 'remove' && event.who !== host && isWelcome) {
@@ -228,6 +229,13 @@ const start = async (client = new Client()) => {
                     fs.writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
                 }
             }
+        }).catch(e => {
+            console.log(color('[ERR>]', 'red'), e)
+        })
+
+        client.getPage().on('error', () => {
+            client.sendText(ownerNumber, `⌛ Page Error! Server bot akan direstart!`)
+            spawn('pm2 reload all')
         })
 
     } catch (err) {

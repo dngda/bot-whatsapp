@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-17 00:18:43
+ * @ Modified time: 2021-07-17 17:54:55
  * @ Description: Handling message
  */
 
@@ -1549,7 +1549,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `Penggunaan: ${prefix}igstory <username> <nomor urut>\n` +
                         `Contoh: ${prefix}igstory awkarin 1`)
                     sendText(resMsg.wait)
-                    let data = await scraper.saveFromStory(browser, args[0].replace(/@/, '')).then(e => printError(e, false))
+                    let data = await scraper.saveFromStory(browser, args[0].replace(/@/, '')).catch(e => printError(e, false))
                     if (data.length < args[1]) return reply(`Story tidak ditemukan. Jumlah: ${data.length}`)
                     sendFFU(data[+args[1] - 1])
                     break
