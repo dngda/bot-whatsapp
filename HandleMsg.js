@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 01:52:38
+ * @ Modified time: 2021-07-18 02:04:57
  * @ Description: Handling message
  */
 
@@ -1334,15 +1334,15 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             .setFfmpegPath('./bin/ffmpeg.exe')
                             .complexFilter('[0:v]scale=512:512,eq=saturation=0.3,overlay=0:0')
                             .save(path)
-                            .on('end', () => {
-                                client.sendMp4AsSticker(from, path, { endTime: '00:00:06.0' }, stickerMetadata)
+                            .on('end', async () => {
+                                await client.sendMp4AsSticker(from, path, { endTime: '00:00:06.0' }, stickerMetadata)
                                     .then(console.log(color('[LOGS]', 'grey'), `Wasted Sticker Processed for ${processTime(t, moment())} Seconds`))
                                 if (existsSync(path)) unlinkSync(path)
                             })
                             .on('error', (e) => {
                                 console.log('An error occurred: ' + e.message)
-                                reply(resMsg.error.norm)
                                 if (existsSync(path)) unlinkSync(path)
+                                return reply(resMsg.error.norm)
                             })
                     } catch (err) { printError(err) }
                     break
