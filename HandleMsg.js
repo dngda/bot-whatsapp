@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-17 19:48:30
+ * @ Modified time: 2021-07-18 01:41:16
  * @ Description: Handling message
  */
 
@@ -934,10 +934,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             let encryptMedia = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                             let mediaData = await decryptMedia(encryptMedia)
                             if (isQuotedSticker) mediaData = await webpToPng(mediaData)
-                            let getUrl = await uploadImages(mediaData, false)
-                            let ImageBase64 = await meme.custom(getUrl, top, bottom)
-                            if (!isQuotedSticker) client.sendFile(from, ImageBase64, 'image.png', 'Here you\'re', id).catch(e => { return printError(e) })
-                            else await client.sendImageAsSticker(from, ImageBase64, stickerMetadata)
+                            let imgUrl = await uploadImages(mediaData, false)
+                            let sUrl = api.memegen(imgUrl, top, bottom)
+                            if (!isQuotedSticker) client.sendFileFromUrl(from, sUrl, 'image.png', 'Here you\'re', id).catch(e => { return printError(e) })
+                            else await client.sendStickerfromUrl(from, sUrl, stickerMetadata)
                                 .then(() => {
                                     sendText(resMsg.success.sticker)
                                     console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
@@ -1326,8 +1326,24 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         let enc = (isQuotedImage || isQuotedSticker) ? quotedMsg : message
                         let mediaData = await decryptMedia(enc)
                         if (isQuotedSticker) mediaData = await webpToPng(mediaData)
-                        let _url = await uploadImages(mediaData, true)
-                        sendSFU(lolApi(`editor/wasted`, { img: _url }), false)
+                        const inp = './media/wasted.png'
+                        const path = './media/wastedres.mp4'
+                        writeFileSync(inp, mediaData)
+                        Ffmpeg(inp)
+                            .addInput('./src/mov/wasted.mov')
+                            .setFfmpegPath('./bin/ffmpeg.exe')
+                            .complexFilter('[0:v]scale=512:512,eq=saturation=0.3,overlay=0:0')
+                            .save(path)
+                            .on('end', () => {
+                                client.sendMp4AsSticker(from, path, { endTime: '00:00:06.0' }, stickerMetadata)
+                                    .then(console.log(color('[LOGS]', 'grey'), `Wasted Sticker Processed for ${processTime(t, moment())} Seconds`))
+                                if (existsSync(path)) unlinkSync(path)
+                            })
+                            .on('error', (e) => {
+                                console.log('An error occurred: ' + e.message)
+                                reply(resMsg.error.norm)
+                                if (existsSync(path)) unlinkSync(path)
+                            })
                     } catch (err) { printError(err) }
                     break
                 }
@@ -1707,7 +1723,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'memes':
                 case 'meme': {
-                    const randmeme = await meme.random()
+                    const randmeme = await api.sreddit()
                     client.sendFileFromUrl(from, randmeme.url, '', randmeme.title, id)
                         .catch(e => { return printError(e) })
                     break
