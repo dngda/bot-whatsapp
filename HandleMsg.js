@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 17:24:18
+ * @ Modified time: 2021-07-18 17:46:14
  * @ Description: Handling message
  */
 
@@ -1947,7 +1947,6 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'tbg':
                 case 'tebakgambar': {
-                    if (!isLolApiActive) return sendText(`❌ Maaf fitur sedang tidak aktif!`)
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakGambar(from).then(async res => {
