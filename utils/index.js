@@ -3,7 +3,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-05-31 22:33:11
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 17:26:01
+ * @ Modified time: 2021-07-19 00:07:48
  * @ Description:
  */
 
@@ -204,7 +204,7 @@ const initGlobalVariable = () => {
     global.q3 = '```'
     global.readMore = `\u00AD`.repeat(1500) //it print 1500 characters so that makes whatsapp add 'read more' button
     global.color = (text, color) => _color(text, color)
-    global.isLolApiActive = true
+    global.isLolApiActive = false
     global.simi = 0
 }
 
