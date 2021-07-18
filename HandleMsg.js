@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 20:22:43
+ * @ Modified time: 2021-07-18 22:26:30
  * @ Description: Handling message
  */
 
@@ -71,6 +71,7 @@ const antiKasar = JSON.parse(createReadFileSync('./data/ngegas.json'))
 const antiKasarKick = JSON.parse(createReadFileSync('./data/ngegaskick.json'))
 const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
 const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
+const antiVirtex = JSON.parse(createReadFileSync('./data/antivirtex.json'))
 const disableBot = JSON.parse(createReadFileSync('./data/disablebot.json'))
 const groupPrem = JSON.parse(createReadFileSync('./data/premiumgroup.json'))
 const groupBanned = JSON.parse(createReadFileSync('./data/groupbanned.json'))
@@ -202,6 +203,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             if (isGroupMsg) _whenGroup = `in ${color(name || formattedTitle)}`
             console.log(color('[LARG]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(croppedChats, 'grey'), 'from', color(pushname), _whenGroup)
             return client.deleteMessage(from, id, true)
+        }
+
+        if (chats?.length > 10000 && antiVirtex.includes(chatId)) {
+            client.sendTextWithMentions(from, `💣 Member @${pengirim.replace(/@c\.us/, '')} terdeteksi mengirimkan pesan terlalu panjang! Auto kick!`)
+            client.removeParticipant(from, pengirim)
+            client.sendText(from, `💣 AWAS VIRTEX! TANDAI TELAH DIBACA 💣💣💣\n` + `\n`.repeat(200) + `Pengirim: ${pushname} -> ${pengirim}`)
         }
         /* #endregion */
 
@@ -2594,6 +2601,27 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         reply('Fitur anti link group sudah di non-Aktifkan')
                     } else {
                         reply(`Untuk mengaktifkan Fitur anti link group pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengirimkan link group lain maka akan terkick otomatis\n\nPenggunaan\n${prefix}antilinkgroup on --mengaktifkan\n${prefix}antilinkgroup off --nonaktifkan`)
+                    }
+                    break
+                }
+                case 'antivirtex': {
+                    if (!isGroupMsg) return reply(resMsg.error.group)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (args[0] === 'on') {
+                        if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
+                        let pos = antiVirtex.indexOf(chatId)
+                        if (pos != -1) return reply('Fitur anti virtex group sudah aktif!')
+                        antiVirtex.push(chatId)
+                        writeFileSync('./data/antivirtex.json', JSON.stringify(antiVirtex))
+                        reply('Fitur anti virtex sudah di Aktifkan')
+                    } else if (args[0] === 'off') {
+                        let pos = antiVirtex.indexOf(chatId)
+                        if (pos === -1) return reply('Fitur anti virtex memang belum aktif!')
+                        antiVirtex.splice(pos, 1)
+                        writeFileSync('./data/antivirtex.json', JSON.stringify(antiVirtex))
+                        reply('Fitur anti virtex sudah di non-Aktifkan')
+                    } else {
+                        reply(`Untuk mengaktifkan Fitur anti virtex pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengirimkan pesan terlalu panjang maka akan terkick otomatis\n\nPenggunaan\n${prefix}antivirtex on --mengaktifkan\n${prefix}antivirtex off --nonaktifkan`)
                     }
                     break
                 }
