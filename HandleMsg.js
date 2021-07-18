@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 23:47:55
+ * @ Modified time: 2021-07-19 00:06:43
  * @ Description: Handling message
  */
 
@@ -1513,8 +1513,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'tiktok': case 'tt':
                 case 'tiktok1': case 'tt1':
                 case 'tiktok2': case 'tt2':
-                case 'tiktok3': case 'tt3':
-                case 'tiktok4': case 'tt4': {
+                case 'tiktok3': case 'tt3': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok tanpa watermark. Bagaimana caranya?\nTinggal ketik ${prefix}tiktok (alamat video tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
