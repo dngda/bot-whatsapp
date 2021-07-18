@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 19:54:35
+ * @ Modified time: 2021-07-18 20:22:43
  * @ Description: Handling message
  */
 
@@ -2868,9 +2868,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let count = 0
                     for (let group of allGroupz) {
                         let _id = group.contact.id
-                        let isSewa = sewa.isSewa(_id)
                         let isPrem = groupPrem.includes(_id)
-                        if (!isPrem && !isSewa) {
+                        if (!isPrem) {
                             await client.sendText(_id, `Maaf bot sedang pembersihan, total group aktif : ${allGroupz.length}.\nTerima kasih.`)
                             await sleep(2000)
                             await client.leaveGroup(_id)
