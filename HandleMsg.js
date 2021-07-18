@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 19:29:09
+ * @ Modified time: 2021-07-18 19:54:35
  * @ Description: Handling message
  */
 
@@ -661,14 +661,31 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             `Masukkan hanya link group kalian dalam kolom *"Pesan"* di website saweria`
                         )
                         if (groupInfo?.size < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
-                        if (groupInfo?.id) await sewa.trialSewa(client, args[0]).then(res => {
-                            if (res) reply(`✅ Berhasil claim trial sewa bot selama 7 hari.`)
-                            else reply(`💣 Group sudah pernah claim trial. Tunggu habis dulu cuy!`)
-                        }).catch(e => {
-                            console.log(color('[ERR>]', 'red'), e)
-                            reply(resMsg.error.join)
-                        })
+                        reply(`⌛ Oke tunggu diproses sama owner ya!`)
+                        client.sendText(ownerNumber, `Ada yang mau claim trial:\n` +
+                            `${q3}Pushname  :${q3} ${pushname}\n` +
+                            `${q3}Pemohon   :${q3} ${pengirim}\n` +
+                            `${q3}GroupLink :${q3} ${args[0]}\n`
+                        )
+                        client.sendText(ownerNumber, `${prefix}trial ${pengirim} ${args[0]}`)
                     }
+                    break
+                }
+                case 'trial': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    if (args.length != 2) return reply(`Format salah. Untuk claim trial gunakan.\n${prefix}trial <senderid> <linkg>`)
+                    await sewa.trialSewa(client, args[1]).then(res => {
+                        if (res) {
+                            reply(`✅ Berhasil claim trial sewa bot selama 7 hari.`)
+                            client.sendText(args[0], `✅ Berhasil claim trial sewa bot selama 7 hari.`)
+                        }
+                        else {
+                            reply(`💣 Group sudah pernah claim trial. Tunggu habis dulu cuy!`)
+                            client.sendText(args[0], `💣 Group sudah pernah claim trial. Tunggu habis dulu cuy!`)
+                        }
+                    }).catch(e => {
+                        printError(e, true, false)
+                    })
                     break
                 }
                 case 'stat':
