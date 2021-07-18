@@ -8,6 +8,7 @@ parserOptions:
 rules: {}
 globals:
   LOCAL_DATE_OPTIONS: readonly
+  isLolApiActive: writable
   readMore: readonly
   color: readonly
   simi: writable

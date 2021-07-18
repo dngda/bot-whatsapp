@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 02:04:57
+ * @ Modified time: 2021-07-18 17:24:18
  * @ Description: Handling message
  */
 
@@ -971,7 +971,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (args.length == 0 && !isQuotedChat) return reply(`Membuat bot menulis teks yang dikirim menjadi gambar\n` +
                         `Pemakaian: ${prefix}nulis [teks]\n\ncontoh: ${prefix}nulis i love you 3000`)
                     const content = isQuotedChat ? quotedMsgObj.content.toString() : arg
-                    await client.sendImage(from, lolApi(`nulis`, { text: content }), '', ``, id).catch(e => { return printError(e) })
+                    const resu = await api.tulis(content)
+                    await client.sendImage(from, resu, '', ``, id).catch(e => { return printError(e) })
                     break
                 }
 
@@ -1269,6 +1270,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             switch (command) {
                 /* #region Maker */
                 case 'attp': {
+                    if (!isLolApiActive) return sendText(`❌ Maaf fitur sedang tidak aktif!`)
                     if (args.length == 0) return reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
                     reply(resMsg.wait)
                     let txt = isQuotedChat ? quotedMsg.body : arg
@@ -1304,6 +1306,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'trigger':
                 case 'trigger2': {
+                    if (!isLolApiActive) return sendText(`❌ Maaf fitur sedang tidak aktif!`)
                     if (!isMedia && !isQuotedImage && !isQuotedSticker) return reply(`Trigger gambar. Reply gambar atau kirim gambar dengan caption ${prefix}trigger atau ${prefix}trigger2`)
                     try {
                         if (quotedMsg?.isAnimated) return reply(`Error! Tidak support sticker bergerak.`)
@@ -1335,9 +1338,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             .complexFilter('[0:v]scale=512:512,eq=saturation=0.3,overlay=0:0')
                             .save(path)
                             .on('end', async () => {
-                                await client.sendMp4AsSticker(from, path, { endTime: '00:00:06.0' }, stickerMetadata)
+                                await client.sendMp4AsSticker(from, path, undefined, stickerMetadata)
                                     .then(console.log(color('[LOGS]', 'grey'), `Wasted Sticker Processed for ${processTime(t, moment())} Seconds`))
                                 if (existsSync(path)) unlinkSync(path)
+                                sendText(resMsg.success.sticker)
                             })
                             .on('error', (e) => {
                                 console.log('An error occurred: ' + e.message)
@@ -1943,6 +1947,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'tbg':
                 case 'tebakgambar': {
+                    if (!isLolApiActive) return sendText(`❌ Maaf fitur sedang tidak aktif!`)
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakGambar(from).then(async res => {
@@ -1958,6 +1963,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'tbk':
                 case 'tebakkata': {
+                    if (!isLolApiActive) return sendText(`❌ Maaf fitur sedang tidak aktif!`)
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakKata(from).then(async res => {
@@ -1974,6 +1980,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'tbl':
                 case 'tebaklirik': {
+                    if (!isLolApiActive) return sendText(`❌ Maaf fitur sedang tidak aktif!`)
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakLirik(from).then(async res => {
@@ -1990,6 +1997,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'tbj':
                 case 'tebakjenaka': {
+                    if (!isLolApiActive) return sendText(`❌ Maaf fitur sedang tidak aktif!`)
                     const isRoomExist = await tebak.isRoomExist(from)
                     if (isRoomExist) return reply(`Sesi Tebak sedang berlangsung. ${prefix}skip untuk skip sesi.`)
                     await tebak.getTebakJenaka(from).then(async res => {
