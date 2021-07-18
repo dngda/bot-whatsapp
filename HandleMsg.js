@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-18 17:46:14
+ * @ Modified time: 2021-07-18 19:29:09
  * @ Description: Handling message
  */
 
@@ -73,6 +73,7 @@ const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json')
 const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
 const disableBot = JSON.parse(createReadFileSync('./data/disablebot.json'))
 const groupPrem = JSON.parse(createReadFileSync('./data/premiumgroup.json'))
+const groupBanned = JSON.parse(createReadFileSync('./data/groupbanned.json'))
 const ownerBotOnly = JSON.parse(createReadFileSync('./data/ownerbotonly.json'))
 // src
 const Surah = JSON.parse(readFileSync('./src/json/surah.json'))
@@ -629,6 +630,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     const isLinkGroup = linkGroup.match(/(https:\/\/chat\.whatsapp\.com)/gi)
                     if (!isLinkGroup) return reply('Maaf link group-nya salah! Silakan kirim link yang benar')
                     let groupInfo = await client.inviteInfo(linkGroup).catch(e => { return printError(e) })
+                    if (groupBanned.includes(groupInfo.id)) return reply(`⛔ Group Banned`)
                     if (isOwnerBot) {
                         await client.joinGroupViaLink(linkGroup)
                             .then(async () => {
@@ -2786,6 +2788,28 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (pos === -1) return reply('Not found!')
                     banned.splice(pos, 1)
                     writeFileSync('./data/banned.json', JSON.stringify(banned))
+                    reply('Success unbanned target!')
+                }
+                    break
+                case 'gban': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    if (args.length == 0) return reply(`Untuk banned group agar tidak bisa masuk\n\nCaranya ketik: \n${prefix}gban 628xx-xx@g.us --untuk mengaktifkan\n${prefix}ungban 628xx-xx@g.us --untuk nonaktifkan`)
+                    if (!args[0].endsWith('@g.us')) return reply(`Error! Id group tidak valid`)
+                    let pos = banned.indexOf(args[0])
+                    if (pos != -1) return reply('Target already banned!')
+                    groupBanned.push(args[0])
+                    writeFileSync('./data/groupbanned.json', JSON.stringify(groupBanned))
+                    reply('Success banned target!')
+                    break
+                }
+
+                case 'ungban': {
+                    if (!isOwnerBot) return reply(resMsg.error.owner)
+                    if (args.length == 0) return reply(`Untuk banned group agar tidak bisa masuk\n\nCaranya ketik: \n${prefix}ban 628xx --untuk mengaktifkan\n${prefix}ungban 628xx-xx@g.us --untuk nonaktifkan`)
+                    let pos = groupBanned.indexOf(args[0])
+                    if (pos === -1) return reply('Not found!')
+                    groupBanned.splice(pos, 1)
+                    writeFileSync('./data/banned.json', JSON.stringify(groupBanned))
                     reply('Success unbanned target!')
                 }
                     break
