@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-19 00:06:43
+ * @ Modified time: 2021-07-19 00:12:35
  * @ Description: Handling message
  */
 
@@ -341,7 +341,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             let apiSimi = (q) => api.simiLol(q)
             if (simi == 0) return null
             if (simi == 1) apiSimi = (q) => api.simiLol(q)
-            if (simi == 2) apiSimi = (q) => api.simi404(q)
+            if (simi == 2) apiSimi = (q) => api.simiPais(q)
             if (simi == 3) apiSimi = (q) => api.simiSumi(q)
             let respon = await apiSimi(inp.replace(/\b(sero)\b/ig, 'simi')).catch(e => { return console.log(color('[ERR>]', 'red'), e) })
             if (respon) {
