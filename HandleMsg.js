@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-19 09:59:36
+ * @ Modified time: 2021-07-19 10:25:46
  * @ Description: Handling message
  */
 
@@ -1296,11 +1296,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             switch (command) {
                 /* #region Maker */
                 case 'attp': {
-                    if (!isLolApiActive) return sendText(`❌ Maaf fitur sedang tidak aktif!`)
                     if (args.length == 0) return reply(`Animated text to picture. Contoh ${prefix}attp Halo sayang`)
                     reply(resMsg.wait)
                     let txt = isQuotedChat ? quotedMsg.body : arg
-                    sendSFU(lolApi(`attp`, { text: txt }), false)
+                    sendSFU(`https://api.xteam.xyz/attp?file&text=${txt}`, false)
                     break
                 }
 
