@@ -1,7 +1,7 @@
 {
   "ownerNumber": "628xxxxx@c.us",
   "memberLimit": 3,
-  "groupLimit": 50,
+  "groupLimit": 30,
   "prefix": "/",
   "groupOfc": "",
   "stickerHash": {
