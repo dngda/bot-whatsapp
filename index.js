@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-17 17:46:36
+ * @ Modified time: 2021-07-19 20:16:47
  * @ Description:
  */
 
@@ -30,7 +30,7 @@ let {
     prefix
 } = setting
 
-const queue = new PQueue({ concurrency: 5, timeout: 3000, throwOnTimeout: true })
+const queue = new PQueue({ concurrency: 8, timeout: 3000, throwOnTimeout: true })
 queue.on('next', () => {
     if (queue.size > 0 || queue.pending > 0) console.log(color('[==>>]', 'red'), `In-process: ${queue.pending} In-queue: ${queue.size}`)
 })

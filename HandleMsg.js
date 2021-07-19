@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-19 10:59:55
+ * @ Modified time: 2021-07-19 20:15:14
  * @ Description: Handling message
  */
 
@@ -1512,8 +1512,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 case 'tiktok': case 'tt':
                 case 'tiktok1': case 'tt1':
-                case 'tiktok2': case 'tt2':
-                case 'tiktok3': case 'tt3': {
+                case 'tiktok2': case 'tt2': {
                     if (args.length === 0 && !isQuotedChat) return reply(`Download Tiktok tanpa watermark. Bagaimana caranya?\nTinggal ketik ${prefix}tiktok (alamat video tiktok)\nTanpa tanda kurung`)
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
@@ -1522,18 +1521,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     try {
                         let _mp4Url
                         if (!/\d/.test(command)) {
-                            let result = await api.ttdl(urls)
-                            _mp4Url = result?.nowm
-                        }
-                        if (command.endsWith('1')) {
                             let result = await scraper.snaptik(browser, urls)
                             _mp4Url = result?.source
                         }
-                        if (command.endsWith('2')) {
+                        if (command.endsWith('1')) {
                             let result = await scraper.snaptik(browser, urls)
                             _mp4Url = result?.server1
                         }
-                        if (command.endsWith('3')) {
+                        if (command.endsWith('2')) {
                             let ress = await scraper.ssstik(browser, urls)
                             _mp4Url = ress?.mp4
                         }
