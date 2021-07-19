@@ -2328,6 +2328,25 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 // Admin only
+                case 'setname':
+                case 'settitle':
+                    try {
+                        if (!isBotGroupAdmin) return reply(resMsg.error.botAdm);
+                        if (!isGroupAdmin) return reply(resMsg.error.admin);
+                        if (args.length === 0) return reply(`Untuk mengganti nama group gunakan perintah *${prefix}setname <nama group baru>* contoh: ${prefix}setname nganu`);
+                        let subject = arg;
+                        const page = await client.getPage();
+                        let res = await page.evaluate((groupId, subject) => {
+                            return window.Store.WapQuery.changeSubject(groupId, subject);
+                        }, groupId, subject);
+                
+                        if(res.status == 200) {
+                            reply(`Berhasil mengganti nama group ke *${subject}*`);
+                        }
+                    } catch (error) {
+                        printError(error);
+                    }
+                    break;                
                 case "revoke": {
                     if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (!isGroupAdmin) return reply(resMsg.error.admin)
@@ -2713,6 +2732,43 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
             switch (command) {
                 /* #region Owner Commands */
+                case 'getstory':
+                    try {
+                        let param = body.slice(10).replace('@', '');
+                        if (!param) return reply('tag user lah');
+                        const page = await client.getPage();
+                        const story = await page.evaluate(() => {
+                            let obj = window.Store.Msg.filter(x => x.__x_id.remote.server == 'broadcast');
+                            let nganu = [];
+                            for (let asu of obj) {
+                                nganu.push(window.WAPI._serializeRawObj(asu));
+                            }
+                            return nganu;
+                        })
+                        client.sendTextWithMentions(from, `_fetching whatsapp status from @${param}_`);
+                        await sleep(2000);
+                        let bjingan = story.filter(v => v.author.user == param);
+                        if (bjingan.length === 0) return reply('Tidak ada story atau mungkin belum save kontak')
+                        for (let i = 0; i < bjingan.length; i++) {
+                            if (bjingan[i].type == 'chat') {
+                                let caption = `*From :* wa.me/${bjingan[i].author.user}\n` +
+                                `*Time :* ${moment(bjingan[i].t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
+                                `*Type :* ${bjingan[i].type}\n` +
+                                `*Text :* ${bjingan[i].body}`
+                                reply(caption)
+                            } else if (bjingan[i].type == 'image' || bjingan[i].type == 'video') {
+                                let caption = `*From :* wa.me/${bjingan[i].author.user}\n` +
+                                `*Time :* ${moment(bjingan[i].t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
+                                `*Type :* ${bjingan[i].type}\n` + `${bjingan[i].type == 'video' ? `*Duration :* ${bjingan[i].duration}s\n` : ''}` +
+                                `*Caption :* ${bjingan[i].caption}`
+                                const mediaData = await decryptMedia(bjingan[i])
+                                client.sendImage(from, `data:${bjingan[i].mimetype};base64,${mediaData.toString('base64')}`, 'nganu' + bjingan[i].type == 'image' ? '.jpg' : '.mp4', caption, id).catch(e => { return printError(e) })
+                            }
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
+                    break;
                 case 'owneronly': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (!isGroupMsg) return reply(resMsg.error.group)
