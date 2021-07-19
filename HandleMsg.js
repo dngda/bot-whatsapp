@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-19 05:50:02
+ * @ Modified time: 2021-07-19 09:59:36
  * @ Description: Handling message
  */
 
@@ -1522,7 +1522,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     try {
                         let _mp4Url
                         if (!/\d/.test(command)) {
-                            let result = await scraper.ttdl(urls)
+                            let result = await api.ttdl(urls)
                             _mp4Url = result?.nowm
                         }
                         if (command.endsWith('1')) {
