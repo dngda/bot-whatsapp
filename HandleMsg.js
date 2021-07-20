@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-20 10:21:14
+ * @ Modified time: 2021-07-20 10:46:36
  * @ Description: Handling message
  */
 
@@ -1548,7 +1548,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let urls = isQuotedChat ? quotedMsg.body : arg
                     if (!isUrl(urls)) { return reply('Maaf, link yang kamu kirim tidak valid.') }
                     sendText(resMsg.wait)
-                    let result = await scraper.ssstik(urls).catch(e => { return printError(e) })
+                    let result = await scraper.ssstik(browser, urls).catch(e => { return printError(e) })
                     let _id = quotedMsg != null ? quotedMsg.id : id
                     if (result.mp3) client.sendFileFromUrl(from, result.mp3, '', '', _id).catch(e => { return printError(e) })
                     else reply('Maaf, link yang kamu kirim tidak valid.')
