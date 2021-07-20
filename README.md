@@ -231,3 +231,4 @@ Fix Stuck on linux, install google chrome stable:
 - [MhankBarBar](https://github.com/MhankBarBar/whatsapp-bot)
 - [ArugaZ](https://github.com/ArugaZ/whatsapp-bot)
 - [Aziz0404](https://github.com/nuraziz0404/botwa)
+- [Gimenz](https://github.com/Gimenz)
