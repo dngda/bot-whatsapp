@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-21 13:41:24
+ * @ Modified time: 2021-07-21 21:34:54
  * @ Description: Handling message
  */
 
@@ -648,7 +648,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                         await client.sendText(groupInfo.id, resMsg.success.greeting)
                                     }, 2000)
                                 } else {
-                                     // silently join group with owneronly mode. Add 'owneronly' after grouplink
+                                    // silently join group with owneronly mode. Add 'owneronly' after grouplink
                                     let pos = ownerBotOnly.indexOf(groupInfo.id)
                                     if (pos == -1) {
                                         ownerBotOnly.push(groupInfo.id)
@@ -2734,37 +2734,48 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
             switch (command) {
                 /* #region Owner Commands */
-                case 'getstory': {
+                case 'getstory':
+                case 'getstatus': {
                     try {
-                        let param = args[0].replace(/@/, '')
-                        if (!param) return reply('Tag user lah')
+                        let param = args[0]?.replace(/@/, '')
                         const page = client.getPage()
-                        const story = await page.evaluate(() => {
+                        const stories = await page.evaluate(() => {
                             let obj = window.Store.Msg.filter(x => x.__x_id.remote.server == 'broadcast')
-                            let nganu = []
-                            for (let asu of obj) {
-                                nganu.push(window.WAPI._serializeRawObj(asu))
+                            let res = []
+                            for (let o of obj) {
+                                res.push(window.WAPI._serializeRawObj(o))
                             }
-                            return nganu
+                            return res
                         })
+                        if (args.length == 0) {
+                            let storyList = `Status tersedia:\n`
+                            let nodupe = lodash.uniqBy(stories, 'author.user')
+                            for (let s of nodupe) {
+                                storyList += `${s.author.user} -> @${s.author.user}\n`
+                            }
+                            client.sendTextWithMentions(from, storyList)
+                            return sendText('Tag user lah')
+                        }
                         client.sendTextWithMentions(from, `_fetching whatsapp status from @${param}_`)
                         await sleep(2000)
-                        let bjingan = story.filter(v => v.author.user == param)
-                        if (bjingan.length === 0) return reply('Tidak ada story atau mungkin belum save kontak')
-                        for (let i = 0; i < bjingan.length; i++) {
-                            if (bjingan[i].type == 'chat') {
-                                let caption = `*From :* wa.me/${bjingan[i].author.user}\n` +
-                                    `*Time :* ${moment(bjingan[i].t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
-                                    `*Type :* ${bjingan[i].type}\n` +
-                                    `*Text :* ${bjingan[i].body}`
+                        let userStories = stories.filter(v => v.author.user == param)
+                        if (userStories.length === 0) return reply('Tidak ada status atau mungkin belum save kontak')
+                        for (let story of userStories) {
+                            if (story.type == 'chat') {
+                                let caption =
+                                    `${q3}From  :${q3} @${story.author.user}\n` +
+                                    `${q3}Time  :${q3} ${moment(story.t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
+                                    `${q3}Type  :${q3} ${story.type}\n` +
+                                    `${q3}Text  :${q3} ${story.body}`
                                 reply(caption)
-                            } else if (bjingan[i].type == 'image' || bjingan[i].type == 'video') {
-                                let caption = `*From :* wa.me/${bjingan[i].author.user}\n` +
-                                    `*Time :* ${moment(bjingan[i].t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
-                                    `*Type :* ${bjingan[i].type}\n` + `${bjingan[i].type == 'video' ? `*Duration :* ${bjingan[i].duration}s\n` : ''}` +
-                                    `*Caption :* ${bjingan[i].caption}`
-                                const mediaData = await decryptMedia(bjingan[i])
-                                client.sendImage(from, `data:${bjingan[i].mimetype};base64,${mediaData.toString('base64')}`, 'nganu' + bjingan[i].type == 'image' ? '.jpg' : '.mp4', caption, id).catch(e => { return printError(e) })
+                            } else if (story.type == 'image' || story.type == 'video') {
+                                let caption =
+                                    `${q3}From     :${q3} @${story.author.user}\n` +
+                                    `${q3}Time     :${q3} ${moment(story.t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
+                                    `${q3}Type     :${q3} ${story.type}\n` + `${story.type == 'video' ? `${q3}Duration :${q3} ${story.duration}s\n` : ''}` +
+                                    `${q3}Caption  :${q3} ${story.caption || '_none_'}`
+                                const mediaData = await decryptMedia(story)
+                                client.sendImage(from, mediaData, '', caption, id).catch(e => { return printError(e) })
                             }
                         }
                     } catch (error) {
