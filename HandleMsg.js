@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-20 10:46:36
+ * @ Modified time: 2021-07-21 13:41:24
  * @ Description: Handling message
  */
 
@@ -648,6 +648,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                         await client.sendText(groupInfo.id, resMsg.success.greeting)
                                     }, 2000)
                                 } else {
+                                     // silently join group with owneronly mode. Add 'owneronly' after grouplink
                                     let pos = ownerBotOnly.indexOf(groupInfo.id)
                                     if (pos == -1) {
                                         ownerBotOnly.push(groupInfo.id)
@@ -2329,24 +2330,25 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                 // Admin only
                 case 'setname':
-                case 'settitle':
+                case 'settitle': {
                     try {
-                        if (!isBotGroupAdmin) return reply(resMsg.error.botAdm);
-                        if (!isGroupAdmin) return reply(resMsg.error.admin);
-                        if (args.length === 0) return reply(`Untuk mengganti nama group gunakan perintah *${prefix}setname <nama group baru>* contoh: ${prefix}setname nganu`);
-                        let subject = arg;
-                        const page = await client.getPage();
+                        if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
+                        if (!isGroupAdmin) return reply(resMsg.error.admin)
+                        if (args.length === 0) return reply(`Untuk mengganti nama group gunakan perintah *${prefix}setname <nama group baru>* contoh: ${prefix}setname nganu`)
+                        let subject = arg
+                        const page = client.getPage()
                         let res = await page.evaluate((groupId, subject) => {
-                            return window.Store.WapQuery.changeSubject(groupId, subject);
-                        }, groupId, subject);
-                
-                        if(res.status == 200) {
-                            reply(`Berhasil mengganti nama group ke *${subject}*`);
+                            return window.Store.WapQuery.changeSubject(groupId, subject)
+                        }, groupId, subject)
+
+                        if (res.status == 200) {
+                            reply(`Berhasil mengganti nama group ke *${subject}*`)
                         }
                     } catch (error) {
-                        printError(error);
+                        printError(error)
                     }
-                    break;                
+                    break
+                }
                 case "revoke": {
                     if (!isBotGroupAdmin) return reply(resMsg.error.botAdm)
                     if (!isGroupAdmin) return reply(resMsg.error.admin)
@@ -2732,35 +2734,35 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
             switch (command) {
                 /* #region Owner Commands */
-                case 'getstory':
+                case 'getstory': {
                     try {
-                        let param = body.slice(10).replace('@', '');
-                        if (!param) return reply('tag user lah');
-                        const page = await client.getPage();
+                        let param = args[0].replace(/@/, '')
+                        if (!param) return reply('Tag user lah')
+                        const page = client.getPage()
                         const story = await page.evaluate(() => {
-                            let obj = window.Store.Msg.filter(x => x.__x_id.remote.server == 'broadcast');
-                            let nganu = [];
+                            let obj = window.Store.Msg.filter(x => x.__x_id.remote.server == 'broadcast')
+                            let nganu = []
                             for (let asu of obj) {
-                                nganu.push(window.WAPI._serializeRawObj(asu));
+                                nganu.push(window.WAPI._serializeRawObj(asu))
                             }
-                            return nganu;
+                            return nganu
                         })
-                        client.sendTextWithMentions(from, `_fetching whatsapp status from @${param}_`);
-                        await sleep(2000);
-                        let bjingan = story.filter(v => v.author.user == param);
+                        client.sendTextWithMentions(from, `_fetching whatsapp status from @${param}_`)
+                        await sleep(2000)
+                        let bjingan = story.filter(v => v.author.user == param)
                         if (bjingan.length === 0) return reply('Tidak ada story atau mungkin belum save kontak')
                         for (let i = 0; i < bjingan.length; i++) {
                             if (bjingan[i].type == 'chat') {
                                 let caption = `*From :* wa.me/${bjingan[i].author.user}\n` +
-                                `*Time :* ${moment(bjingan[i].t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
-                                `*Type :* ${bjingan[i].type}\n` +
-                                `*Text :* ${bjingan[i].body}`
+                                    `*Time :* ${moment(bjingan[i].t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
+                                    `*Type :* ${bjingan[i].type}\n` +
+                                    `*Text :* ${bjingan[i].body}`
                                 reply(caption)
                             } else if (bjingan[i].type == 'image' || bjingan[i].type == 'video') {
                                 let caption = `*From :* wa.me/${bjingan[i].author.user}\n` +
-                                `*Time :* ${moment(bjingan[i].t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
-                                `*Type :* ${bjingan[i].type}\n` + `${bjingan[i].type == 'video' ? `*Duration :* ${bjingan[i].duration}s\n` : ''}` +
-                                `*Caption :* ${bjingan[i].caption}`
+                                    `*Time :* ${moment(bjingan[i].t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
+                                    `*Type :* ${bjingan[i].type}\n` + `${bjingan[i].type == 'video' ? `*Duration :* ${bjingan[i].duration}s\n` : ''}` +
+                                    `*Caption :* ${bjingan[i].caption}`
                                 const mediaData = await decryptMedia(bjingan[i])
                                 client.sendImage(from, `data:${bjingan[i].mimetype};base64,${mediaData.toString('base64')}`, 'nganu' + bjingan[i].type == 'image' ? '.jpg' : '.mp4', caption, id).catch(e => { return printError(e) })
                             }
@@ -2768,7 +2770,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     } catch (error) {
                         console.log(error)
                     }
-                    break;
+                    break
+                }
                 case 'owneronly': {
                     if (!isOwnerBot) return reply(resMsg.error.owner)
                     if (!isGroupMsg) return reply(resMsg.error.group)
