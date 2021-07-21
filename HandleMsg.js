@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-22 00:41:29
+ * @ Modified time: 2021-07-22 06:46:14
  * @ Description: Handling message
  */
 
@@ -2775,7 +2775,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                     `${q3}Type     :${q3} ${story.type}\n` + `${story.type == 'video' ? `${q3}Duration :${q3} ${story.duration}s\n` : ''}` +
                                     `${q3}Caption  :${q3} ${story.caption || '_none_'}`
                                 const mediaData = await decryptMedia(story)
-                                await client.sendImage(from, mediaData, '', caption, id)
+                                await client.sendImage(from, `data:${story.mimetype};base64,${mediaData.toString('base64')}`, 'file' + story.type == 'image' ? '.jpg' : '.mp4', caption, id)
                             }
                         }
                     } catch (error) {
