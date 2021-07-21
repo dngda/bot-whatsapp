@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-21 21:34:54
+ * @ Modified time: 2021-07-22 00:41:29
  * @ Description: Handling message
  */
 
@@ -2767,7 +2767,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                     `${q3}Time  :${q3} ${moment(story.t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
                                     `${q3}Type  :${q3} ${story.type}\n` +
                                     `${q3}Text  :${q3} ${story.body}`
-                                reply(caption)
+                                await client.sendTextWithMentions(from, caption)
                             } else if (story.type == 'image' || story.type == 'video') {
                                 let caption =
                                     `${q3}From     :${q3} @${story.author.user}\n` +
@@ -2775,11 +2775,11 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                                     `${q3}Type     :${q3} ${story.type}\n` + `${story.type == 'video' ? `${q3}Duration :${q3} ${story.duration}s\n` : ''}` +
                                     `${q3}Caption  :${q3} ${story.caption || '_none_'}`
                                 const mediaData = await decryptMedia(story)
-                                client.sendImage(from, mediaData, '', caption, id).catch(e => { return printError(e) })
+                                await client.sendImage(from, mediaData, '', caption, id)
                             }
                         }
                     } catch (error) {
-                        console.log(error)
+                        printError(error)
                     }
                     break
                 }
