@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 09:58:59
+ * @ Modified time: 2021-07-25 10:08:46
  * @ Description:
  */
 
@@ -246,7 +246,7 @@ const start = async (client = new Client()) => {
                     `${q3}Who  :${q3} @${message.author.replace(/@c\.us/, '')}\n` +
                     `${q3}Type :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}`
                 )
-                client.forwardMessages(message.from, message.id)
+                client.forwardMessages(message.from, message)
             }
         }).catch(e => {
             console.log(color('[ERR>]', 'red'), e)
