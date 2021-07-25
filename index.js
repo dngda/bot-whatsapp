@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 13:02:21
+ * @ Modified time: 2021-07-25 13:06:20
  * @ Description:
  */
 
@@ -245,8 +245,8 @@ const start = async (client = new Client()) => {
                     await client.sendTextWithMentions(message.from,
                         `‼️〘 ANTI DELETE 〙‼️\n` +
                         `${q3}Who     :${q3} @${message.author.replace('@c.us', '')}\n` +
-                        `${q3}Type    :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}\n` +
-                        `${message.type == 'chat' ? `${q3}Content :${q3} ${message.body}` : ``}`
+                        `${q3}Type    :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}` +
+                        `${message.type == 'chat' ? `\n${q3}Content :${q3}\n\n${message.body}` : ``}`
                     )
                     if (['image', 'video', 'ptt', 'audio', 'document'].includes(message.type)) {
                         const mediaData = await decryptMedia(message)
