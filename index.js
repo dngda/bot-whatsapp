@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 09:37:58
+ * @ Modified time: 2021-07-25 09:58:59
  * @ Description:
  */
 
@@ -239,11 +239,11 @@ const start = async (client = new Client()) => {
 
         client.onMessageDeleted(async (message) => {
             const antiDelete = JSON.parse(createReadFileSync('./data/antidelete.json'))
-            const isAntiDelete = antiDelete.includes(message.chatId)
-            if (!message.fromMe && isAntiDelete) {
+            const isAntiDelete = antiDelete.includes(message.from)
+            if (message.author != ownerNumber && isAntiDelete) {
                 client.sendTextWithMentions(message.from,
                     `‼️〘 ANTI DELETE 〙‼️\n` +
-                    `${q3}Who  :${q3} @${message.sender.id.replace(/@c\.us/, '')}\n` +
+                    `${q3}Who  :${q3} @${message.author.replace(/@c\.us/, '')}\n` +
                     `${q3}Type :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}`
                 )
                 client.forwardMessages(message.from, message.id)

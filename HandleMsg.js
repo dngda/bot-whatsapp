@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 09:16:48
+ * @ Modified time: 2021-07-25 09:53:09
  * @ Description: Handling message
  */
 
@@ -2408,13 +2408,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         if (pos != -1) return reply('Fitur welcome sudah aktif!')
                         welcome.push(chatId)
                         writeFileSync('./data/welcome.json', JSON.stringify(welcome))
-                        reply('Fitur welcome sudah di Aktifkan')
+                        reply('Fitur welcome sudah diaktifkan')
                     } else if (args[0] === 'off') {
                         let pos = welcome.indexOf(chatId)
                         if (pos === -1) return reply('Fitur welcome memang belum aktif!')
                         welcome.splice(pos, 1)
                         writeFileSync('./data/welcome.json', JSON.stringify(welcome))
-                        reply('Fitur welcome sudah di non-Aktifkan')
+                        reply('Fitur welcome sudah dinonaktifkan')
                     } else {
                         reply(`Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`)
                     }
@@ -2429,13 +2429,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         if (pos != -1) return reply('Fitur anti delete sudah aktif!')
                         antiDelete.push(chatId)
                         writeFileSync('./data/antidelete.json', JSON.stringify(antiDelete))
-                        reply('Fitur anti delete sudah di Aktifkan')
+                        reply('Fitur anti delete diaktifkan')
                     } else if (args[0] === 'off') {
                         let pos = antiDelete.indexOf(chatId)
                         if (pos === -1) return reply('Fitur anti delete memang belum aktif!')
                         antiDelete.splice(pos, 1)
                         writeFileSync('./data/antidelete.json', JSON.stringify(antiDelete))
-                        reply('Fitur anti delete sudah di non-Aktifkan')
+                        reply('Fitur anti delete sudah dinonaktifkan')
                     } else {
                         reply(`Membuat bot mendeteksi jika ada pesan yang dihapus di group chat!\n\nPenggunaan:\n${prefix}antidelete on --aktifkan\n${prefix}antidelete off --nonaktifkan`)
                     }
@@ -2544,13 +2544,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         if (pos != -1) return reply('Fitur anti kata kasar sudah aktif!')
                         antiKasar.push(chatId)
                         writeFileSync('./data/ngegas.json', JSON.stringify(antiKasar))
-                        reply('Fitur Anti Kasar sudah di Aktifkan')
+                        reply('Fitur Anti Kasar sudah diaktifkan')
                     } else if (args[0] === 'off') {
                         let pos = antiKasar.indexOf(chatId)
                         if (pos === -1) return reply('Fitur anti kata memang belum aktif!')
                         antiKasar.splice(pos, 1)
                         writeFileSync('./data/ngegas.json', JSON.stringify(antiKasar))
-                        reply('Fitur Anti Kasar sudah di non-Aktifkan')
+                        reply('Fitur Anti Kasar sudah dinonaktifkan')
                     } else {
                         reply(`Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}antikasar on --mengaktifkan\n${prefix}antikasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`)
                     }
@@ -2566,13 +2566,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         if (pos != -1) return reply('Fitur anti kata kasar kick sudah aktif!')
                         antiKasarKick.push(chatId)
                         writeFileSync('./data/ngegaskick.json', JSON.stringify(antiKasarKick))
-                        reply('Fitur Anti Kasar kick sudah di Aktifkan')
+                        reply('Fitur Anti Kasar kick sudah diaktifkan')
                     } else if (args[0] === 'off') {
                         let pos = antiKasarKick.indexOf(chatId)
                         if (pos === -1) return reply('Fitur anti kata kasar kick memang belum aktif!')
                         antiKasarKick.splice(pos, 1)
                         writeFileSync('./data/ngegasKick.json', JSON.stringify(antiKasarKick))
-                        reply('Fitur Anti Kasar kick sudah di non-Aktifkan')
+                        reply('Fitur Anti Kasar kick sudah dinonaktifkan')
                     } else {
                         reply(`Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda. Apabila denda mencapai 20k akan terkena kick\n\nPenggunaan\n${prefix}antikasarkick on --mengaktifkan\n${prefix}antikasarkick off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`)
                     }
@@ -2637,13 +2637,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         if (pos != -1) return reply('Fitur anti link group sudah aktif!')
                         antiLinkGroup.push(chatId)
                         writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
-                        reply('Fitur anti link group sudah di Aktifkan')
+                        reply('Fitur anti link group sudah diaktifkan')
                     } else if (args[0] === 'off') {
                         let pos = antiLinkGroup.indexOf(chatId)
                         if (pos === -1) return reply('Fitur anti link group memang belum aktif!')
                         antiLinkGroup.splice(pos, 1)
                         writeFileSync('./data/antilinkgroup.json', JSON.stringify(antiLinkGroup))
-                        reply('Fitur anti link group sudah di non-Aktifkan')
+                        reply('Fitur anti link group sudah dinonaktifkan')
                     } else {
                         reply(`Untuk mengaktifkan Fitur anti link group pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengirimkan link group lain maka akan terkick otomatis\n\nPenggunaan\n${prefix}antilinkgroup on --mengaktifkan\n${prefix}antilinkgroup off --nonaktifkan`)
                     }
@@ -2658,13 +2658,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         if (pos != -1) return reply('Fitur anti virtex group sudah aktif!')
                         antiVirtex.push(chatId)
                         writeFileSync('./data/antivirtex.json', JSON.stringify(antiVirtex))
-                        reply('Fitur anti virtex sudah di Aktifkan')
+                        reply('Fitur anti virtex sudah diaktifkan')
                     } else if (args[0] === 'off') {
                         let pos = antiVirtex.indexOf(chatId)
                         if (pos === -1) return reply('Fitur anti virtex memang belum aktif!')
                         antiVirtex.splice(pos, 1)
                         writeFileSync('./data/antivirtex.json', JSON.stringify(antiVirtex))
-                        reply('Fitur anti virtex sudah di non-Aktifkan')
+                        reply('Fitur anti virtex sudah dinonaktifkan')
                     } else {
                         reply(`Untuk mengaktifkan Fitur anti virtex pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengirimkan pesan terlalu panjang maka akan terkick otomatis\n\nPenggunaan\n${prefix}antivirtex on --mengaktifkan\n${prefix}antivirtex off --nonaktifkan`)
                     }
@@ -2686,13 +2686,13 @@ const HandleMsg = async (message, browser, client = new Client()) => {
 
                         antiLink.push(chatId)
                         writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
-                        reply('Fitur anti semua link sudah di Aktifkan')
+                        reply('Fitur anti semua link sudah diaktifkan')
                     } else if (args[0] === 'off') {
                         let pos = antiLink.indexOf(chatId)
                         if (pos === -1) return reply('Fitur anti semua link memang belum aktif!')
                         antiLink.splice(pos, 1)
                         writeFileSync('./data/antilink.json', JSON.stringify(antiLink))
-                        reply('Fitur anti semua link sudah di non-Aktifkan')
+                        reply('Fitur anti semua link sudah dinonaktifkan')
                     } else {
                         reply(`Untuk mengaktifkan Fitur anti semua link pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengirimkan link maka akan terkick otomatis\n\nPenggunaan\n${prefix}antilink on --mengaktifkan\n${prefix}antilink off --nonaktifkan`)
                     }
