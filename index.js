@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 12:47:58
+ * @ Modified time: 2021-07-25 13:02:21
  * @ Description:
  */
 
@@ -237,26 +237,28 @@ const start = async (client = new Client()) => {
             spawn('pm2 reload all')
         })
 
-        client.onMessageDeleted(async (message) => {
-            client.sendText(ownerNumber, JSON.stringify(message, null, 2))
-            
-            const antiDelete = JSON.parse(createReadFileSync('./data/antidelete.json'))
-            const isAntiDelete = antiDelete.includes(message.from)
-            if (message.author != host && isAntiDelete) {
-                client.sendTextWithMentions(message.from,
-                    `‼️〘 ANTI DELETE 〙‼️\n` +
-                        `${q3}Who     :${q3} @${message.author.replace(/@c\.us/, '')}\n` +
+        client.onMessageDeleted(async message => {
+            try {
+                const antiDelete = JSON.parse(createReadFileSync('./data/antidelete.json'))
+                const isAntiDelete = antiDelete.includes(message.from)
+                if (message.author != host && isAntiDelete) {
+                    await client.sendTextWithMentions(message.from,
+                        `‼️〘 ANTI DELETE 〙‼️\n` +
+                        `${q3}Who     :${q3} @${message.author.replace('@c.us', '')}\n` +
                         `${q3}Type    :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}\n` +
-                        (message.type == 'chat') ? `${q3}Content :${q3} \n${message.body}` : ``
-                )
-                if (['image', 'video', 'ptt', 'audio', 'document'].includes(message.type)) {
-                    const mediaData = await decryptMedia(message)
-                    await client.sendFile(message.from, `data:${message.mimetype};base64,${mediaData.toString('base64')}`, '', message.caption)
+                        `${message.type == 'chat' ? `${q3}Content :${q3} ${message.body}` : ``}`
+                    )
+                    if (['image', 'video', 'ptt', 'audio', 'document'].includes(message.type)) {
+                        const mediaData = await decryptMedia(message)
+                        await client.sendFile(message.from, `data:${message.mimetype};base64,${mediaData.toString('base64')}`, '', message.caption)
+                    }
+                    if (message.type == 'sticker') {
+                        const mediaData = await decryptMedia(message)
+                        await client.sendImageAsSticker(message.from, mediaData)
+                    }
                 }
-                if (message.type == 'sticker') {
-                    const mediaData = await decryptMedia(message)
-                    await client.sendImageAsSticker(message.from, mediaData)
-                }
+            } catch (err) {
+                console.log(color('[ERR>]', 'red'), err)
             }
         }).catch(e => {
             console.log(color('[ERR>]', 'red'), e)
