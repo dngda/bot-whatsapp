@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-22 06:46:14
+ * @ Modified time: 2021-07-25 09:16:48
  * @ Description: Handling message
  */
 
@@ -72,6 +72,7 @@ const antiKasarKick = JSON.parse(createReadFileSync('./data/ngegaskick.json'))
 const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
 const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
 const antiVirtex = JSON.parse(createReadFileSync('./data/antivirtex.json'))
+const antiDelete = JSON.parse(createReadFileSync('./data/antidelete.json'))
 const disableBot = JSON.parse(createReadFileSync('./data/disablebot.json'))
 const groupPrem = JSON.parse(createReadFileSync('./data/premiumgroup.json'))
 const groupBanned = JSON.parse(createReadFileSync('./data/groupbanned.json'))
@@ -2416,6 +2417,27 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         reply('Fitur welcome sudah di non-Aktifkan')
                     } else {
                         reply(`Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`)
+                    }
+                    break
+
+                case 'antidelete':
+                    if (!isGroupMsg) return reply(resMsg.error.group)
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    if (args.length != 1) return reply(`Membuat bot mendeteksi jika ada pesan yang dihapus di group chat!\n\nPenggunaan:\n${prefix}antidelete on --aktifkan\n${prefix}antidelete off --nonaktifkan`)
+                    if (args[0] === 'on') {
+                        let pos = antiDelete.indexOf(chatId)
+                        if (pos != -1) return reply('Fitur anti delete sudah aktif!')
+                        antiDelete.push(chatId)
+                        writeFileSync('./data/antidelete.json', JSON.stringify(antiDelete))
+                        reply('Fitur anti delete sudah di Aktifkan')
+                    } else if (args[0] === 'off') {
+                        let pos = antiDelete.indexOf(chatId)
+                        if (pos === -1) return reply('Fitur anti delete memang belum aktif!')
+                        antiDelete.splice(pos, 1)
+                        writeFileSync('./data/antidelete.json', JSON.stringify(antiDelete))
+                        reply('Fitur anti delete sudah di non-Aktifkan')
+                    } else {
+                        reply(`Membuat bot mendeteksi jika ada pesan yang dihapus di group chat!\n\nPenggunaan:\n${prefix}antidelete on --aktifkan\n${prefix}antidelete off --nonaktifkan`)
                     }
                     break
 

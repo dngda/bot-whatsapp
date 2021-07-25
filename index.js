@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-19 20:16:47
+ * @ Modified time: 2021-07-25 09:34:00
  * @ Description:
  */
 
@@ -236,6 +236,21 @@ const start = async (client = new Client()) => {
         client.getPage().on('error', () => {
             client.sendText(ownerNumber, `⌛ Page Error! Server bot akan direstart!`)
             spawn('pm2 reload all')
+        })
+
+        client.onMessageDeleted(async (message) => {
+            const antiDelete = JSON.parse(createReadFileSync('./data/antidelete.json'))
+            const isAntiDelete = antiDelete.includes(message.chatId)
+            if (!message.fromMe && isAntiDelete) {
+                client.sendTextWithMentions(message.from,
+                    `‼️〘 ANTI DELETE 〙‼️\n` +
+                    `${q3}Who  :${q3} @${message.sender.id.replace(/@c\.us/, '')}\n` +
+                    `${q3}Type :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}`
+                )
+                client.forwardMessages(message.from, message.id)
+            }
+        }).catch(e => {
+            console.log(color('[ERR>]', 'red'), e)
         })
 
     } catch (err) {
