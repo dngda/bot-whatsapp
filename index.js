@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 09:34:00
+ * @ Modified time: 2021-07-25 09:37:58
  * @ Description:
  */
 
@@ -177,13 +177,9 @@ const start = async (client = new Client()) => {
         })
 
         // ketika seseorang masuk/keluar dari group
-
+        const host = await client.getHostNumber() + '@c.us'
         client.onGlobalParticipantsChanged(async event => {
-            const host = await client.getHostNumber() + '@c.us'
-            const ngegas = JSON.parse(createReadFileSync('./data/ngegaskick.json'))
             const welcome = JSON.parse(createReadFileSync('./data/welcome.json'))
-            const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
-            const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
             const isWelcome = welcome.includes(event.chat)
             const profile = await client.getProfilePicFromServer(event.who)
             const who = await client.getContact(event.who)
@@ -207,6 +203,9 @@ const start = async (client = new Client()) => {
             }
             // Saat host keluar
             if (event.action === 'remove' && event.who == host) {
+                const ngegas = JSON.parse(createReadFileSync('./data/ngegaskick.json'))
+                const antiLinkGroup = JSON.parse(createReadFileSync('./data/antilinkgroup.json'))
+                const antiLink = JSON.parse(createReadFileSync('./data/antilink.json'))
                 let _id = event.chat
                 let pos = ngegas.indexOf(_id)
                 if (pos !== -1) {
