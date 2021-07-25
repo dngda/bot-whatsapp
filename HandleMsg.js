@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 09:53:09
+ * @ Modified time: 2021-07-25 10:31:02
  * @ Description: Handling message
  */
 
@@ -2784,20 +2784,20 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         if (userStories.length === 0) return reply('Tidak ada status atau mungkin belum save kontak')
                         for (let story of userStories) {
                             if (story.type == 'chat') {
-                                let caption =
+                                let capt =
                                     `${q3}From  :${q3} @${story.author.user}\n` +
                                     `${q3}Time  :${q3} ${moment(story.t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
                                     `${q3}Type  :${q3} ${story.type}\n` +
                                     `${q3}Text  :${q3} ${story.body}`
-                                await client.sendTextWithMentions(from, caption)
+                                await client.sendTextWithMentions(from, capt)
                             } else if (story.type == 'image' || story.type == 'video') {
-                                let caption =
+                                let capt =
                                     `${q3}From     :${q3} @${story.author.user}\n` +
                                     `${q3}Time     :${q3} ${moment(story.t * 1000).format('DD/MM/YY HH:mm:ss')}\n` +
                                     `${q3}Type     :${q3} ${story.type}\n` + `${story.type == 'video' ? `${q3}Duration :${q3} ${story.duration}s\n` : ''}` +
                                     `${q3}Caption  :${q3} ${story.caption || '_none_'}`
                                 const mediaData = await decryptMedia(story)
-                                await client.sendImage(from, `data:${story.mimetype};base64,${mediaData.toString('base64')}`, 'file' + story.type == 'image' ? '.jpg' : '.mp4', caption, id)
+                                await client.sendImage(from, `data:${story.mimetype};base64,${mediaData.toString('base64')}`, 'file' + story.type == 'image' ? '.jpg' : '.mp4', capt, id)
                             }
                         }
                     } catch (error) {

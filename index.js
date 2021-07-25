@@ -2,13 +2,13 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 10:08:46
+ * @ Modified time: 2021-07-25 10:39:27
  * @ Description:
  */
 
 import { createReadFileSync, initGlobalVariable } from './utils/index.js'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import { create, Client } from '@open-wa/wa-automate'
+import { create, Client, decryptMedia } from '@open-wa/wa-automate'
 import { canvas, schedule, sewa } from './lib/index.js'
 import chromeLauncher from 'chrome-launcher'
 import { scheduleJob } from 'node-schedule'
@@ -243,10 +243,18 @@ const start = async (client = new Client()) => {
             if (message.author != ownerNumber && isAntiDelete) {
                 client.sendTextWithMentions(message.from,
                     `‼️〘 ANTI DELETE 〙‼️\n` +
-                    `${q3}Who  :${q3} @${message.author.replace(/@c\.us/, '')}\n` +
-                    `${q3}Type :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}`
+                        `${q3}Who     :${q3} @${message.author.replace(/@c\.us/, '')}\n` +
+                        `${q3}Type    :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}\n` +
+                        (message.type == 'chat') ? `${q3}Content :${q3} \n${message.body}` : ``
                 )
-                client.forwardMessages(message.from, message)
+                if (['image', 'video', 'ptt', 'audio', 'document'].includes(message.type)) {
+                    const mediaData = await decryptMedia(message)
+                    await client.sendFile(message.from, `data:${message.mimetype};base64,${mediaData.toString('base64')}`, '', message.caption)
+                }
+                if (message.type == 'sticker') {
+                    const mediaData = await decryptMedia(message)
+                    await client.sendImageAsSticker(message.from, mediaData)
+                }
             }
         }).catch(e => {
             console.log(color('[ERR>]', 'red'), e)
