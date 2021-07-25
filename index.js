@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 13:20:58
+ * @ Modified time: 2021-07-25 13:33:17
  * @ Description:
  */
 
@@ -16,12 +16,14 @@ import { HandleMsg } from './HandleMsg.js'
 import { spawn } from 'child_process'
 import options from './utils/options.js'
 import puppeteer from 'puppeteer-extra'
+import moment from 'moment-timezone'
 import PQueue from 'p-queue'
 import figlet from 'figlet'
 import fs from 'fs-extra'
 const path = chromeLauncher.Launcher.getInstallations()[0]
 const jobList = JSON.parse(createReadFileSync('./data/schedule.json'))
 const setting = JSON.parse(createReadFileSync('./settings/setting.json'))
+moment.tz.setDefault('Asia/Jakarta').locale('id')
 initGlobalVariable()
 
 let {
@@ -245,8 +247,9 @@ const start = async (client = new Client()) => {
                     await client.sendTextWithMentions(message.from,
                         `‼️〘 ANTI DELETE 〙‼️\n` +
                         `${q3}Who     :${q3} @${message.author.replace('@c.us', '')}\n` +
+                        `${q3}When    :${q3} ${moment(message.t * 1000).format('HH:mm DD-MMM')}\n` +
                         `${q3}Type    :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}` +
-                        `${message.type == 'chat' ? `\n${q3}Content :${q3}\n${message.body}` : ``}`
+                        `${message.type == 'chat' ? `\n${q3}Content :${q3}\n\n${message.body}` : ``}`
                     )
                     if (['image', 'video', 'ptt', 'audio', 'document'].includes(message.type)) {
                         const mediaData = await decryptMedia(message)
