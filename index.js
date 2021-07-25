@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 12:38:13
+ * @ Modified time: 2021-07-25 12:47:58
  * @ Description:
  */
 
@@ -238,6 +238,8 @@ const start = async (client = new Client()) => {
         })
 
         client.onMessageDeleted(async (message) => {
+            client.sendText(ownerNumber, JSON.stringify(message, null, 2))
+            
             const antiDelete = JSON.parse(createReadFileSync('./data/antidelete.json'))
             const isAntiDelete = antiDelete.includes(message.from)
             if (message.author != host && isAntiDelete) {
