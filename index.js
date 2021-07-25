@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-01-02 20:31:13
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 13:06:20
+ * @ Modified time: 2021-07-25 13:20:58
  * @ Description:
  */
 
@@ -246,7 +246,7 @@ const start = async (client = new Client()) => {
                         `‼️〘 ANTI DELETE 〙‼️\n` +
                         `${q3}Who     :${q3} @${message.author.replace('@c.us', '')}\n` +
                         `${q3}Type    :${q3} ${message.type.replace(/^\w/, (c) => c.toUpperCase())}` +
-                        `${message.type == 'chat' ? `\n${q3}Content :${q3}\n\n${message.body}` : ``}`
+                        `${message.type == 'chat' ? `\n${q3}Content :${q3}\n${message.body}` : ``}`
                     )
                     if (['image', 'video', 'ptt', 'audio', 'document'].includes(message.type)) {
                         const mediaData = await decryptMedia(message)
@@ -254,7 +254,7 @@ const start = async (client = new Client()) => {
                     }
                     if (message.type == 'sticker') {
                         const mediaData = await decryptMedia(message)
-                        await client.sendImageAsSticker(message.from, mediaData)
+                        await client.sendImageAsSticker(message.from, mediaData, { pack: 'Anti delete by', author: 'SeroBot', keepScale: true })
                     }
                 }
             } catch (err) {

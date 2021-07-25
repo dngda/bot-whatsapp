@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 12:50:30
+ * @ Modified time: 2021-07-25 13:24:08
  * @ Description: Handling message
  */
 
@@ -871,10 +871,14 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 case 'takestik':
                 case 'takesticker': {
                     if (!isQuotedSticker && args.length == 0) return reply(`Edit sticker pack dan author.\n${prefix}take packname|author`)
+                    reply(resMsg.wait)
                     client.sendImageAsSticker(from, (await decryptMedia(quotedMsg)), {
                         pack: arg.split('|')[0],
                         author: arg.split('|')[1],
                         keepScale: true
+                    }).then(() => {
+                        reply(resMsg.success.sticker)
+                        console.log(color('[LOGS]', 'grey'), `Sticker Processed for ${processTime(t, moment())} Seconds`)
                     })
                 }
                 /* #endregion Sticker */
