@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-25 13:45:35
+ * @ Modified time: 2021-07-28 08:48:03
  * @ Description: Handling message
  */
 
@@ -1614,7 +1614,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             switch (command) {
                 /* #region Audio Converter */
                 case 'tomp3': {
-                    if (!isQuotedVideo) return reply(`Convert mp4/video ke mp3/audio. ${prefix}tomp3`)
+                    if (!isQuotedVideo && !isMedia) return reply(`Convert mp4/video ke mp3/audio. ${prefix}tomp3`)
                     audioConverter('atempo=1', 'tomp3')
                     break
                 }
