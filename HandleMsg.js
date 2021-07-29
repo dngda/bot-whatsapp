@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-29 21:54:39
+ * @ Modified time: 2021-07-29 21:58:00
  * @ Description: Handling message
  */
 
@@ -292,8 +292,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         const audioConverter = async (complexFilter, filterName) => {
-            if (!quotedMsg) quotedMsg.duration = message.duration
-            reply(resMsg.wait + `\nEstimasi ± ${(+quotedMsg.duration / 100).toFixed(0)} menit.`)
+            let durs = quotedMsg ? quotedMsg.duration : message.duration
+            reply(resMsg.wait + `\nEstimasi ± ${(+durs / 100).toFixed(0)} menit.`)
             const _inp = await decryptMedia(quotedMsg)
             let inpath = `./media/in_${filterName}_${t}.mp3`
             let outpath = `./media/out_${filterName}_${t}.mp3`
