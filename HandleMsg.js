@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-07-28 08:48:03
+ * @ Modified time: 2021-07-29 21:54:39
  * @ Description: Handling message
  */
 
@@ -174,6 +174,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         for (let menu in stickerHash) {
             if (filehash == stickerHash[menu]) body = `${prefix + menu}`, chats = body
         }
+        // Respon to button
+        if (type === 'buttons_response') body = message.selectedButtonId, chats = body
         if (prev.hasPrevCmd(pengirim)) {
             body = `${prev.getPrevCmd(pengirim)} ${chats}`
             prev.delPrevCmd(pengirim)
@@ -290,6 +292,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         }
 
         const audioConverter = async (complexFilter, filterName) => {
+            if (!quotedMsg) quotedMsg.duration = message.duration
             reply(resMsg.wait + `\nEstimasi ± ${(+quotedMsg.duration / 100).toFixed(0)} menit.`)
             const _inp = await decryptMedia(quotedMsg)
             let inpath = `./media/in_${filterName}_${t}.mp3`
