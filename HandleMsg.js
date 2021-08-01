@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-08-01 20:47:53
+ * @ Modified time: 2021-08-01 20:55:43
  * @ Description: Handling message
  */
 
@@ -1579,7 +1579,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     for (let u of res) {
                         msg += `Quality: ${u.quality} : ` + await urlShortener(u.url) + '\n'
                     }
-                    if (res) sendText(msg)
+                    if (res[0]?.url) sendText(msg)
                     let uls
                     if (command == 'fbdl') uls = lodash.find(res, { quality: '4' }).url || lodash.find(res, { quality: '6' }).url
                     if (command == 'twdl') uls = res[1].url || res[0].url
