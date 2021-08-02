@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-08-02 17:57:35
+ * @ Modified time: 2021-08-02 18:40:55
  * @ Description: Handling message
  */
 
@@ -239,6 +239,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const isNgegasKick = antiKasarKick.includes(chatId)
         const isDisabled = disableBot.includes(chatId)
         const isWelcome = welcome.includes(chatId)
+        const isAntiDelete = antiDelete.includes(chatId)
         /* #endregion */
 
         if (isGroupOwnerBotOnly && !isOwnerBot) return null
@@ -2349,6 +2350,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                         `${q3}Anti Semua Link :${q3} ${isAntiLink ? '*Hidup*' : 'Mati'}\n` +
                         `${q3}Anti Link Group :${q3} ${isAntiLinkGroup ? '*Hidup*' : 'Mati'}\n` +
                         `${q3}Anti Virtex     :${q3} ${isAntiVirtex ? '*Hidup*' : 'Mati'}\n` +
+                        `${q3}Anti Delete     :${q3} ${isAntiDelete ? '*Hidup*' : 'Mati'}\n` +
                         `${q3}Welcome         :${q3} ${isWelcome ? '*Hidup*' : 'Mati'}` +
                         `${(exp) ? `\n${q3}Sewa expire at  :${q3} _${exp.trim()}_` : ''}`
                     )
