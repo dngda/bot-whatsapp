@@ -2,7 +2,7 @@
  * @ Author: SeroBot Team
  * @ Create Time: 2021-02-01 19:29:50
  * @ Modified by: Danang Dwiyoga A (https://github.com/dngda/)
- * @ Modified time: 2021-08-01 20:55:43
+ * @ Modified time: 2021-08-02 17:57:35
  * @ Description: Handling message
  */
 
@@ -208,7 +208,8 @@ const HandleMsg = async (message, browser, client = new Client()) => {
             return client.deleteMessage(from, id, true)
         }
 
-        if (chats?.length > 10000 && antiVirtex.includes(chatId)) {
+        const isAntiVirtex = antiVirtex.includes(chatId)
+        if (chats?.length > 10000 && isAntiVirtex) {
             client.sendTextWithMentions(from, `💣 Member @${pengirim.replace(/@c\.us/, '')} terdeteksi mengirimkan pesan terlalu panjang! Auto kick!`)
             client.removeParticipant(from, pengirim)
             client.sendText(from, `💣 AWAS VIRTEX! TANDAI TELAH DIBACA 💣💣💣\n` + `\n`.repeat(200) + `Pengirim: ${pushname} -> ${pengirim}`)
@@ -237,6 +238,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
         const isNgegas = antiKasar.includes(chatId)
         const isNgegasKick = antiKasarKick.includes(chatId)
         const isDisabled = disableBot.includes(chatId)
+        const isWelcome = welcome.includes(chatId)
         /* #endregion */
 
         if (isGroupOwnerBotOnly && !isOwnerBot) return null
@@ -714,7 +716,7 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     let statSewa = ''
                     if (isGroupMsg) {
                         let exp = sewa.getExp(from)
-                        statSewa = (exp) ? `\n\nGroup expire on: _${exp.trim()}_` : ''
+                        statSewa = (exp) ? `\n\nSewa expire at: _${exp.trim()}_` : ''
                     }
                     sendText(`Status :\n- *${loadedMsg}* Loaded Messages\n` +
                         `- *${groups.length}* Group Chats\n` +
@@ -2336,6 +2338,22 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                 }
 
                 // Admin only
+                case 'groupstats':
+                case 'groupstat': {
+                    if (!isGroupAdmin) return reply(resMsg.error.admin)
+                    let exp = sewa.getExp(from)
+                    sendText(
+                        `✪〘 Status Group 〙✪\n` +
+                        `${q3}Anti Kasar      :${q3} ${isNgegas ? '*Hidup*' : 'Mati'}\n` +
+                        `${q3}Anti Kasar Kick :${q3} ${isNgegasKick ? '*Hidup*' : 'Mati'}\n` +
+                        `${q3}Anti Semua Link :${q3} ${isAntiLink ? '*Hidup*' : 'Mati'}\n` +
+                        `${q3}Anti Link Group :${q3} ${isAntiLinkGroup ? '*Hidup*' : 'Mati'}\n` +
+                        `${q3}Anti Virtex     :${q3} ${isAntiVirtex ? '*Hidup*' : 'Mati'}\n` +
+                        `${q3}Welcome         :${q3} ${isWelcome ? '*Hidup*' : 'Mati'}` +
+                        `${(exp) ? `\n${q3}Sewa expire at  :${q3} _${exp.trim()}_` : ''}`
+                    )
+                    break
+                }
                 case 'setname':
                 case 'settitle': {
                     try {
