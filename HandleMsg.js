@@ -634,12 +634,12 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                     if (args.length == 0) return reply(
                         `Jika kalian ingin menculik bot ke group\n` +
                         `Silakan kontak owner atau gunakan perintah:\n` +
-                        `-> ${prefix}join (link group) jika slot gratis masih tersedia.\n` +
-                        `\nSlot gratis habis? Sewa aja murah kok.\n` +
-                        `Cuma 10k masa aktif 1 bulan.\n` +
-                        `Mau sewa otomatis? Gunakan link berikut:\n` +
-                        `Saweria: https://saweria.co/dngda \n` +
-                        `*Masukkan *hanya* link group kalian dalam kolom "Pesan" di website saweria*`
+                        `-> ${prefix}join (link group) jika slot gratis masih tersedia.\n` //+
+                        // `\nSlot gratis habis? Sewa aja murah kok.\n` +
+                        // `Cuma 10k masa aktif 1 bulan.\n` +
+                        // `Mau sewa otomatis? Gunakan link berikut:\n` +
+                        // `Saweria: https://saweria.co/dngda \n` +
+                        // `*Masukkan *hanya* link group kalian dalam kolom "Pesan" di website saweria*`
                     )
                     const linkGroup = args[0]
                     const isLinkGroup = linkGroup.match(/(https:\/\/chat\.whatsapp\.com)/gi)
@@ -671,10 +671,10 @@ const HandleMsg = async (message, browser, client = new Client()) => {
                             `Mohon maaf, untuk mencegah overload\n` +
                             `Slot group free pada bot dibatasi.\n` +
                             `Total group: ${allGroup.length}/${groupLimit}\n\n` +
-                            `Chat /owner untuk sewa. Harga 10k masa aktif 1 bulan.\n` +
-                            `Mau sewa otomatis? Gunakan link berikut:\n` +
-                            `Saweria: https://saweria.co/dngda \n` +
-                            `Masukkan hanya link group kalian dalam kolom *"Pesan"* di website saweria`
+                            `Chat /owner untuk sewa. Harga 10k masa aktif 1 bulan.\n` //+
+                            // `Mau sewa otomatis? Gunakan link berikut:\n` +
+                            // `Saweria: https://saweria.co/dngda \n` +
+                            // `Masukkan hanya link group kalian dalam kolom *"Pesan"* di website saweria`
                         )
                         if (groupInfo?.size < memberLimit) return reply(`Maaf, Bot tidak akan masuk group yang anggotanya tidak lebih dari ${memberLimit} orang`)
                         reply(`⌛ Oke tunggu diproses sama owner ya!`)

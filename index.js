@@ -129,7 +129,7 @@ const start = async (client = new Client()) => {
         }
 
         // Listen saweria
-        sewa.listenSaweria(client, browser).catch(e => console.log(e))
+        // sewa.listenSaweria(client, browser).catch(e => console.log(e))
 
         // ketika bot diinvite ke dalam group
         client.onAddedToGroup(async chat => {
@@ -142,10 +142,10 @@ const start = async (client = new Client()) => {
                     client.sendText(chat.groupMetadata.id,
                         `Mohon maaf, untuk mencegah overload, group pada bot dibatasi.\n` +
                         `Total group: ${groups.length}/${groupLimit}\n` +
-                        `Chat /owner untuk sewa. harga 10k masa aktif 1 bulan.\n` +
-                        `Mau sewa otomatis? Buka link berikut:\n` +
-                        `Saweria: https://saweria.co/dngda \n` +
-                        `*Masukkan hanya link group kalian dalam kolom "Pesan" di website saweria*`
+                        `Chat /owner untuk sewa. harga 10k masa aktif 1 bulan.\n` //+
+                        // `Mau sewa otomatis? Buka link berikut:\n` +
+                        // `Saweria: https://saweria.co/dngda \n` +
+                        // `*Masukkan hanya link group kalian dalam kolom "Pesan" di website saweria*`
                     )
                     setTimeout(() => {
                         client.leaveGroup(chat.groupMetadata.id)
