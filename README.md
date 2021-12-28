@@ -4,7 +4,7 @@
 <p align="center">
 <a href="https://github.com/dngda/bot-whatsapp"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Sero Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
   <br>
-Multipurpose WhatsApp Bot using open-wa/wa-automate-nodejs library!<hr>
+UNMAINTAINED - Multipurpose WhatsApp Bot using open-wa/wa-automate-nodejs library!<hr>
 </p>
 <h3 align="center">Made with ❤️ by</h3>
 <p align="center">
@@ -39,6 +39,7 @@ Install the dependencies:
 ```bash
 > npm install
 ```
+Change all apiKey on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/api.json.example) then *rename to api.json*
 
 ### Usage
 Run the Whatsapp bot
@@ -56,9 +57,8 @@ After running it you need to scan the QR
 - Change prefix on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/setting.json#L5)
 - Change menu on [this section](https://github.com/dngda/bot-whatsapp/blob/main/lib/menu.js#L34)
 - Add kata kasar on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/katakasar.json)
-- Change all apiKey on [this section](https://github.com/dngda/bot-whatsapp/blob/main/settings/api.json.example) then *rename to api.json*
-
 - Create Saweria account and get SaweriaOverlay on [this website](https://saweria.co)
+
 - Get Api NoBackground on [this website](https://www.remove.bg/)
 - Get Api LolHuman on [this website](https://lolhuman.herokuapp.com)
 - Get Api Fariaz on [this website](https://rest.farzain.com)
