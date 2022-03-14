@@ -37,7 +37,7 @@
     "lowdb": "^2.1.0",
     "mathjs": "^9.4.3",
     "moment-timezone": "^0.5.33",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.2.3",
     "node-schedule": "^2.0.0",
     "office-to-pdf": "^4.0.0",
     "p-queue": "^7.1.0",
