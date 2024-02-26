@@ -34,7 +34,7 @@
     "gtts": "^0.2.1",
     "jimp": "^0.16.1",
     "lodash": "^4.17.21",
-    "lowdb": "^2.1.0",
+    "lowdb": "^3.0.0",
     "mathjs": "^9.4.3",
     "moment-timezone": "^0.5.33",
     "node-fetch": "^2.6.1",
